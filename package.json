@@ -6,12 +6,56 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "WEBPACK_ENV=prod webpack -p",
+    "dev": "WEBPACK_ENV=dev webpack-dev-server --inline --colors --progress",
+    "test": "mocha --opts ./ui/test/mocha.opts"
   },
   "keywords": [
     "podcast",
     "rss"
   ],
   "author": "Dan Jacob",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^6.3.13",
+    "babel-cli": "^6.3.17",
+    "babel-loader": "^6.2.0",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-register": "^6.3.13",
+    "chai": "^3.4.1",
+    "css-loader": "^0.23.0",
+    "es6-promise": "^3.0.2",
+    "extract-text-webpack-plugin": "^0.9.1",
+    "file-loader": "^0.8.5",
+    "jsdom": "^7.2.1",
+    "mocha": "^2.3.4",
+    "mocha-babel": "^3.0.0",
+    "mocha-jsdom": "^1.0.0",
+    "react-addons-test-utils": "^0.14.3",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "style-loader": "^0.13.0",
+    "uglifyjs": "^2.4.10",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "bootswatch": "^3.3.6",
+    "history": "^1.13.1",
+    "lodash": "^3.10.1",
+    "react": "^0.14.3",
+    "react-bootstrap": "^0.28.1",
+    "react-dom": "^0.14.3",
+    "react-redux": "^4.0.2",
+    "react-router": "^1.0.2",
+    "redux": "^3.0.5",
+    "redux-logger": "^2.3.1",
+    "redux-simple-router": "^1.0.1",
+    "redux-thunk": "^1.0.2"
+  }
 }
