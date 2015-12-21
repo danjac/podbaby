@@ -2,7 +2,6 @@
   "name": "podbaby",
   "version": "0.0.1",
   "description": "web-based podcast client",
-  "main": "index.js",
   "directories": {
     "doc": "docs"
   },
