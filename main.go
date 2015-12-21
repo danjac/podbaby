@@ -14,6 +14,7 @@ var (
 	port = flag.String("port", "5000", "server port")
 )
 
+// should be settings
 const (
 	staticURL    = "/static/"
 	staticDir    = "./static/"
@@ -26,13 +27,12 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.PathPrefix(staticURL).Handler(http.StripPrefix(staticURL,
-		http.FileServer(http.Dir(staticDir))))
+	router.PathPrefix(staticURL).Handler(
+		http.StripPrefix(staticURL, http.FileServer(http.Dir(staticDir))))
 
 	render := render.New()
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
 		ctx := map[string]string{
 			"staticURL": staticURL,
 		}
