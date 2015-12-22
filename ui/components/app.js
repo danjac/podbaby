@@ -9,7 +9,10 @@ import {
   Navbar
 } from 'react-bootstrap';
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import * as actions from '../actions';
 
 const MainNav = props => {
   const { createHref, isActive } = props.history;
@@ -24,21 +27,40 @@ const MainNav = props => {
         <NavItem active={isActive("/secure/")}
                  href={createHref("/secure/")}>Dashboard</NavItem>
       </Nav>
+      {props.auth.isLoggedIn ?
+
+      <Nav pullRight={true}>
+        <NavItem href="#" onClick={props.logout}>Logout</NavItem>
+      </Nav> :
       <Nav pullRight={true}>
         <NavItem active={isActive("/login/")}
                  href={createHref("/login/")}>Login</NavItem>
         <NavItem active={isActive("/signup/")}
                  href={createHref("/signup/")}>Signup</NavItem>
-      </Nav>
+      </Nav>}
+
     </Navbar>
   );
 };
 
 export class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    const { dispatch } = this.props;
+    this.actions = bindActionCreators(actions.auth, dispatch);
+  }
+
+  logout(event) {
+    event.preventDefault();
+    this.actions.logout();
+  }
+
   render() {
+
     return (
       <div>
-        <MainNav {...this.props} />
+        <MainNav logout={this.logout.bind(this)} {...this.props} />
         <div className="container" style={ { marginTop: "80px"}  }>
           {this.props.children}
         </div>
@@ -48,13 +70,17 @@ export class App extends React.Component {
 }
 
 App.propTypes = {
-  routing: PropTypes.object.isRequired
+  routing: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  auth: PropTypes.object
 };
 
 
-const mapStateToProps = props => {
+const mapStateToProps = state => {
+  const { routing, auth } = state;
   return {
-    routing: props.routing
+    routing,
+    auth
   };
 };
 
