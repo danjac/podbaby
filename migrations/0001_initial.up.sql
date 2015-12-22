@@ -1,0 +1,46 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE channels (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NULL REFERENCES users(id),
+    url TEXT UNIQUE NOT NULL,
+    image TEXT NULL,
+    name TEXT NULL,
+    description TEXT NULL,
+    website TEXT NULL,
+    pub_date TIMESTAMP WITH TIME ZONE NULL,
+    copyright TEXT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE podcasts (
+    id SERIAL PRIMARY KEY,
+    channel_id INTEGER NOT NULL REFERENCES channels(id),
+    enclosure_url TEXT,
+    url TEXT,
+    description TEXT NULL,
+    pub_date TIMESTAMP WITH TIME ZONE NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE subscriptions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    channel_id INTEGER NOT NULL REFERENCES channels(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users_podcasts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    podcast_id INTEGER NOT NULL REFERENCES podcasts(id),
+    is_pinned BOOLEAN DEFAULT FALSE,
+    is_listened BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
