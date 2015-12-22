@@ -6,7 +6,8 @@ import 'bootswatch/paper/bootstrap.min.css';
 import {
   Nav,
   NavItem,
-  Navbar
+  Navbar,
+  Glyphicon
 } from 'react-bootstrap';
 
 import { bindActionCreators } from 'redux';
@@ -15,28 +16,35 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 const MainNav = props => {
+  const { auth } = props;
   const { createHref, isActive } = props.history;
   return (
-    <Navbar fixedTop={true} inverse={true}>
+    <Navbar fixedTop={true}>
       <Navbar.Header>
         <Navbar.Brand>
-          <Link to="/">Podbaby</Link>
+          <Link to={auth.isLoggedIn ? "/podcasts/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>
         </Navbar.Brand>
       </Navbar.Header>
+
+      {auth.isLoggedIn ?
+
       <Nav pullLeft={true}>
-        <NavItem active={isActive("/secure/")}
-                 href={createHref("/secure/")}>Dashboard</NavItem>
-      </Nav>
-      {props.auth.isLoggedIn ?
+        <NavItem active={isActive("/podcasts/")} href={createHref("/podcasts/")}><Glyphicon glyph="flash" /> New episodes</NavItem>
+        <NavItem active={isActive("/podcasts/list/")} href="#"><Glyphicon glyph="list" /> My podcasts</NavItem>
+        <NavItem href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
+      </Nav> : ''}
+
+      {auth.isLoggedIn ?
 
       <Nav pullRight={true}>
-        <NavItem href="#" onClick={props.logout}>Logout</NavItem>
+        <NavItem href="#"><Glyphicon glyph="cog" /> Settings</NavItem>
+        <NavItem href="#" onClick={props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
       </Nav> :
       <Nav pullRight={true}>
         <NavItem active={isActive("/login/")}
-                 href={createHref("/login/")}>Login</NavItem>
+                 href={createHref("/login/")}><Glyphicon glyph="log-in" /> Login</NavItem>
         <NavItem active={isActive("/signup/")}
-                 href={createHref("/signup/")}>Signup</NavItem>
+                 href={createHref("/signup/")}><Glyphicon glyph="user" /> Signup</NavItem>
       </Nav>}
 
     </Navbar>
