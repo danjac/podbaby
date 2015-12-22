@@ -72,7 +72,7 @@ const ListItem = props => {
         </Grid>
         <Well>{podcast.summary}</Well>
         {podcast.id === 1000 ?
-        <audio controls={true} src={podcast.url}>
+        <audio onPlay={()=>window.alert('starting...')} controls={true} src={podcast.url}>
           Your browser doesn't support the <code>audio</code> format. You
           can <a href="#">download</a> this episode instead.
         </audio>: ''}
