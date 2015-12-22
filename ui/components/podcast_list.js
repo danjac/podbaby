@@ -17,39 +17,44 @@ const SAMPLE_DATA = [
     name: 'Joe Rogan Experience',
     title: 'Molly Crabapple',
     summary: '#738. Molly Crabapple is an American artist and journalist, known for her work for The New York Times, VICE, the Wall Street Journal, the Royal Society of Arts, Red Bull, Marvel Comics, DC Comics and CNN. Her new book "Drawing Blood" is available now on Amazon',
-    id: 1000
+    id: 1000,
+    url: 'http://traffic.libsyn.com/joeroganexp/p738.mp3',
+    channelId: 1000,
   },
   {
     image: 'https://gpodder.net/logo/32/f3f/f3f419da4a5e90d5e7eb1fdfd032dd9c327d2494',
     name: 'Radiolab from NYC',
     title: 'Nazi Summer Camp',
     summary: 'The incredible, little-known story of the Nazi prisoners of war kept on American soil during World War II.',
-    id: 1001
+    id: 1001,
+    channelId: 1002,
   },
   {
     image: 'https://gpodder.net/logo/32/124/1246edc674de518c36549def4493b47eb43d4591',
     name: 'JavaScript Jabber',
     title: ' 146 JSJ React with Christopher Chedeau and Jordan Walker',
     summary: 'The panelists talk to Christopher Chedeau and Jordan Walke about React.js Conf and React Native.',
-    id: 1002
+    id: 1002,
+    channelId: 1002,
   }
 
 
 ];
 
 const ListItem = props => {
-  const { podcast } = props;
+  const { podcast, createHref } = props;
+  const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
   return (
     <div className="media">
       <div className="media-left">
-        <a href="#">
+        <a href={url}>
           <img className="media-object"
                src={podcast.image}
                alt={podcast.name} />
         </a>
       </div>
       <div className="media-body">
-        <h4 className="media-heading"><a href="#">{podcast.name}</a></h4>
+        <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
         <Grid>
           <Row>
             <Col xs={6} md={9}>
@@ -66,6 +71,12 @@ const ListItem = props => {
           </Row>
         </Grid>
         <Well>{podcast.summary}</Well>
+        {podcast.id === 1000 ?
+        <audio controls={true} src={podcast.url}>
+          Your browser doesn't support the <code>audio</code> format. You
+          can <a href="#">download</a> this episode instead.
+        </audio>: ''}
+
       </div>
     </div>
   );
@@ -73,10 +84,11 @@ const ListItem = props => {
 
 export class PodcastList extends React.Component {
   render() {
+    const { createHref } = this.props.history;
     return (
       <div>
         {SAMPLE_DATA.map(podcast => {
-          return <ListItem key={podcast.id} podcast={podcast} />;
+          return <ListItem key={podcast.id} podcast={podcast} createHref={createHref} />;
         })}
       </div>
     );

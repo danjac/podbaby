@@ -21,7 +21,7 @@ const SAMPLE_DATA = [
 ];
 
 const ListItem = props => {
-  const { channel } = props;
+  const { channel, createHref } = props;
   return (
     <div className="media">
       <div className="media-left">
@@ -32,7 +32,7 @@ const ListItem = props => {
         </a>
       </div>
       <div className="media-body">
-        <h4 className="media-heading"><a href="#">{channel.name}</a></h4>
+        <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.name}</a></h4>
         <Grid>
           <Row>
             <Col xs={6} md={9}>
@@ -56,10 +56,11 @@ const ListItem = props => {
 
 export class SubscriptionList extends React.Component {
   render() {
+    const { createHref } = this.props.history;
     return (
       <div>
       {SAMPLE_DATA.map(channel => {
-        return <ListItem key={channel.id} channel={channel} />;
+        return <ListItem key={channel.id} channel={channel} createHref={createHref} />;
       })}
       </div>
     );

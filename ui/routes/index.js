@@ -5,6 +5,7 @@ import App from '../components/app';
 import Front from '../components/front';
 import Login from '../components/login';
 import Signup from '../components/signup';
+import ChannelDetail from '../components/channel_detail';
 import PodcastList from '../components/podcast_list';
 import SubscriptionList from '../components/subscription_list';
 import PageNotFound from '../components/not_found';
@@ -29,6 +30,7 @@ export default function(store, history) {
             <IndexRedirect to="/podcasts/new/" />
             <Route path="/podcasts/new/" component={PodcastList} />
             <Route path="/podcasts/subscriptions/" component={SubscriptionList} />
+            <Route path="/podcasts/channel/:id/" component={ChannelDetail} />
           </Route>
           <Route path="/login/" component={Login} />
           <Route path="/signup/" component={Signup} />
