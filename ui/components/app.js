@@ -20,49 +20,61 @@ import { connect } from 'react-redux';
 
 import * as actions from '../actions';
 
-const MainNav = props => {
-  const { auth } = props;
-  const { createHref, isActive } = props.history;
-  const searchIcon = <Glyphicon glyph="search" />;
-  return (
-    <Navbar fixedTop={true}>
-      <Navbar.Header>
-        <Navbar.Brand>
-          <Link to={auth.isLoggedIn ? "/podcasts/new/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>
-        </Navbar.Brand>
-      </Navbar.Header>
+class MainNav extends React.Component {
 
-      {auth.isLoggedIn ?
+  search(event) {
+    event.preventDefault();
+    const node = this.refs.search.getInputDOMNode();
+    this.props.search(node.value);
+    node.value = "";
+  }
 
-      <Nav pullLeft={true}>
-        <NavItem active={isActive("/podcasts/new/")}
-          href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
-        <NavItem active={isActive("/podcasts/subscriptions/")}
-                 href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
-        <NavItem href="#"><Glyphicon glyph="pushpin" /> Pins <Badge>4</Badge></NavItem>
-        <NavItem onClick={props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
-      </Nav> : ''}
+  render() {
 
-      {auth.isLoggedIn ?
-      <form className="navbar-form navbar-left" role="search">
-        <Input type="search" placeholder="Find podcast or channel" addonBefore={searchIcon}/>
-      </form> : ''}
+    const { auth } = this.props;
+    const { createHref, isActive } = this.props.history;
+    const searchIcon = <Glyphicon glyph="search" />;
 
-      {auth.isLoggedIn ?
-      <Nav pullRight={true}>
-        <NavItem href="#"><Glyphicon glyph="cog" /> Settings</NavItem>
-        <NavItem href="#" onClick={props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
-      </Nav> :
-      <Nav pullRight={true}>
-        <NavItem active={isActive("/login/")}
-                 href={createHref("/login/")}><Glyphicon glyph="log-in" /> Login</NavItem>
-        <NavItem active={isActive("/signup/")}
-                 href={createHref("/signup/")}><Glyphicon glyph="user" /> Signup</NavItem>
-      </Nav>}
+    return (
+      <Navbar fixedTop={true}>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <Link to={auth.isLoggedIn ? "/podcasts/new/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>
+          </Navbar.Brand>
+        </Navbar.Header>
 
-    </Navbar>
-  );
-};
+        {auth.isLoggedIn ?
+        <form className="navbar-form navbar-left" role="search" onSubmit={this.search.bind(this)}>
+          <Input ref="search" type="search" placeholder="Find podcast or channel" addonBefore={searchIcon} />
+        </form> : ''}
+
+        {auth.isLoggedIn ?
+
+        <Nav pullLeft={true}>
+          <NavItem active={isActive("/podcasts/new/")}
+            href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
+          <NavItem active={isActive("/podcasts/subscriptions/")}
+                   href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
+          <NavItem href="#"><Glyphicon glyph="pushpin" /> Pins <Badge>4</Badge></NavItem>
+          <NavItem onClick={this.props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
+        </Nav> : ''}
+
+        {auth.isLoggedIn ?
+        <Nav pullRight={true}>
+          <NavItem href="#"><Glyphicon glyph="cog" /> Settings</NavItem>
+          <NavItem href="#" onClick={this.props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
+        </Nav> :
+        <Nav pullRight={true}>
+          <NavItem active={isActive("/login/")}
+                   href={createHref("/login/")}><Glyphicon glyph="log-in" /> Login</NavItem>
+          <NavItem active={isActive("/signup/")}
+                   href={createHref("/signup/")}><Glyphicon glyph="user" /> Signup</NavItem>
+        </Nav>}
+
+      </Navbar>
+    );
+  }
+}
 
 
 class AddChannelModal extends React.Component {
@@ -78,13 +90,13 @@ class AddChannelModal extends React.Component {
           <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form className="form form-horizontal" onSubmit={close}>
-            <Input required type="text" placeholder="RSS URL of the channel" />
-            <ButtonGroup>
-            <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
-            <Button bsStyle="default" onClick={close}><Glyphicon glyph="remove" /> Cancel</Button>
-          </ButtonGroup>
-          </form>
+            <form className="form" onSubmit={close}>
+              <Input required type="text" placeholder="RSS URL of the channel" />
+              <ButtonGroup>
+              <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
+              <Button bsStyle="default" onClick={close}><Glyphicon glyph="remove" /> Cancel</Button>
+            </ButtonGroup>
+            </form>
         </Modal.Body>
       </Modal>
     );
@@ -101,7 +113,8 @@ export class App extends React.Component {
 
     this.actions = {
       auth: bindActionCreators(actions.auth, dispatch),
-      addChannel: bindActionCreators(actions.addChannel, dispatch)
+      addChannel: bindActionCreators(actions.addChannel, dispatch),
+      search: bindActionCreators(actions.search, dispatch)
     }
   }
 
@@ -120,12 +133,17 @@ export class App extends React.Component {
     this.actions.addChannel.close();
   }
 
+  search(query) {
+    this.actions.search.search(query);
+  }
+
   render() {
 
     return (
       <div>
         <MainNav logout={this.logout.bind(this)}
                  openAddChannelForm={this.openAddChannelForm.bind(this)}
+                 search={this.search.bind(this)}
                  {...this.props} />
         <div className="container" style={ { marginTop: "80px"}  }>
           {this.props.children}

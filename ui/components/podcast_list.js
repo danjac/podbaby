@@ -44,6 +44,7 @@ const SAMPLE_DATA = [
 const ListItem = props => {
   const { podcast, createHref } = props;
   const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
+  // tbd get audio ref, set played at to last time
   return (
     <div className="media">
       <div className="media-left">
@@ -72,7 +73,7 @@ const ListItem = props => {
         </Grid>
         <Well>{podcast.summary}</Well>
         {podcast.id === 1000 ?
-        <audio onPlay={()=>window.alert('starting...')} controls={true} src={podcast.url}>
+        <audio onPause={() => window.alert('pausing...')} onPlay={()=>window.alert('starting...')} controls={true} src={podcast.url}>
           Your browser doesn't support the <code>audio</code> format. You
           can <a href="#">download</a> this episode instead.
         </audio>: ''}

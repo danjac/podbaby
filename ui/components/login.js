@@ -20,8 +20,8 @@ export class Login extends React.Component {
 
   login(event) {
     event.preventDefault();
-    const identifier = this.refs.identifier.getInputDOMNode();
-    const password = this.refs.password.getInputDOMNode();
+    const identifier = this.refs.identifier.getInputDOMNode().value;
+    const password = this.refs.password.getInputDOMNode().value;
     this.actions.login(identifier, password);
   }
 
