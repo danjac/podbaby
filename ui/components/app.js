@@ -7,7 +7,9 @@ import {
   Nav,
   NavItem,
   Navbar,
-  Glyphicon
+  Glyphicon,
+  Badge,
+  Input
 } from 'react-bootstrap';
 
 import { bindActionCreators } from 'redux';
@@ -18,6 +20,7 @@ import * as actions from '../actions';
 const MainNav = props => {
   const { auth } = props;
   const { createHref, isActive } = props.history;
+  const searchIcon = <Glyphicon glyph="search" />;
   return (
     <Navbar fixedTop={true}>
       <Navbar.Header>
@@ -29,13 +32,18 @@ const MainNav = props => {
       {auth.isLoggedIn ?
 
       <Nav pullLeft={true}>
-        <NavItem active={isActive("/podcasts/")} href={createHref("/podcasts/")}><Glyphicon glyph="flash" /> New episodes</NavItem>
-        <NavItem active={isActive("/podcasts/list/")} href="#"><Glyphicon glyph="list" /> My podcasts</NavItem>
+        <NavItem active={isActive("/podcasts/")} href={createHref("/podcasts/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
+        <NavItem active={isActive("/podcasts/list/")} href="#"><Glyphicon glyph="list" /> Subscriptions</NavItem>
+        <NavItem href="#"><Glyphicon glyph="pushpin" /> Pins <Badge>4</Badge></NavItem>
         <NavItem href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
       </Nav> : ''}
 
       {auth.isLoggedIn ?
+      <form className="navbar-form navbar-left" role="search">
+        <Input type="search" placeholder="Find podcast or channel" addonBefore={searchIcon}/>
+      </form> : ''}
 
+      {auth.isLoggedIn ?
       <Nav pullRight={true}>
         <NavItem href="#"><Glyphicon glyph="cog" /> Settings</NavItem>
         <NavItem href="#" onClick={props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
