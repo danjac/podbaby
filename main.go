@@ -2,6 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"github.com/auth0/go-jwt-middleware"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
 	"github.com/justinas/nosurf"
@@ -39,7 +43,28 @@ func main() {
 		render.HTML(w, http.StatusOK, "index", ctx)
 	})
 
-	chain := alice.New(nosurf.NewPure).Then(router)
+	router.HandleFunc("/auth/", func(w http.ResponseWriter, r *http.Request) {
+		user := context.Get(r, "user")
+		fmt.Fprintf(w, "This is an authenticated request:\n")
+		if user == nil {
+			fmt.Fprintf(w, "No token set")
+		} else {
+			fmt.Fprintf(w, "Claim content:\n")
+			for k, v := range user.(*jwt.Token).Claims {
+				fmt.Fprintf(w, "%s: \t%#v", k, v)
+			}
+		}
+	})
+
+	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			return []byte("My Secret"), nil
+		},
+		CredentialsOptional: true,
+		SigningMethod:       jwt.SigningMethodHS256,
+	})
+
+	chain := alice.New(nosurf.NewPure, jwtMiddleware.Handler).Then(router)
 
 	if err := http.ListenAndServe(":"+*port, chain); err != nil {
 		panic(err)
