@@ -9,7 +9,10 @@ import {
   Navbar,
   Glyphicon,
   Badge,
-  Input
+  Input,
+  Button,
+  ButtonGroup,
+  Modal
 } from 'react-bootstrap';
 
 import { bindActionCreators } from 'redux';
@@ -35,7 +38,7 @@ const MainNav = props => {
         <NavItem active={isActive("/podcasts/")} href={createHref("/podcasts/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
         <NavItem active={isActive("/podcasts/list/")} href="#"><Glyphicon glyph="list" /> Subscriptions</NavItem>
         <NavItem href="#"><Glyphicon glyph="pushpin" /> Pins <Badge>4</Badge></NavItem>
-        <NavItem href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
+        <NavItem onClick={props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
       </Nav> : ''}
 
       {auth.isLoggedIn ?
@@ -59,27 +62,75 @@ const MainNav = props => {
   );
 };
 
+
+class AddChannelModal extends React.Component {
+
+  render() {
+    const { show, close, container } = this.props;
+    return (
+      <Modal show={show}
+             aria-labelledby="add-channel-modal-title"
+             container={container}
+             onHide={close}>
+        <Modal.Header closeButton>
+          <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="form form-horizontal" onSubmit={close}>
+            <Input required type="text" placeholder="RSS URL of the channel" />
+            <ButtonGroup>
+            <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
+            <Button bsStyle="default" onClick={close}><Glyphicon glyph="remove" /> Cancel</Button>
+          </ButtonGroup>
+          </form>
+        </Modal.Body>
+      </Modal>
+    );
+  }
+
+
+}
+
 export class App extends React.Component {
 
   constructor(props) {
     super(props);
     const { dispatch } = this.props;
-    this.actions = bindActionCreators(actions.auth, dispatch);
+
+    this.actions = {
+      auth: bindActionCreators(actions.auth, dispatch),
+      addChannel: bindActionCreators(actions.addChannel, dispatch)
+    }
   }
 
   logout(event) {
     event.preventDefault();
-    this.actions.logout();
+    this.actions.auth.logout();
+  }
+
+  openAddChannelForm(event) {
+    event.preventDefault();
+    this.actions.addChannel.open();
+  }
+
+  closeAddChannelForm(event) {
+    event.preventDefault();
+    this.actions.addChannel.close();
   }
 
   render() {
 
     return (
       <div>
-        <MainNav logout={this.logout.bind(this)} {...this.props} />
+        <MainNav logout={this.logout.bind(this)}
+                 openAddChannelForm={this.openAddChannelForm.bind(this)}
+                 {...this.props} />
         <div className="container" style={ { marginTop: "80px"}  }>
           {this.props.children}
         </div>
+        <AddChannelModal show={this.props.addChannel.show}
+                         container={this}
+                         close={this.closeAddChannelForm.bind(this)} />
       </div>
     );
   }
@@ -93,10 +144,11 @@ App.propTypes = {
 
 
 const mapStateToProps = state => {
-  const { routing, auth } = state;
+  const { routing, auth, addChannel } = state;
   return {
     routing,
-    auth
+    auth,
+    addChannel
   };
 };
 
