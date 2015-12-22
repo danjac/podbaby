@@ -28,15 +28,17 @@ const MainNav = props => {
     <Navbar fixedTop={true}>
       <Navbar.Header>
         <Navbar.Brand>
-          <Link to={auth.isLoggedIn ? "/podcasts/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>
+          <Link to={auth.isLoggedIn ? "/podcasts/new/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>
         </Navbar.Brand>
       </Navbar.Header>
 
       {auth.isLoggedIn ?
 
       <Nav pullLeft={true}>
-        <NavItem active={isActive("/podcasts/")} href={createHref("/podcasts/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
-        <NavItem active={isActive("/podcasts/list/")} href="#"><Glyphicon glyph="list" /> Subscriptions</NavItem>
+        <NavItem active={isActive("/podcasts/new/")}
+          href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
+        <NavItem active={isActive("/podcasts/subscriptions/")}
+                 href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
         <NavItem href="#"><Glyphicon glyph="pushpin" /> Pins <Badge>4</Badge></NavItem>
         <NavItem onClick={props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
       </Nav> : ''}

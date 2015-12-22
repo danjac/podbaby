@@ -17,7 +17,7 @@ export function login(identifier, password) {
   return (dispatch, getState) => {
     // call to api...
     const { auth } = getState();
-    const nextPath = auth.redirectTo || '/podcasts/';
+    const nextPath = auth.redirectTo || '/podcasts/new/';
 
     dispatch(createAction(Actions.LOGIN_SUCCESS, { username: "danjac" }));
     dispatch(pushPath(nextPath));

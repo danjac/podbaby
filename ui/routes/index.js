@@ -1,12 +1,12 @@
 import React from 'react';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, IndexRedirect } from 'react-router';
 
 import App from '../components/app';
 import Front from '../components/front';
 import Login from '../components/login';
 import Signup from '../components/signup';
-import EpisodeList from '../components/episode_list';
 import PodcastList from '../components/podcast_list';
+import SubscriptionList from '../components/subscription_list';
 import PageNotFound from '../components/not_found';
 
 import { loginRequired } from '../actions/auth';
@@ -26,8 +26,9 @@ export default function(store, history) {
         <Route path="/" component={App}>
           <IndexRoute component={Front} />
           <Route path="/podcasts/" onEnter={requireAuth}>
-            <IndexRoute component={EpisodeList} />
-            <Route path="/list/" component={PodcastList} />
+            <IndexRedirect to="/podcasts/new/" />
+            <Route path="/podcasts/new/" component={PodcastList} />
+            <Route path="/podcasts/subscriptions/" component={SubscriptionList} />
           </Route>
           <Route path="/login/" component={Login} />
           <Route path="/signup/" component={Signup} />
