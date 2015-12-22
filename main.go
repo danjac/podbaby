@@ -11,6 +11,7 @@ import (
 	"github.com/justinas/nosurf"
 	"github.com/unrolled/render"
 	"net/http"
+	"time"
 )
 
 var (
@@ -44,6 +45,20 @@ func main() {
 	})
 
 	router.HandleFunc("/auth/", func(w http.ResponseWriter, r *http.Request) {
+		token := jwt.New(jwt.SigningMethodHS256)
+		token.Claims["id"] = "1234567"
+		token.Claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+		tokenString, err := token.SignedString([]byte("My Secret"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fmt.Fprintf(w, tokenString)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(tokenString))
+	})
+
+	router.HandleFunc("/secure/", func(w http.ResponseWriter, r *http.Request) {
 		user := context.Get(r, "user")
 		fmt.Fprintf(w, "This is an authenticated request:\n")
 		if user == nil {
