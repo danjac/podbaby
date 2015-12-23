@@ -28,7 +28,10 @@ export function signup(name, email, password) {
   return dispatch =>  {
     dispatch(createAction(Actions.SIGNUP))
     api.signup(name, email, password)
-    .then(result => dispatch(createAction(Actions.SIGNUP_SUCCESS, result.data)))
+    .then(result => {
+      dispatch(createAction(Actions.SIGNUP_SUCCESS, result.data));
+      dispatch(pushPath('/podcasts/new/'));
+    })
     .catch(dispatch(createAction(Actions.SIGNUP_FAILURE)));
   }
 }
