@@ -2,21 +2,19 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"github.com/auth0/go-jwt-middleware"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"github.com/justinas/alice"
 	"github.com/justinas/nosurf"
+	_ "github.com/lib/pq"
 	"github.com/unrolled/render"
 	"net/http"
-	"time"
 )
 
 var (
 	env  = flag.String("env", "prod", "environment ('prod' or 'dev')")
 	port = flag.String("port", "5000", "server port")
+	url  = flag.String("url", "", "database connection url")
 )
 
 // should be settings
@@ -30,6 +28,7 @@ func main() {
 
 	flag.Parse()
 
+	sqlx.MustConnect("postgres", *url)
 	router := mux.NewRouter()
 
 	router.PathPrefix(staticURL).Handler(
@@ -44,42 +43,69 @@ func main() {
 		render.HTML(w, http.StatusOK, "index", ctx)
 	})
 
-	router.HandleFunc("/auth/", func(w http.ResponseWriter, r *http.Request) {
-		token := jwt.New(jwt.SigningMethodHS256)
-		token.Claims["id"] = "1234567"
-		token.Claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-		tokenString, err := token.SignedString([]byte("My Secret"))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		fmt.Fprintf(w, tokenString)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(tokenString))
-	})
+	api := router.PathPrefix("/api/").Subrouter()
+	auth := api.PathPrefix("/auth/").Subrouter()
 
-	router.HandleFunc("/secure/", func(w http.ResponseWriter, r *http.Request) {
-		user := context.Get(r, "user")
-		fmt.Fprintf(w, "This is an authenticated request:\n")
-		if user == nil {
-			fmt.Fprintf(w, "No token set")
-		} else {
-			fmt.Fprintf(w, "Claim content:\n")
-			for k, v := range user.(*jwt.Token).Claims {
-				fmt.Fprintf(w, "%s: \t%#v", k, v)
-			}
-		}
-	})
+	auth.HandleFunc("/login/", func(w http.ResponseWriter, r *http.Request) {
+		// log in here, set cookie, return user
 
-	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return []byte("My Secret"), nil
-		},
-		CredentialsOptional: true,
-		SigningMethod:       jwt.SigningMethodHS256,
-	})
+	}).Methods("POST")
 
-	chain := alice.New(nosurf.NewPure, jwtMiddleware.Handler).Then(router)
+	auth.HandleFunc("/signup/", func(w http.ResponseWriter, r *http.Request) {
+		// return new user, login
+
+	}).Methods("POST")
+
+	auth.HandleFunc("/recoverpass/", func(w http.ResponseWriter, r *http.Request) {
+		// return new user, login
+	}).Methods("POST")
+
+	auth.HandleFunc("/changepass/", func(w http.ResponseWriter, r *http.Request) {
+		// return new user, login
+	}).Methods("PATCH")
+
+	auth.HandleFunc("/changeid/", func(w http.ResponseWriter, r *http.Request) {
+		// return new user, login
+	}).Methods("PATCH")
+
+	auth.HandleFunc("/logout/", func(w http.ResponseWriter, r *http.Request) {
+		// delete cookie
+	}).Methods("POST")
+
+	pc := api.PathPrefix("/podcasts/").Subrouter()
+
+	pc.HandleFunc("/latest/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("GET")
+
+	pc.HandleFunc("/search/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("GET")
+
+	pc.HandleFunc("/subscriptions/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("GET")
+
+	pc.HandleFunc("/subscriptions/{id}/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("POST")
+
+	pc.HandleFunc("/subscriptions/{id}/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("DELETE")
+
+	pc.HandleFunc("/pins/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("GET")
+
+	pc.HandleFunc("/pins/{id}/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("POST")
+
+	pc.HandleFunc("/unpin/{id}/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("DELETE")
+
+	pc.HandleFunc("/channels/", func(w http.ResponseWriter, r *http.Request) {
+		// add channel
+	}).Methods("POST")
+
+	pc.HandleFunc("/channels/{id}/", func(w http.ResponseWriter, r *http.Request) {
+	}).Methods("GET")
+
+	chain := alice.New(nosurf.NewPure).Then(router)
 
 	if err := http.ListenAndServe(":"+*port, chain); err != nil {
 		panic(err)
