@@ -67,8 +67,25 @@ func main() {
 	api := router.PathPrefix("/api/").Subrouter()
 	auth := api.PathPrefix("/auth/").Subrouter()
 
+	// load user on startup
+	auth.HandleFunc("/currentuser/", func(w http.ResponseWriter, r *http.Request) {
+		// log in here, set cookie, return username
+		cookie, err := r.Cookie("userID")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		user := &User{}
+		if err := db.Get(user, "SELECT name, email FROM users WHERE id=$1", cookie.Value); err != nil {
+			// check for no rows
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		render.JSON(w, http.StatusOK, user)
+
+	}).Methods("GET")
+
 	auth.HandleFunc("/login/", func(w http.ResponseWriter, r *http.Request) {
-		// log in here, set cookie, return user
 
 	}).Methods("POST")
 
@@ -126,13 +143,16 @@ func main() {
 		}
 		// sign user in
 		cookie := &http.Cookie{
-			Name:     "auth",
-			Value:    strconv.FormatInt(user.ID, 10),
-			Expires:  time.Now().Add(time.Hour),
+			Name:    "userID",
+			Value:   strconv.FormatInt(user.ID, 10),
+			Expires: time.Now().Add(time.Hour),
+			//Secure:   true,
 			HttpOnly: true,
+			Path:     "/",
 		}
 		http.SetCookie(w, cookie)
-		render.JSON(w, http.StatusCreated, user)
+		// tbd: no need to return user!
+		render.Text(w, http.StatusCreated, "New user created")
 
 	}).Methods("POST")
 
