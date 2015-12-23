@@ -18,7 +18,7 @@ export class Login extends React.Component {
     this.actions = bindActionCreators(actions.auth, dispatch);
   }
 
-  login(event) {
+  handleLogin(event) {
     event.preventDefault();
     const identifier = this.refs.identifier.getInputDOMNode().value;
     const password = this.refs.password.getInputDOMNode().value;
@@ -29,7 +29,7 @@ export class Login extends React.Component {
 
     return (
       <div>
-        <form className="form-horizontal" onSubmit={this.login.bind(this)}>
+        <form className="form-horizontal" onSubmit={this.handleLogin.bind(this)}>
             <Input required
               type="text"
               ref="identifier"
