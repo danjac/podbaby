@@ -8,10 +8,9 @@ CREATE TABLE users (
 
 CREATE TABLE channels (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NULL REFERENCES users(id),
+    title TEXT NULL,
     url TEXT UNIQUE NOT NULL,
     image TEXT NULL,
-    name TEXT NULL,
     description TEXT NULL,
     website TEXT NULL,
     pub_date TIMESTAMP WITH TIME ZONE NULL,
@@ -21,6 +20,7 @@ CREATE TABLE channels (
 
 CREATE TABLE podcasts (
     id SERIAL PRIMARY KEY,
+    title TEXT NULL,
     channel_id INTEGER NOT NULL REFERENCES channels(id),
     enclosure_url TEXT,
     url TEXT,
@@ -36,7 +36,7 @@ CREATE TABLE subscriptions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE pins (
+CREATE TABLE bookmarks (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
     podcast_id INTEGER NOT NULL REFERENCES podcasts(id),

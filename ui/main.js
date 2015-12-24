@@ -4,6 +4,7 @@ import createHashHistory from 'history/lib/createHashHistory';
 import { Provider } from 'react-redux';
 import { syncReduxAndRouter } from 'redux-simple-router';
 
+import { auth } from './actions';
 import routes from './routes';
 import configureStore from './store';
 
@@ -19,5 +20,7 @@ const Container = props => {
     </Provider>
   );
 };
+
+store.dispatch(auth.getCurrentUser());
 
 ReactDOM.render(<Container />, document.getElementById("app"));

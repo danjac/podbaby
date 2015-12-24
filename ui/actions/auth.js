@@ -8,30 +8,47 @@ export const loginRequired = redirectTo => createAction(Actions.LOGIN_REQUIRED, 
 
 export function logout() {
   return dispatch => {
+    api.logout();
     dispatch(createAction(Actions.LOGOUT));
     dispatch(pushPath("/"));
   };
 }
 
+export function getCurrentUser() {
+  return dispatch => {
+    api.getCurrentUser()
+    .then(result => dispatch(createAction(Actions.CURRENT_USER_SUCCESS, result.data)))
+    .catch(()  => dispatch(createAction(Actions.CURRENT_USER_FAILURE)));
+  };
+}
+
 export function login(identifier, password) {
   return (dispatch, getState) => {
-    // call to api...
-    const { auth } = getState();
-    const nextPath = auth.redirectTo || '/podcasts/new/';
-
-    dispatch(createAction(Actions.LOGIN_SUCCESS, { name: "danjac" }));
-    dispatch(pushPath(nextPath));
-  };
+    dispatch(createAction(Actions.LOGIN));
+    api.login(identifier, password)
+    .then(result => {
+      // call to api...
+      const { auth } = getState();
+      const nextPath = auth.redirectTo || '/podcasts/new/';
+      dispatch(createAction(Actions.LOGIN_SUCCESS, result.data));
+      dispatch(pushPath(nextPath));
+    })
+    .catch(error => {
+      dispatch(createAction(Actions.LOGIN_FAILURE));
+    });
+  }
 }
 
 export function signup(name, email, password) {
   return dispatch =>  {
-    dispatch(createAction(Actions.SIGNUP))
+    dispatch(createAction(Actions.SIGNUP));
     api.signup(name, email, password)
     .then(result => {
       dispatch(createAction(Actions.SIGNUP_SUCCESS, result.data));
       dispatch(pushPath('/podcasts/new/'));
     })
-    .catch(dispatch(createAction(Actions.SIGNUP_FAILURE)));
-  }
+    .catch(error => {
+      dispatch(createAction(Actions.SIGNUP_FAILURE));
+    });
+  };
 }

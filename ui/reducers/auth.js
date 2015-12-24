@@ -11,8 +11,10 @@ export default function(state=initialState, action) {
     case Actions.LOGIN_REQUIRED:
       return Object.assign({}, state, { redirectTo: action.payload });
     case Actions.LOGIN_SUCCESS:
+    case Actions.CURRENT_USER_SUCCESS:
     case Actions.SIGNUP_SUCCESS:
       return Object.assign({}, state, action.payload, { isLoggedIn: true });
+    case Actions.CURRENT_USER_FAILURE:
     case Actions.LOGOUT:
       return initialState;
   }

@@ -55,13 +55,13 @@ class MainNav extends React.Component {
             href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts <Badge>24</Badge></NavItem>
           <NavItem active={isActive("/podcasts/subscriptions/")}
                    href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
-          <NavItem href="#"><Glyphicon glyph="pushpin" /> Pins <Badge>4</Badge></NavItem>
-          <NavItem onClick={this.props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new podcast</NavItem>
+          <NavItem href="#"><Glyphicon glyph="pushpin" /> Bookmarks</NavItem>
+          <NavItem onClick={this.props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
         </Nav> : ''}
 
         {auth.isLoggedIn ?
         <Nav pullRight={true}>
-          <NavItem href="#"><Glyphicon glyph="cog" /> Settings</NavItem>
+          <NavItem href="#"><Glyphicon glyph="cog" /> {auth.name}</NavItem>
           <NavItem href="#" onClick={this.props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
         </Nav> :
         <Nav pullRight={true}>

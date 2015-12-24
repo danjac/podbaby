@@ -1,5 +1,5 @@
 DROP TABLE plays;
-DROP TABLE pins;
+DROP TABLE bookmarks;
 DROP TABLE subscriptions;
 DROP TABLE podcasts;
 DROP TABLE channels;
