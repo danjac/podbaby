@@ -14,7 +14,6 @@ import (
 	"github.com/justinas/nosurf"
 	_ "github.com/lib/pq"
 	"github.com/unrolled/render"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"strconv"
 	"time"
@@ -164,11 +163,9 @@ func main() {
 			return
 		}
 
-		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(decoder.Password)); err != nil {
-			if err == sql.ErrNoRows {
-				http.Error(w, "Invalid password", http.StatusBadRequest)
-				return
-			}
+		if !user.CheckPassword(decoder.Password) {
+			http.Error(w, "Invalid password", http.StatusBadRequest)
+			return
 		}
 		// login user
 
@@ -208,20 +205,14 @@ func main() {
 
 		// make new user
 
-		password := []byte(decoder.Password)
+		user := &models.User{
+			Name:  decoder.Name,
+			Email: decoder.Email,
+		}
 
-		hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-
-		if err != nil {
+		if err := user.SetPassword(decoder.Password); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
-		}
-		encryptedPassword := string(hash)
-
-		user := &models.User{
-			Name:     decoder.Name,
-			Email:    decoder.Email,
-			Password: encryptedPassword,
 		}
 
 		if err := db.Users.Create(user); err != nil {
