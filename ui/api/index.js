@@ -27,3 +27,7 @@ export function signup(name, email, password) {
     password
   });
 }
+
+export function getLatestPodcasts() {
+  return axios.get("/api/podcasts/latest/");
+}

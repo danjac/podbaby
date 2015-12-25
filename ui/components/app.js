@@ -105,6 +105,22 @@ class AddChannelModal extends React.Component {
 
 }
 
+export class Player extends React.Component {
+  render() {
+    const { podcast } = this.props.player;
+    return (
+    <p>
+      Currently playing: <b>{podcast.name}</b><br />
+      <audio controls={true} autoPlay={true} src={podcast.enclosureUrl}>
+        <source src={podcast.enclosureUrl} />
+        Download from <a href="#">here</a>.
+      </audio>
+    </p>
+    );
+  }
+}
+
+
 export class App extends React.Component {
 
   constructor(props) {
@@ -145,7 +161,10 @@ export class App extends React.Component {
                  openAddChannelForm={this.openAddChannelForm.bind(this)}
                  search={this.search.bind(this)}
                  {...this.props} />
-        <div className="container" style={ { marginTop: "80px"}  }>
+        <div className="container" style={ { marginTop: "80px", opacity: 0.5, backgroundColor: "#eee" } }>
+          {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} /> : ''}
+        </div>
+        <div className="container" style={ { marginTop: "80px" } }>
           {this.props.children}
         </div>
         <AddChannelModal show={this.props.addChannel.show}
@@ -156,19 +175,21 @@ export class App extends React.Component {
   }
 }
 
+
 App.propTypes = {
-  routing: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  routing: PropTypes.object.isRequired,
   auth: PropTypes.object
 };
 
 
 const mapStateToProps = state => {
-  const { routing, auth, addChannel } = state;
+  const { routing, auth, addChannel, player } = state;
   return {
     routing,
     auth,
-    addChannel
+    addChannel,
+    player
   };
 };
 

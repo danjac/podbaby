@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'react';
+import { connect } from 'react-redux';
+import sanitizeHtml from 'sanitize-html';
 
 import {
   Grid,
@@ -10,90 +13,101 @@ import {
   Well
 } from 'react-bootstrap';
 
-const SAMPLE_DATA = [
+import { latest, player } from '../actions';
 
-  {
-    image: 'https://gpodder.net/logo/32/341/3419c0f511f571af904efe172acedcf411d07502',
-    name: 'Joe Rogan Experience',
-    title: 'Molly Crabapple',
-    summary: '#738. Molly Crabapple is an American artist and journalist, known for her work for The New York Times, VICE, the Wall Street Journal, the Royal Society of Arts, Red Bull, Marvel Comics, DC Comics and CNN. Her new book "Drawing Blood" is available now on Amazon',
-    id: 1000,
-    url: 'http://traffic.libsyn.com/joeroganexp/p738.mp3',
-    channelId: 1000,
-  },
-  {
-    image: 'https://gpodder.net/logo/32/f3f/f3f419da4a5e90d5e7eb1fdfd032dd9c327d2494',
-    name: 'Radiolab from NYC',
-    title: 'Nazi Summer Camp',
-    summary: 'The incredible, little-known story of the Nazi prisoners of war kept on American soil during World War II.',
-    id: 1001,
-    channelId: 1002,
-  },
-  {
-    image: 'https://gpodder.net/logo/32/124/1246edc674de518c36549def4493b47eb43d4591',
-    name: 'JavaScript Jabber',
-    title: ' 146 JSJ React with Christopher Chedeau and Jordan Walker',
-    summary: 'The panelists talk to Christopher Chedeau and Jordan Walke about React.js Conf and React Native.',
-    id: 1002,
-    channelId: 1002,
+const sanitizeOptions = {
+  allowedTags: ['a', 'code'],
+  allowedAttributes: {
+    'a': ['href']
   }
+};
 
-
-];
+const sanitize = dirty => {
+  return {
+    __html: sanitizeHtml(dirty, sanitizeOptions)
+  }
+};
 
 const ListItem = props => {
-  const { podcast, createHref } = props;
+  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying } = props;
   const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
   // tbd get audio ref, set played at to last time
   return (
-    <div className="media">
-      <div className="media-left">
-        <a href={url}>
-          <img className="media-object"
-               src={podcast.image}
-               alt={podcast.name} />
-        </a>
+    <div>
+      <div className="media">
+        <div className="media-left media-middle">
+          <a href={url}>
+            <img className="media-object"
+                 height={60}
+                 width={60}
+                 src={podcast.image}
+                 alt={podcast.name} />
+          </a>
+        </div>
+        <div className="media-body">
+          <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
+          <Grid>
+            <Row>
+              <Col xs={6} md={9}>
+                <h5>{podcast.title}</h5>
+              </Col>
+              <Col xs={6} md={3}>
+                <ButtonGroup>
+                  <Button><Glyphicon glyph="play" onClick={setCurrentlyPlaying} /></Button>
+                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>
+                  <Button><Glyphicon glyph="pushpin" /></Button>
+                  <Button><Glyphicon glyph="ok" /></Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
       </div>
-      <div className="media-body">
-        <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
-        <Grid>
-          <Row>
-            <Col xs={6} md={9}>
-              <h5>{podcast.title}</h5>
-            </Col>
-            <Col xs={6} md={3}>
-              <ButtonGroup>
-                <Button><Glyphicon glyph="play" /></Button>
-                <Button><Glyphicon glyph="download" /></Button>
-                <Button><Glyphicon glyph="pushpin" /></Button>
-                <Button><Glyphicon glyph="ok" /></Button>
-              </ButtonGroup>
-            </Col>
-          </Row>
-        </Grid>
-        <Well>{podcast.summary}</Well>
-        {podcast.id === 1000 ?
-        <audio onPause={() => window.alert('pausing...')} onPlay={()=>window.alert('starting...')} controls={true} src={podcast.url}>
-          Your browser doesn't support the <code>audio</code> format. You
-          can <a href="#">download</a> this episode instead.
-        </audio>: ''}
-
-      </div>
+      <Well dangerouslySetInnerHTML={sanitize(podcast.description)} />
     </div>
   );
 };
 
+
 export class PodcastList extends React.Component {
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(latest.getLatestPodcasts());
+  }
+
   render() {
+    const { dispatch } = this.props;
     const { createHref } = this.props.history;
     return (
       <div>
-        {SAMPLE_DATA.map(podcast => {
-          return <ListItem key={podcast.id} podcast={podcast} createHref={createHref} />;
+        {this.props.podcasts.map(podcast => {
+          const setCurrentlyPlaying = () => {
+            dispatch(player.setPodcast(podcast));
+          }
+          const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
+          return <ListItem key={podcast.id}
+                           podcast={podcast}
+                           isCurrentlyPlaying={isCurrentlyPlaying}
+                           setCurrentlyPlaying={setCurrentlyPlaying}
+                           createHref={createHref} />;
         })}
       </div>
     );
   }
 }
 
-export default PodcastList;
+PodcastList.propTypes = {
+  podcasts: PropTypes.array.isRequired,
+  currentlyPlaying: PropTypes.number,
+  dispatch: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    podcasts: state.latest,
+    player: state.player
+  };
+};
+
+export default connect(mapStateToProps)(PodcastList);

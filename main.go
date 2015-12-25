@@ -48,7 +48,10 @@ type Channel struct {
 }
 
 type Podcast struct {
-	ChannelID    int64     `db:"channel_id"`
+	ID           int64     `db:"id" json:"id"`
+	ChannelID    int64     `db:"channel_id" json:"channelId"`
+	Name         string    `db:"name" json:"name"`
+	Image        string    `db:"image" json:"image"`
 	Title        string    `db:"title" json:"title"`
 	Description  string    `db:"description" json:"description"`
 	EnclosureURL string    `db:"enclosure_url" json:"enclosureUrl"`
@@ -72,11 +75,37 @@ type NewChannel struct {
 
 func fetchPodcasts(db *sqlx.DB, url string) error {
 
-	channel := &Channel{
-		URL: url,
+	var rssChannel *rss.Channel
+
+	chanHandler := func(feed *rss.Feed, newChannels []*rss.Channel) {
+		rssChannel = newChannels[0]
 	}
 
-	query, args, err := sqlx.Named("INSERT INTO channels (url)  VALUES (:url) RETURNING id", channel)
+	var rssItems []*rss.Item
+
+	itemHandler := func(feed *rss.Feed, ch *rss.Channel, newItems []*rss.Item) {
+		rssItems = append(rssItems, newItems...)
+	}
+
+	feed := rss.New(5, true, chanHandler, itemHandler)
+
+	if err := feed.Fetch(url, nil); err != nil {
+		return err
+	}
+
+	// tbd: check if channel already exists
+	channel := &Channel{
+		URL:         url,
+		Title:       rssChannel.Title,
+		Image:       rssChannel.Image.Url,
+		Description: rssChannel.Description,
+	}
+
+	query, args, err := sqlx.Named(`
+    INSERT INTO channels (url, title, image, description)  
+    VALUES (:url, :title, :image, :description)
+    RETURNING id`, channel)
+
 	if err != nil {
 		return err
 	}
@@ -85,69 +114,39 @@ func fetchPodcasts(db *sqlx.DB, url string) error {
 		return err
 	}
 
-	isChannelUpdated := false
-	var rssErr error
-	chanHandler := func(feed *rss.Feed, newChannels []*rss.Channel) {
-		for _, ch := range newChannels {
-			if isChannelUpdated {
-				return
-			}
+	// tbd: check pubdates: only insert if pub_date > MAX pub date of existing
+	// items
 
-			channel.Title = ch.Title
-			channel.Image = ch.Image.Url
-			channel.Description = ch.Description
+	for _, item := range rssItems {
+		pubDate, _ := item.ParsedPubDate()
 
-			query, args, err := sqlx.Named("UPDATE channels SET title=:title, image=:image, description=:description WHERE id=:id", channel)
-			if err != nil {
-				rssErr = err
-				return
-			}
-			fmt.Println(query, args)
-			if _, err := db.Exec(db.Rebind(query), args...); err != nil {
-				rssErr = err
-				return
-			}
-			isChannelUpdated = true
+		pc := &Podcast{
+			ChannelID:   channel.ID,
+			Title:       item.Title,
+			Description: item.Description,
+			PubDate:     pubDate,
+		}
+
+		if len(item.Enclosures) == 0 {
+			continue
+		}
+
+		pc.EnclosureURL = item.Enclosures[0].Url
+
+		query, args, err := sqlx.Named(`
+        INSERT INTO podcasts (channel_id, title, description, enclosure_url, pub_date) 
+        VALUES(:channel_id, :title, :description, :enclosure_url, :pub_date)`, pc)
+
+		if err != nil {
+			return err
+		}
+
+		if _, err := db.Exec(db.Rebind(query), args...); err != nil {
+			return err
 		}
 	}
 
-	itemHandler := func(feed *rss.Feed, ch *rss.Channel, newItems []*rss.Item) {
-		fmt.Println("Items for Channel:", ch.Title)
-		for _, item := range newItems {
-			fmt.Println("Item:", item.Title)
-			pubDate, _ := item.ParsedPubDate()
-			pc := &Podcast{
-				ChannelID:   channel.ID,
-				Title:       item.Title,
-				Description: item.Description,
-				PubDate:     pubDate,
-			}
-			for _, enclosure := range item.Enclosures {
-				pc.EnclosureURL = enclosure.Url
-				break
-			}
-			if pc.EnclosureURL == "" {
-				continue
-			}
-			query, args, err := sqlx.Named("INSERT INTO podcasts (channel_id, title, description, enclosure_url, pub_date) VALUES(:channel_id, :title, :description, :enclosure_url, :pub_date)", pc)
-			if err != nil {
-				rssErr = err
-				return
-			}
-			fmt.Println(query, args)
-			if _, err := db.Exec(db.Rebind(query), args...); err != nil {
-				rssErr = err
-				return
-			}
-
-		}
-	}
-
-	feed := rss.New(5, true, chanHandler, itemHandler)
-	if err := feed.Fetch(url, nil); err != nil {
-		return err
-	}
-	return rssErr
+	return nil
 }
 
 func main() {
@@ -342,6 +341,19 @@ func main() {
 	pc := api.PathPrefix("/podcasts/").Subrouter()
 
 	pc.HandleFunc("/latest/", func(w http.ResponseWriter, r *http.Request) {
+		sql := `SELECT p.id, p.title, p.enclosure_url, p.description, 
+        p.channel_id, c.title AS name, c.image, p.pub_date
+        FROM podcasts p 
+        JOIN channels c ON c.id = p.channel_id
+        ORDER BY pub_date DESC
+        LIMIT 30`
+		var podcasts []Podcast
+		if err := db.Select(&podcasts, sql); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		render.JSON(w, http.StatusOK, podcasts)
+
 	}).Methods("GET")
 
 	pc.HandleFunc("/search/", func(w http.ResponseWriter, r *http.Request) {
