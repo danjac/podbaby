@@ -2,10 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/asaskevich/govalidator"
+	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
@@ -32,21 +31,6 @@ const (
 	staticDir    = "./static/"
 	devServerURL = "http://localhost:8080"
 )
-
-type Signup struct {
-	Name     string `json:"name",valid:"required"`
-	Email    string `json:"email",valid:"email,required"`
-	Password string `json:"password",valid:"required"`
-}
-
-type Login struct {
-	Identifier string `json:"identifier",valid:"required"`
-	Password   string `json:"password",valid:"required"`
-}
-
-type NewChannel struct {
-	URL string `json:"url",valid:"url,required"`
-}
 
 func fetchPodcasts(db *sqlx.DB, url string) error {
 
@@ -175,16 +159,9 @@ func main() {
 
 	auth.HandleFunc("/login/", func(w http.ResponseWriter, r *http.Request) {
 
-		defer r.Body.Close()
+		decoder := &decoders.Login{}
 
-		login := &Login{}
-
-		if err := json.NewDecoder(r.Body).Decode(login); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		if _, err := govalidator.ValidateStruct(login); err != nil {
+		if err := decoder.Decode(r); r != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -192,14 +169,14 @@ func main() {
 		// find the user
 		user := &models.User{}
 
-		if err := db.Get(user, "SELECT id, name FROM users WHERE email=$1 or name=$1", login.Identifier); err != nil {
+		if err := db.Get(user, "SELECT id, name FROM users WHERE email=$1 or name=$1", decoder.Identifier); err != nil {
 			if err == sql.ErrNoRows {
 				http.Error(w, "No user found", http.StatusBadRequest)
 				return
 			}
 		}
 
-		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(login.Password)); err != nil {
+		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(decoder.Password)); err != nil {
 			if err == sql.ErrNoRows {
 				http.Error(w, "Invalid password", http.StatusBadRequest)
 				return
@@ -224,14 +201,9 @@ func main() {
 	auth.HandleFunc("/signup/", func(w http.ResponseWriter, r *http.Request) {
 		// return new user, login
 
-		defer r.Body.Close()
+		decoder := &decoders.Signup{}
 
-		signup := &Signup{}
-		if err := json.NewDecoder(r.Body).Decode(signup); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		if _, err := govalidator.ValidateStruct(signup); err != nil {
+		if err := decoder.Decode(r); r != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -239,7 +211,7 @@ func main() {
 		// check if email exists
 		var num int64
 
-		if err := db.QueryRow("SELECT COUNT(*) FROM users WHERE email=$1", signup.Email).Scan(&num); err != nil {
+		if err := db.QueryRow("SELECT COUNT(*) FROM users WHERE email=$1", decoder.Email).Scan(&num); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -251,7 +223,7 @@ func main() {
 
 		// make new user
 
-		password := []byte(signup.Password)
+		password := []byte(decoder.Password)
 
 		hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 
@@ -262,8 +234,8 @@ func main() {
 		encryptedPassword := string(hash)
 
 		user := &models.User{
-			Name:     signup.Name,
-			Email:    signup.Email,
+			Name:     decoder.Name,
+			Email:    decoder.Email,
 			Password: encryptedPassword,
 		}
 
@@ -355,36 +327,20 @@ func main() {
 	pc.HandleFunc("/channels/", func(w http.ResponseWriter, r *http.Request) {
 
 		// add channel
-		/*
-			s := &NewChannel{}
-			defer r.Body.Close()
+		decoder := &decoders.NewChannel{}
 
-			if err := json.NewDecoder(r.Body).Decode(s); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-
-			fmt.Println("ADDING NEW CHANNEL....", s.URL)
-
-			if _, err := govalidator.ValidateStruct(s); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-		*/
-
-		channel := &models.Channel{
-			URL: r.FormValue("url"),
+		if err := decoder.Decode(r); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
-
-		url := r.FormValue("url")
 
 		go func(db *sqlx.DB, url string) {
 			if err := fetchPodcasts(db, url); err != nil {
 				fmt.Println("FEEDERROR", err)
 			}
-		}(db, url)
+		}(db, decoder.URL)
 
-		render.JSON(w, http.StatusOK, channel)
+		render.Text(w, http.StatusCreated, "New channel added")
 
 	}).Methods("POST")
 
