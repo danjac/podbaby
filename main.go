@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/mux"
@@ -32,7 +33,7 @@ const (
 	devServerURL = "http://localhost:8080"
 )
 
-func fetchPodcasts(db *sqlx.DB, url string) error {
+func fetchPodcasts(db *database.DB, url string) error {
 
 	var rssChannel *rss.Channel
 
@@ -60,16 +61,7 @@ func fetchPodcasts(db *sqlx.DB, url string) error {
 		Description: rssChannel.Description,
 	}
 
-	query, args, err := sqlx.Named(`
-    INSERT INTO channels (url, title, image, description)  
-    VALUES (:url, :title, :image, :description)
-    RETURNING id`, channel)
-
-	if err != nil {
-		return err
-	}
-
-	if err := db.QueryRow(db.Rebind(query), args...).Scan(&channel.ID); err != nil {
+	if err := db.Channels.Create(channel); err != nil {
 		return err
 	}
 
@@ -91,18 +83,10 @@ func fetchPodcasts(db *sqlx.DB, url string) error {
 		}
 
 		pc.EnclosureURL = item.Enclosures[0].Url
-
-		query, args, err := sqlx.Named(`
-        INSERT INTO podcasts (channel_id, title, description, enclosure_url, pub_date) 
-        VALUES(:channel_id, :title, :description, :enclosure_url, :pub_date)`, pc)
-
-		if err != nil {
+		if err := db.Podcasts.Create(pc); err != nil {
 			return err
 		}
 
-		if _, err := db.Exec(db.Rebind(query), args...); err != nil {
-			return err
-		}
 	}
 
 	return nil
@@ -112,7 +96,7 @@ func main() {
 
 	flag.Parse()
 
-	db := sqlx.MustConnect("postgres", *url)
+	db := database.New(sqlx.MustConnect("postgres", *url))
 	router := mux.NewRouter()
 
 	router.PathPrefix(staticURL).Handler(
@@ -147,9 +131,13 @@ func main() {
 			return
 		}
 
-		user := &models.User{}
-		if err := db.Get(user, "SELECT id, name, email FROM users WHERE id=$1", cookie.Value); err != nil {
+		user, err := db.Users.GetByID(cookie.Value)
+		if err != nil {
 			// check for no rows
+			if err == sql.ErrNoRows {
+				http.Error(w, "No user found", http.StatusUnauthorized)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -166,14 +154,14 @@ func main() {
 			return
 		}
 
-		// find the user
-		user := &models.User{}
-
-		if err := db.Get(user, "SELECT id, name FROM users WHERE email=$1 or name=$1", decoder.Identifier); err != nil {
+		user, err := db.Users.GetByNameOrEmail(decoder.Identifier)
+		if err != nil {
 			if err == sql.ErrNoRows {
 				http.Error(w, "No user found", http.StatusBadRequest)
 				return
 			}
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(decoder.Password)); err != nil {
@@ -208,16 +196,13 @@ func main() {
 			return
 		}
 
-		// check if email exists
-		var num int64
-
-		if err := db.QueryRow("SELECT COUNT(*) FROM users WHERE email=$1", decoder.Email).Scan(&num); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if exists, _ := db.Users.IsEmail(decoder.Email); exists {
+			http.Error(w, "Email already taken", http.StatusBadRequest)
 			return
 		}
 
-		if num != 0 {
-			http.Error(w, "Email already taken", http.StatusBadRequest)
+		if exists, _ := db.Users.IsName(decoder.Name); exists {
+			http.Error(w, "Name already taken", http.StatusBadRequest)
 			return
 		}
 
@@ -239,9 +224,7 @@ func main() {
 			Password: encryptedPassword,
 		}
 
-		sql := "INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING id"
-
-		if err := db.QueryRow(sql, user.Name, user.Email, user.Password).Scan(&user.ID); err != nil {
+		if err := db.Users.Create(user); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -288,14 +271,8 @@ func main() {
 	pc := api.PathPrefix("/podcasts/").Subrouter()
 
 	pc.HandleFunc("/latest/", func(w http.ResponseWriter, r *http.Request) {
-		sql := `SELECT p.id, p.title, p.enclosure_url, p.description, 
-        p.channel_id, c.title AS name, c.image, p.pub_date
-        FROM podcasts p 
-        JOIN channels c ON c.id = p.channel_id
-        ORDER BY pub_date DESC
-        LIMIT 30`
-		var podcasts []models.Podcast
-		if err := db.Select(&podcasts, sql); err != nil {
+		podcasts, err := db.Podcasts.SelectAll()
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -334,7 +311,7 @@ func main() {
 			return
 		}
 
-		go func(db *sqlx.DB, url string) {
+		go func(db *database.DB, url string) {
 			if err := fetchPodcasts(db, url); err != nil {
 				fmt.Println("FEEDERROR", err)
 			}
