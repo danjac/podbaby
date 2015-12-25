@@ -31,7 +31,7 @@ func (s *Server) getCurrentUser(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(cookieUserID)
 
 	if err != nil {
-		s.Abort(w, r, err)
+		s.Abort(w, r, HTTPError{http.StatusUnauthorized, err})
 		return
 	}
 

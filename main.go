@@ -6,7 +6,6 @@ import (
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/server"
 	"github.com/jmoiron/sqlx"
-	//rss "github.com/jteeuwen/go-pkg-rss"
 	"github.com/justinas/alice"
 	"github.com/justinas/nosurf"
 	_ "github.com/lib/pq"
@@ -25,67 +24,6 @@ const (
 	staticDir    = "./static/"
 	devServerURL = "http://localhost:8080"
 )
-
-/*
-func fetchPodcasts(db *database.DB, url string) error {
-
-	var rssChannel *rss.Channel
-
-	chanHandler := func(feed *rss.Feed, newChannels []*rss.Channel) {
-		rssChannel = newChannels[0]
-	}
-
-	var rssItems []*rss.Item
-
-	itemHandler := func(feed *rss.Feed, ch *rss.Channel, newItems []*rss.Item) {
-		rssItems = append(rssItems, newItems...)
-	}
-
-	feed := rss.New(5, true, chanHandler, itemHandler)
-
-	if err := feed.Fetch(url, nil); err != nil {
-		return err
-	}
-
-	// tbd: check if channel already exists
-	channel := &models.Channel{
-		URL:         url,
-		Title:       rssChannel.Title,
-		Image:       rssChannel.Image.Url,
-		Description: rssChannel.Description,
-	}
-
-	if err := db.Channels.Create(channel); err != nil {
-		return err
-	}
-
-	// tbd: check pubdates: only insert if pub_date > MAX pub date of existing
-	// items: make enclosure URL + channel ID unique
-
-	for _, item := range rssItems {
-		pubDate, _ := item.ParsedPubDate()
-
-		pc := &models.Podcast{
-			ChannelID:   channel.ID,
-			Title:       item.Title,
-			Description: item.Description,
-			PubDate:     pubDate,
-		}
-
-		if len(item.Enclosures) == 0 {
-			continue
-		}
-
-		pc.EnclosureURL = item.Enclosures[0].Url
-		if err := db.Podcasts.Create(pc); err != nil {
-			return err
-		}
-
-	}
-
-	return nil
-}
-*/
 
 func main() {
 
