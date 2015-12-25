@@ -53,7 +53,7 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.Signup{}
 
-	if err := decoder.Decode(r); r != nil {
+	if err := decoders.Decode(r, decoder); r != nil {
 		s.Abort(w, r, HTTPError{http.StatusBadRequest, err})
 		return
 	}
@@ -93,7 +93,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.Login{}
 
-	if err := decoder.Decode(r); err != nil {
+	if err := decoders.Decode(r, decoder); err != nil {
 		s.Abort(w, r, HTTPError{http.StatusBadRequest, err})
 		return
 	}
