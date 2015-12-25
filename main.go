@@ -149,7 +149,7 @@ func main() {
 
 		decoder := &decoders.Login{}
 
-		if err := decoder.Decode(r); r != nil {
+		if err := decoder.Decode(r); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
