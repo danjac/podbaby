@@ -115,7 +115,7 @@ func fetchPodcasts(db *sqlx.DB, url string) error {
 	}
 
 	// tbd: check pubdates: only insert if pub_date > MAX pub date of existing
-	// items
+	// items: make enclosure URL + channel ID unique
 
 	for _, item := range rssItems {
 		pubDate, _ := item.ParsedPubDate()
@@ -184,7 +184,7 @@ func main() {
 			return
 		}
 		if cookie.Value == "" {
-			http.Error(w, err.Error(), http.StatusUnauthorized)
+			http.Error(w, "Not authenticated", http.StatusUnauthorized)
 			return
 		}
 

@@ -17,7 +17,7 @@ export default function(store, history) {
 
     const requireAuth = (nextState, replaceState) => {
       const { auth } = store.getState();
-      if (!auth.isLoggedIn) {
+      if (!auth.isLoggedIn && auth.isLoaded) {
         store.dispatch(loginRequired(nextState.location.pathname));
         replaceState(null, "/login/");
       }

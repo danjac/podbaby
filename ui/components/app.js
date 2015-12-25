@@ -110,7 +110,7 @@ export class Player extends React.Component {
     const { podcast } = this.props.player;
     return (
     <p>
-      Currently playing: <b>{podcast.name}</b><br />
+      Currently playing: <b>{podcast.name} : {podcast.title}</b><br />
       <audio controls={true} autoPlay={true} src={podcast.enclosureUrl}>
         <source src={podcast.enclosureUrl} />
         Download from <a href="#">here</a>.
@@ -155,13 +155,16 @@ export class App extends React.Component {
 
   render() {
 
+    if (!this.props.auth.isLoaded) {
+      return <div><h1>Loading....</h1></div>;
+    }
     return (
       <div>
         <MainNav logout={this.logout.bind(this)}
                  openAddChannelForm={this.openAddChannelForm.bind(this)}
                  search={this.search.bind(this)}
                  {...this.props} />
-        <div className="container" style={ { marginTop: "80px", opacity: 0.5, backgroundColor: "#eee" } }>
+        <div style={ { padding: 6, position: "fixed", opacity: 0.7, backgroundColor: "#222", color: "#fff", marginTop: "80px" } }>
           {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} /> : ''}
         </div>
         <div className="container" style={ { marginTop: "80px" } }>

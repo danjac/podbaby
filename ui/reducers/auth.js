@@ -3,7 +3,8 @@ import { Actions } from '../constants';
 const initialState = {
   isLoggedIn: false,
   name: null,
-  redirectTo: null
+  redirectTo: null,
+  isLoaded: false
 };
 
 export default function(state=initialState, action) {
@@ -13,10 +14,10 @@ export default function(state=initialState, action) {
     case Actions.LOGIN_SUCCESS:
     case Actions.CURRENT_USER_SUCCESS:
     case Actions.SIGNUP_SUCCESS:
-      return Object.assign({}, state, action.payload, { isLoggedIn: true });
-    case Actions.CURRENT_USER_FAILURE:
+      return Object.assign({}, state, action.payload, { isLoggedIn: true, isLoaded: true });
     case Actions.LOGOUT:
-      return initialState;
+    case Actions.CURRENT_USER_FAILURE:
+      return Object.assign({}, state, action.payload, { isLoaded: true });
   }
   return state;
 }
