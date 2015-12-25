@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/asaskevich/govalidator"
+	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	rss "github.com/jteeuwen/go-pkg-rss"
@@ -31,32 +32,6 @@ const (
 	staticDir    = "./static/"
 	devServerURL = "http://localhost:8080"
 )
-
-type User struct {
-	ID       int64  `db:"id" json:"id"`
-	Name     string `db:"name" json:"name"`
-	Email    string `db:"email" json:"email"`
-	Password string `db:"password" json:"password"`
-}
-
-type Channel struct {
-	ID          int64  `db:"id" json:"id"`
-	Title       string `db:"title" json:"title"`
-	Description string `db:"description" json:"description"`
-	Image       string `db:"image" json:"image"`
-	URL         string `db:"url" json:"url"`
-}
-
-type Podcast struct {
-	ID           int64     `db:"id" json:"id"`
-	ChannelID    int64     `db:"channel_id" json:"channelId"`
-	Name         string    `db:"name" json:"name"`
-	Image        string    `db:"image" json:"image"`
-	Title        string    `db:"title" json:"title"`
-	Description  string    `db:"description" json:"description"`
-	EnclosureURL string    `db:"enclosure_url" json:"enclosureUrl"`
-	PubDate      time.Time `db:"pub_date" json:"pubDate"`
-}
 
 type Signup struct {
 	Name     string `json:"name",valid:"required"`
@@ -94,7 +69,7 @@ func fetchPodcasts(db *sqlx.DB, url string) error {
 	}
 
 	// tbd: check if channel already exists
-	channel := &Channel{
+	channel := &models.Channel{
 		URL:         url,
 		Title:       rssChannel.Title,
 		Image:       rssChannel.Image.Url,
@@ -120,7 +95,7 @@ func fetchPodcasts(db *sqlx.DB, url string) error {
 	for _, item := range rssItems {
 		pubDate, _ := item.ParsedPubDate()
 
-		pc := &Podcast{
+		pc := &models.Podcast{
 			ChannelID:   channel.ID,
 			Title:       item.Title,
 			Description: item.Description,
@@ -188,7 +163,7 @@ func main() {
 			return
 		}
 
-		user := &User{}
+		user := &models.User{}
 		if err := db.Get(user, "SELECT id, name, email FROM users WHERE id=$1", cookie.Value); err != nil {
 			// check for no rows
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -215,7 +190,7 @@ func main() {
 		}
 
 		// find the user
-		user := &User{}
+		user := &models.User{}
 
 		if err := db.Get(user, "SELECT id, name FROM users WHERE email=$1 or name=$1", login.Identifier); err != nil {
 			if err == sql.ErrNoRows {
@@ -286,7 +261,7 @@ func main() {
 		}
 		encryptedPassword := string(hash)
 
-		user := &User{
+		user := &models.User{
 			Name:     signup.Name,
 			Email:    signup.Email,
 			Password: encryptedPassword,
@@ -347,7 +322,7 @@ func main() {
         JOIN channels c ON c.id = p.channel_id
         ORDER BY pub_date DESC
         LIMIT 30`
-		var podcasts []Podcast
+		var podcasts []models.Podcast
 		if err := db.Select(&podcasts, sql); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -397,7 +372,7 @@ func main() {
 			}
 		*/
 
-		channel := &Channel{
+		channel := &models.Channel{
 			URL: r.FormValue("url"),
 		}
 
