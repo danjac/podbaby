@@ -5,12 +5,16 @@ import (
 	"errors"
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/models"
+	"github.com/gorilla/context"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-const cookieUserID = "userid"
+const (
+	cookieUserID = "userid"
+	userKey      = "user"
+)
 
 // auth routes
 
@@ -26,25 +30,66 @@ func setAuthCookie(w http.ResponseWriter, userID int64) {
 	http.SetCookie(w, cookie)
 }
 
-func (s *Server) getCurrentUser(w http.ResponseWriter, r *http.Request) {
-	// log in here, set cookie, return username
-	cookie, err := r.Cookie(cookieUserID)
+func getUser(r *http.Request) (*models.User, bool) {
+	val, ok := context.GetOk(r, userKey)
+	if !ok {
+		return nil, false
+	}
+	return val.(*models.User), true
+}
 
+func (s *Server) requireAuth(fn http.HandlerFunc) http.HandlerFunc {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		s.Log.Info("Running auth check...")
+		// check if user already set elsewhere
+		if _, ok := getUser(r); ok {
+			return
+		}
+		// get user from cookie
+		user, err := s.getUserFromCookie(r)
+		if err != nil {
+			s.abort(w, r, err)
+			return
+		}
+		// all ok...
+		context.Set(r, userKey, user)
+		fn(w, r)
+	})
+
+}
+
+func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
+	cookie, err := r.Cookie(cookieUserID)
 	if err != nil {
-		s.Abort(w, r, HTTPError{http.StatusUnauthorized, err})
-		return
+		return nil, HTTPError{http.StatusUnauthorized, err}
 	}
 
 	if cookie.Value == "" || cookie.Value == "0" {
-		s.Abort(w, r, HTTPError{http.StatusUnauthorized, errors.New("Unauthenticated")})
-		return
+		return nil, HTTPError{http.StatusUnauthorized, errors.New("Cookie is empty")}
 	}
 
 	user, err := s.DB.Users.GetByID(cookie.Value)
 	if err != nil {
-		s.Abort(w, r, err)
+		if err == sql.ErrNoRows {
+			return nil, HTTPError{http.StatusUnauthorized, errors.New("No user found for this ID")}
+		}
+		return nil, err
+	}
+	return user, nil
+
+}
+
+func (s *Server) getCurrentUser(w http.ResponseWriter, r *http.Request) {
+	// log in here, set cookie, return username
+
+	user, err := s.getUserFromCookie(r)
+
+	if err != nil {
+		s.abort(w, r, err)
 		return
 	}
+
 	s.Render.JSON(w, http.StatusOK, user)
 
 }
@@ -54,17 +99,17 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 	decoder := &decoders.Signup{}
 
 	if err := decoders.Decode(r, decoder); r != nil {
-		s.Abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
 		return
 	}
 
 	if exists, _ := s.DB.Users.IsEmail(decoder.Email); exists {
-		s.Abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
 		return
 	}
 
 	if exists, _ := s.DB.Users.IsName(decoder.Name); exists {
-		s.Abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Name taken")})
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Name taken")})
 		return
 	}
 
@@ -76,12 +121,12 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := user.SetPassword(decoder.Password); err != nil {
-		s.Abort(w, r, err)
+		s.abort(w, r, err)
 		return
 	}
 
 	if err := s.DB.Users.Create(user); err != nil {
-		s.Abort(w, r, err)
+		s.abort(w, r, err)
 		return
 	}
 	setAuthCookie(w, user.ID)
@@ -94,7 +139,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	decoder := &decoders.Login{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.Abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
 		return
 	}
 
@@ -102,15 +147,15 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		if err == sql.ErrNoRows {
-			s.Abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
+			s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
 			return
 		}
-		s.Abort(w, r, err)
+		s.abort(w, r, err)
 		return
 	}
 
 	if !user.CheckPassword(decoder.Password) {
-		s.Abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
 		return
 	}
 	// login user

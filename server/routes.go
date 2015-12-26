@@ -36,13 +36,12 @@ func (s *Server) Router() *mux.Router {
 	// podcasts
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
-
-	podcasts.HandleFunc("/latest/", s.getLatestPodcasts).Methods("GET")
+	podcasts.HandleFunc("/latest/", s.requireAuth(s.getLatestPodcasts)).Methods("GET")
 
 	return router
 }
 
-func (s *Server) Abort(w http.ResponseWriter, r *http.Request, err error) {
+func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 	logger := s.Log.WithFields(logrus.Fields{
 		"URL":    r.URL,
 		"Method": r.Method,
