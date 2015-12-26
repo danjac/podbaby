@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (s *Server) Router() *mux.Router {
+func (s *Server) Handler() http.Handler {
 
 	router := mux.NewRouter()
 	// static routes
@@ -37,7 +37,7 @@ func (s *Server) Router() *mux.Router {
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
 	podcasts.HandleFunc("/latest/", s.requireAuth(s.getLatestPodcasts)).Methods("GET")
 
-	return router
+	return nosurf.NewPure(router)
 }
 
 func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {

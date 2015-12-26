@@ -6,7 +6,6 @@ import (
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/server"
 	"github.com/jmoiron/sqlx"
-	"github.com/justinas/nosurf"
 	_ "github.com/lib/pq"
 	"net/http"
 )
@@ -45,9 +44,7 @@ func main() {
 		SecretKey: "my-secret",
 	})
 
-	handler := nosurf.NewPure(s.Router())
-
-	if err := http.ListenAndServe(":"+*port, handler); err != nil {
+	if err := http.ListenAndServe(":"+*port, s.Handler()); err != nil {
 		panic(err)
 	}
 
