@@ -2,6 +2,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 
+import { pushPath } from 'redux-simple-router';
+
 import reducer from '../reducers';
 
 const loggingMiddleware = createLogger({
@@ -10,10 +12,30 @@ const loggingMiddleware = createLogger({
   logger: console
 });
 
+// should catch any API errors and act accordingly
+const apiErrorMiddleware = store => next => action => {
+    let result = next(action);
+
+    if (result.payload && result.payload.error) {
+
+      const { error } = result.payload;
+
+      switch(error.status) {
+        case 401:
+          // post message
+          store.dispatch(pushPath("/login/"));
+          break;
+      }
+
+    }
+    return result;
+};
+
 const createStoreWithMiddleware = compose(
   applyMiddleware(
     thunkMiddleware,
-    loggingMiddleware
+    apiErrorMiddleware,
+    loggingMiddleware,
   ),
 )(createStore);
 
