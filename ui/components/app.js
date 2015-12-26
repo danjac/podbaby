@@ -12,7 +12,8 @@ import {
   Input,
   Button,
   ButtonGroup,
-  Modal
+  Modal,
+  Alert
 } from 'react-bootstrap';
 
 import { bindActionCreators } from 'redux';
@@ -121,6 +122,19 @@ export class Player extends React.Component {
 }
 
 
+const AlertList = props => {
+  return (
+    <div className="container" style={ { marginTop: "80px" }}>
+      {props.alerts.map(alert => {
+        const dismissAlert = () => props.dismissAlert(alert.id);
+        return (<Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
+          <p>{alert.message}</p>
+        </Alert>);
+      })}
+    </div>
+  );
+};
+
 export class App extends React.Component {
 
   constructor(props) {
@@ -130,7 +144,8 @@ export class App extends React.Component {
     this.actions = {
       auth: bindActionCreators(actions.auth, dispatch),
       addChannel: bindActionCreators(actions.addChannel, dispatch),
-      search: bindActionCreators(actions.search, dispatch)
+      search: bindActionCreators(actions.search, dispatch),
+      alerts: bindActionCreators(actions.alerts, dispatch)
     }
   }
 
@@ -153,6 +168,10 @@ export class App extends React.Component {
     this.actions.search.search(query);
   }
 
+  dismissAlert(id) {
+    this.actions.alerts.dismissAlert(id);
+  }
+
   render() {
 
     if (!this.props.auth.isLoaded) {
@@ -167,7 +186,8 @@ export class App extends React.Component {
         <div style={ { padding: 6, position: "fixed", opacity: 0.7, backgroundColor: "#222", color: "#fff", marginTop: "80px" } }>
           {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} /> : ''}
         </div>
-        <div className="container" style={ { marginTop: "80px" } }>
+        <AlertList alerts={this.props.alerts} dismissAlert={this.dismissAlert.bind(this)} />
+        <div className="container">
           {this.props.children}
         </div>
         <AddChannelModal show={this.props.addChannel.show}
@@ -182,17 +202,21 @@ export class App extends React.Component {
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   routing: PropTypes.object.isRequired,
-  auth: PropTypes.object
+  auth: PropTypes.object,
+  addChannel: PropTypes.object,
+  player: PropTypes.object,
+  alerts: PropTypes.array
 };
 
 
 const mapStateToProps = state => {
-  const { routing, auth, addChannel, player } = state;
+  const { routing, auth, addChannel, player, alerts } = state;
   return {
     routing,
     auth,
     addChannel,
-    player
+    player,
+    alerts
   };
 };
 
