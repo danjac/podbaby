@@ -48,15 +48,15 @@ const ListItem = props => {
           <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
           <Grid>
             <Row>
-              <Col xs={6} md={9}>
+              <Col xs={6} md={6}>
                 <h5>{podcast.title}</h5>
               </Col>
-              <Col xs={6} md={3}>
+              <Col xs={6} mdPush={3} md={3}>
                 <ButtonGroup>
-                  <Button><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' } onClick={setCurrentlyPlaying} /></Button>
-                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>
-                  <Button><Glyphicon glyph="pushpin" /></Button>
-                  <Button><Glyphicon glyph="ok" /></Button>
+                  <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
+                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
+                  <Button><Glyphicon glyph="pushpin" /> </Button>
+                  <Button onClick={() => window.alert("OK")}><Glyphicon glyph="ok" /> </Button>
                 </ButtonGroup>
               </Col>
             </Row>
