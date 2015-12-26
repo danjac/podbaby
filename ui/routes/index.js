@@ -11,6 +11,7 @@ import PodcastList from '../components/podcast_list';
 import SubscriptionList from '../components/subscription_list';
 import PageNotFound from '../components/not_found';
 
+import { Alerts } from '../constants';
 import { addAlert } from '../actions/alerts';
 import { loginRequired } from '../actions/auth';
 
@@ -19,10 +20,8 @@ export default function(store, history) {
     const requireAuth = (nextState, replaceState) => {
       const { auth } = store.getState();
       if (!auth.isLoggedIn) {
-        store.dispatch(addAlert("warning", "You have to be signed in first"));
+        store.dispatch(addAlert(Alerts.WARNING, "You have to be signed in first"));
         store.dispatch(loginRequired(nextState.location.pathname));
-        // tbd: if auth not yet loaded, redirect to "loading" page.
-        // when that page is loaded we redirect accordingly.
         replaceState(null, "/login/");
       }
     };

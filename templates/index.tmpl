@@ -1,12 +1,12 @@
 <html>
-	<head>
+  <head>
         <title>Podbaby</title>
-        <link rel="stylesheet" href="http://localhost:8080/static/main.css">
+        <link rel="stylesheet" href="{{ .staticURL }}main.css">
         <style>
         body { padding-top: 80px; }
         </style>
     </head>
-	<body>
+  <body>
         <div id="app"></div>
     </body>
     <script>
@@ -14,7 +14,7 @@
     window.csrfToken = "{{ .csrfToken }}";
     window.user = {{ .user }};
     </script>
-    <script src="http://localhost:8080/static/main.js"></script>
+    <script src="{{ .staticURL }}main.js"></script>
 
 
 </html>

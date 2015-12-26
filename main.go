@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
+	"net/http"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/server"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"net/http"
 )
 
 var (
@@ -18,9 +19,9 @@ var (
 
 // should be settings
 const (
-	staticURL    = "/static/"
-	staticDir    = "./static/"
-	devServerURL = "http://localhost:8080"
+	defaultStaticURL = "/static/"
+	defaultStaticDir = "./static/"
+	devStaticURL     = "http://localhost:8080/static/"
 )
 
 func main() {
@@ -38,9 +39,16 @@ func main() {
 
 	log.Info("Starting web service...")
 
+	var staticURL string
+	if *env == "dev" {
+		staticURL = devStaticURL
+	} else {
+		staticURL = defaultStaticURL
+	}
+
 	s := server.New(db, log, &server.Config{
 		StaticURL: staticURL,
-		StaticDir: staticDir,
+		StaticDir: defaultStaticDir,
 		SecretKey: "my-secret",
 	})
 

@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 import { createAction } from './utils';
-
 import { Actions } from '../constants';
 
 export function addAlert(status, message) {

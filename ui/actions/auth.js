@@ -5,8 +5,7 @@ import { Actions } from '../constants';
 import { createAction } from './utils';
 
 export const loginRequired = redirectTo => createAction(Actions.LOGIN_REQUIRED, redirectTo);
-
-export const setCurrentUser = user => createAction(Actions.CURRENT_USER_SUCCESS, user);
+export const setCurrentUser = user => createAction(Actions.CURRENT_USER, user);
 
 export function logout() {
   return dispatch => {
@@ -28,7 +27,7 @@ export function login(identifier, password) {
       dispatch(pushPath(nextPath));
     })
     .catch(error => {
-      dispatch(createAction(Actions.LOGIN_FAILURE));
+      dispatch(createAction(Actions.LOGIN_FAILURE, { error }));
     });
   }
 }
@@ -42,7 +41,7 @@ export function signup(name, email, password) {
       dispatch(pushPath('/podcasts/new/'));
     })
     .catch(error => {
-      dispatch(createAction(Actions.SIGNUP_FAILURE));
+      dispatch(createAction(Actions.SIGNUP_FAILURE, { error }));
     });
   };
 }
