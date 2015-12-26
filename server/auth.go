@@ -40,7 +40,7 @@ func getUser(r *http.Request) (*models.User, bool) {
 	return val.(*models.User), true
 }
 
-func (s *Server) requireAuth(fn http.HandlerFunc) http.HandlerFunc {
+func (s *Server) requireAuth(fn http.HandlerFunc) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s.Log.Info("Running auth check...")

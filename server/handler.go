@@ -1,8 +1,6 @@
 package server
 
 import (
-	"database/sql"
-	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"github.com/justinas/nosurf"
 	"net/http"
@@ -35,34 +33,9 @@ func (s *Server) Handler() http.Handler {
 	// podcasts
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
-	podcasts.HandleFunc("/latest/", s.requireAuth(s.getLatestPodcasts)).Methods("GET")
+	podcasts.Handle("/latest/", s.requireAuth(s.getLatestPodcasts)).Methods("GET")
 
 	return nosurf.NewPure(router)
-}
-
-func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
-	logger := s.Log.WithFields(logrus.Fields{
-		"URL":    r.URL,
-		"Method": r.Method,
-		"Error":  err,
-	})
-	if err == sql.ErrNoRows {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		logger.Debug("Not found:" + err.Error())
-		return
-	}
-
-	var msg string
-
-	switch e := err.(error).(type) {
-	case Error:
-		msg = "HTTP Error"
-		http.Error(w, e.Error(), e.Status())
-	default:
-		msg = "Internal Server Error"
-		http.Error(w, "Sorry, an error occurred", http.StatusInternalServerError)
-	}
-	logger.Error(msg)
 }
 
 func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
