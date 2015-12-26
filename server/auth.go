@@ -44,6 +44,7 @@ func (s *Server) requireAuth(fn http.HandlerFunc) http.HandlerFunc {
 		s.Log.Info("Running auth check...")
 		// check if user already set elsewhere
 		if _, ok := getUser(r); ok {
+			fn(w, r)
 			return
 		}
 		// get user from cookie
