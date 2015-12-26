@@ -79,6 +79,9 @@ export class PodcastList extends React.Component {
   render() {
     const { dispatch } = this.props;
     const { createHref } = this.props.history;
+    if (this.props.podcasts.length === 0) {
+      return <div>There aren&quot;t any new podcasts yet.</div>;
+    }
     return (
       <div>
         {this.props.podcasts.map(podcast => {

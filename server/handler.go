@@ -37,15 +37,3 @@ func (s *Server) Handler() http.Handler {
 
 	return nosurf.NewPure(router)
 }
-
-func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
-
-	user, _ := s.getUserFromCookie(r)
-	csrfToken := nosurf.Token(r)
-	ctx := map[string]interface{}{
-		"staticURL": s.Config.StaticURL,
-		"csrfToken": csrfToken,
-		"user":      user,
-	}
-	s.Render.HTML(w, http.StatusOK, "index", ctx)
-}

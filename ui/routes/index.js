@@ -11,8 +11,7 @@ import PodcastList from '../components/podcast_list';
 import SubscriptionList from '../components/subscription_list';
 import PageNotFound from '../components/not_found';
 
-import { Alerts } from '../constants';
-import { addAlert } from '../actions/alerts';
+import { alerts } from '../actions';
 import { loginRequired } from '../actions/auth';
 
 export default function(store, history) {
@@ -20,7 +19,7 @@ export default function(store, history) {
     const requireAuth = (nextState, replaceState) => {
       const { auth } = store.getState();
       if (!auth.isLoggedIn) {
-        store.dispatch(addAlert(Alerts.WARNING, "You have to be signed in first"));
+        store.dispatch(alerts.warning("You have to be signed in first"));
         store.dispatch(loginRequired(nextState.location.pathname));
         replaceState(null, "/login/");
       }

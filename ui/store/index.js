@@ -4,8 +4,7 @@ import createLogger from 'redux-logger';
 
 import { pushPath } from 'redux-simple-router';
 
-import { Alerts } from '../constants';
-import { addAlert } from '../actions/alerts';
+import { alerts } from '../actions';
 import reducer from '../reducers';
 
 const loggingMiddleware = createLogger({
@@ -24,7 +23,7 @@ const apiErrorMiddleware = store => next => action => {
 
       switch(error.status) {
         case 401:
-          store.dispatch(addAlert(Alerts.WARNING, 'You must be logged in to continue'))
+          store.dispatch(alerts.warning('You must be logged in to continue'))
           store.dispatch(pushPath("/login/"));
           break;
       }

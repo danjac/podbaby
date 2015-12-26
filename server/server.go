@@ -7,6 +7,7 @@ import (
 	"github.com/unrolled/render"
 )
 
+// Config is server configuration
 type Config struct {
 	StaticURL string
 	StaticDir string
