@@ -1,9 +1,9 @@
 GOPATH := ${PWD}:${GOPATH}
 export GOPATH
 
-build: build-service build-ui
+build: build-server build-ui
 
-build-service: 
+build-server: 
 	godep restore
 	go build -o bin/serve -i main.go
 
@@ -17,11 +17,11 @@ clean-ui:
 clean: 
 	clean-ui
 
-test-service:
+test-server:
 	go test ./...
 
 test-ui:
 	npm run test
 
-test: test-service test-ui
+test: test-server test-ui
 

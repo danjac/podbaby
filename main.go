@@ -6,7 +6,6 @@ import (
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/server"
 	"github.com/jmoiron/sqlx"
-	"github.com/justinas/alice"
 	"github.com/justinas/nosurf"
 	_ "github.com/lib/pq"
 	"net/http"
@@ -46,9 +45,9 @@ func main() {
 		SecretKey: "my-secret",
 	})
 
-	chain := alice.New(nosurf.NewPure).Then(s.Router())
+	handler := nosurf.NewPure(s.Router())
 
-	if err := http.ListenAndServe(":"+*port, chain); err != nil {
+	if err := http.ListenAndServe(":"+*port, handler); err != nil {
 		panic(err)
 	}
 
