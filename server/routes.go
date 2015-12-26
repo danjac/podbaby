@@ -28,7 +28,6 @@ func (s *Server) Router() *mux.Router {
 
 	auth := api.PathPrefix("/auth/").Subrouter()
 
-	auth.HandleFunc("/currentuser/", s.getCurrentUser).Methods("GET")
 	auth.HandleFunc("/login/", s.login).Methods("POST")
 	auth.HandleFunc("/signup/", s.signup).Methods("POST")
 	auth.HandleFunc("/logout/", s.logout).Methods("DELETE")
@@ -67,10 +66,13 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 }
 
 func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
+
+	user, _ := s.getUserFromCookie(r)
 	csrfToken := nosurf.Token(r)
-	ctx := map[string]string{
+	ctx := map[string]interface{}{
 		"staticURL": s.Config.StaticURL,
 		"csrfToken": csrfToken,
+		"user":      user,
 	}
 	s.Render.HTML(w, http.StatusOK, "index", ctx)
 }

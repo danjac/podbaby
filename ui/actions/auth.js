@@ -6,19 +6,13 @@ import { createAction } from './utils';
 
 export const loginRequired = redirectTo => createAction(Actions.LOGIN_REQUIRED, redirectTo);
 
+export const setCurrentUser = user => createAction(Actions.CURRENT_USER_SUCCESS, user);
+
 export function logout() {
   return dispatch => {
     api.logout();
     dispatch(createAction(Actions.LOGOUT));
     dispatch(pushPath("/"));
-  };
-}
-
-export function getCurrentUser() {
-  return dispatch => {
-    api.getCurrentUser()
-    .then(result => dispatch(createAction(Actions.CURRENT_USER_SUCCESS, result.data)))
-    .catch(()  => dispatch(createAction(Actions.CURRENT_USER_FAILURE)));
   };
 }
 

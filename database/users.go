@@ -6,7 +6,7 @@ import (
 )
 
 type UserDB interface {
-	GetByID(string) (*models.User, error)
+	GetByID(int64) (*models.User, error)
 	GetByNameOrEmail(string) (*models.User, error)
 	Create(*models.User) error
 	IsName(string) (bool, error)
@@ -17,7 +17,7 @@ type defaultUserDBImpl struct {
 	*sqlx.DB
 }
 
-func (db *defaultUserDBImpl) GetByID(id string) (*models.User, error) {
+func (db *defaultUserDBImpl) GetByID(id int64) (*models.User, error) {
 	user := &models.User{}
 	err := db.Get(user, "SELECT * FROM users WHERE id=$1", id)
 	return user, err

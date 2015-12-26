@@ -7,7 +7,6 @@ import (
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -18,16 +17,19 @@ const (
 
 // auth routes
 
-func setAuthCookie(w http.ResponseWriter, userID int64) {
-	cookie := &http.Cookie{
-		Name:    cookieUserID,
-		Value:   strconv.FormatInt(userID, 10),
-		Expires: time.Now().Add(time.Hour),
-		//Secure:   true,
-		HttpOnly: true,
-		Path:     "/",
+func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
+
+	if encoded, err := s.Cookie.Encode(cookieUserID, userID); err == nil {
+		cookie := &http.Cookie{
+			Name:    cookieUserID,
+			Value:   encoded,
+			Expires: time.Now().Add(time.Hour),
+			//Secure:   true,
+			HttpOnly: true,
+			Path:     "/",
+		}
+		http.SetCookie(w, cookie)
 	}
-	http.SetCookie(w, cookie)
 }
 
 func getUser(r *http.Request) (*models.User, bool) {
@@ -61,16 +63,23 @@ func (s *Server) requireAuth(fn http.HandlerFunc) http.HandlerFunc {
 }
 
 func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
+
 	cookie, err := r.Cookie(cookieUserID)
 	if err != nil {
 		return nil, HTTPError{http.StatusUnauthorized, err}
 	}
 
-	if cookie.Value == "" || cookie.Value == "0" {
+	var userID int64
+
+	if err := s.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
+		return nil, HTTPError{http.StatusUnauthorized, err}
+	}
+
+	if userID == 0 {
 		return nil, HTTPError{http.StatusUnauthorized, errors.New("Cookie is empty")}
 	}
 
-	user, err := s.DB.Users.GetByID(cookie.Value)
+	user, err := s.DB.Users.GetByID(userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, HTTPError{http.StatusUnauthorized, errors.New("No user found for this ID")}
@@ -78,20 +87,6 @@ func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
 		return nil, err
 	}
 	return user, nil
-
-}
-
-func (s *Server) getCurrentUser(w http.ResponseWriter, r *http.Request) {
-	// log in here, set cookie, return username
-
-	user, err := s.getUserFromCookie(r)
-
-	if err != nil {
-		s.abort(w, r, err)
-		return
-	}
-
-	s.Render.JSON(w, http.StatusOK, user)
 
 }
 
@@ -130,7 +125,7 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 		s.abort(w, r, err)
 		return
 	}
-	setAuthCookie(w, user.ID)
+	s.setAuthCookie(w, user.ID)
 	// tbd: no need to return user!
 	s.Render.JSON(w, http.StatusCreated, user)
 }
@@ -160,7 +155,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// login user
-	setAuthCookie(w, user.ID)
+	s.setAuthCookie(w, user.ID)
 
 	// tbd: no need to return user!
 	s.Render.JSON(w, http.StatusOK, user)
@@ -168,6 +163,6 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) logout(w http.ResponseWriter, r *http.Request) {
-	setAuthCookie(w, 0)
+	s.setAuthCookie(w, 0)
 	s.Render.Text(w, http.StatusOK, "Logged out")
 }

@@ -17,8 +17,10 @@ export default function(store, history) {
 
     const requireAuth = (nextState, replaceState) => {
       const { auth } = store.getState();
-      if (!auth.isLoggedIn && auth.isLoaded) {
+      if (!auth.isLoggedIn) {
         store.dispatch(loginRequired(nextState.location.pathname));
+        // tbd: if auth not yet loaded, redirect to "loading" page.
+        // when that page is loaded we redirect accordingly.
         replaceState(null, "/login/");
       }
     };

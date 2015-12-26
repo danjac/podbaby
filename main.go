@@ -43,6 +43,7 @@ func main() {
 	s := server.New(db, log, &server.Config{
 		StaticURL: staticURL,
 		StaticDir: staticDir,
+		SecretKey: "my-secret",
 	})
 
 	chain := alice.New(nosurf.NewPure).Then(s.Router())

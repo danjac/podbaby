@@ -21,6 +21,6 @@ const Container = props => {
   );
 };
 
-store.dispatch(auth.getCurrentUser());
+store.dispatch(auth.setCurrentUser(window.user));
 
 ReactDOM.render(<Container />, document.getElementById("app"));
