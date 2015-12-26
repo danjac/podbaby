@@ -53,7 +53,7 @@ const ListItem = props => {
               </Col>
               <Col xs={6} md={3}>
                 <ButtonGroup>
-                  <Button><Glyphicon glyph="play" onClick={setCurrentlyPlaying} /></Button>
+                  <Button><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' } onClick={setCurrentlyPlaying} /></Button>
                   <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>
                   <Button><Glyphicon glyph="pushpin" /></Button>
                   <Button><Glyphicon glyph="ok" /></Button>
@@ -82,10 +82,10 @@ export class PodcastList extends React.Component {
     return (
       <div>
         {this.props.podcasts.map(podcast => {
-          const setCurrentlyPlaying = () => {
-            dispatch(player.setPodcast(podcast));
-          }
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
+          const setCurrentlyPlaying = () => {
+            dispatch(player.setPodcast(isCurrentlyPlaying ? null : podcast));
+          }
           return <ListItem key={podcast.id}
                            podcast={podcast}
                            isCurrentlyPlaying={isCurrentlyPlaying}

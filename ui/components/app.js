@@ -118,15 +118,15 @@ export class Player extends React.Component {
   render() {
     const { podcast } = this.props.player;
     return (
-      <header style={{
+      <footer style={{
         position:"fixed",
         padding: "5px",
         opacity: 0.7,
         backgroundColor: "#222",
         color: "#fff",
         fontWeight: "bold",
-        height: 50,
-        marginTop: -15,
+        height: "50px",
+        bottom: 0,
         width: "100%",
         zIndex: 100
         }}>
@@ -146,7 +146,7 @@ export class Player extends React.Component {
             </Col>
           </Row>
         </Grid>
-    </header>
+    </footer>
     );
   }
 }
@@ -154,7 +154,7 @@ export class Player extends React.Component {
 
 const AlertList = props => {
   return (
-    <div className="container" style={ { marginTop: 80 }}>
+    <div className="container">
       {props.alerts.map(alert => {
         const dismissAlert = () => props.dismissAlert(alert.id);
         return (<Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
@@ -218,11 +218,11 @@ export class App extends React.Component {
                  openAddChannelForm={this.openAddChannelForm.bind(this)}
                  search={this.search.bind(this)}
                  {...this.props} />
-          {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.closePlayer.bind(this)}/> : ''}
         <AlertList alerts={this.props.alerts} dismissAlert={this.dismissAlert.bind(this)} />
         <div className="container">
           {this.props.children}
         </div>
+        {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.closePlayer.bind(this)}/> : ''}
         <AddChannelModal show={this.props.addChannel.show}
                          container={this}
                          close={this.closeAddChannelForm.bind(this)} />
