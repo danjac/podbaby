@@ -8,7 +8,7 @@ const initialState = {
 export default function(state=initialState, action) {
   switch(action.type) {
     case Actions.CURRENTLY_PLAYING:
-      return { podcast: action.payload, isPlaying: true };
+      return { podcast: action.payload, isPlaying: !!action.payload };
   }
   return state;
 }

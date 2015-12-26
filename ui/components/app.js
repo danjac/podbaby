@@ -13,7 +13,10 @@ import {
   Button,
   ButtonGroup,
   Modal,
-  Alert
+  Alert,
+  Grid,
+  Row,
+  Col
 } from 'react-bootstrap';
 
 import { bindActionCreators } from 'redux';
@@ -107,16 +110,43 @@ class AddChannelModal extends React.Component {
 }
 
 export class Player extends React.Component {
+  handleClose(event) {
+    event.preventDefault();
+    this.props.closePlayer();
+  }
+
   render() {
     const { podcast } = this.props.player;
     return (
-    <p>
-      Currently playing: <b>{podcast.name} : {podcast.title}</b><br />
-      <audio controls={true} autoPlay={true} src={podcast.enclosureUrl}>
-        <source src={podcast.enclosureUrl} />
-        Download from <a href="#">here</a>.
-      </audio>
-    </p>
+      <header style={{
+        position:"fixed",
+        padding: "5px",
+        opacity: 0.7,
+        backgroundColor: "#222",
+        color: "#fff",
+        fontWeight: "bold",
+        height: 50,
+        marginTop: -15,
+        width: "100%",
+        zIndex: 100
+        }}>
+        <Grid>
+          <Row>
+            <Col xs={6} md={6}>
+              Currently playing: <b>{podcast.name} : {podcast.title}</b>
+            </Col>
+            <Col xs={3} md={4}>
+              <audio controls={true} autoPlay={true} src={podcast.enclosureUrl}>
+                <source src={podcast.enclosureUrl} />
+                Download from <a href="#">here</a>.
+              </audio>
+            </Col>
+            <Col xs={3} md={2} mdPush={2}>
+              <a href="#" onClick={this.handleClose.bind(this)} style={{ color: "#fff" }}><Glyphicon glyph="remove" /> Close</a>
+            </Col>
+          </Row>
+        </Grid>
+    </header>
     );
   }
 }
@@ -124,7 +154,7 @@ export class Player extends React.Component {
 
 const AlertList = props => {
   return (
-    <div className="container" style={ { marginTop: "80px" }}>
+    <div className="container" style={ { marginTop: 80 }}>
       {props.alerts.map(alert => {
         const dismissAlert = () => props.dismissAlert(alert.id);
         return (<Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
@@ -145,6 +175,7 @@ export class App extends React.Component {
       auth: bindActionCreators(actions.auth, dispatch),
       addChannel: bindActionCreators(actions.addChannel, dispatch),
       search: bindActionCreators(actions.search, dispatch),
+      player: bindActionCreators(actions.player, dispatch),
       alerts: bindActionCreators(actions.alerts, dispatch)
     }
   }
@@ -172,6 +203,10 @@ export class App extends React.Component {
     this.actions.alerts.dismissAlert(id);
   }
 
+  closePlayer() {
+    this.actions.player.setPodcast(null);
+  }
+
   render() {
 
     if (!this.props.auth.isLoaded) {
@@ -183,9 +218,7 @@ export class App extends React.Component {
                  openAddChannelForm={this.openAddChannelForm.bind(this)}
                  search={this.search.bind(this)}
                  {...this.props} />
-        <div style={ { padding: 6, position: "fixed", opacity: 0.7, backgroundColor: "#222", color: "#fff", marginTop: "80px" } }>
-          {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} /> : ''}
-        </div>
+          {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.closePlayer.bind(this)}/> : ''}
         <AlertList alerts={this.props.alerts} dismissAlert={this.dismissAlert.bind(this)} />
         <div className="container">
           {this.props.children}
