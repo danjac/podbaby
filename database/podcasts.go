@@ -16,7 +16,7 @@ type defaultPodcastDBImpl struct {
 }
 
 func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error) {
-	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
+	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
         p.channel_id, c.title AS name, c.image, p.pub_date
         FROM podcasts p
         JOIN subscriptions s ON s.channel_id = p.id
@@ -30,12 +30,8 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error
 }
 
 func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
-	query, args, err := sqlx.Named(`
-        INSERT INTO podcasts (channel_id, title, description, enclosure_url, pub_date)
-        VALUES(:channel_id, :title, :description, :enclosure_url, :pub_date)
-        IF NOT EXISTS (SELECT id FROM podcasts
-            WHERE channel_id=:channel_id AND pub_date=:pub_date AND enclosure_url=:enclosure_url)
-        RETURNING id`, pc)
+
+	query, args, err := sqlx.Named("SELECT insert_podcast(:channel_id, :title, :description, :enclosure_url, :pub_date)", pc)
 
 	if err != nil {
 		return err

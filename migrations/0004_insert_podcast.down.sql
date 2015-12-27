@@ -1,0 +1,1 @@
+DROP FUNCTION insert_podcast (integer, text, text, text, timestamp);
