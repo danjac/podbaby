@@ -63,7 +63,7 @@ const ListItem = props => {
           </Grid>
         </div>
       </div>
-      <Well dangerouslySetInnerHTML={sanitize(podcast.description)} />
+      {podcast.description ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
     </div>
   );
 };
@@ -107,7 +107,6 @@ PodcastList.propTypes = {
 };
 
 const mapStateToProps = state => {
-  console.log("state", state)
   return {
     podcasts: state.latest,
     player: state.player

@@ -4,5 +4,13 @@ import * as latest from './latest';
 import * as player from './player';
 import * as alerts from './alerts';
 import * as addChannel from './add_channel';
+import * as channels from './channels';
 
-export { auth, search, addChannel, latest, player, alerts };
+export {
+    auth,
+    search,
+    addChannel,
+    latest,
+    player,
+    channels,
+    alerts };

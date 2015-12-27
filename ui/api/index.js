@@ -32,6 +32,10 @@ export function addChannel(url) {
   return axios.post("/api/channels/", { url });
 }
 
+export function getChannels() {
+  return axios.get("/api/channels/");
+}
+
 export function getLatestPodcasts() {
   return axios.get("/api/podcasts/latest/");
 }

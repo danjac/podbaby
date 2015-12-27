@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import {
   Grid,
@@ -6,19 +7,11 @@ import {
   Col,
   Button,
   ButtonGroup,
-  Glyphicon
+  Glyphicon,
+  Well
 } from 'react-bootstrap';
 
-const SAMPLE_DATA = [
-
-  {
-    image: 'https://gpodder.net/logo/32/341/3419c0f511f571af904efe172acedcf411d07502',
-    name: 'Joe Rogan Experience',
-    description: 'The podcast of Comedian Joe Rogan.',
-    episodes: 745,
-    id: 1000
-  },
-];
+import * as  actions from '../actions';
 
 const ListItem = props => {
   const { channel, createHref } = props;
@@ -27,27 +20,26 @@ const ListItem = props => {
       <div className="media-left">
         <a href="#">
           <img className="media-object"
+               height={60}
+               width={60}
                src={channel.image}
-               alt={channel.name} />
+               alt={channel.title} />
         </a>
       </div>
       <div className="media-body">
-        <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.name}</a></h4>
+        <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
         <Grid>
           <Row>
             <Col xs={6} md={9}>
-              <p>{channel.description}</p>
+              <Well>{channel.description}</Well>
             </Col>
             <Col xs={6} md={3}>
               <ButtonGroup>
-                <Button title="Unsubscribe"><Glyphicon glyph="trash" /></Button>
+                <Button title="Unsubscribe"><Glyphicon glyph="trash" /> Unsubscribe</Button>
               </ButtonGroup>
             </Col>
           </Row>
         </Grid>
-        <p>
-          Episodes: <b>{channel.episodes}</b>
-        </p>
       </div>
     </div>
   );
@@ -55,11 +47,14 @@ const ListItem = props => {
 
 
 export class SubscriptionList extends React.Component {
+  componentDidMount() {
+    this.props.dispatch(actions.channels.getChannels());
+  }
   render() {
     const { createHref } = this.props.history;
     return (
       <div>
-      {SAMPLE_DATA.map(channel => {
+      {this.props.channels.map(channel => {
         return <ListItem key={channel.id} channel={channel} createHref={createHref} />;
       })}
       </div>
@@ -67,4 +62,14 @@ export class SubscriptionList extends React.Component {
   }
 }
 
-export default SubscriptionList;
+SubscriptionList.propTypes = {
+    channels: PropTypes.array.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    channels: state.channels
+  };
+};
+
+export default connect(mapStateToProps)(SubscriptionList);

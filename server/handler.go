@@ -33,6 +33,7 @@ func (s *Server) Handler() http.Handler {
 	// channels
 
 	channels := api.PathPrefix("/channels/").Subrouter()
+	channels.Handle("/", s.requireAuth(s.getChannels)).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.addChannel)).Methods("POST")
 
 	// podcasts

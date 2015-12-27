@@ -7,12 +7,22 @@ import (
 
 // ChannelDB database model
 type ChannelDB interface {
+	SelectSubscribed(int64) ([]models.Channel, error)
 	GetByID(int64, int64) (*models.Channel, error)
 	Create(*models.Channel) error
 }
 
 type defaultChannelDBImpl struct {
 	*sqlx.DB
+}
+
+func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
+	sql := `SELECT DISTINCT c.* FROM channels c
+	JOIN subscriptions s ON s.channel_id = c.id
+	WHERE s.user_id=$1 AND title IS NOT NULL
+	ORDER BY title`
+	var channels []models.Channel
+	return channels, db.Select(&channels, sql, userID)
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {

@@ -30,6 +30,8 @@ const apiErrorMiddleware = store => next => action => {
           store.dispatch(alerts.warning('You must be logged in to continue'))
           store.dispatch(pushPath("/login/"));
           break;
+        case 500:
+          store.dispatch(alerts.warning('Sorry, an error has occurred'))
       }
 
     }

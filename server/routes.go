@@ -31,6 +31,16 @@ func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
 	s.Render.JSON(w, http.StatusOK, podcasts)
 }
 
+func (s *Server) getChannels(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	channels, err := s.DB.Channels.SelectSubscribed(user.ID)
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.JSON(w, http.StatusOK, channels)
+}
+
 func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.NewChannel{}

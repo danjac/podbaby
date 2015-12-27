@@ -7,6 +7,7 @@ import addChannelReducer from './add_channel';
 import latestReducer from './latest';
 import playerReducer from './player';
 import alertsReducer from './alerts';
+import channelsReducer from './channels';
 
 export default combineReducers({
   routing: routeReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
   addChannel: addChannelReducer,
   latest: latestReducer,
   player: playerReducer,
-  alerts: alertsReducer
+  alerts: alertsReducer,
+  channels: channelsReducer
 });
