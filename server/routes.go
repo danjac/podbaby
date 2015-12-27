@@ -56,13 +56,12 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 			Description: result.Channel.Description,
 		}
 
-		if _, err := s.DB.Channels.GetOrCreate(channel); err != nil {
+		if err := s.DB.Channels.Create(channel); err != nil {
 			s.Log.Error(err)
 			return
 		}
 
-		sub := &models.Subscription{channel.ID, user.ID}
-		if _, err := s.DB.Subscriptions.GetOrCreate(sub); err != nil {
+		if err := s.DB.Subscriptions.Create(channel.ID, userID); err != nil {
 			s.Log.Error(err)
 			return
 		}
@@ -81,7 +80,7 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 			pubDate, _ := item.ParsedPubDate()
 			podcast.PubDate = pubDate
 
-			if _, err := s.DB.Podcasts.Create(podcast); err != nil {
+			if err := s.DB.Podcasts.Create(podcast); err != nil {
 				s.Log.Error(err)
 				return
 			}
