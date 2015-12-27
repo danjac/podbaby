@@ -6,8 +6,8 @@ import (
 )
 
 type Result struct {
-	channel *rss.Channel
-	items   []*rss.Item
+	Channel *rss.Channel
+	Items   []*rss.Item
 }
 
 var InvalidFeed = errors.New("No channel found")

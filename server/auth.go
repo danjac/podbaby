@@ -17,6 +17,14 @@ const (
 
 // authentication methods
 
+func getUser(r *http.Request) (*models.User, bool) {
+	val, ok := context.GetOk(r, userKey)
+	if !ok {
+		return nil, false
+	}
+	return val.(*models.User), true
+}
+
 func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
 
 	if encoded, err := s.Cookie.Encode(cookieUserID, userID); err == nil {
@@ -30,14 +38,6 @@ func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
 		}
 		http.SetCookie(w, cookie)
 	}
-}
-
-func getUser(r *http.Request) (*models.User, bool) {
-	val, ok := context.GetOk(r, userKey)
-	if !ok {
-		return nil, false
-	}
-	return val.(*models.User), true
 }
 
 func (s *Server) requireAuth(fn http.HandlerFunc) http.Handler {

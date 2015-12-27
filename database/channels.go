@@ -7,14 +7,18 @@ import (
 
 // ChannelDB database model
 type ChannelDB interface {
-	Create(*models.Channel) error
+	GetOrCreate(*models.Channel) (bool, error)
 }
 
 type defaultChannelDBImpl struct {
 	*sqlx.DB
 }
 
-func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
+func (db *defaultChannelDBImpl) GetOrCreate(ch *models.Channel) (bool, error) {
+
+	if err := db.Get(channel, "SELECT * FROM channels WHERE url=$1", channel.URL); err == nil {
+		return false, nil
+	}
 
 	query, args, err := sqlx.Named(`
     INSERT INTO channels (url, title, image, description)
@@ -22,8 +26,8 @@ func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
     RETURNING id`, ch)
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return db.QueryRow(db.Rebind(query), args...).Scan(&ch.ID)
+	return true, db.QueryRow(db.Rebind(query), args...).Scan(&ch.ID)
 }

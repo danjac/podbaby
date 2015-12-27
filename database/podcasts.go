@@ -8,7 +8,7 @@ import (
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
 	SelectAll(int64) ([]models.Podcast, error)
-	Create(*models.Podcast) error
+	GetOrCreate(*models.Podcast) (bool, error)
 }
 
 type defaultPodcastDBImpl struct {
@@ -29,16 +29,26 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error
 	return podcasts, err
 }
 
-func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
-	query, args, err := sqlx.Named(`
+func (db *defaultPodcastDBImpl) GetOrCreate(pc *models.Podcast) (bool, error) {
+
+    query, args, err := sqlx.Named(`
+        SELECT * FROM podcasts WHERE enclosure_url=:enclosure_url AND channel_id=:channel_id
+    `, pc)
+    if err != nil {
+        return false, err
+    }
+    if err := db.Get(pc, query, ...args); err == nil {
+        return false, nil
+    }
+	query, args, err = sqlx.Named(`
         INSERT INTO podcasts (channel_id, title, description, enclosure_url, pub_date)
         VALUES(:channel_id, :title, :description, :enclosure_url, :pub_date)
         RETURNING id`, pc)
 
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return db.QueryRow(db.Rebind(query), args...).Scan(&pc.ID)
+	return true, db.QueryRow(db.Rebind(query), args...).Scan(&pc.ID)
 
 }
