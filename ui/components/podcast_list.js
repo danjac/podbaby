@@ -107,6 +107,7 @@ PodcastList.propTypes = {
 };
 
 const mapStateToProps = state => {
+  console.log("state", state)
   return {
     podcasts: state.latest,
     player: state.player

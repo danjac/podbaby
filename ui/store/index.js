@@ -21,7 +21,11 @@ const apiErrorMiddleware = store => next => action => {
 
       const { error } = result.payload;
 
+        console.log(error)
       switch(error.status) {
+        case 400:
+          store.dispatch(alerts.warning("There was an error in your form: " + error.data));
+          break;
         case 401:
           store.dispatch(alerts.warning('You must be logged in to continue'))
           store.dispatch(pushPath("/login/"));

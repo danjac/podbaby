@@ -28,6 +28,10 @@ export function signup(name, email, password) {
   });
 }
 
+export function addChannel(url) {
+  return axios.post("/api/channels/", { url });
+}
+
 export function getLatestPodcasts() {
   return axios.get("/api/podcasts/latest/");
 }

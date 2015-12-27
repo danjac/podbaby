@@ -33,13 +33,15 @@ func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
-	user, _ := getUser(r)
 	decoder := &decoders.NewChannel{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
 		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
 		return
 	}
+
+	user, _ := getUser(r)
+
 	go func(url string, userID int64) {
 
 		result, err := feedparser.Fetch(url)

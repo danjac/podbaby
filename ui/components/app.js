@@ -83,6 +83,13 @@ class MainNav extends React.Component {
 
 class AddChannelModal extends React.Component {
 
+  handleAdd(event){
+    event.preventDefault();
+    const node = this.refs.url.getInputDOMNode();
+    this.props.add(node.value);
+    node.value = "";
+  }
+
   render() {
     const { show, close, container } = this.props;
     return (
@@ -94,8 +101,8 @@ class AddChannelModal extends React.Component {
           <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <form className="form" onSubmit={close}>
-              <Input required type="text" placeholder="RSS URL of the channel" />
+            <form className="form" onSubmit={this.handleAdd.bind(this)}>
+              <Input required type="text" placeholder="RSS URL of the channel" ref="url" />
               <ButtonGroup>
               <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
               <Button bsStyle="default" onClick={close}><Glyphicon glyph="remove" /> Cancel</Button>
@@ -195,6 +202,10 @@ export class App extends React.Component {
     this.actions.addChannel.close();
   }
 
+  addChannel(url) {
+    this.actions.addChannel.add(url);
+  }
+
   search(query) {
     this.actions.search.search(query);
   }
@@ -225,6 +236,7 @@ export class App extends React.Component {
         {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.closePlayer.bind(this)}/> : ''}
         <AddChannelModal show={this.props.addChannel.show}
                          container={this}
+                         add={this.addChannel.bind(this)}
                          close={this.closeAddChannelForm.bind(this)} />
       </div>
     );

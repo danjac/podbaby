@@ -11,8 +11,11 @@ export default function(state=initialState, action) {
     case Actions.OPEN_ADD_CHANNEL_FORM:
       return Object.assign({}, state, { show: true });
 
+    case Actions.ADD_CHANNEL_SUCCESS:
+    case Actions.ADD_CHANNEL_FAILURE:
     case Actions.CLOSE_ADD_CHANNEL_FORM:
       return Object.assign({}, state, { show: false });
+
   }
   return state;
 }

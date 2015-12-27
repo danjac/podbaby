@@ -9,6 +9,8 @@ export function getLatestPodcasts() {
     .then(result => {
       dispatch(createAction(Actions.LATEST_PODCASTS_SUCCESS, result.data));
     })
-    .catch(error => dispatch(createAction(Actions.LATEST_PODCASTS_FAILURE, { error })));
+    .catch(error => {
+        dispatch(createAction(Actions.LATEST_PODCASTS_FAILURE, { error }));
+    });
   };
 }
