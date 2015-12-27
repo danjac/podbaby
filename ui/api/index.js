@@ -43,3 +43,11 @@ export function getChannel(id) {
 export function getLatestPodcasts() {
   return axios.get("/api/podcasts/latest/");
 }
+
+export function subscribe(id) {
+  return axios.post(`/api/subscriptions/${id}/`)
+}
+
+export function unsubscribe(id) {
+  return axios.delete(`/api/subscriptions/${id}/`)
+}

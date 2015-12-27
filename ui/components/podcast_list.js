@@ -12,12 +12,12 @@ import {
   Well
 } from 'react-bootstrap';
 
-import { latest, player } from '../actions';
+import { latest, player, subscribe } from '../actions';
 
 import { sanitize } from './utils';
 
 const ListItem = props => {
-  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying } = props;
+  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying, unsubscribe } = props;
   const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
   // tbd get audio ref, set played at to last time
   return (
@@ -42,9 +42,9 @@ const ListItem = props => {
               <Col xs={6} mdPush={3} md={3}>
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
-                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
-                  <Button><Glyphicon glyph="pushpin" /> </Button>
-                  <Button onClick={() => window.alert("OK")}><Glyphicon glyph="ok" /> </Button>
+                  <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
+                  <Button title="Bookmark this podcast"><Glyphicon glyph="pushpin" /> </Button>
+                  <Button title="Unsubscribe from this channel" onClick={unsubscribe}><Glyphicon glyph="trash" /> </Button>
                 </ButtonGroup>
               </Col>
             </Row>
@@ -76,10 +76,14 @@ export class PodcastList extends React.Component {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
           const setCurrentlyPlaying = () => {
             dispatch(player.setPodcast(isCurrentlyPlaying ? null : podcast));
-          }
+          };
+          const unsubscribe = () => {
+            dispatch(subscribe.unsubscribe(podcast.channelId, podcast.name));
+          };
           return <ListItem key={podcast.id}
                            podcast={podcast}
                            isCurrentlyPlaying={isCurrentlyPlaying}
+                           unsubscribe={unsubscribe}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
         })}

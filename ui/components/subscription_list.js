@@ -14,7 +14,7 @@ import {
 import * as  actions from '../actions';
 
 const ListItem = props => {
-  const { channel, createHref } = props;
+  const { channel, createHref, unsubscribe } = props;
   return (
     <div className="media">
       <div className="media-left">
@@ -35,7 +35,7 @@ const ListItem = props => {
             </Col>
             <Col xs={6} md={3}>
               <ButtonGroup>
-                <Button title="Unsubscribe"><Glyphicon glyph="trash" /> Unsubscribe</Button>
+                <Button title="Unsubscribe" onClick={unsubscribe}><Glyphicon glyph="trash" /> Unsubscribe</Button>
               </ButtonGroup>
             </Col>
           </Row>
@@ -55,7 +55,13 @@ export class SubscriptionList extends React.Component {
     return (
       <div>
       {this.props.channels.map(channel => {
-        return <ListItem key={channel.id} channel={channel} createHref={createHref} />;
+        const unsubscribe = () => {
+            this.props.dispatch(actions.subscribe.unsubscribe(channel.id, channel.title));
+        };
+        return <ListItem key={channel.id}
+                         channel={channel}
+                         unsubscribe={unsubscribe}
+                         createHref={createHref} />;
       })}
       </div>
     );

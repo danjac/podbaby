@@ -31,7 +31,6 @@ const ListItem = props => {
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
                   <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
                   <Button><Glyphicon glyph="pushpin" /> </Button>
-                  <Button onClick={() => window.alert("OK")}><Glyphicon glyph="ok" /> </Button>
                 </ButtonGroup>
               </Col>
             </Row>
@@ -44,18 +43,39 @@ const ListItem = props => {
 };
 
 export class ChannelDetail extends React.Component {
+
   componentDidMount(){
       this.props.dispatch(actions.channel.getChannel(this.props.params.id));
   }
+
+  handleSubscribe(event) {
+    event.preventDefault();
+    const { channel, dispatch } = this.props;
+    const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
+    dispatch(action(channel.id, channel.title));
+  }
+
   render() {
     const { channel, dispatch, player } = this.props;
     if (!channel) {
       return <div></div>;
     }
-    return (
+    const isSubscribed = channel.isSubscribed;
 
+    return (
       <div>
-        <h2>{channel.title}</h2>
+        <Grid>
+          <Row>
+            <Col xs={6} md={8}>
+              <h2>{channel.title}</h2>
+            </Col>
+            <Col xs={6} md={4}>
+              <Button bsStyle="default" onClick={this.handleSubscribe.bind(this)}>
+                <Glyphicon glyph={isSubscribed ? 'trash' : 'ok'} /> {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+              </Button>
+            </Col>
+          </Row>
+        </Grid>
         <p>{channel.description}</p>
         {channel.podcasts.map(podcast => {
           const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;

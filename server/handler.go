@@ -33,13 +33,22 @@ func (s *Server) Handler() http.Handler {
 	// channels
 
 	channels := api.PathPrefix("/channels/").Subrouter()
+
 	channels.Handle("/", s.requireAuth(s.getChannels)).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.addChannel)).Methods("POST")
 	channels.Handle("/{id}/", s.requireAuth(s.getChannelDetail)).Methods("GET")
 
+	// subscriptions
+
+	subs := api.PathPrefix("/subscriptions/").Subrouter()
+
+	subs.Handle("/{id}/", s.requireAuth(s.subscribe)).Methods("POST")
+	subs.Handle("/{id}/", s.requireAuth(s.unsubscribe)).Methods("DELETE")
+
 	// podcasts
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
+
 	podcasts.Handle("/latest/", s.requireAuth(s.getLatestPodcasts)).Methods("GET")
 
 	return nosurf.NewPure(router)

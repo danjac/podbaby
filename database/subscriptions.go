@@ -20,7 +20,7 @@ func (db *defaultSubscriptionDBImpl) Create(channelID, userID int64) error {
 }
 
 func (db *defaultSubscriptionDBImpl) Delete(channelID, userID int64) error {
-	sql := "DELETE subscriptions WHERE channel_id=$1 AND user_id=$2 VALUES($1, $2)"
+	sql := "DELETE FROM subscriptions WHERE channel_id=$1 AND user_id=$2"
 	_, err := db.Exec(sql, channelID, userID)
 	return err
 }

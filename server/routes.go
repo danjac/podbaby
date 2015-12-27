@@ -3,11 +3,12 @@ package server
 import (
 	"database/sql"
 	"errors"
+	"net/http"
+
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
 	"github.com/justinas/nosurf"
-	"net/http"
 )
 
 func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
@@ -204,4 +205,32 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 func (s *Server) logout(w http.ResponseWriter, r *http.Request) {
 	s.setAuthCookie(w, 0)
 	s.Render.Text(w, http.StatusOK, "Logged out")
+}
+
+func (s *Server) subscribe(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	channelID, err := getInt64(r, "id")
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	if err := s.DB.Subscriptions.Create(channelID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "subscribed")
+}
+
+func (s *Server) unsubscribe(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	channelID, err := getInt64(r, "id")
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	if err := s.DB.Subscriptions.Delete(channelID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "unsubscribed")
 }
