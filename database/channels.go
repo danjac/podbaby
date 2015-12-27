@@ -28,6 +28,7 @@ func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {
 	sql := `SELECT channels.*,
         EXISTS(SELECT id FROM subscriptions WHERE channel_id=channels.id AND user_id=$1) AS is_subscribed
+        FROM channels
         WHERE id=$2`
 	channel := &models.Channel{}
 	return channel, db.Get(channel, sql, userID, id)

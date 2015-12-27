@@ -1,10 +1,14 @@
 package server
 
 import (
+	"errors"
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/unrolled/render"
+	"net/http"
+	"strconv"
 )
 
 // Config is server configuration
@@ -35,4 +39,17 @@ func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
 		Render: render.New(),
 		Cookie: cookie,
 	}
+}
+
+func getInt64(r *http.Request, name string) (int64, error) {
+	badRequest := HTTPError{http.StatusBadRequest, errors.New("Invalid parameter for " + name)}
+	value, ok := mux.Vars(r)[name]
+	if !ok {
+		return 0, badRequest
+	}
+	intval, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		return 0, badRequest
+	}
+	return intval, nil
 }

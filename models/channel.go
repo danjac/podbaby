@@ -18,3 +18,8 @@ type Channel struct {
 	Copyright    sql.NullString `db:"copyright" json:"copyright"`
 	IsSubscribed bool           `db:"is_subscribed" json:"isSubscribed"`
 }
+
+type ChannelDetail struct {
+	*Channel
+	Podcasts []Podcast `db:"-" json:"podcasts"`
+}

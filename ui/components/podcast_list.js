@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'react';
 import { connect } from 'react-redux';
-import sanitizeHtml from 'sanitize-html';
 
 import {
   Grid,
@@ -15,18 +14,7 @@ import {
 
 import { latest, player } from '../actions';
 
-const sanitizeOptions = {
-  allowedTags: ['a', 'code'],
-  allowedAttributes: {
-    'a': ['href']
-  }
-};
-
-const sanitize = dirty => {
-  return {
-    __html: sanitizeHtml(dirty, sanitizeOptions)
-  }
-};
+import { sanitize } from './utils';
 
 const ListItem = props => {
   const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying } = props;

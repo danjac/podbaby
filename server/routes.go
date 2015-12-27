@@ -31,6 +31,35 @@ func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
 	s.Render.JSON(w, http.StatusOK, podcasts)
 }
 
+func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	channelID, err := getInt64(r, "id")
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	channel, err := s.DB.Channels.GetByID(channelID, user.ID)
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	detail := &models.ChannelDetail{
+		Channel: channel,
+	}
+	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID)
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	for _, pc := range podcasts {
+		pc.Name = channel.Title
+		pc.Image = channel.Image
+		pc.ChannelID = channel.ID
+		detail.Podcasts = append(detail.Podcasts, pc)
+	}
+	s.Render.JSON(w, http.StatusOK, detail)
+}
+
 func (s *Server) getChannels(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
 	channels, err := s.DB.Channels.SelectSubscribed(user.ID)

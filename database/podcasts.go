@@ -8,6 +8,7 @@ import (
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
 	SelectAll(int64) ([]models.Podcast, error)
+	SelectByChannelID(int64) ([]models.Podcast, error)
 	Create(*models.Podcast) error
 }
 
@@ -26,6 +27,17 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error
         LIMIT 30`
 	var podcasts []models.Podcast
 	err := db.Select(&podcasts, sql, userID)
+	return podcasts, err
+}
+
+func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64) ([]models.Podcast, error) {
+	sql := `SELECT id, title, enclosure_url, description, pub_date
+    FROM podcasts
+    WHERE channel_id=$1
+    ORDER BY pub_date DESC
+    LIMIT 30`
+	var podcasts []models.Podcast
+	err := db.Select(&podcasts, sql, channelID)
 	return podcasts, err
 }
 

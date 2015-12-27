@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import {
   Grid,
@@ -10,74 +11,79 @@ import {
   Well
 } from 'react-bootstrap';
 
-const SAMPLE_DATA = {
+import * as actions from '../actions';
+import { sanitize } from './utils';
 
-  channel: {
-    name: 'Joe Rogan Experience',
-    image: 'https://gpodder.net/logo/32/341/3419c0f511f571af904efe172acedcf411d07502'
-  },
-
-  podcasts: [
-    {
-      title: 'Molly Crabapple',
-      summary: 'Molly Crabapple is an American artist and journalist, known for her work for The New York Times, VICE, the Wall Street Journal, the Royal Society of Arts, Red Bull, Marvel Comics, DC Comics and CNN. Her new book "Drawing Blood" is available now on Amazon',
-      id: 1000
-    },
-    {
-      title: 'Brian Stann',
-      summary: 'Brian Stann is a retired mixed martial artist and U.S. Marine, who competed as a Middleweight in the UFC. He is a former WEC Light Heavyweight Champion and is currently an analyst & commentator for the UFC.',
-      id: 1001
-    },
-  ]
-}
+const ListItem = props => {
+  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying } = props;
+  // tbd get audio ref, set played at to last time
+  return (
+    <div>
+      <div className="media">
+        <div className="media-body">
+          <Grid>
+            <Row>
+              <Col xs={6} md={6}>
+                <h4 className="media-heading">{podcast.title}</h4>
+              </Col>
+              <Col xs={6} mdPush={3} md={3}>
+                <ButtonGroup>
+                  <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
+                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
+                  <Button><Glyphicon glyph="pushpin" /> </Button>
+                  <Button onClick={() => window.alert("OK")}><Glyphicon glyph="ok" /> </Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      </div>
+      {podcast.description ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+    </div>
+  );
+};
 
 export class ChannelDetail extends React.Component {
+  componentDidMount(){
+      this.props.dispatch(actions.channel.getChannel(this.props.params.id));
+  }
   render() {
-    const { channel, podcasts } = SAMPLE_DATA;
+    const { channel, dispatch, player } = this.props;
+    if (!channel) {
+      return <div></div>;
+    }
     return (
+
       <div>
-        <h2>{channel.name}</h2>
-        {podcasts.map(podcast => {
-        return <ListItem key={podcast.id}
-                         podcast={podcast}
-                         channel={channel} />;
+        <h2>{channel.title}</h2>
+        <p>{channel.description}</p>
+        {channel.podcasts.map(podcast => {
+          const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
+          const setCurrentlyPlaying = () => {
+            dispatch(actions.player.setPodcast(isCurrentlyPlaying ? null : podcast));
+          }
+          return <ListItem key={podcast.id}
+                           podcast={podcast}
+                           isCurrentlyPlaying={isCurrentlyPlaying}
+                           setCurrentlyPlaying={setCurrentlyPlaying}
+                           channel={channel} />;
         })}
       </div>
     );
   }
 }
 
-const ListItem = props => {
-  const { podcast, channel } = props;
-  return (
-    <div className="media">
-      <div className="media-left">
-        <a href="#">
-          <img className="media-object"
-               src={channel.image}
-               alt={channel.name} />
-        </a>
-      </div>
-      <div className="media-body">
-        <h4 className="media-heading">{podcast.title}</h4>
-        <Grid>
-          <Row>
-            <Col xs={6} md={9}>
-              <p>{podcast.description}</p>
-            </Col>
-            <Col xs={6} md={3}>
-              <ButtonGroup>
-                <Button><Glyphicon glyph="play" /></Button>
-                <Button><Glyphicon glyph="download" /></Button>
-                <Button><Glyphicon glyph="pushpin" /></Button>
-                <Button><Glyphicon glyph="ok" /></Button>
-              </ButtonGroup>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    </div>
-  );
+ChannelDetail.propTypes = {
+  channel: PropTypes.object,
+  player: PropTypes.object,
+  dispatch: PropTypes.func.isRequired
 };
 
-export default ChannelDetail;
+const mapStateToProps = state => {
+  return {
+    channel: state.channel,
+    player: state.player
+  };
+};
+
+export default connect(mapStateToProps)(ChannelDetail);

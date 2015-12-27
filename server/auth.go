@@ -43,7 +43,6 @@ func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
 func (s *Server) requireAuth(fn http.HandlerFunc) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		s.Log.Info("Running auth check...")
 		// check if user already set elsewhere
 		if _, ok := getUser(r); ok {
 			fn(w, r)
