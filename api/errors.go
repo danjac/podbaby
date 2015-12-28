@@ -1,9 +1,10 @@
-package server
+package api
 
 import (
 	"database/sql"
-	"github.com/Sirupsen/logrus"
 	"net/http"
+
+	"github.com/Sirupsen/logrus"
 )
 
 type Error interface {

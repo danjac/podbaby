@@ -1,27 +1,30 @@
 GOPATH := ${PWD}:${GOPATH}
 export GOPATH
 
-build: build-server build-ui
+build: build-backend build-frontend
 
-build-server: 
-	godep restore
-	go build -o bin/serve -i main.go
+build-backend:
+	cd serve; godep restore
+	cd serve; go build -o ../bin/serve -i main.go
 
-build-ui:
+build-frontend:
 	npm install
 	npm run build
-	
-clean-ui:
+
+clean-frontend:
 	rm -rf node_modules
 
-clean: 
-	clean-ui
+clean-backend:
+	rm -rf bin
 
-test-server:
+clean:
+	clean-frontend
+	clean-backend
+
+test-backend:
 	go test ./...
 
-test-ui:
+test-frontend:
 	npm run test
 
-test: test-server test-ui
-
+test: test-backend test-frontend

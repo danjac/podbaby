@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/danjac/podbaby/api"
 	"github.com/danjac/podbaby/database"
-	"github.com/danjac/podbaby/server"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -46,13 +46,13 @@ func main() {
 		staticURL = defaultStaticURL
 	}
 
-	s := server.New(db, log, &server.Config{
+	api := api.New(db, log, &api.Config{
 		StaticURL: staticURL,
 		StaticDir: defaultStaticDir,
 		SecretKey: "my-secret",
 	})
 
-	if err := http.ListenAndServe(":"+*port, s.Handler()); err != nil {
+	if err := http.ListenAndServe(":"+*port, api.Handler()); err != nil {
 		panic(err)
 	}
 
