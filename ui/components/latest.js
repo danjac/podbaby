@@ -51,7 +51,7 @@ const ListItem = props => {
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /></Button>
                   <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>
                   <Button onClick={bookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
-                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'ok'} />
+                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
                   <Button title="Unsubscribe from this channel" onClick={unsubscribe}><Glyphicon glyph="trash" /></Button>
                 </ButtonGroup>
@@ -85,9 +85,10 @@ export class Latest extends React.Component {
     const { createHref } = this.props.history;
     const { page, podcasts } = this.props;
     if (podcasts.length === 0) {
-      return <div>There aren&quot;t any new podcasts yet.</div>;
+      return <div>You do not have any podcasts yet.</div>;
     }
     const pagination = (
+      page.numPages > 1 ?
       <Pagination onSelect={this.handleSelectPage.bind(this)}
                   first
                   last
@@ -95,7 +96,7 @@ export class Latest extends React.Component {
                   next
                   maxButtons={6}
                   items={page.numPages}
-                  activePage={page.page} />);
+                  activePage={page.page} /> : '');
     return (
       <div>
         {pagination}

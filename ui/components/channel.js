@@ -37,7 +37,7 @@ const ListItem = props => {
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
                   <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
                   <Button onClick={bookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
-                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'pushpin'} />
+                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
                 </ButtonGroup>
               </Col>
@@ -90,12 +90,12 @@ export class Channel extends React.Component {
                 </Col>
                 <Col xs={6} md={3}>
                   <ButtonGroup>
-                    <Button title="Unsubscribe" onClick={this.handleSubscribe.bind(this)}><Glyphicon glyph="trash" /> Unsubscribe</Button>
+                    <Button title="Unsubscribe" onClick={this.handleSubscribe.bind(this)}><Glyphicon glyph="minus" /> Unsubscribe</Button>
                   </ButtonGroup>
                 </Col>
               </Row>
             </Grid>
-            <Well>{channel.description}</Well>
+            {channel.description ? <Well dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           </div>
           </div>
           {channel.podcasts.map(podcast => {

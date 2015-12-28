@@ -19,9 +19,9 @@ export function deleteBookmark(podcastId) {
   };
 }
 
-export function getBookmarks() {
+export function getBookmarks(page=1) {
   return dispatch => {
-    api.getBookmarks()
+    api.getBookmarks(page)
     .then(result => {
       dispatch(createAction(Actions.GET_BOOKMARKS_SUCCESS, result.data));
     })

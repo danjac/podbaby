@@ -9,7 +9,8 @@ import {
   Glyphicon,
   ButtonGroup,
   Button,
-  Well
+  Well,
+  Pagination
 } from 'react-bootstrap';
 
 import { bookmarks, player, subscribe } from '../actions';
@@ -66,15 +67,33 @@ export class Bookmarks extends React.Component {
     dispatch(bookmarks.getBookmarks());
   }
 
-  render() {
+  handleSelectPage(event, selectedEvent) {
+    event.preventDefault();
     const { dispatch } = this.props;
-    const podcasts = this.props.bookmarks;
+    const page = selectedEvent.eventKey;
+    dispatch(bookmarks.getBookmarks(page));
+  }
+
+  render() {
+    const { page, podcasts, dispatch } = this.props;
     const { createHref } = this.props.history;
     if (podcasts.length === 0) {
       return <div>You do not have any bookmarked podcasts yet.</div>;
     }
+
+    const pagination = (
+      page.numPages > 1 ?
+      <Pagination onSelect={this.handleSelectPage.bind(this)}
+                  first
+                  last
+                  prev
+                  next
+                  maxButtons={6}
+                  items={page.numPages}
+                  activePage={page.page} /> : '');
     return (
       <div>
+        {pagination}
         {podcasts.map(podcast => {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
           const setCurrentlyPlaying = event => {
@@ -97,21 +116,25 @@ export class Bookmarks extends React.Component {
                            isCurrentlyPlaying={isCurrentlyPlaying}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
-        })}
+        })             }
+        {pagination}
       </div>
     );
   }
 }
 
 Bookmarks.propTypes = {
-  bookmarks: PropTypes.array.isRequired,
+  podcasts: PropTypes.array.isRequired,
+  page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
+  const { podcasts, page } = state.bookmarks;
   return {
-    bookmarks: state.bookmarks,
+    podcasts: podcasts || [],
+    page: page,
     player: state.player
   };
 };

@@ -56,8 +56,8 @@ export function unsubscribe(id) {
   return axios.delete(`/api/subscriptions/${id}/`);
 }
 
-export function getBookmarks() {
-  return axios.get("/api/bookmarks/");
+export function getBookmarks(page=1) {
+  return axios.get("/api/bookmarks/", { params: { page } });
 }
 
 export function addBookmark(id) {

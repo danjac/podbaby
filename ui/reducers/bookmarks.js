@@ -1,27 +1,40 @@
 import { Actions } from '../constants';
 
-const initialState = [];
+
+const initialState = {
+  podcasts: [],
+  page: {
+    numPages: 0,
+    numRows: 0,
+    page: 1
+  }
+};
 
 export default function(state=initialState, action) {
+  let podcasts;
   switch(action.type) {
 
     case Actions.SUBSCRIBE:
     case Actions.UNSUBSCRIBE:
-      return state.map(podcast => {
-          if (podcast.channelId === action.payload) {
-            podcast.isSubscribed = action.type === Actions.SUBSCRIBE;
-          }
-          return podcast;
+      podcasts = state.podcasts.map(podcast => {
+        if (podcast.channelId === action.payload) {
+          podcast.isSubscribed = action.type === Actions.SUBSCRIBE;
+        }
+        return podcast;
       });
+      return Object.assign({}, state, { podcasts });
+
     case Actions.GET_BOOKMARKS_SUCCESS:
-      return action.payload || [];
+      return action.payload;
+
+    case Actions.GET_BOOKMARKS_FAILURE:
+      return initialState;
 
     case Actions.DELETE_BOOKMARK:
-      return _.reject(state, bookmark => {
+      podcasts = _.reject(state.podcasts, bookmark => {
           return bookmark.id === action.payload;
       });
-
-
+      return Object.assign({}, state, { podcasts });
   }
   return state;
 

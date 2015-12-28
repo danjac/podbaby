@@ -259,12 +259,12 @@ func (s *Server) unsubscribe(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) getBookmarks(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
-	podcasts, err := s.DB.Podcasts.SelectBookmarked(user.ID)
+	result, err := s.DB.Podcasts.SelectBookmarked(user.ID, getPage(r))
 	if err != nil {
 		s.abort(w, r, err)
 		return
 	}
-	s.Render.JSON(w, http.StatusOK, podcasts)
+	s.Render.JSON(w, http.StatusOK, result)
 }
 
 func (s *Server) addBookmark(w http.ResponseWriter, r *http.Request) {
