@@ -26,10 +26,11 @@ export default function(state=initialState, action) {
 
     case Actions.ADD_BOOKMARK:
     case Actions.DELETE_BOOKMARK:
-      podcasts = state.podcasts.map(podcast => {
+      podcasts = (state.podcasts || []).map(podcast => {
         if (podcast.id === action.payload) {
           podcast.isBookmarked = action.type === Actions.ADD_BOOKMARK;
         }
+        return podcast;
       });
       return Object.assign({}, state, { podcasts });
 
