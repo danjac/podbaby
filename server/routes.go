@@ -48,7 +48,7 @@ func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
 	detail := &models.ChannelDetail{
 		Channel: channel,
 	}
-	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID)
+	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, user.ID)
 	if err != nil {
 		s.abort(w, r, err)
 		return
@@ -255,4 +255,42 @@ func (s *Server) unsubscribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.Render.Text(w, http.StatusOK, "unsubscribed")
+}
+
+func (s *Server) getBookmarks(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	podcasts, err := s.DB.Podcasts.SelectBookmarked(user.ID)
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.JSON(w, http.StatusOK, podcasts)
+}
+
+func (s *Server) addBookmark(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	podcastID, err := getInt64(r, "id")
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	if err := s.DB.Bookmarks.Create(podcastID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "bookmarked")
+}
+
+func (s *Server) removeBookmark(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	podcastID, err := getInt64(r, "id")
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	if err := s.DB.Bookmarks.Delete(podcastID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "bookmark removed")
 }

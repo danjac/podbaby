@@ -52,6 +52,14 @@ func (s *Server) Handler() http.Handler {
 	subs.Handle("/{id}/", s.requireAuth(s.subscribe)).Methods("POST")
 	subs.Handle("/{id}/", s.requireAuth(s.unsubscribe)).Methods("DELETE")
 
+	// bookmarks
+
+	bookmarks := api.PathPrefix("/bookmarks/").Subrouter()
+
+	bookmarks.Handle("/", s.requireAuth(s.getBookmarks)).Methods("GET")
+	bookmarks.Handle("/{id}/", s.requireAuth(s.addBookmark)).Methods("POST")
+	bookmarks.Handle("/{id}/", s.requireAuth(s.removeBookmark)).Methods("DELETE")
+
 	// podcasts
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()

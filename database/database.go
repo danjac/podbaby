@@ -8,6 +8,7 @@ type DB struct {
 	Users         UserDB
 	Channels      ChannelDB
 	Podcasts      PodcastDB
+	Bookmarks     BookmarkDB
 	Subscriptions SubscriptionDB
 }
 
@@ -17,5 +18,6 @@ func New(db *sqlx.DB) *DB {
 		Channels:      &defaultChannelDBImpl{db},
 		Podcasts:      &defaultPodcastDBImpl{db},
 		Subscriptions: &defaultSubscriptionDBImpl{db},
+		Bookmarks:     &defaultBookmarkDBImpl{db},
 	}
 }

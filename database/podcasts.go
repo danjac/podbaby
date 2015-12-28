@@ -8,7 +8,8 @@ import (
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
 	SelectAll(int64) ([]models.Podcast, error)
-	SelectByChannelID(int64) ([]models.Podcast, error)
+	SelectByChannelID(int64, int64) ([]models.Podcast, error)
+	SelectBookmarked(int64) ([]models.Podcast, error)
 	Create(*models.Podcast) error
 }
 
@@ -18,26 +19,44 @@ type defaultPodcastDBImpl struct {
 
 func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error) {
 	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
-        p.channel_id, c.title AS name, c.image, p.pub_date
-        FROM podcasts p
-        JOIN subscriptions s ON s.channel_id = p.channel_id
-        JOIN channels c ON c.id = p.channel_id
-        WHERE s.user_id=$1
-        ORDER BY pub_date DESC
-        LIMIT 30`
+    p.channel_id, c.title AS name, c.image, p.pub_date,
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
+      AS is_bookmarked
+    FROM podcasts p
+    JOIN subscriptions s ON s.channel_id = p.channel_id
+    JOIN channels c ON c.id = p.channel_id
+    WHERE s.user_id=$1
+    ORDER BY pub_date DESC
+    LIMIT 30`
 	var podcasts []models.Podcast
 	err := db.Select(&podcasts, sql, userID)
 	return podcasts, err
 }
 
-func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64) ([]models.Podcast, error) {
-	sql := `SELECT id, title, enclosure_url, description, pub_date
-    FROM podcasts
-    WHERE channel_id=$1
+func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64) ([]models.Podcast, error) {
+	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, c.title AS name, c.image, p.pub_date
+    FROM podcasts p
+    JOIN channels c ON c.id = p.channel_id
+    JOIN bookmarks b ON b.podcast_id = p.id
+    WHERE b.user_id=$
     ORDER BY pub_date DESC
     LIMIT 30`
 	var podcasts []models.Podcast
-	err := db.Select(&podcasts, sql, channelID)
+	err := db.Select(&podcasts, sql, userID)
+	return podcasts, err
+}
+
+func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64, userID int64) ([]models.Podcast, error) {
+	sql := `SELECT id, title, enclosure_url, description, pub_date,
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
+      AS is_bookmarked
+    FROM podcasts
+    WHERE channel_id=$2
+    ORDER BY pub_date DESC
+    LIMIT 30`
+	var podcasts []models.Podcast
+	err := db.Select(&podcasts, sql, userID, channelID)
 	return podcasts, err
 }
 
