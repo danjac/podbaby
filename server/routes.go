@@ -25,12 +25,12 @@ func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
-	podcasts, err := s.DB.Podcasts.SelectAll(user.ID)
+	result, err := s.DB.Podcasts.SelectAll(user.ID, getPage(r))
 	if err != nil {
 		s.abort(w, r, err)
 		return
 	}
-	s.Render.JSON(w, http.StatusOK, podcasts)
+	s.Render.JSON(w, http.StatusOK, result)
 }
 
 func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {

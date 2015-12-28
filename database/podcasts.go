@@ -7,7 +7,7 @@ import (
 
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
-	SelectAll(int64) ([]models.Podcast, error)
+	SelectAll(int64, int64) (*models.PodcastList, error)
 	SelectByChannelID(int64, int64) ([]models.Podcast, error)
 	SelectBookmarked(int64) ([]models.Podcast, error)
 	Create(*models.Podcast) error
@@ -17,8 +17,23 @@ type defaultPodcastDBImpl struct {
 	*sqlx.DB
 }
 
-func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error) {
-	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
+func (db *defaultPodcastDBImpl) SelectAll(userID int64, page int64) (*models.PodcastList, error) {
+
+	sql := `SELECT COUNT(p.id) FROM podcasts p
+  JOIN subscriptions s ON s.channel_id = p.channel_id
+  WHERE s.user_id=$1`
+
+	var numRows int64
+
+	if err := db.QueryRow(sql, userID).Scan(&numRows); err != nil {
+		return nil, err
+	}
+
+	result := &models.PodcastList{}
+
+	result.Page = models.NewPage(page, numRows)
+
+	sql = `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
     EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
       AS is_bookmarked
@@ -27,10 +42,9 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error
     JOIN channels c ON c.id = p.channel_id
     WHERE s.user_id=$1
     ORDER BY pub_date DESC
-    LIMIT 30`
-	var podcasts []models.Podcast
-	err := db.Select(&podcasts, sql, userID)
-	return podcasts, err
+    OFFSET $2 LIMIT 30`
+	err := db.Select(&result.Podcasts, sql, userID, result.Page.Offset)
+	return result, err
 }
 
 func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64) ([]models.Podcast, error) {
@@ -42,7 +56,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64) ([]models.Podcast
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id
     WHERE b.user_id=$1
-    ORDER BY p.title 
+    ORDER BY p.title
     LIMIT 30`
 	var podcasts []models.Podcast
 	err := db.Select(&podcasts, sql, userID)

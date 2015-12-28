@@ -77,7 +77,7 @@ export class Bookmarks extends React.Component {
       <div>
         {podcasts.map(podcast => {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
-          const setCurrentlyPlaying = (event) => {
+          const setCurrentlyPlaying = event => {
             event.preventDefault();
             dispatch(player.setPodcast(isCurrentlyPlaying ? null : podcast));
           };

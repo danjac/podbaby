@@ -2,13 +2,14 @@ package server
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/unrolled/render"
-	"net/http"
-	"strconv"
 )
 
 // Config is server configuration
@@ -52,4 +53,16 @@ func getInt64(r *http.Request, name string) (int64, error) {
 		return 0, badRequest
 	}
 	return intval, nil
+}
+
+func getPage(r *http.Request) int64 {
+	value := r.FormValue("page")
+	if value == "" {
+		return 1
+	}
+	page, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		page = 1
+	}
+	return page
 }

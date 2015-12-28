@@ -1,9 +1,10 @@
 import sanitizeHtml from 'sanitize-html';
 
 const sanitizeOptions = {
-  allowedTags: ['a', 'code'],
+  allowedTags: ['a', 'code', 'p', 'em', 'strong', 'b', 'br', 'span'],
   allowedAttributes: {
-    'a': ['href']
+    'a': ['href'],
+    'span': ['style']
   }
 };
 
@@ -12,4 +13,3 @@ export const sanitize = dirty => {
     __html: sanitizeHtml(dirty, sanitizeOptions)
   }
 };
-

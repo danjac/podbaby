@@ -2,6 +2,11 @@ package models
 
 import "time"
 
+type PodcastList struct {
+	Podcasts []Podcast `json:"podcasts"`
+	Page     *Page     `json:"page"`
+}
+
 type Podcast struct {
 	ID           int64     `db:"id" json:"id"`
 	ChannelID    int64     `db:"channel_id" json:"channelId"`

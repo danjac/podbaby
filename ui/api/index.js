@@ -44,8 +44,8 @@ export function getChannel(id) {
   return axios.get(`/api/channels/${id}/`);
 }
 
-export function getLatestPodcasts() {
-  return axios.get("/api/podcasts/latest/");
+export function getLatestPodcasts(page=1) {
+  return axios.get("/api/podcasts/latest/", { params: { page } });
 }
 
 export function subscribe(id) {

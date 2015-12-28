@@ -1,8 +1,6 @@
 package database
 
-import (
-	"github.com/jmoiron/sqlx"
-)
+import "github.com/jmoiron/sqlx"
 
 type DB struct {
 	Users         UserDB

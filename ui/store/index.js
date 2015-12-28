@@ -21,7 +21,6 @@ const apiErrorMiddleware = store => next => action => {
 
       const { error } = result.payload;
 
-        console.log(error)
       switch(error.status) {
         case 400:
           store.dispatch(alerts.warning("There was an error in your form: " + error.data));
@@ -32,6 +31,9 @@ const apiErrorMiddleware = store => next => action => {
           break;
         case 500:
           store.dispatch(alerts.warning('Sorry, an error has occurred'))
+          break;
+        default:
+          throw new Error(error);
       }
 
     }

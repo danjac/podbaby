@@ -9,7 +9,8 @@ import {
   Glyphicon,
   ButtonGroup,
   Button,
-  Well
+  Well,
+  Pagination
 } from 'react-bootstrap';
 
 import { latest, player, bookmarks, subscribe } from '../actions';
@@ -72,15 +73,33 @@ export class Latest extends React.Component {
     dispatch(latest.getLatestPodcasts());
   }
 
+  handleSelectPage(event, selectedEvent) {
+    event.preventDefault();
+    const { dispatch } = this.props;
+    const page = selectedEvent.eventKey;
+    dispatch(latest.getLatestPodcasts(page));
+  }
+
   render() {
     const { dispatch } = this.props;
     const { createHref } = this.props.history;
-    if (this.props.podcasts.length === 0) {
+    const { page, podcasts } = this.props;
+    if (podcasts.length === 0) {
       return <div>There aren&quot;t any new podcasts yet.</div>;
     }
+    const pagination = (
+      <Pagination onSelect={this.handleSelectPage.bind(this)}
+                  first
+                  last
+                  prev
+                  next
+                  maxButtons={6}
+                  items={page.numPages}
+                  activePage={page.page} />);
     return (
       <div>
-        {this.props.podcasts.map(podcast => {
+        {pagination}
+        {podcasts.map(podcast => {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
           const setCurrentlyPlaying = (event) => {
             event.preventDefault();
@@ -103,20 +122,24 @@ export class Latest extends React.Component {
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
         })}
-      </div>
+        {pagination}
+        </div>
     );
   }
 }
 
 Latest.propTypes = {
   podcasts: PropTypes.array.isRequired,
+  page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
+  const { podcasts, page } = state.latest;
   return {
-    podcasts: state.latest,
+    podcasts: podcasts || [],
+    page: page,
     player: state.player
   };
 };

@@ -11,8 +11,9 @@ import (
 )
 
 const (
-	cookieUserID = "userid"
-	userKey      = "user"
+	cookieUserID  = "userid"
+	userKey       = "user"
+	cookieTimeout = 24
 )
 
 // authentication methods
@@ -31,7 +32,7 @@ func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
 		cookie := &http.Cookie{
 			Name:    cookieUserID,
 			Value:   encoded,
-			Expires: time.Now().Add(time.Hour),
+			Expires: time.Now().Add(time.Hour * cookieTimeout),
 			//Secure:   true,
 			HttpOnly: true,
 			Path:     "/",
