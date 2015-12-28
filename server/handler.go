@@ -1,9 +1,10 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/justinas/nosurf"
-	"net/http"
 )
 
 func (s *Server) Handler() http.Handler {
@@ -37,6 +38,12 @@ func (s *Server) Handler() http.Handler {
 	channels.Handle("/", s.requireAuth(s.getChannels)).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.addChannel)).Methods("POST")
 	channels.Handle("/{id}/", s.requireAuth(s.getChannelDetail)).Methods("GET")
+
+	// search
+
+	search := api.PathPrefix("/search/").Subrouter()
+
+	search.Handle("/", s.requireAuth(s.search)).Methods("GET")
 
 	// subscriptions
 

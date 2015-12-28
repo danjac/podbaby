@@ -1,6 +1,9 @@
 package database
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -8,6 +11,7 @@ import (
 // ChannelDB database model
 type ChannelDB interface {
 	SelectSubscribed(int64) ([]models.Channel, error)
+	Search(string, int64) ([]models.Channel, error)
 	GetByID(int64, int64) (*models.Channel, error)
 	Create(*models.Channel) error
 }
@@ -18,11 +22,36 @@ type defaultChannelDBImpl struct {
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
 	sql := `SELECT DISTINCT c.* FROM channels c
-	JOIN subscriptions s ON s.channel_id = c.id
-	WHERE s.user_id=$1 AND title IS NOT NULL
-	ORDER BY title`
+  JOIN subscriptions s ON s.channel_id = c.id
+  WHERE s.user_id=$1 AND title IS NOT NULL
+  ORDER BY title`
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql, userID)
+}
+
+func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Channel, error) {
+
+	tokens := strings.Split(query, " ")
+
+	var searchArgs []interface{}
+
+	sql := `SELECT channels.*,
+    EXISTS(SELECT id FROM subscriptions WHERE channel_id=channels.id AND user_id=$1) AS is_subscribed
+    FROM channels WHERE`
+
+	searchArgs = append(searchArgs, userID)
+
+	var clauses []string
+
+	for counter, token := range tokens {
+		searchArgs = append(searchArgs, fmt.Sprintf("%%%s%%", token))
+		clauses = append(clauses, fmt.Sprintf("title ILIKE $%d OR description ILIKE $%d", counter+2, counter+2))
+	}
+
+	sql += " " + strings.Join(clauses, " OR ") + " ORDER BY title DESC LIMIT 30"
+
+	var channels []models.Channel
+	return channels, db.Select(&channels, sql, searchArgs...)
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {

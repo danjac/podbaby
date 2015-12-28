@@ -28,6 +28,10 @@ export function signup(name, email, password) {
   });
 }
 
+export function search(query) {
+  return axios.get("/api/search/", { params: { q: query } });
+}
+
 export function addChannel(url) {
   return axios.post("/api/channels/", { url });
 }

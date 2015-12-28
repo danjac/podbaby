@@ -64,20 +64,33 @@ export class ChannelDetail extends React.Component {
 
     return (
       <div>
-        <Grid>
-          <Row>
-            <Col xs={6} md={8}>
-              <h2>{channel.title}</h2>
-            </Col>
-            <Col xs={6} md={4}>
-              <Button bsStyle="default" onClick={this.handleSubscribe.bind(this)}>
-                <Glyphicon glyph={isSubscribed ? 'trash' : 'ok'} /> {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-              </Button>
-            </Col>
-          </Row>
-        </Grid>
-        <p>{channel.description}</p>
-        {channel.podcasts.map(podcast => {
+        <div className="media">
+          <div className="media-left">
+            <a href="#">
+              <img className="media-object"
+                   height={60}
+                   width={60}
+                   src={channel.image}
+                   alt={channel.title} />
+            </a>
+          </div>
+          <div className="media-body">
+            <Grid>
+              <Row>
+                <Col xs={6} md={9}>
+                  <h2 className="media-heading">{channel.title}</h2>
+                </Col>
+                <Col xs={6} md={3}>
+                  <ButtonGroup>
+                    <Button title="Unsubscribe" onClick={this.handleSubscribe.bind(this)}><Glyphicon glyph="trash" /> Unsubscribe</Button>
+                  </ButtonGroup>
+                </Col>
+              </Row>
+            </Grid>
+            <Well>{channel.description}</Well>
+          </div>
+          </div>
+          {channel.podcasts.map(podcast => {
           const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
           const setCurrentlyPlaying = () => {
             dispatch(actions.player.setPodcast(isCurrentlyPlaying ? null : podcast));

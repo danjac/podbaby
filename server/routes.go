@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
@@ -71,6 +72,26 @@ func (s *Server) getChannels(w http.ResponseWriter, r *http.Request) {
 	s.Render.JSON(w, http.StatusOK, channels)
 }
 
+func (s *Server) search(w http.ResponseWriter, r *http.Request) {
+
+	user, _ := getUser(r)
+	query := strings.Trim(r.FormValue("q"), " ")
+
+	result := &models.SearchResult{}
+
+	if query != "" {
+		channels, err := s.DB.Channels.Search(query, user.ID)
+		if err != nil {
+			s.abort(w, r, err)
+			return
+		}
+		result.Channels = channels
+		result.NumResults += len(result.Channels)
+	}
+
+	s.Render.JSON(w, http.StatusOK, result)
+}
+
 func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.NewChannel{}
@@ -132,6 +153,7 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
 	s.Render.Text(w, http.StatusCreated, "New channel")
 }
+
 func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.Signup{}
