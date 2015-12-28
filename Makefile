@@ -6,6 +6,8 @@ build: build-backend build-frontend
 build-backend:
 	cd serve; godep restore
 	cd serve; go build -o ../bin/serve -i main.go
+	cd fetch; godep restore
+	cd fetch; go build -o ../bin/fetch -i main.go
 
 build-frontend:
 	npm install

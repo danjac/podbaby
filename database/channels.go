@@ -10,6 +10,7 @@ import (
 
 // ChannelDB database model
 type ChannelDB interface {
+	GetAll() ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
 	Search(string, int64) ([]models.Channel, error)
 	GetByID(int64, int64) (*models.Channel, error)
@@ -18,6 +19,11 @@ type ChannelDB interface {
 
 type defaultChannelDBImpl struct {
 	*sqlx.DB
+}
+
+func (db *defaultChannelDBImpl) GetAll() ([]models.Channel, error) {
+	var channels []models.Channel
+	return channels, db.Select(&channels, "SELECT * FROM channels")
 }
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
