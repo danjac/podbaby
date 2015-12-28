@@ -17,7 +17,7 @@ import { bookmarks, player, subscribe } from '../actions';
 import { sanitize } from './utils';
 
 const ListItem = props => {
-  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying, subscribe, removeBookmark } = props;
+  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying, subscribe, deleteBookmark } = props;
   const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
   // tbd get audio ref, set played at to last time
   return (
@@ -41,10 +41,12 @@ const ListItem = props => {
               </Col>
               <Col xs={6} mdPush={3} md={3}>
                 <ButtonGroup>
-                  <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
-                  <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
-                  <Button title="Remove this bookmark"><Glyphicon glyph="removee" /> </Button>
-                  <Button title="Unsubscribe from this channel" onClick={unsubscribe}><Glyphicon glyph="trash" /> </Button>
+                  <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /></Button>
+                    <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>
+                  <Button onClick={deleteBookmark} title="Remove this bookmark"><Glyphicon glyph="remove" /></Button>
+                  <Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={subscribe}>
+                    <Glyphicon glyph={podcast.isSubscribed ? "trash" : "ok"} />
+                  </Button>
                 </ButtonGroup>
               </Col>
             </Row>
@@ -66,24 +68,33 @@ export class Bookmarks extends React.Component {
 
   render() {
     const { dispatch } = this.props;
+    const podcasts = this.props.bookmarks;
     const { createHref } = this.props.history;
-    if (this.props.podcasts.length === 0) {
+    if (podcasts.length === 0) {
       return <div>You do not have any bookmarked podcasts yet.</div>;
     }
     return (
       <div>
-        {this.props.bookmarks.map(podcast => {
+        {podcasts.map(podcast => {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
-          const setCurrentlyPlaying = () => {
+          const setCurrentlyPlaying = (event) => {
+            event.preventDefault();
             dispatch(player.setPodcast(isCurrentlyPlaying ? null : podcast));
           };
-          const unsubscribe = () => {
-            dispatch(subscribe.unsubscribe(podcast.channelId, podcast.name));
+          const doSubscribe = event => {
+            event.preventDefault();
+            const action = podcast.isSubscribed ? subscribe.unsubscribe : subscribe.subscribe;
+            dispatch(action(podcast.channelId, podcast.name));
+          };
+          const deleteBookmark = event => {
+            event.preventDefault();
+            dispatch(bookmarks.deleteBookmark(podcast.id));
           };
           return <ListItem key={podcast.id}
                            podcast={podcast}
+                           subscribe={doSubscribe}
+                           deleteBookmark={deleteBookmark}
                            isCurrentlyPlaying={isCurrentlyPlaying}
-                           subscribe={unsubscribe}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
         })}

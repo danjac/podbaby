@@ -35,12 +35,14 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64) ([]models.Podcast, error
 
 func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64) ([]models.Podcast, error) {
 	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date
+    p.channel_id, c.title AS name, c.image, p.pub_date,
+    EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
+      AS is_subscribed
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id
-    WHERE b.user_id=$
-    ORDER BY pub_date DESC
+    WHERE b.user_id=$1
+    ORDER BY p.title 
     LIMIT 30`
 	var podcasts []models.Podcast
 	err := db.Select(&podcasts, sql, userID)
@@ -49,7 +51,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64) ([]models.Podcast
 
 func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64, userID int64) ([]models.Podcast, error) {
 	sql := `SELECT id, title, enclosure_url, description, pub_date,
-    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=podcasts.id AND user_id=$1)
       AS is_bookmarked
     FROM podcasts
     WHERE channel_id=$2

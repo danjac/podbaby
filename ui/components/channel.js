@@ -15,7 +15,13 @@ import * as actions from '../actions';
 import { sanitize } from './utils';
 
 const ListItem = props => {
-  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying } = props;
+  const {
+    podcast,
+    createHref,
+    isCurrentlyPlaying,
+    setCurrentlyPlaying,
+    bookmark
+  } = props;
   // tbd get audio ref, set played at to last time
   return (
     <div>
@@ -30,7 +36,9 @@ const ListItem = props => {
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
                   <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
-                  <Button><Glyphicon glyph="pushpin" /> </Button>
+                  <Button onClick={bookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
+                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'pushpin'} />
+                  </Button>
                 </ButtonGroup>
               </Col>
             </Row>
@@ -92,11 +100,19 @@ export class Channel extends React.Component {
           </div>
           {channel.podcasts.map(podcast => {
           const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
-          const setCurrentlyPlaying = () => {
+          const setCurrentlyPlaying = event => {
+            event.preventDefault();
             dispatch(actions.player.setPodcast(isCurrentlyPlaying ? null : podcast));
-          }
+          };
+          const bookmark = (event) => {
+            event.preventDefault();
+            const { bookmarks } = actions;
+            const action = podcast.isBookmarked ? bookmarks.deleteBookmark : bookmarks.addBookmark;
+            dispatch(action(podcast.id));
+          };
           return <ListItem key={podcast.id}
                            podcast={podcast}
+                           bookmark={bookmark}
                            isCurrentlyPlaying={isCurrentlyPlaying}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            channel={channel} />;

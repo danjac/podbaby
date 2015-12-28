@@ -9,6 +9,7 @@ import playerReducer from './player';
 import alertsReducer from './alerts';
 import channelsReducer from './channels';
 import channelReducer from './channel';
+import bookmarksReducer from './bookmarks';
 
 export default combineReducers({
   routing: routeReducer,
@@ -19,5 +20,6 @@ export default combineReducers({
   player: playerReducer,
   alerts: alertsReducer,
   channels: channelsReducer,
-  channel: channelReducer
+  channel: channelReducer,
+  bookmarks: bookmarksReducer
 });

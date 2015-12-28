@@ -13,4 +13,5 @@ type Podcast struct {
 	PubDate      time.Time `db:"pub_date" json:"pubDate"`
 	CreatedAt    time.Time `db:"created_at" json:"createdAt"`
 	IsBookmarked bool      `db:"is_bookmarked" json:"isBookmarked"`
+	IsSubscribed bool      `db:"is_subscribed" json:"isSubscribed"`
 }

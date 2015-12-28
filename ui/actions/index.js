@@ -7,14 +7,17 @@ import * as addChannel from './add_channel';
 import * as channels from './channels';
 import * as channel from './channel';
 import * as subscribe from './subscribe';
+import * as bookmarks from './bookmarks';
 
 export {
-    auth,
-    search,
-    addChannel,
-    latest,
-    player,
-    channels,
-    channel,
-    subscribe,
-    alerts };
+  auth,
+  search,
+  addChannel,
+  latest,
+  player,
+  channels,
+  channel,
+  subscribe,
+  bookmarks,
+  alerts
+};

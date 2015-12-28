@@ -59,7 +59,8 @@ class MainNav extends React.Component {
             href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts</NavItem>
           <NavItem active={isActive("/podcasts/subscriptions/")}
                    href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
-          <NavItem href="#"><Glyphicon glyph="pushpin" /> Bookmarks</NavItem>
+          <NavItem active={isActive("/podcasts/bookmarks/")}
+                   href={createHref("/podcasts/bookmarks/")}><Glyphicon glyph="pushpin" /> Bookmarks</NavItem>
           <NavItem onClick={this.props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
         </Nav> : ''}
 

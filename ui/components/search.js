@@ -60,9 +60,10 @@ export class Search extends React.Component {
       <div>
         <h2>Searching for {searchQuery}</h2>
         {channels.map(channel => {
-          const subscribe = () => {
-              const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-              dispatch(action(channel.id, channel.title));
+          const subscribe = (event) => {
+            event.preventDefault();
+            const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
+            dispatch(action(channel.id, channel.title));
           };
           return (
             <ChannelItem key={channel.id}
