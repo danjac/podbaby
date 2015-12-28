@@ -49,7 +49,7 @@ class MainNav extends React.Component {
 
         {auth.isLoggedIn ?
         <form className="navbar-form navbar-left" role="search" onSubmit={this.search.bind(this)}>
-          <Input ref="search" type="search" placeholder="Find podcast or channel" addonBefore={searchIcon} />
+          <Input ref="search" type="search" placeholder="Find a channel" addonBefore={searchIcon} />
         </form> : ''}
 
         {auth.isLoggedIn ?

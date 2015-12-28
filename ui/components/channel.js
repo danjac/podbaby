@@ -8,7 +8,8 @@ import {
   Glyphicon,
   ButtonGroup,
   Button,
-  Well
+  Well,
+  Pagination
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
@@ -63,15 +64,33 @@ export class Channel extends React.Component {
     dispatch(action(channel.id, channel.title));
   }
 
+  handleSelectPage(event, selectedEvent) {
+    event.preventDefault();
+    const { dispatch } = this.props;
+    const page = selectedEvent.eventKey;
+    dispatch(actions.channel.getChannel(this.props.params.id, page));
+  }
+
   render() {
-    const { channel, dispatch, player } = this.props;
+    const { channel, podcasts, page, dispatch, player } = this.props;
     if (!channel) {
       return <div></div>;
     }
     const isSubscribed = channel.isSubscribed;
 
+    const pagination = (
+      page.numPages > 1 ?
+      <Pagination onSelect={this.handleSelectPage.bind(this)}
+                  first
+                  last
+                  prev
+                  next
+                  maxButtons={6}
+                  items={page.numPages}
+                  activePage={page.page} /> : '');
     return (
       <div>
+        {pagination}
         <div className="media">
           <div className="media-left">
             <a href="#">
@@ -98,7 +117,7 @@ export class Channel extends React.Component {
             {channel.description ? <Well dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           </div>
           </div>
-          {channel.podcasts.map(podcast => {
+          {podcasts.map(podcast => {
           const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
           const setCurrentlyPlaying = event => {
             event.preventDefault();
@@ -117,6 +136,7 @@ export class Channel extends React.Component {
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            channel={channel} />;
         })}
+        {pagination}
       </div>
     );
   }
@@ -124,14 +144,19 @@ export class Channel extends React.Component {
 
 Channel.propTypes = {
   channel: PropTypes.object,
+  podcasts: PropTypes.array,
+  page: PropTypes.object,
   player: PropTypes.object,
   dispatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
+  const { channel, podcasts, page } = state.channel;
   return {
-    channel: state.channel,
-    player: state.player
+    player: state.player,
+    channel,
+    podcasts,
+    page
   };
 };
 

@@ -48,17 +48,18 @@ func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
 	detail := &models.ChannelDetail{
 		Channel: channel,
 	}
-	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, user.ID)
+	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, user.ID, getPage(r))
 	if err != nil {
 		s.abort(w, r, err)
 		return
 	}
-	for _, pc := range podcasts {
+	for _, pc := range podcasts.Podcasts {
 		pc.Name = channel.Title
 		pc.Image = channel.Image
 		pc.ChannelID = channel.ID
 		detail.Podcasts = append(detail.Podcasts, pc)
 	}
+	detail.Page = podcasts.Page
 	s.Render.JSON(w, http.StatusOK, detail)
 }
 

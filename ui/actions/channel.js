@@ -2,9 +2,9 @@ import * as api from '../api';
 import { Actions } from '../constants';
 import { createAction } from './utils';
 
-export function getChannel(id) {
+export function getChannel(id, page=1) {
     return dispatch => {
-        api.getChannel(id)
+        api.getChannel(id, page)
         .then(result => {
             dispatch(createAction(Actions.GET_CHANNEL_SUCCESS, result.data));
         })

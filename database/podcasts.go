@@ -8,7 +8,7 @@ import (
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
 	SelectAll(int64, int64) (*models.PodcastList, error)
-	SelectByChannelID(int64, int64) ([]models.Podcast, error)
+	SelectByChannelID(int64, int64, int64) (*models.PodcastList, error)
 	SelectBookmarked(int64, int64) (*models.PodcastList, error)
 	Create(*models.Podcast) error
 }
@@ -88,17 +88,36 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64, page int64) (*mod
 	return result, err
 }
 
-func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64, userID int64) ([]models.Podcast, error) {
-	sql := `SELECT id, title, enclosure_url, description, pub_date,
+func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64, userID int64, page int64) (*models.PodcastList, error) {
+
+	sql := `SELECT COUNT(id) FROM podcasts WHERE channel_id=$1`
+
+	var numRows int64
+
+	if err := db.QueryRow(sql, channelID).Scan(&numRows); err != nil {
+		return nil, err
+	}
+
+	result := &models.PodcastList{
+		Page: models.NewPage(page, numRows),
+	}
+
+	sql = `SELECT id, title, enclosure_url, description, pub_date,
     EXISTS(SELECT id FROM bookmarks WHERE podcast_id=podcasts.id AND user_id=$1)
       AS is_bookmarked
     FROM podcasts
     WHERE channel_id=$2
     ORDER BY pub_date DESC
-    LIMIT 30`
-	var podcasts []models.Podcast
-	err := db.Select(&podcasts, sql, userID, channelID)
-	return podcasts, err
+    OFFSET $3 LIMIT $4`
+
+	err := db.Select(
+		&result.Podcasts,
+		sql,
+		userID,
+		channelID,
+		result.Page.Offset,
+		result.Page.PageSize)
+	return result, err
 }
 
 func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {

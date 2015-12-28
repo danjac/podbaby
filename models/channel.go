@@ -2,8 +2,9 @@ package models
 
 import (
 	"database/sql"
-	"github.com/lib/pq"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 type Channel struct {
@@ -20,6 +21,7 @@ type Channel struct {
 }
 
 type ChannelDetail struct {
-	*Channel
-	Podcasts []Podcast `db:"-" json:"podcasts"`
+	Channel  *Channel  `json:"channel"`
+	Podcasts []Podcast `json:"podcasts"`
+	Page     *Page     `json:"page"`
 }
