@@ -6,9 +6,10 @@ import Front from '../components/front';
 import Login from '../components/login';
 import Signup from '../components/signup';
 import Search from '../components/search';
-import ChannelDetail from '../components/channel_detail';
-import PodcastList from '../components/podcast_list';
-import SubscriptionList from '../components/subscription_list';
+import Latest from '../components/latest';
+import Subscriptions from '../components/subscriptions';
+import Bookmarks from '../components/bookmarks';
+import Channel from '../components/channel';
 import PageNotFound from '../components/not_found';
 
 import { alerts } from '../actions';
@@ -31,10 +32,11 @@ export default function(store, history) {
           <IndexRoute component={Front} />
           <Route path="/podcasts/" onEnter={requireAuth}>
             <IndexRedirect to="/podcasts/new/" />
-            <Route path="/podcasts/new/" component={PodcastList} />
+            <Route path="/podcasts/new/" component={Latest} />
             <Route path="/podcasts/search/" component={Search} />
-            <Route path="/podcasts/subscriptions/" component={SubscriptionList} />
-            <Route path="/podcasts/channel/:id/" component={ChannelDetail} />
+            <Route path="/podcasts/subscriptions/" component={Subscriptions} />
+            <Route path="/podcasts/bookmarks/" component={Bookmarks} />
+            <Route path="/podcasts/channel/:id/" component={Channel} />
           </Route>
           <Route path="/login/" component={Login} />
           <Route path="/signup/" component={Signup} />

@@ -46,7 +46,7 @@ const ListItem = props => {
 };
 
 
-export class SubscriptionList extends React.Component {
+export class Subscriptions extends React.Component {
   componentDidMount() {
     this.props.dispatch(actions.channels.getChannels());
   }
@@ -68,7 +68,7 @@ export class SubscriptionList extends React.Component {
   }
 }
 
-SubscriptionList.propTypes = {
+Subscriptions.propTypes = {
     channels: PropTypes.array.isRequired
 };
 
@@ -78,4 +78,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(SubscriptionList);
+export default connect(mapStateToProps)(Subscriptions);

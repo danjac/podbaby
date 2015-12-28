@@ -42,7 +42,7 @@ const ListItem = props => {
   );
 };
 
-export class ChannelDetail extends React.Component {
+export class Channel extends React.Component {
 
   componentDidMount(){
       this.props.dispatch(actions.channel.getChannel(this.props.params.id));
@@ -106,7 +106,7 @@ export class ChannelDetail extends React.Component {
   }
 }
 
-ChannelDetail.propTypes = {
+Channel.propTypes = {
   channel: PropTypes.object,
   player: PropTypes.object,
   dispatch: PropTypes.func.isRequired
@@ -119,4 +119,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ChannelDetail);
+export default connect(mapStateToProps)(Channel);

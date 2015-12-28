@@ -12,12 +12,12 @@ import {
   Well
 } from 'react-bootstrap';
 
-import { latest, player, subscribe } from '../actions';
+import { bookmarks, player, subscribe } from '../actions';
 
 import { sanitize } from './utils';
 
 const ListItem = props => {
-  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying, unsubscribe } = props;
+  const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying, subscribe, removeBookmark } = props;
   const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
   // tbd get audio ref, set played at to last time
   return (
@@ -43,7 +43,7 @@ const ListItem = props => {
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
                   <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
-                  <Button title="Bookmark this podcast"><Glyphicon glyph="pushpin" /> </Button>
+                  <Button title="Remove this bookmark"><Glyphicon glyph="removee" /> </Button>
                   <Button title="Unsubscribe from this channel" onClick={unsubscribe}><Glyphicon glyph="trash" /> </Button>
                 </ButtonGroup>
               </Col>
@@ -57,22 +57,22 @@ const ListItem = props => {
 };
 
 
-export class PodcastList extends React.Component {
+export class Bookmarks extends React.Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(latest.getLatestPodcasts());
+    dispatch(bookmarks.getBookmarks());
   }
 
   render() {
     const { dispatch } = this.props;
     const { createHref } = this.props.history;
     if (this.props.podcasts.length === 0) {
-      return <div>There aren&quot;t any new podcasts yet.</div>;
+      return <div>You do not have any bookmarked podcasts yet.</div>;
     }
     return (
       <div>
-        {this.props.podcasts.map(podcast => {
+        {this.props.bookmarks.map(podcast => {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
           const setCurrentlyPlaying = () => {
             dispatch(player.setPodcast(isCurrentlyPlaying ? null : podcast));
@@ -83,7 +83,7 @@ export class PodcastList extends React.Component {
           return <ListItem key={podcast.id}
                            podcast={podcast}
                            isCurrentlyPlaying={isCurrentlyPlaying}
-                           unsubscribe={unsubscribe}
+                           subscribe={unsubscribe}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
         })}
@@ -92,17 +92,17 @@ export class PodcastList extends React.Component {
   }
 }
 
-PodcastList.propTypes = {
-  podcasts: PropTypes.array.isRequired,
+Bookmarks.propTypes = {
+  bookmarks: PropTypes.array.isRequired,
   currentlyPlaying: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    podcasts: state.latest,
+    bookmarks: state.bookmarks,
     player: state.player
   };
 };
 
-export default connect(mapStateToProps)(PodcastList);
+export default connect(mapStateToProps)(Bookmarks);

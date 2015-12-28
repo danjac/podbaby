@@ -49,9 +49,21 @@ export function getLatestPodcasts() {
 }
 
 export function subscribe(id) {
-  return axios.post(`/api/subscriptions/${id}/`)
+  return axios.post(`/api/subscriptions/${id}/`);
 }
 
 export function unsubscribe(id) {
-  return axios.delete(`/api/subscriptions/${id}/`)
+  return axios.delete(`/api/subscriptions/${id}/`);
+}
+
+export function getBookmarks() {
+  return axios.get("/api/bookmarks/");
+}
+
+export function addBookmark(id) {
+  return axios.post(`/api/bookmarks/${id}/`);
+}
+
+export function deleteBookmark(id) {
+  return axios.delete(`/api/bookmarks/${id}/`);
 }
