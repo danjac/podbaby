@@ -71,3 +71,7 @@ export function deleteBookmark(id) {
 export function changeEmail(email) {
   return axios.patch(`/api/user/email/`, { email });
 }
+
+export function changePassword(oldPassword, newPassword) {
+  return axios.patch(`/api/user/password/`, { oldPassword, newPassword });
+}

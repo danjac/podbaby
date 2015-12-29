@@ -317,3 +317,26 @@ func (s *Server) changeEmail(w http.ResponseWriter, r *http.Request) {
 	}
 	s.Render.Text(w, http.StatusOK, "email updated")
 }
+
+func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	decoder := &decoders.NewPassword{}
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+
+	// validate old password first
+
+	if !user.CheckPassword(decoder.OldPassword) {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
+		return
+	}
+	user.SetPassword(decoder.NewPassword)
+
+	if err := s.DB.Users.UpdatePassword(user.Password, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "password updated")
+}

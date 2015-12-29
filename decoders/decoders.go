@@ -7,7 +7,7 @@ import (
 	"github.com/asaskevich/govalidator"
 )
 
-// decodes JSON body of request and runs through validator
+// Decode decodes JSON body of request and runs through validator
 func Decode(r *http.Request, data interface{}) error {
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(data); err != nil {
@@ -20,9 +20,9 @@ func Decode(r *http.Request, data interface{}) error {
 }
 
 type Signup struct {
-	Name     string `json:"name",valid:"required"`
+	Name     string `json:"name",valid:"length(3), required"`
 	Email    string `json:"email",valid:"email,required"`
-	Password string `json:"password",valid:"required"`
+	Password string `json:"password",valid:"length(6), required"`
 }
 
 type Login struct {
@@ -36,4 +36,9 @@ type NewChannel struct {
 
 type NewEmail struct {
 	Email string `json:"email",valid:"email,required"`
+}
+
+type NewPassword struct {
+	OldPassword string `json:"oldPassword",valid:"length(6),required"`
+	NewPassword string `json:"newPassword",valid:"length(6),required"`
 }

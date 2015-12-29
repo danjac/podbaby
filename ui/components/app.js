@@ -27,7 +27,7 @@ import * as actions from '../actions';
 
 class MainNav extends React.Component {
 
-  search(event) {
+  handleSearch(event) {
     event.preventDefault();
     const node = this.refs.search.getInputDOMNode();
     const query = node.value;
@@ -51,7 +51,7 @@ class MainNav extends React.Component {
         </Navbar.Header>
 
         {auth.isLoggedIn ?
-        <form className="navbar-form navbar-left" role="search" onSubmit={this.search.bind(this)}>
+        <form className="navbar-form navbar-left" role="search" onSubmit={this.handleSearch.bind(this)}>
           <Input ref="search" type="search" placeholder="Find a podcast" addonBefore={searchIcon} />
         </form> : ''}
 
@@ -64,14 +64,14 @@ class MainNav extends React.Component {
                    href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
           <NavItem active={isActive("/podcasts/bookmarks/")}
                    href={createHref("/podcasts/bookmarks/")}><Glyphicon glyph="bookmark" /> Bookmarks</NavItem>
-          <NavItem onClick={this.props.openAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
+          <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
         </Nav> : ''}
 
         {auth.isLoggedIn ?
         <Nav pullRight={true}>
           <NavItem active={isActive("/user/")}
                     href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
-          <NavItem href="#" onClick={this.props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
+          <NavItem href="#" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> Logout</NavItem>
         </Nav> :
         <Nav pullRight={true}>
           <NavItem active={isActive("/login/")}
@@ -91,17 +91,17 @@ class AddChannelModal extends React.Component {
   handleAdd(event){
     event.preventDefault();
     const node = this.refs.url.getInputDOMNode();
-    this.props.add(node.value);
+    this.props.onAdd(node.value);
     node.value = "";
   }
 
   render() {
-    const { show, close, container } = this.props;
+    const { show, onClose, container } = this.props;
     return (
       <Modal show={show}
              aria-labelledby="add-channel-modal-title"
              container={container}
-             onHide={close}>
+             onHide={onClose}>
         <Modal.Header closeButton>
           <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
         </Modal.Header>
@@ -110,7 +110,7 @@ class AddChannelModal extends React.Component {
               <Input required type="text" placeholder="RSS URL of the channel" ref="url" />
               <ButtonGroup>
               <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
-              <Button bsStyle="default" onClick={close}><Glyphicon glyph="remove" /> Cancel</Button>
+              <Button bsStyle="default" onClick={onClose}><Glyphicon glyph="remove" /> Cancel</Button>
             </ButtonGroup>
             </form>
         </Modal.Body>
@@ -124,7 +124,7 @@ class AddChannelModal extends React.Component {
 export class Player extends React.Component {
   handleClose(event) {
     event.preventDefault();
-    this.props.closePlayer();
+    this.props.onClosePlayer();
   }
 
   render() {
@@ -165,10 +165,18 @@ export class Player extends React.Component {
 
 
 const AlertList = props => {
+
+  if (!props.alerts) return <div></div>;
+
   return (
-    <div className="container">
+    <div className="container" style={{
+        position: "fixed",
+        height: "20px",
+        width: "100%",
+        top: 100
+      }}>
       {props.alerts.map(alert => {
-        const dismissAlert = () => props.dismissAlert(alert.id);
+        const dismissAlert = () => props.onDismissAlert(alert.id);
         return (<Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
           <p>{alert.message}</p>
         </Alert>);
@@ -192,34 +200,30 @@ export class App extends React.Component {
     }
   }
 
-  logout(event) {
+  handleLogout(event) {
     event.preventDefault();
     this.actions.auth.logout();
   }
 
-  openAddChannelForm(event) {
+  handleOpenAddChannelForm(event) {
     event.preventDefault();
     this.actions.addChannel.open();
   }
 
-  closeAddChannelForm(event) {
+  handleCloseAddChannelForm(event) {
     event.preventDefault();
     this.actions.addChannel.close();
   }
 
-  addChannel(url) {
+  handleAddChannel(url) {
     this.actions.addChannel.add(url);
   }
 
-  search(query) {
-    this.actions.search.search(query);
-  }
-
-  dismissAlert(id) {
+  handleDismissAlert(id) {
     this.actions.alerts.dismissAlert(id);
   }
 
-  closePlayer() {
+  handleClosePlayer() {
     this.actions.player.setPodcast(null);
   }
 
@@ -230,19 +234,19 @@ export class App extends React.Component {
     }
     return (
       <div>
-        <MainNav logout={this.logout.bind(this)}
-                 openAddChannelForm={this.openAddChannelForm.bind(this)}
-                 search={this.search.bind(this)}
+        <MainNav onLogout={this.handleLogout.bind(this)}
+                 onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
                  {...this.props} />
-        <AlertList alerts={this.props.alerts} dismissAlert={this.dismissAlert.bind(this)} />
+               <AlertList alerts={this.props.alerts}
+                          onDismissAlert={this.handleDismissAlert.bind(this)} />
         <div className="container">
           {this.props.children}
         </div>
-        {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.closePlayer.bind(this)}/> : ''}
+        {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.handleClosePlayer.bind(this)}/> : ''}
         <AddChannelModal show={this.props.addChannel.show}
                          container={this}
-                         add={this.addChannel.bind(this)}
-                         close={this.closeAddChannelForm.bind(this)} />
+                         onAdd={this.handleAddChannel.bind(this)}
+                         onClose={this.handleCloseAddChannelForm.bind(this)} />
       </div>
     );
   }

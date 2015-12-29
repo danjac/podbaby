@@ -13,6 +13,7 @@ type UserDB interface {
 	IsName(string) (bool, error)
 	IsEmail(string, int64) (bool, error)
 	UpdateEmail(string, int64) error
+	UpdatePassword(string, int64) error
 }
 
 type defaultUserDBImpl struct {
@@ -69,5 +70,10 @@ func (db *defaultUserDBImpl) IsEmail(email string, userID int64) (bool, error) {
 
 func (db *defaultUserDBImpl) UpdateEmail(email string, userID int64) error {
 	_, err := db.Exec("UPDATE users SET email=$1 WHERE id=$2", email, userID)
+	return err
+}
+
+func (db *defaultUserDBImpl) UpdatePassword(password string, userID int64) error {
+	_, err := db.Exec("UPDATE users SET password=$1 WHERE id=$2", password, userID)
 	return err
 }

@@ -16,3 +16,16 @@ export function changeEmail(email) {
     });
   };
 }
+
+export function changePassword(oldPassword, newPassword) {
+  return dispatch => {
+    api.changePassword(oldPassword, newPassword)
+      .then(result => {
+        dispatch(createAction(Actions.CHANGE_PASSWORD_SUCCESS));
+        dispatch(alerts.success('Your password has been updated'));
+      })
+      .catch(error => {
+        dispatch(createAction(Actions.CHANGE_PASSWORD_FAILURE, { error }));
+      });
+  }
+}

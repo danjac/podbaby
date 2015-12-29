@@ -19,6 +19,23 @@ export class User extends React.Component {
 
   }
 
+  handleSubmitPassword(event) {
+    event.preventDefault();
+
+    const oldPasswordNode = this.refs.oldPassword.getInputDOMNode();
+    const newPasswordNode = this.refs.newPassword.getInputDOMNode();
+
+    const oldPassword = oldPasswordNode.value;
+    const newPassword = newPasswordNode.value;
+
+    if (oldPassword && newPassword){
+      oldPasswordNode.value = "";
+      newPasswordNode.value = "";
+      this.props.dispatch(actions.users.changePassword(oldPassword, newPassword));
+    }
+
+  }
+
   render() {
     return (
       <div>
@@ -33,7 +50,7 @@ export class User extends React.Component {
                          value="Save" />
         </form>
         <h3>Change my password</h3>
-        <form className="form form-vertical">
+        <form className="form form-vertical" onSubmit={this.handleSubmitPassword.bind(this)}>
             <Input ref="oldPassword"
                    type="password"
                    placeholder="Old password"
@@ -43,6 +60,7 @@ export class User extends React.Component {
                    placeholder="New password"
                    required />
             <ButtonInput bsStyle="primary"
+                         type="submit"
                          value="Save" />
         </form>
       </div>
