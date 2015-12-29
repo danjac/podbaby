@@ -1,11 +1,33 @@
 {
-	"ImportPath": "github.com/danjac/podbaby/fetch",
+	"ImportPath": "github.com/danjac/podbaby",
 	"GoVersion": "go1.5.2",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.8.6-7-g9c060de",
 			"Rev": "9c060de643590dae45da9d7c26276463bfc46fa0"
+		},
+		{
+			"ImportPath": "github.com/asaskevich/govalidator",
+			"Comment": "v2-10-g088ee17",
+			"Rev": "088ee1700509921c0970999fc56bc4641676b3a0"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.2.0-139-g142e6cd",
+			"Rev": "142e6cd241a4dfbf7f07a018f1f8225180018da4"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "f8220e087da2fc83d083bfc0289ed7f9db3536bd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Rev": "95995b243b00d085c7068909df0f833b343a3215"
 		},
 		{
 			"ImportPath": "github.com/jmoiron/sqlx",
@@ -21,9 +43,18 @@
 			"Rev": "76f54ee73233b171ca9ee82ef837a1fc4d3809c0"
 		},
 		{
+			"ImportPath": "github.com/justinas/nosurf",
+			"Comment": "0.1-50-g45adcfc",
+			"Rev": "45adcfcaf70610a5934db447ffe0ea9d13462c9e"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Comment": "go1.0-cutoff-63-g11fc39a",
 			"Rev": "11fc39a580a008f1f39bb3d11d984fb34ed778d9"
+		},
+		{
+			"ImportPath": "github.com/unrolled/render",
+			"Rev": "c442bc30e10d9a5ad49f2837d5e175de0bd0a52a"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",

@@ -1,24 +1,61 @@
-package main
+package commands
 
 import (
-	"github.com/danjac/podbaby/feedparser"
-	"github.com/danjac/podbaby/models"
-
-	"flag"
+	"fmt"
+	"net/http"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/danjac/podbaby/api"
 	"github.com/danjac/podbaby/database"
+	"github.com/danjac/podbaby/feedparser"
+	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 )
 
-var url = flag.String("url", "", "database connection url")
+// should be settings
+const (
+	defaultStaticURL = "/static/"
+	defaultStaticDir = "./static/"
+	devStaticURL     = "http://localhost:8080/static/"
+)
 
-func main() {
+// Serve runs the webserver
+func Serve(url string, port int, env string) {
 
-	flag.Parse()
+	db := database.New(sqlx.MustConnect("postgres", url))
 
-	db := database.New(sqlx.MustConnect("postgres", *url))
+	log := logrus.New()
+
+	log.Formatter = &logrus.TextFormatter{
+		FullTimestamp: true,
+		ForceColors:   true,
+	}
+
+	log.Info("Starting web service...")
+
+	var staticURL string
+	if env == "dev" {
+		staticURL = devStaticURL
+	} else {
+		staticURL = defaultStaticURL
+	}
+
+	api := api.New(db, log, &api.Config{
+		StaticURL: staticURL,
+		StaticDir: defaultStaticDir,
+		SecretKey: "my-secret",
+	})
+
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), api.Handler()); err != nil {
+		panic(err)
+	}
+
+}
+
+// Fetch retrieves latest podcasts
+func Fetch(url string) {
+
+	db := database.New(sqlx.MustConnect("postgres", url))
 
 	log := logrus.New()
 
