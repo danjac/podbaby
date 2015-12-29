@@ -6,6 +6,7 @@ const initialState = {
   name: null,
   email: null,
   redirectTo: null,
+  showRecoverPasswordForm: false,
   isLoaded: true
 };
 
@@ -28,6 +29,10 @@ export default function(state=initialState, action) {
 
     case Actions.CHANGE_EMAIL_SUCCESS:
       return Object.assign({}, state, { email: action.payload });
+
+    case Actions.OPEN_RECOVER_PASSWORD_FORM:
+    case Actions.CLOSE_RECOVER_PASSWORD_FORM:
+      return Object.assign({}, state, { showRecoverPasswordForm: action.type === Actions.OPEN_RECOVER_PASSWORD_FORM });
 
     case Actions.LOGOUT:
       return initialState;

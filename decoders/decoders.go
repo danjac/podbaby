@@ -19,6 +19,10 @@ func Decode(r *http.Request, data interface{}) error {
 	return nil
 }
 
+type RecoverPassword struct {
+	Identifier string `json:"identifier",valid:"required"`
+}
+
 type Signup struct {
 	Name     string `json:"name",valid:"length(3), required"`
 	Email    string `json:"email",valid:"email,required"`

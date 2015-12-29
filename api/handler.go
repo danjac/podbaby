@@ -30,6 +30,7 @@ func (s *Server) Handler() http.Handler {
 	auth.HandleFunc("/login/", s.login).Methods("POST")
 	auth.HandleFunc("/signup/", s.signup).Methods("POST")
 	auth.HandleFunc("/logout/", s.logout).Methods("DELETE")
+	auth.HandleFunc("/recoverpass/", s.recoverPassword).Methods("POST")
 
 	// user
 

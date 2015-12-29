@@ -62,7 +62,7 @@ export class Channel extends React.Component {
                 </Col>
                 <Col xs={6} md={3}>
                   <ButtonGroup>
-                    <Button title="Unsubscribe" onClick={this.handleSubscribe.bind(this)}><Glyphicon glyph="minus" /> Unsubscribe</Button>
+                    <Button title="Unsubscribe" onClick={this.handleSubscribe.bind(this)}><Glyphicon glyph="trash" /> Unsubscribe</Button>
                   </ButtonGroup>
                 </Col>
               </Row>

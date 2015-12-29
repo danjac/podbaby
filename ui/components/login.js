@@ -5,10 +5,49 @@ import { connect } from 'react-redux';
 
 import {
   Input,
-  Button
+  Button,
+  ButtonGroup,
+  Modal,
+  Glyphicon
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
+
+export class RecoverPasswordModal extends React.Component {
+
+  handleSubmit(event){
+    event.preventDefault();
+    const node = this.refs.identifier.getInputDOMNode();
+    if (node.value) {
+      this.props.onSubmit(node.value);
+      node.value = "";
+    }
+  }
+
+  render() {
+    const { show, onClose, container } = this.props;
+    return (
+      <Modal show={show}
+             aria-labelledby="recover-password-modal-title"
+             container={container}
+             onHide={onClose}>
+        <Modal.Header closeButton>
+          <Modal.Title id="recover-password-modal-title">Recover password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <form className="form" onSubmit={this.handleSubmit.bind(this)}>
+              <Input required type="text" placeholder="Your username or email address" ref="identifier" />
+              <ButtonGroup>
+                <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Submit</Button>
+                <Button bsStyle="default" onClick={onClose}><Glyphicon glyph="remove" /> Cancel</Button>
+              </ButtonGroup>
+            </form>
+        </Modal.Body>
+      </Modal>
+    );
+  }
+
+}
 
 export class Login extends React.Component {
 
@@ -22,7 +61,22 @@ export class Login extends React.Component {
     event.preventDefault();
     const identifier = this.refs.identifier.getInputDOMNode().value;
     const password = this.refs.password.getInputDOMNode().value;
-    this.actions.login(identifier, password);
+    if (identifier && password) {
+      this.actions.login(identifier, password);
+    }
+  }
+
+  handleOpenRecoverPasswordForm(event) {
+    event.preventDefault();
+    this.actions.openRecoverPasswordForm();
+  }
+
+  handleRecoverPassword(identifier) {
+    this.actions.recoverPassword(identifier);
+  }
+
+  handleCloseRecoverPasswordForm() {
+    this.actions.closeRecoverPasswordForm();
   }
 
   render() {
@@ -43,6 +97,13 @@ export class Login extends React.Component {
               className="form-control"
               type="submit">Login</Button>
         </form>
+        <div>
+          <a href="#" onClick={this.handleOpenRecoverPasswordForm.bind(this)}>Forgot your password?</a>
+        </div>
+        <RecoverPasswordModal show={this.props.auth.showRecoverPasswordForm}
+                              container={this}
+                              onSubmit={this.handleRecoverPassword.bind(this)}
+                              onClose={this.handleCloseRecoverPasswordForm.bind(this)} />
       </div>
 
     );
@@ -50,7 +111,14 @@ export class Login extends React.Component {
 };
 
 Login.propTypes = {
+  auth: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired
 };
 
-export default connect()(Login);
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps)(Login);

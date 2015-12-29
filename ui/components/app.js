@@ -173,6 +173,8 @@ const AlertList = props => {
         position: "fixed",
         height: "20px",
         width: "100%",
+        opacity: 0.99,
+        zIndex: 200,
         top: 100
       }}>
       {props.alerts.map(alert => {

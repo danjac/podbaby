@@ -75,3 +75,7 @@ export function changeEmail(email) {
 export function changePassword(oldPassword, newPassword) {
   return axios.patch(`/api/user/password/`, { oldPassword, newPassword });
 }
+
+export function recoverPassword(identifier) {
+  return axios.post(`/api/auth/recoverpass/`, { identifier });
+}

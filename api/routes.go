@@ -3,7 +3,9 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
+	"net/smtp"
 	"strings"
 
 	"github.com/danjac/podbaby/decoders"
@@ -155,6 +157,77 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 	}(decoder.URL, user.ID)
 
 	s.Render.Text(w, http.StatusCreated, "New channel")
+}
+
+func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
+	// generate a temp password
+	decoder := &decoders.RecoverPassword{}
+
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+
+	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
+	if err != nil {
+
+		if err == sql.ErrNoRows {
+			s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
+			return
+		}
+		s.abort(w, r, err)
+		return
+	}
+
+	tempPassword := "foobar"
+
+	user.SetPassword(tempPassword)
+
+	if err := s.DB.Users.UpdatePassword(user.Password, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
+	// send email to user
+	// TBD: add email config to server config
+	go func(r *http.Request, user *models.User, tempPassword string) {
+
+		msg := fmt.Sprintf(`Hi %s,
+We've reset your password so you can sign back in again!
+
+Here is your new temporary password:
+
+%s
+
+You can login here:
+
+%s/#/login/
+
+Change your password as soon as possible!
+
+Thanks,
+
+PodBaby
+    `, user.Name, tempPassword, r.Host)
+
+		s.Log.Info(msg)
+
+		err := smtp.SendMail(
+			"mail.localhost:25",
+			nil, // auth
+			"sender@podbaby.me",
+			[]string{user.Email},
+			[]byte(msg),
+		)
+
+		if err != nil {
+			s.Log.Error(err)
+		}
+
+	}(r, user, tempPassword)
+
+	s.Render.Text(w, http.StatusOK, "password sent")
+
 }
 
 func (s *Server) signup(w http.ResponseWriter, r *http.Request) {

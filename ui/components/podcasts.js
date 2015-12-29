@@ -143,7 +143,7 @@ export const Podcast = props => {
       {podcast.description ?
       (<div style={{paddingTop: "30px"}}>
         <Button className="form-control" onClick={toggleDetail}>
-        {isShowingDetail ? 'Show less' : 'Show more'} <Glyphicon glyph={isShowingDetail ? 'chevron-up' : 'chevron-down'} />
+        <Glyphicon glyph={isShowingDetail ? 'chevron-up' : 'chevron-down'} />
         </Button>
       </div>) : ''}
       {podcast.description && isShowingDetail  ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
