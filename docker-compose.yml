@@ -1,0 +1,10 @@
+web:
+  build: .
+  ports:
+   - "5000:5000"
+  volumes:
+   - .:/go/src/github.com/danjac/podbaby 
+  links:
+   - db
+db:
+  image: postgres
