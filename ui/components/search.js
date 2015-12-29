@@ -60,10 +60,12 @@ export class Search extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const { q } = newProps.location.query;
-    const isDiff = this.props.searchQuery !== q;
+    const newQuery = newProps.location.query.q;
+    const oldQuery = this.props.location.query.q;
+    const isDiff = newQuery && oldQuery && newQuery !== oldQuery;
     if (isDiff) {
-      this.props.dispatch(actions.search.search(q));
+      console.log("fetching again", newQuery, oldQuery)
+      this.props.dispatch(actions.search.search(newQuery));
     }
     return isDiff;
   }
