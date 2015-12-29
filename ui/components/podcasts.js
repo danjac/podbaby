@@ -55,7 +55,7 @@ export class PodcastList extends React.Component {
           const toggleSubscribe = event => {
             event.preventDefault();
             const action = podcast.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-            dispatch(action(podcast.channelId));
+            dispatch(action(podcast.d));
           };
 
           const toggleBookmark = event => {
@@ -122,7 +122,7 @@ export const Podcast = props => {
             <Row>
               <Col xs={6} md={6}>
                 {showChannel ? <h4>{podcast.title}</h4> : ''}
-                <b>{formatPubDate(podcast.pubDate)}</b>
+                <br /><b>{formatPubDate(podcast.pubDate)}</b>
               </Col>
               <Col xs={6} mdPush={2} md={3}>
                 <ButtonGroup>
@@ -131,8 +131,7 @@ export const Podcast = props => {
                   <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
                     <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
-                  {showChannel ?
-                    (<Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={toggleSubscribe}>
+                  {showChannel ? (<Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={toggleSubscribe}>
                     <Glyphicon glyph={podcast.isSubscribed ? "trash" : "ok"} title={podcast.isSubscribed ? 'Unsubscribe' : 'Subscribe'} />
                   </Button>) : ''}
                 </ButtonGroup>

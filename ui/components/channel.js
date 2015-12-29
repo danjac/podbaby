@@ -8,49 +8,12 @@ import {
   Glyphicon,
   ButtonGroup,
   Button,
-  Well,
-  Pagination
+  Well
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
+import PodcastList from './podcasts';
 import { sanitize, formatPubDate } from './utils';
-
-const ListItem = props => {
-  const {
-    podcast,
-    createHref,
-    isCurrentlyPlaying,
-    setCurrentlyPlaying,
-    bookmark
-  } = props;
-  // tbd get audio ref, set played at to last time
-  return (
-    <div>
-      <div className="media">
-        <div className="media-body">
-          <Grid>
-            <Row>
-              <Col xs={6} md={6}>
-                <h4 className="media-heading">{podcast.title}</h4>
-              </Col>
-              <Col xs={6} mdPush={3} md={3}>
-                <b>{formatPubDate(podcast.pubDate)}</b><br />
-                <ButtonGroup>
-                  <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
-                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
-                  <Button onClick={bookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
-                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
-                  </Button>
-                </ButtonGroup>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-      </div>
-      {podcast.description ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
-    </div>
-  );
-};
 
 export class Channel extends React.Component {
 
@@ -73,25 +36,14 @@ export class Channel extends React.Component {
   }
 
   render() {
-    const { channel, podcasts, page, dispatch, player } = this.props;
+    const { channel } = this.props;
     if (!channel) {
-      return <div></div>;
+      return <div>No channel found</div>;
     }
     const isSubscribed = channel.isSubscribed;
 
-    const pagination = (
-      page.numPages > 1 ?
-      <Pagination onSelect={this.handleSelectPage.bind(this)}
-                  first
-                  last
-                  prev
-                  next
-                  maxButtons={6}
-                  items={page.numPages}
-                  activePage={page.page} /> : '');
     return (
       <div>
-        {pagination}
         <div className="media">
           <div className="media-left">
             <a href="#">
@@ -119,26 +71,9 @@ export class Channel extends React.Component {
           </div>
           </div>
           <hr />
-          {podcasts.map(podcast => {
-          const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
-          const setCurrentlyPlaying = event => {
-            event.preventDefault();
-            dispatch(actions.player.setPodcast(isCurrentlyPlaying ? null : podcast));
-          };
-          const bookmark = (event) => {
-            event.preventDefault();
-            const { bookmarks } = actions;
-            const action = podcast.isBookmarked ? bookmarks.deleteBookmark : bookmarks.addBookmark;
-            dispatch(action(podcast.id));
-          };
-          return <ListItem key={podcast.id}
-                           podcast={podcast}
-                           bookmark={bookmark}
-                           isCurrentlyPlaying={isCurrentlyPlaying}
-                           setCurrentlyPlaying={setCurrentlyPlaying}
-                           channel={channel} />;
-        })}
-        {pagination}
+          <PodcastList showChannel={false}
+                       onSelectPage={this.handleSelectPage.bind(this)}
+                       actions={actions} {...this.props} />
       </div>
     );
   }
@@ -154,11 +89,12 @@ Channel.propTypes = {
 
 const mapStateToProps = state => {
   const { channel } = state.channel;
-  const { podcasts, page } = state.podcasts;
+  const { podcasts, page, showDetail } = state.podcasts;
   return {
     player: state.player,
+    podcasts: podcasts || [],
     channel,
-    podcasts,
+    showDetail,
     page
   };
 };

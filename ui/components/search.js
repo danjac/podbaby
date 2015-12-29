@@ -11,61 +11,9 @@ import {
   Well
 } from 'react-bootstrap';
 
-
 import  * as actions from '../actions';
+import PodcastList from './podcasts';
 import { sanitize, formatPubDate } from './utils';
-
-const PodcastItem = props => {
-  const {
-    podcast,
-    createHref,
-    isCurrentlyPlaying,
-    setCurrentlyPlaying,
-    bookmark,
-    subscribe
-  } = props;
-
-  const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
-  return (
-    <div>
-      <div className="media">
-        <div className="media-left media-middle">
-          <a href={url}>
-            <img className="media-object"
-                 height={60}
-                 width={60}
-                 src={podcast.image}
-                 alt={podcast.name} />
-          </a>
-        </div>
-        <div className="media-body">
-          <Grid>
-            <Row>
-              <Col xs={6} md={6}>
-                <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
-              </Col>
-              <Col xs={6} mdPush={3} md={3}>
-                <b>{formatPubDate(podcast.pubDate)}</b><br />
-                <ButtonGroup>
-                  <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
-                  <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
-                  <Button onClick={bookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
-                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
-                  </Button>
-                  <Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={subscribe}>
-                    <Glyphicon glyph={podcast.isSubscribed ? "trash" : "ok"} />
-                  </Button>
-                </ButtonGroup>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-      </div>
-      <h5>{podcast.title}</h5>
-      {podcast.description ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
-    </div>
-  );
-};
 
 const ChannelItem = props => {
   const { channel, createHref, subscribe } = props;
@@ -122,7 +70,7 @@ export class Search extends React.Component {
 
   render() {
 
-    const { dispatch, channels, podcasts, player, searchQuery } = this.props;
+    const { dispatch, channels, podcasts, searchQuery } = this.props;
     const { createHref } = this.props.history;
 
     return (
@@ -142,50 +90,22 @@ export class Search extends React.Component {
           );
         })}
         {podcasts.length > 0 ? <hr /> : ''}
-        {podcasts.map(podcast => {
-
-          const subscribe = event => {
-            event.preventDefault();
-            const action = podcast.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-            dispatch(action(podcast.channelId, podcast.name));
-          };
-
-          const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
-
-          const setCurrentlyPlaying = event => {
-            event.preventDefault();
-            dispatch(actions.player.setPodcast(isCurrentlyPlaying ? null : podcast));
-          };
-
-          const bookmark = event => {
-            event.preventDefault();
-            const { bookmarks } = actions;
-            const action = podcast.isBookmarked ? bookmarks.deleteBookmark : bookmarks.addBookmark;
-            dispatch(action(podcast.id));
-          };
-
-          return (
-            <PodcastItem key={podcast.id}
-                         podcast={podcast}
-                         subscribe={subscribe}
-                         bookmark={bookmark}
-                         isCurrentlyPlaying={isCurrentlyPlaying}
-                         setCurrentlyPlaying={setCurrentlyPlaying}
-                         createHref={createHref} />
-          );
-        })}
+        <PodcastList actions={actions}
+                     showChannel={true}
+                     {...this.props} />
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  const { podcasts } = state.podcasts;
+  const { podcasts, showDetail } = state.podcasts;
   const { query, channels } = state.search;
   return {
     searchQuery: query,
-    podcasts,
+    podcasts: podcasts || [],
     channels,
+    showDetail,
     player: state.player
   };
 };
