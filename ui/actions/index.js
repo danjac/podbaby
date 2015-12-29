@@ -8,6 +8,7 @@ import * as channels from './channels';
 import * as channel from './channel';
 import * as subscribe from './subscribe';
 import * as bookmarks from './bookmarks';
+import * as showDetail from './show_detail';
 
 export {
   auth,
@@ -19,5 +20,6 @@ export {
   channel,
   subscribe,
   bookmarks,
-  alerts
+  showDetail,
+  alerts,
 };

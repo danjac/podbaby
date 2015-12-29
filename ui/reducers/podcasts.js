@@ -1,7 +1,9 @@
+import _ from 'lodash';
 import { Actions } from '../constants';
 
 const initialState = {
   podcasts: [],
+  showDetail: [],
   page: {
     numPages: 0,
     numRows: 0,
@@ -12,9 +14,17 @@ const initialState = {
 
 export default function(state=initialState, action) {
 
-  let podcasts;
+  let podcasts, showDetail;
 
   switch(action.type) {
+
+    case Actions.SHOW_PODCAST_DETAIL:
+      showDetail = state.showDetail.concat(action.payload);
+      return Object.assign({}, state, { showDetail });
+
+    case Actions.HIDE_PODCAST_DETAIL:
+      showDetail = _.reject(id => id === action.payload);
+      return Object.assign({}, state, { showDetail });
 
     case Actions.ADD_BOOKMARK:
     case Actions.DELETE_BOOKMARK:
@@ -44,9 +54,8 @@ export default function(state=initialState, action) {
 
     case Actions.GET_BOOKMARKS_SUCCESS:
     case Actions.LATEST_PODCASTS_SUCCESS:
-
-      return action.payload;
-
+      return Object.assign({}, state, { podcasts: action.payload.podcasts, page: action.payload.page });
+      
     case Actions.GET_BOOKMARKS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:
 

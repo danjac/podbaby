@@ -10,10 +10,11 @@ import {
   ButtonGroup,
   Button,
   Well,
-  Pagination
+  Pagination,
+  Panel
 } from 'react-bootstrap';
 
-import { latest, player, bookmarks, subscribe } from '../actions';
+import { latest, player, bookmarks, subscribe, showDetail } from '../actions';
 
 import { sanitize, formatPubDate } from './utils';
 
@@ -24,11 +25,14 @@ const ListItem = props => {
     isCurrentlyPlaying,
     setCurrentlyPlaying,
     unsubscribe,
+    toggleDetail,
+    isShowingDetail,
     bookmark } = props;
   const url = createHref("/podcasts/channel/" + podcast.channelId + "/")
-  // tbd get audio ref, set played at to last time
+  const header = <h3><a href={url}>{podcast.name}</a></h3>;
+
   return (
-    <div>
+    <Panel header={header}>
       <div className="media">
         <div className="media-left media-middle">
           <a href={url}>
@@ -43,17 +47,8 @@ const ListItem = props => {
           <Grid>
             <Row>
               <Col xs={6} md={6}>
-                <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
-              </Col>
-              <Col xs={6} mdPush={2} md={3}>
+                <h4>{podcast.title}</h4>
                 <b>{formatPubDate(podcast.pubDate)}</b>
-              </Col>
-            </Row>
-          </Grid>
-          <Grid>
-            <Row>
-              <Col xs={6} md={6}>
-                <h5>{podcast.title}</h5>
               </Col>
               <Col xs={6} mdPush={2} md={3}>
                 <ButtonGroup>
@@ -69,8 +64,14 @@ const ListItem = props => {
           </Grid>
         </div>
       </div>
-      {podcast.description ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
-    </div>
+      <div style={{paddingTop: "30px"}}>
+        <Button className="form-control" onClick={toggleDetail}>
+        {isShowingDetail ? 'Show less' : 'Show more'} <Glyphicon glyph={isShowingDetail ? 'chevron-up' : 'chevron-down'} />
+        </Button>
+      </div>
+
+      {podcast.description && isShowingDetail  ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+  </Panel>
   );
 };
 
@@ -111,23 +112,37 @@ export class Latest extends React.Component {
         {pagination}
         {podcasts.map(podcast => {
           const isCurrentlyPlaying = this.props.player.podcast && podcast.id === this.props.player.podcast.id;
-          const setCurrentlyPlaying = (event) => {
+
+          const setCurrentlyPlaying = event => {
             event.preventDefault();
             dispatch(player.setPodcast(isCurrentlyPlaying ? null : podcast));
           };
-          const unsubscribe = (event) => {
+
+          const unsubscribe = event => {
             event.preventDefault();
             dispatch(subscribe.unsubscribe(podcast.channelId, podcast.name));
           };
-          const bookmark = (event) => {
+
+          const bookmark = event => {
             event.preventDefault();
             const action = podcast.isBookmarked ? bookmarks.deleteBookmark : bookmarks.addBookmark;
             dispatch(action(podcast.id));
           };
+
+          const isShowingDetail = this.props.showDetail.includes(podcast.id);
+
+          const toggleDetail = event => {
+            event.preventDefault();
+            const action = isShowingDetail ? showDetail.hidePodcastDetail : showDetail.showPodcastDetail;
+            dispatch(action(podcast.id));
+          };
+
           return <ListItem key={podcast.id}
                            podcast={podcast}
                            unsubscribe={unsubscribe}
                            bookmark={bookmark}
+                           isShowingDetail={isShowingDetail}
+                           toggleDetail={toggleDetail}
                            isCurrentlyPlaying={isCurrentlyPlaying}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
@@ -146,9 +161,10 @@ Latest.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, page } = state.podcasts;
+  const { podcasts, showDetail, page } = state.podcasts;
   return {
     podcasts: podcasts || [],
+    showDetail: showDetail,
     page: page,
     player: state.player
   };
