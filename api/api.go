@@ -1,15 +1,23 @@
 package api
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
-	"github.com/gorilla/mux"
+	"github.com/danjac/podbaby/models"
+	"github.com/gorilla/context"
 	"github.com/gorilla/securecookie"
 	"github.com/unrolled/render"
+)
+
+const (
+	cookieUserID  = "userid"
+	userKey       = "user"
+	cookieTimeout = 24
 )
 
 // Config is server configuration
@@ -42,27 +50,66 @@ func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
 	}
 }
 
-func getInt64(r *http.Request, name string) (int64, error) {
-	badRequest := HTTPError{http.StatusBadRequest, errors.New("Invalid parameter for " + name)}
-	value, ok := mux.Vars(r)[name]
-	if !ok {
-		return 0, badRequest
+func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
+
+	if encoded, err := s.Cookie.Encode(cookieUserID, userID); err == nil {
+		cookie := &http.Cookie{
+			Name:    cookieUserID,
+			Value:   encoded,
+			Expires: time.Now().Add(time.Hour * cookieTimeout),
+			//Secure:   true,
+			HttpOnly: true,
+			Path:     "/",
+		}
+		http.SetCookie(w, cookie)
 	}
-	intval, err := strconv.ParseInt(value, 10, 64)
-	if err != nil {
-		return 0, badRequest
-	}
-	return intval, nil
 }
 
-func getPage(r *http.Request) int64 {
-	value := r.FormValue("page")
-	if value == "" {
-		return 1
-	}
-	page, err := strconv.ParseInt(value, 10, 64)
+func (s *Server) requireAuth(fn http.HandlerFunc) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check if user already set elsewhere
+		if _, ok := getUser(r); ok {
+			fn(w, r)
+			return
+		}
+		// get user from cookie
+		user, err := s.getUserFromCookie(r)
+		if err != nil {
+			s.abort(w, r, err)
+			return
+		}
+		// all ok...
+		context.Set(r, userKey, user)
+		fn(w, r)
+	})
+
+}
+
+func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
+
+	cookie, err := r.Cookie(cookieUserID)
 	if err != nil {
-		page = 1
+		return nil, HTTPError{http.StatusUnauthorized, err}
 	}
-	return page
+
+	var userID int64
+
+	if err := s.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
+		return nil, HTTPError{http.StatusUnauthorized, err}
+	}
+
+	if userID == 0 {
+		return nil, HTTPError{http.StatusUnauthorized, errors.New("Cookie is empty")}
+	}
+
+	user, err := s.DB.Users.GetByID(userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, HTTPError{http.StatusUnauthorized, errors.New("No user found for this ID")}
+		}
+		return nil, err
+	}
+	return user, nil
+
 }

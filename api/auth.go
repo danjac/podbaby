@@ -3,89 +3,216 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"math/rand"
 	"net/http"
+	"net/smtp"
 	"time"
 
+	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/models"
-	"github.com/gorilla/context"
 )
 
-const (
-	cookieUserID  = "userid"
-	userKey       = "user"
-	cookieTimeout = 24
-)
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
-// authentication methods
+const passwordChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func getUser(r *http.Request) (*models.User, bool) {
-	val, ok := context.GetOk(r, userKey)
-	if !ok {
-		return nil, false
+func generateRandomPassword(length int) string {
+	b := make([]byte, length)
+	numChars := len(passwordChars)
+	for i := range b {
+		b[i] = passwordChars[rand.Intn(numChars)]
 	}
-	return val.(*models.User), true
+	return string(b)
 }
 
-func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
+func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
+	// generate a temp password
+	decoder := &decoders.RecoverPassword{}
 
-	if encoded, err := s.Cookie.Encode(cookieUserID, userID); err == nil {
-		cookie := &http.Cookie{
-			Name:    cookieUserID,
-			Value:   encoded,
-			Expires: time.Now().Add(time.Hour * cookieTimeout),
-			//Secure:   true,
-			HttpOnly: true,
-			Path:     "/",
-		}
-		http.SetCookie(w, cookie)
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
 	}
-}
 
-func (s *Server) requireAuth(fn http.HandlerFunc) http.Handler {
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check if user already set elsewhere
-		if _, ok := getUser(r); ok {
-			fn(w, r)
-			return
-		}
-		// get user from cookie
-		user, err := s.getUserFromCookie(r)
-		if err != nil {
-			s.abort(w, r, err)
-			return
-		}
-		// all ok...
-		context.Set(r, userKey, user)
-		fn(w, r)
-	})
-
-}
-
-func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
-
-	cookie, err := r.Cookie(cookieUserID)
+	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
 	if err != nil {
-		return nil, HTTPError{http.StatusUnauthorized, err}
-	}
 
-	var userID int64
-
-	if err := s.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
-		return nil, HTTPError{http.StatusUnauthorized, err}
-	}
-
-	if userID == 0 {
-		return nil, HTTPError{http.StatusUnauthorized, errors.New("Cookie is empty")}
-	}
-
-	user, err := s.DB.Users.GetByID(userID)
-	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, HTTPError{http.StatusUnauthorized, errors.New("No user found for this ID")}
+			s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
+			return
 		}
-		return nil, err
+		s.abort(w, r, err)
+		return
 	}
-	return user, nil
 
+	tempPassword := generateRandomPassword(6)
+
+	user.SetPassword(tempPassword)
+
+	if err := s.DB.Users.UpdatePassword(user.Password, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
+	// send email to user
+	// TBD: add email config to server config
+	go func(r *http.Request, user *models.User, tempPassword string) {
+
+		msg := fmt.Sprintf(`Hi %s,
+We've reset your password so you can sign back in again!
+
+Here is your new temporary password:
+
+%s
+
+You can login here:
+
+%s/#/login/
+
+Change your password as soon as possible!
+
+Thanks,
+
+PodBaby
+    `, user.Name, tempPassword, r.Host)
+
+		s.Log.Info(msg)
+
+		err := smtp.SendMail(
+			"mail.localhost:25",
+			nil, // auth
+			"sender@podbaby.me",
+			[]string{user.Email},
+			[]byte(msg),
+		)
+
+		if err != nil {
+			s.Log.Error(err)
+		}
+
+	}(r, user, tempPassword)
+
+	s.Render.Text(w, http.StatusOK, "password sent")
+
+}
+
+func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
+
+	decoder := &decoders.Signup{}
+
+	if err := decoders.Decode(r, decoder); r != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+
+	if exists, _ := s.DB.Users.IsEmail(decoder.Email, 0); exists {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
+		return
+	}
+
+	if exists, _ := s.DB.Users.IsName(decoder.Name); exists {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Name taken")})
+		return
+	}
+
+	// make new user
+
+	user := &models.User{
+		Name:  decoder.Name,
+		Email: decoder.Email,
+	}
+
+	if err := user.SetPassword(decoder.Password); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
+	if err := s.DB.Users.Create(user); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.setAuthCookie(w, user.ID)
+	// tbd: no need to return user!
+	s.Render.JSON(w, http.StatusCreated, user)
+}
+
+func (s *Server) login(w http.ResponseWriter, r *http.Request) {
+	decoder := &decoders.Login{}
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+
+	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
+	if err != nil {
+
+		if err == sql.ErrNoRows {
+			s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
+			return
+		}
+		s.abort(w, r, err)
+		return
+	}
+
+	if !user.CheckPassword(decoder.Password) {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
+		return
+	}
+	// login user
+	s.setAuthCookie(w, user.ID)
+
+	// tbd: no need to return user!
+	s.Render.JSON(w, http.StatusOK, user)
+
+}
+
+func (s *Server) logout(w http.ResponseWriter, r *http.Request) {
+	s.setAuthCookie(w, 0)
+	s.Render.Text(w, http.StatusOK, "Logged out")
+}
+
+func (s *Server) changeEmail(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	decoder := &decoders.NewEmail{}
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+	// does this email exist?
+	if exists, _ := s.DB.Users.IsEmail(decoder.Email, user.ID); exists {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
+		return
+	}
+
+	if err := s.DB.Users.UpdateEmail(decoder.Email, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "email updated")
+}
+
+func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	decoder := &decoders.NewPassword{}
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+
+	// validate old password first
+
+	if !user.CheckPassword(decoder.OldPassword) {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
+		return
+	}
+	user.SetPassword(decoder.NewPassword)
+
+	if err := s.DB.Users.UpdatePassword(user.Password, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "password updated")
 }
