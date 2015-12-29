@@ -31,7 +31,7 @@ module.exports = {
   devtool: 'source-map',
   entry: entry,
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'static'),
     filename: "[name].js",
     publicPath: 'http://localhost:8080/static/'
   },

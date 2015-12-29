@@ -35,7 +35,7 @@ func main() {
 				},
 				cli.StringFlag{
 					Name:        "env",
-					Value:       "dev",
+					Value:       "prod",
 					Usage:       "Environment",
 					Destination: &env,
 				},

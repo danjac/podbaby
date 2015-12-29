@@ -10,6 +10,7 @@ import (
 func (s *Server) Handler() http.Handler {
 
 	router := mux.NewRouter()
+
 	// static routes
 
 	router.PathPrefix(s.Config.StaticURL).Handler(
