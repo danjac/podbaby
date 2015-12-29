@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/codegangsta/cli"
@@ -12,7 +13,7 @@ func main() {
 	app := cli.NewApp()
 	app.EnableBashCompletion = true
 
-	var url, env string
+	var url, env, secretKey string
 	var port int
 
 	app.Commands = []cli.Command{
@@ -25,6 +26,12 @@ func main() {
 					EnvVar:      "DB_URL",
 					Usage:       "Database connection URL",
 					Destination: &url,
+				},
+				cli.StringFlag{
+					Name:        "secret",
+					EnvVar:      "SECRET_KEY",
+					Usage:       "Secret key",
+					Destination: &secretKey,
 				},
 				cli.IntFlag{
 					Name:        "port",
@@ -41,7 +48,13 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
-				commands.Serve(url, port, env)
+				if url == "" {
+					log.Fatal("url is required")
+				}
+				if secretKey == "" {
+					log.Fatal("secret is required")
+				}
+				commands.Serve(url, port, secretKey, env)
 			},
 		},
 		{
@@ -56,6 +69,9 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
+				if url == "" {
+					log.Fatal("url is required")
+				}
 				commands.Fetch(url)
 			},
 		},

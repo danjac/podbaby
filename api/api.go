@@ -20,6 +20,8 @@ const (
 	cookieTimeout = 24
 )
 
+var errNotLoggedIn = errors.New("You are not logged in")
+
 // Config is server configuration
 type Config struct {
 	StaticURL string
@@ -90,23 +92,23 @@ func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
 
 	cookie, err := r.Cookie(cookieUserID)
 	if err != nil {
-		return nil, HTTPError{http.StatusUnauthorized, err}
+		return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
 	}
 
 	var userID int64
 
 	if err := s.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
-		return nil, HTTPError{http.StatusUnauthorized, err}
+		return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
 	}
 
 	if userID == 0 {
-		return nil, HTTPError{http.StatusUnauthorized, errors.New("Cookie is empty")}
+		return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
 	}
 
 	user, err := s.DB.Users.GetByID(userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, HTTPError{http.StatusUnauthorized, errors.New("No user found for this ID")}
+			return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
 		}
 		return nil, err
 	}

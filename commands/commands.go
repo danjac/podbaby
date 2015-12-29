@@ -20,7 +20,7 @@ const (
 )
 
 // Serve runs the webserver
-func Serve(url string, port int, env string) {
+func Serve(url string, port int, secretKey, env string) {
 
 	db := database.New(sqlx.MustConnect("postgres", url))
 
@@ -43,7 +43,7 @@ func Serve(url string, port int, env string) {
 	api := api.New(db, log, &api.Config{
 		StaticURL: staticURL,
 		StaticDir: defaultStaticDir,
-		SecretKey: "my-secret",
+		SecretKey: secretKey,
 	})
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), api.Handler()); err != nil {
