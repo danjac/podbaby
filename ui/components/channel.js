@@ -153,7 +153,8 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { channel, podcasts, page } = state.channel;
+  const { channel } = state.channel;
+  const { podcasts, page } = state.podcasts;
   return {
     player: state.player,
     channel,

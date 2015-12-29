@@ -1,18 +1,10 @@
 import { Actions } from '../constants';
 
 const initialState = {
-  channel: null,
-  podcasts: [],
-  page: {
-    numPages: 0,
-    numRows: 0,
-    page: 1
-  }
+  channel: null
 };
 
 export default function(state=initialState, action) {
-
-  let channel, podcasts;
 
   switch(action.type) {
 
@@ -24,18 +16,8 @@ export default function(state=initialState, action) {
       }
       return state;
 
-    case Actions.ADD_BOOKMARK:
-    case Actions.DELETE_BOOKMARK:
-      podcasts = (state.podcasts || []).map(podcast => {
-        if (podcast.id === action.payload) {
-          podcast.isBookmarked = action.type === Actions.ADD_BOOKMARK;
-        }
-        return podcast;
-      });
-      return Object.assign({}, state, { podcasts });
-
     case Actions.GET_CHANNEL_SUCCESS:
-      return action.payload;
+      return Object.assign({}, state, { channel: action.payload.channel });
 
     case Actions.GET_CHANNEL_FAILURE:
       return initialState;

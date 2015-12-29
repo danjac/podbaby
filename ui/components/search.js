@@ -180,7 +180,8 @@ export class Search extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { query, podcasts, channels, numResults } = state.search;
+  const { podcasts } = state.podcasts;
+  const { query, channels } = state.search;
   return {
     searchQuery: query,
     podcasts,

@@ -132,7 +132,7 @@ Bookmarks.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, page } = state.bookmarks;
+  const { podcasts, page } = state.podcasts;
   return {
     podcasts: podcasts || [],
     page: page,

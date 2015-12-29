@@ -126,9 +126,9 @@ export class Latest extends React.Component {
           };
           return <ListItem key={podcast.id}
                            podcast={podcast}
-                           isCurrentlyPlaying={isCurrentlyPlaying}
                            unsubscribe={unsubscribe}
                            bookmark={bookmark}
+                           isCurrentlyPlaying={isCurrentlyPlaying}
                            setCurrentlyPlaying={setCurrentlyPlaying}
                            createHref={createHref} />;
         })}
@@ -146,7 +146,7 @@ Latest.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, page } = state.latest;
+  const { podcasts, page } = state.podcasts;
   return {
     podcasts: podcasts || [],
     page: page,

@@ -34,13 +34,16 @@ export default function (state=initialState, action) {
           return podcast;
         })
       });
+
     case Actions.SEARCH:
       return Object.assign({}, state, { query: action.payload });
+
     case Actions.SEARCH_SUCCESS:
-      let { channels, podcasts } = action.payload;
+      let { channels, podcasts, numResults } = action.payload;
       return Object.assign({}, state, {
         channels: channels || [],
-        podcasts: podcasts || []
+        podcasts: podcasts || [],
+        numResults
       });
     case Actions.SEARCH_FAILURE:
       return initialState;
