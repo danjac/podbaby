@@ -15,7 +15,7 @@ import {
 
 import { bookmarks, player, subscribe } from '../actions';
 
-import { sanitize } from './utils';
+import { sanitize, formatPubDate } from './utils';
 
 const ListItem = props => {
   const { podcast, createHref, isCurrentlyPlaying, setCurrentlyPlaying, subscribe, deleteBookmark } = props;
@@ -41,6 +41,7 @@ const ListItem = props => {
                 <h5>{podcast.title}</h5>
               </Col>
               <Col xs={6} mdPush={3} md={3}>
+                <b>{formatPubDate(podcast.pubDate)}</b><br />
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /></Button>
                     <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>

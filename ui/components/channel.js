@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
-import { sanitize } from './utils';
+import { sanitize, formatPubDate } from './utils';
 
 const ListItem = props => {
   const {
@@ -34,6 +34,7 @@ const ListItem = props => {
                 <h4 className="media-heading">{podcast.title}</h4>
               </Col>
               <Col xs={6} mdPush={3} md={3}>
+                <b>{formatPubDate(podcast.pubDate)}</b><br />
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
                   <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
@@ -117,6 +118,7 @@ export class Channel extends React.Component {
             {channel.description ? <Well dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           </div>
           </div>
+          <hr />
           {podcasts.map(podcast => {
           const isCurrentlyPlaying = player.podcast && podcast.id === player.podcast.id;
           const setCurrentlyPlaying = event => {

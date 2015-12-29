@@ -15,7 +15,7 @@ import {
 
 import { latest, player, bookmarks, subscribe } from '../actions';
 
-import { sanitize } from './utils';
+import { sanitize, formatPubDate } from './utils';
 
 const ListItem = props => {
   const {
@@ -40,13 +40,22 @@ const ListItem = props => {
           </a>
         </div>
         <div className="media-body">
-          <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
+          <Grid>
+            <Row>
+              <Col xs={6} md={6}>
+                <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
+              </Col>
+              <Col xs={6} mdPush={2} md={3}>
+                <b>{formatPubDate(podcast.pubDate)}</b>
+              </Col>
+            </Row>
+          </Grid>
           <Grid>
             <Row>
               <Col xs={6} md={6}>
                 <h5>{podcast.title}</h5>
               </Col>
-              <Col xs={6} mdPush={3} md={3}>
+              <Col xs={6} mdPush={2} md={3}>
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /></Button>
                   <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>

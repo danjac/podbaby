@@ -13,7 +13,7 @@ import {
 
 
 import  * as actions from '../actions';
-import { sanitize } from './utils';
+import { sanitize, formatPubDate } from './utils';
 
 const PodcastItem = props => {
   const {
@@ -45,6 +45,7 @@ const PodcastItem = props => {
                 <h4 className="media-heading"><a href={url}>{podcast.name}</a></h4>
               </Col>
               <Col xs={6} mdPush={3} md={3}>
+                <b>{formatPubDate(podcast.pubDate)}</b><br />
                 <ButtonGroup>
                   <Button onClick={setCurrentlyPlaying}><Glyphicon glyph={ isCurrentlyPlaying ? 'stop': 'play' }  /> </Button>
                   <a className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /> </a>
@@ -126,7 +127,7 @@ export class Search extends React.Component {
 
     return (
       <div>
-        {searchQuery ? <h2>Searching for {searchQuery}</h2> : ''}
+        {searchQuery ? <h2>Searching for "{searchQuery}"</h2> : ''}
         {channels.map(channel => {
           const subscribe = (event) => {
             event.preventDefault();

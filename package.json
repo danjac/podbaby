@@ -50,6 +50,7 @@
     "bootswatch": "^3.3.6",
     "history": "^1.13.1",
     "lodash": "^3.10.1",
+    "moment": "^2.10.6",
     "react": "^0.14.3",
     "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.3",
