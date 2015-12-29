@@ -21,6 +21,7 @@ import {
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
 
@@ -29,8 +30,10 @@ class MainNav extends React.Component {
   search(event) {
     event.preventDefault();
     const node = this.refs.search.getInputDOMNode();
-    this.props.search(node.value);
+    const query = node.value;
     node.value = "";
+    this.props.dispatch(pushPath(`/podcasts/search/?q=${query}`))
+
   }
 
   render() {
@@ -49,7 +52,7 @@ class MainNav extends React.Component {
 
         {auth.isLoggedIn ?
         <form className="navbar-form navbar-left" role="search" onSubmit={this.search.bind(this)}>
-          <Input ref="search" type="search" placeholder="Find a channel" addonBefore={searchIcon} />
+          <Input ref="search" type="search" placeholder="Find a podcast" addonBefore={searchIcon} />
         </form> : ''}
 
         {auth.isLoggedIn ?

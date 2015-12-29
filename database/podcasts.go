@@ -1,6 +1,9 @@
 package database
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -10,6 +13,7 @@ type PodcastDB interface {
 	SelectAll(int64, int64) (*models.PodcastList, error)
 	SelectByChannelID(int64, int64, int64) (*models.PodcastList, error)
 	SelectBookmarked(int64, int64) (*models.PodcastList, error)
+	Search(string, int64) ([]models.Podcast, error)
 	Create(*models.Podcast) error
 }
 
@@ -17,7 +21,37 @@ type defaultPodcastDBImpl struct {
 	*sqlx.DB
 }
 
-func (db *defaultPodcastDBImpl) SelectAll(userID int64, page int64) (*models.PodcastList, error) {
+func (db *defaultPodcastDBImpl) Search(query string, userID int64) ([]models.Podcast, error) {
+
+	tokens := strings.Split(query, " ")
+
+	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, c.title AS name, c.image, p.pub_date,
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
+      AS is_bookmarked,
+    EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
+      AS is_subscribed
+    FROM podcasts p
+    JOIN channels c ON c.id=p.channel_id
+    WHERE `
+
+	searchArgs := []interface{}{userID}
+
+	var clauses []string
+
+	for counter, token := range tokens {
+		searchArgs = append(searchArgs, fmt.Sprintf("%%%s%%", token))
+		clauses = append(clauses, fmt.Sprintf("(p.title ILIKE $%d OR p.description ILIKE $%d)", counter+2, counter+2))
+	}
+
+	sql += " " + strings.Join(clauses, " AND ") + " ORDER BY p.pub_date DESC LIMIT 20"
+
+	var podcasts []models.Podcast
+	return podcasts, db.Select(&podcasts, sql, searchArgs...)
+
+}
+
+func (db *defaultPodcastDBImpl) SelectAll(userID, page int64) (*models.PodcastList, error) {
 
 	sql := `SELECT COUNT(p.id) FROM podcasts p
   JOIN subscriptions s ON s.channel_id = p.channel_id
@@ -35,7 +69,7 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64, page int64) (*models.Pod
 
 	sql = `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
-    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
       AS is_bookmarked
     FROM podcasts p
     JOIN subscriptions s ON s.channel_id = p.channel_id
@@ -52,7 +86,7 @@ func (db *defaultPodcastDBImpl) SelectAll(userID int64, page int64) (*models.Pod
 	return result, err
 }
 
-func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64, page int64) (*models.PodcastList, error) {
+func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
 
 	sql := `SELECT COUNT(p.id) FROM podcasts p
   JOIN bookmarks b ON b.podcast_id = p.id
@@ -88,7 +122,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID int64, page int64) (*mod
 	return result, err
 }
 
-func (db *defaultPodcastDBImpl) SelectByChannelID(channelID int64, userID int64, page int64) (*models.PodcastList, error) {
+func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, userID, page int64) (*models.PodcastList, error) {
 
 	sql := `SELECT COUNT(id) FROM podcasts WHERE channel_id=$1`
 

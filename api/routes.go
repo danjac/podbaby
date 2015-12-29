@@ -81,13 +81,15 @@ func (s *Server) search(w http.ResponseWriter, r *http.Request) {
 	result := &models.SearchResult{}
 
 	if query != "" {
-		channels, err := s.DB.Channels.Search(query, user.ID)
-		if err != nil {
+		var err error
+		if result.Channels, err = s.DB.Channels.Search(query, user.ID); err != nil {
 			s.abort(w, r, err)
 			return
 		}
-		result.Channels = channels
-		result.NumResults += len(result.Channels)
+		if result.Podcasts, err = s.DB.Podcasts.Search(query, user.ID); err != nil {
+			s.abort(w, r, err)
+			return
+		}
 	}
 
 	s.Render.JSON(w, http.StatusOK, result)

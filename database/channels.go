@@ -51,10 +51,10 @@ func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Cha
 
 	for counter, token := range tokens {
 		searchArgs = append(searchArgs, fmt.Sprintf("%%%s%%", token))
-		clauses = append(clauses, fmt.Sprintf("title ILIKE $%d OR description ILIKE $%d", counter+2, counter+2))
+		clauses = append(clauses, fmt.Sprintf("(title ILIKE $%d OR description ILIKE $%d)", counter+2, counter+2))
 	}
 
-	sql += " " + strings.Join(clauses, " OR ") + " ORDER BY title DESC LIMIT 30"
+	sql += " " + strings.Join(clauses, " AND ") + " ORDER BY title DESC LIMIT 20"
 
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql, searchArgs...)
