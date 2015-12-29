@@ -25,7 +25,7 @@ func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
-	result, err := s.DB.Podcasts.SelectAll(user.ID, getPage(r))
+	result, err := s.DB.Podcasts.SelectSubscribed(user.ID, getPage(r))
 	if err != nil {
 		s.abort(w, r, err)
 		return

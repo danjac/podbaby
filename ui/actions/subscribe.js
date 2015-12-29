@@ -3,18 +3,18 @@ import { Actions } from '../constants';
 import * as alerts from './alerts';
 import { createAction } from './utils';
 
-export function subscribe(id, name) {
+export function subscribe(id) {
   return dispatch => {
     api.subscribe(id);
     dispatch(createAction(Actions.SUBSCRIBE, id));
-    dispatch(alerts.success(`You are now subscribed to ${name}`));
+    dispatch(alerts.success("You are now subscribed to this channel"));
   };
 }
 
-export function unsubscribe(id, name) {
+export function unsubscribe(id) {
   return dispatch => {
     api.unsubscribe(id);
     dispatch(createAction(Actions.UNSUBSCRIBE, id));
-    dispatch(alerts.success(`You are no longer subscribed to ${name}`));
+    dispatch(alerts.success("You are no longer subscribed to this channel"));
   }
 }
