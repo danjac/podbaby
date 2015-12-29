@@ -242,7 +242,9 @@ export class App extends React.Component {
         <div className="container">
           {this.props.children}
         </div>
-        {this.props.auth.isLoggedIn && this.props.player.isPlaying ? <Player player={this.props.player} closePlayer={this.handleClosePlayer.bind(this)}/> : ''}
+        {this.props.auth.isLoggedIn && this.props.player.isPlaying ?
+          <Player player={this.props.player}
+                  onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
         <AddChannelModal show={this.props.addChannel.show}
                          container={this}
                          onAdd={this.handleAddChannel.bind(this)}
