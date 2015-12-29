@@ -6,18 +6,30 @@ import {
     Input
 } from 'react-bootstrap';
 
+import * as actions from '../actions';
+
 export class User extends React.Component {
+
+  handleSubmitEmail(event) {
+    event.preventDefault();
+    const email = this.refs.email.getValue();
+    if (email) {
+      this.props.dispatch(actions.users.changeEmail(email));
+    }
+
+  }
 
   render() {
     return (
       <div>
         <h3>Change my email address</h3>
-        <form className="form form-vertical">
+        <form className="form form-vertical" onSubmit={this.handleSubmitEmail.bind(this)}>
             <Input ref="email"
                    type="email"
                    required
                    defaultValue={this.props.auth.email}  />
             <ButtonInput bsStyle="primary"
+                         type="submit"
                          value="Save" />
         </form>
         <h3>Change my password</h3>

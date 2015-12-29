@@ -26,6 +26,9 @@ export default function(state=initialState, action) {
     case Actions.CURRENT_USER:
       return Object.assign({}, state, action.payload, { isLoggedIn: !_.isEmpty(action.payload) });
 
+    case Actions.CHANGE_EMAIL_SUCCESS:
+      return Object.assign({}, state, { email: action.payload });
+
     case Actions.LOGOUT:
       return initialState;
   }

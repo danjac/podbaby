@@ -1,4 +1,5 @@
 import * as auth from './auth';
+import * as users from './users';
 import * as search from './search';
 import * as latest from './latest';
 import * as player from './player';
@@ -12,6 +13,7 @@ import * as showDetail from './show_detail';
 
 export {
   auth,
+  users,
   search,
   addChannel,
   latest,

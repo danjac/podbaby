@@ -31,6 +31,12 @@ func (s *Server) Handler() http.Handler {
 	auth.HandleFunc("/signup/", s.signup).Methods("POST")
 	auth.HandleFunc("/logout/", s.logout).Methods("DELETE")
 
+	// user
+
+	user := api.PathPrefix("/user/").Subrouter()
+
+	user.Handle("/email/", s.requireAuth(s.changeEmail)).Methods("PATCH")
+
 	// channels
 
 	channels := api.PathPrefix("/channels/").Subrouter()

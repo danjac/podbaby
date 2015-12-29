@@ -2,8 +2,9 @@ package decoders
 
 import (
 	"encoding/json"
-	"github.com/asaskevich/govalidator"
 	"net/http"
+
+	"github.com/asaskevich/govalidator"
 )
 
 // decodes JSON body of request and runs through validator
@@ -31,4 +32,8 @@ type Login struct {
 
 type NewChannel struct {
 	URL string `json:"url",valid:"url,required"`
+}
+
+type NewEmail struct {
+	Email string `json:"email",valid:"email,required"`
 }

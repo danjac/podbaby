@@ -67,3 +67,7 @@ export function addBookmark(id) {
 export function deleteBookmark(id) {
   return axios.delete(`/api/bookmarks/${id}/`);
 }
+
+export function changeEmail(email) {
+  return axios.patch(`/api/user/email/`, { email });
+}

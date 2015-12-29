@@ -166,7 +166,7 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if exists, _ := s.DB.Users.IsEmail(decoder.Email); exists {
+	if exists, _ := s.DB.Users.IsEmail(decoder.Email, 0); exists {
 		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
 		return
 	}
@@ -296,4 +296,24 @@ func (s *Server) removeBookmark(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.Render.Text(w, http.StatusOK, "bookmark removed")
+}
+
+func (s *Server) changeEmail(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	decoder := &decoders.NewEmail{}
+	if err := decoders.Decode(r, decoder); err != nil {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		return
+	}
+	// does this email exist?
+	if exists, _ := s.DB.Users.IsEmail(decoder.Email, user.ID); exists {
+		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
+		return
+	}
+
+	if err := s.DB.Users.UpdateEmail(decoder.Email, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "email updated")
 }
