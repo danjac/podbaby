@@ -166,7 +166,7 @@ export class Player extends React.Component {
 
 const AlertList = props => {
 
-  if (!props.alerts) return <div></div>;
+  if (props.alerts.length === 0) return <div></div>;
 
   return (
     <div className="container" style={{
