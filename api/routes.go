@@ -4,15 +4,32 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/smtp"
 	"strings"
+	"time"
 
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
 	"github.com/justinas/nosurf"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+const passwordChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func generateRandomPassword(length int) string {
+	b := make([]byte, length)
+	numChars := len(passwordChars)
+	for i := range b {
+		b[i] = passwordChars[rand.Intn(numChars)]
+	}
+	return string(b)
+}
 
 func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 	user, _ := s.getUserFromCookie(r)
@@ -179,7 +196,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tempPassword := "foobar"
+	tempPassword := generateRandomPassword(6)
 
 	user.SetPassword(tempPassword)
 

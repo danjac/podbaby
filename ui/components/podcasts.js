@@ -132,7 +132,7 @@ export const Podcast = props => {
                     <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
                   {showChannel ? (<Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={toggleSubscribe}>
-                    <Glyphicon glyph={podcast.isSubscribed ? "trash" : "ok"} title={podcast.isSubscribed ? 'Unsubscribe' : 'Subscribe'} />
+                    <Glyphicon glyph={podcast.isSubscribed ? "trash" : "plus"} title={podcast.isSubscribed ? 'Unsubscribe' : 'Subscribe'} />
                   </Button>) : ''}
                 </ButtonGroup>
               </Col>

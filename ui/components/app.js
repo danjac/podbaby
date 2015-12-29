@@ -171,11 +171,10 @@ const AlertList = props => {
   return (
     <div className="container" style={{
         position: "fixed",
-        height: "20px",
+        height: "50px",
         width: "100%",
-        opacity: 0.99,
-        zIndex: 200,
-        top: 100
+        bottom: 20,
+        zIndex: 200
       }}>
       {props.alerts.map(alert => {
         const dismissAlert = () => props.onDismissAlert(alert.id);
