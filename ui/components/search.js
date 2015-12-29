@@ -57,6 +57,14 @@ export class Search extends React.Component {
     if (q) {
       this.props.dispatch(actions.search.search(q));
     }
+    this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
+  }
+
+  handleLeavePage() {
+    const { dispatch, isLoading } = this.props;
+    if (!isLoading) {
+      dispatch(actions.podcasts.unloadPodcasts());
+    }
   }
 
   componentWillReceiveProps(newProps) {
@@ -101,13 +109,14 @@ export class Search extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { podcasts, showDetail } = state.podcasts;
+  const { podcasts, showDetail, isLoading } = state.podcasts;
   const { query, channels } = state.search;
   return {
     searchQuery: query,
     podcasts: podcasts || [],
     channels,
     showDetail,
+    isLoading,
     player: state.player
   };
 };

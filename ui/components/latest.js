@@ -11,6 +11,14 @@ export class Latest extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(actions.latest.getLatestPodcasts());
+    this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
+  }
+
+  handleLeavePage() {
+    const { dispatch, podcasts } = this.props;
+    if (podcasts.length > 0) {
+      dispatch(actions.podcasts.unloadPodcasts());
+    }
   }
 
   handleSelectPage(event, selectedEvent) {
@@ -21,9 +29,6 @@ export class Latest extends React.Component {
   }
 
   render() {
-    if (this.props.podcasts.length === 0) {
-      return <div>You do not have any podcasts yet.</div>;
-    }
     return <PodcastList actions={actions}
                         onSelectPage={this.handleSelectPage.bind(this)}
                         showChannel={true} {...this.props} />;
@@ -38,11 +43,12 @@ Latest.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, showDetail, page } = state.podcasts;
+  const { podcasts, showDetail, page, isLoading } = state.podcasts;
   return {
     podcasts: podcasts || [],
-    showDetail: showDetail,
-    page: page,
+    showDetail,
+    isLoading,
+    page,
     player: state.player
   };
 };

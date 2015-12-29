@@ -19,6 +19,14 @@ export class Channel extends React.Component {
 
   componentDidMount(){
       this.props.dispatch(actions.channel.getChannel(this.props.params.id));
+      this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
+  }
+
+  handleLeavePage() {
+    const { dispatch, isLoading } = this.props;
+    if (!isLoading) {
+      dispatch(actions.podcasts.unloadPodcasts());
+    }
   }
 
   handleSubscribe(event) {
@@ -36,9 +44,9 @@ export class Channel extends React.Component {
   }
 
   render() {
-    const { channel } = this.props;
+    const { channel, isLoading } = this.props;
     if (!channel) {
-      return <div>No channel found</div>;
+      return <div></div>;
     }
     const isSubscribed = channel.isSubscribed;
 
@@ -89,12 +97,13 @@ Channel.propTypes = {
 
 const mapStateToProps = state => {
   const { channel } = state.channel;
-  const { podcasts, page, showDetail } = state.podcasts;
+  const { podcasts, page, showDetail, isLoading } = state.podcasts;
   return {
     player: state.player,
     podcasts: podcasts || [],
     channel,
     showDetail,
+    isLoading,
     page
   };
 };

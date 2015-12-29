@@ -12,6 +12,14 @@ export class Bookmarks extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(actions.bookmarks.getBookmarks());
+    this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
+  }
+
+  handleLeavePage() {
+    const { dispatch, isLoading } = this.props;
+    if (!isLoading) {
+      dispatch(actions.podcasts.unloadPodcasts());
+    }
   }
 
   handleSelectPage(event, selectedEvent) {
@@ -22,13 +30,9 @@ export class Bookmarks extends React.Component {
   }
 
   render() {
-    const { page, podcasts, dispatch } = this.props;
-    if (podcasts.length === 0) {
-      return <div>You do not have any bookmarked podcasts yet.</div>;
-    }
-
     return <PodcastList actions={actions}
-                        showChannel={true} 
+                        showChannel={true}
+                        ifEmpty="You haven't added any bookmarks yet"
                         onSelectPage={this.handleSelectPage.bind(this)}
                         {...this.props} />;
   }
@@ -42,11 +46,12 @@ Bookmarks.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, page, showDetail } = state.podcasts;
+  const { podcasts, page, showDetail, isLoading } = state.podcasts;
   return {
     podcasts: podcasts || [],
     showDetail,
-    page: page,
+    page,
+    isLoading,
     player: state.player
   };
 };

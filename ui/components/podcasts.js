@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import _ from 'lodash';
 
 import {
   Grid,
@@ -24,10 +25,23 @@ export class PodcastList extends React.Component {
       page,
       onSelectPage,
       player,
+      isLoading,
+      ifEmpty,
       showChannel
     } = this.props;
 
     const { createHref } = this.props.history;
+
+    if (isLoading) {
+      return (
+        <div className="text-center" style={{ marginTop: 50 }}>
+          <h1><Glyphicon glyph="refresh" /> Loading...</h1>
+        </div>);
+    }
+
+    if (_.isEmpty(podcasts)) {
+      return <div>{ifEmpty || "No podcasts found"}</div>
+    }
 
     const pagination = (
       page && onSelectPage && page.numPages > 1 ?

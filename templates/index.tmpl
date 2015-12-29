@@ -4,6 +4,14 @@
         <link rel="stylesheet" href="{{ .staticURL }}main.css">
         <style>
         body { padding-top: 80px; }
+        .content-transition-appear {
+            opacity: 0.01;
+          }
+
+        .content-transition-appear.example-appear-active {
+            opacity: 1;
+            transition: opacity .5s ease-in;
+        }
         </style>
     </head>
   <body>

@@ -4,6 +4,7 @@ import { Actions } from '../constants';
 const initialState = {
   podcasts: [],
   showDetail: [],
+  isLoading: true,
   page: {
     numPages: 0,
     numRows: 0,
@@ -46,19 +47,24 @@ export default function(state=initialState, action) {
       });
       return Object.assign({}, state, { podcasts });
 
-    case Actions.GET_CHANNEL_SUCCESS:
-      return Object.assign({}, state, { podcasts: action.payload.podcasts, page: action.payload.page });
-
-    case Actions.SEARCH_SUCCESS:
-      return Object.assign({}, state, { podcasts: action.payload.podcasts });
-
     case Actions.GET_BOOKMARKS_SUCCESS:
     case Actions.LATEST_PODCASTS_SUCCESS:
-      return Object.assign({}, state, { podcasts: action.payload.podcasts, page: action.payload.page });
-      
+    case Actions.GET_CHANNEL_SUCCESS:
+      return Object.assign({}, state, {
+        podcasts: action.payload.podcasts,
+        page: action.payload.page,
+        isLoading: false
+      });
+
+    case Actions.SEARCH_SUCCESS:
+      return Object.assign({}, state, {
+        podcasts: action.payload.podcasts,
+        isLoading: false
+      });
+
+    case Actions.UNLOAD_PODCASTS:
     case Actions.GET_BOOKMARKS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:
-
       return initialState;
   }
   return state;

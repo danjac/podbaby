@@ -240,6 +240,7 @@ export class App extends React.Component {
                  {...this.props} />
                <AlertList alerts={this.props.alerts}
                           onDismissAlert={this.handleDismissAlert.bind(this)} />
+
         <div className="container">
           {this.props.children}
         </div>
