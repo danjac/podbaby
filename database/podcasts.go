@@ -1,9 +1,6 @@
 package database
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -23,31 +20,18 @@ type defaultPodcastDBImpl struct {
 
 func (db *defaultPodcastDBImpl) Search(query string, userID int64) ([]models.Podcast, error) {
 
-	tokens := strings.Split(query, " ")
-
-	sql := `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date,
-    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=c.id AND user_id=$1)
+	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, p.pub_date, c.title AS name, c.image,
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
       AS is_bookmarked,
     EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
       AS is_subscribed
-    FROM podcasts p
-    JOIN channels c ON c.id=p.channel_id
-    WHERE `
-
-	searchArgs := []interface{}{userID}
-
-	var clauses []string
-
-	for counter, token := range tokens {
-		searchArgs = append(searchArgs, fmt.Sprintf("%%%s%%", token))
-		clauses = append(clauses, fmt.Sprintf("(p.title ILIKE $%d OR p.description ILIKE $%d)", counter+2, counter+2))
-	}
-
-	sql += " " + strings.Join(clauses, " AND ") + " ORDER BY p.pub_date DESC LIMIT 20"
+    FROM podcasts p, plainto_tsquery($2) as q, channels c
+    WHERE (tsv @@ q) AND p.channel_id = c.id
+    ORDER BY ts_rank_cd(tsv, plainto_tsquery($2)) DESC LIMIT 20`
 
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, sql, searchArgs...)
+	return podcasts, db.Select(&podcasts, sql, userID, query)
 
 }
 
