@@ -106,7 +106,8 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 	sql = `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
     EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
-      AS is_subscribed
+      AS is_subscribed,
+    1 AS is_bookmarked
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id

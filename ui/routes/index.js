@@ -10,6 +10,7 @@ import Latest from '../components/latest';
 import Subscriptions from '../components/subscriptions';
 import Bookmarks from '../components/bookmarks';
 import Channel from '../components/channel';
+import User from '../components/user';
 import PageNotFound from '../components/not_found';
 
 import { alerts } from '../actions';
@@ -40,6 +41,7 @@ export default function(store, history) {
           </Route>
           <Route path="/login/" component={Login} />
           <Route path="/signup/" component={Signup} />
+          <Route path="/user/" component={User} onEnter={requireAuth} />
           <Route path="*" component={PageNotFound} />
         </Route>
       </Router>

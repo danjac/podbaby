@@ -69,7 +69,8 @@ class MainNav extends React.Component {
 
         {auth.isLoggedIn ?
         <Nav pullRight={true}>
-          <NavItem href="#"><Glyphicon glyph="cog" /> {auth.name}</NavItem>
+          <NavItem active={isActive("/user/")}
+                    href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
           <NavItem href="#" onClick={this.props.logout}><Glyphicon glyph="log-out" /> Logout</NavItem>
         </Nav> :
         <Nav pullRight={true}>

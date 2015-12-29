@@ -4,13 +4,14 @@ import { Actions } from '../constants';
 const initialState = {
   isLoggedIn: false,
   name: null,
+  email: null,
   redirectTo: null,
   isLoaded: true
 };
 
 export default function(state=initialState, action) {
   switch(action.type) {
-    
+
     case Actions.LOGIN_REQUIRED:
       return Object.assign({}, state, { redirectTo: action.payload });
 
@@ -20,7 +21,7 @@ export default function(state=initialState, action) {
 
     case Actions.LOGIN_FAILURE:
     case Actions.SIGNUP_FAILURE:
-      return Object.assign({}, state, { name: null, isLoggedIn: false });
+      return Object.assign({}, state, { name: null, email: null, isLoggedIn: false });
 
     case Actions.CURRENT_USER:
       return Object.assign({}, state, action.payload, { isLoggedIn: !_.isEmpty(action.payload) });
