@@ -103,7 +103,7 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.Signup{}
 
-	if err := decoders.Decode(r, decoder); r != nil {
+	if err := decoders.Decode(r, decoder); err != nil {
 		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
 		return
 	}
