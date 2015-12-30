@@ -6,5 +6,8 @@ web:
    - .:/go/src/github.com/danjac/podbaby 
   links:
    - db
+  environment:
+      DB_URL: postgres://postgres@db/postgres?sslmode=disable
+      SECRET_KEY: secret
 db:
   image: postgres

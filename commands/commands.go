@@ -22,8 +22,6 @@ const (
 // Serve runs the webserver
 func Serve(url string, port int, secretKey, env string) {
 
-	db := database.New(sqlx.MustConnect("postgres", url))
-
 	log := logrus.New()
 
 	log.Formatter = &logrus.TextFormatter{
@@ -32,6 +30,8 @@ func Serve(url string, port int, secretKey, env string) {
 	}
 
 	log.Info("Starting web service...")
+
+	db := database.New(sqlx.MustConnect("postgres", url))
 
 	var staticURL string
 	if env == "dev" {

@@ -11,8 +11,7 @@ RUN apt-get install -y nodejs
 RUN go get github.com/tools/godep
 RUN make
 
-# set environment keys
-#CMD migrate -path=./migrations -db= up
+RUN go get github.com/mattes/migrate
+RUN migrate -path=./migrations -url=postgres://postgres@db/postgres?sslmode=disable up
 
-CMD ./bin/runapp serve
-
+CMD ./bin/runapp serve 
