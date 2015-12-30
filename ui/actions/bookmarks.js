@@ -1,7 +1,9 @@
 import { Actions } from '../constants';
 import * as api from '../api';
 import * as alerts from './alerts';
+import { requestPodcasts } from './podcasts';
 import { createAction } from './utils';
+
 
 export function addBookmark(podcastId) {
   return dispatch => {
@@ -21,6 +23,7 @@ export function deleteBookmark(podcastId) {
 
 export function getBookmarks(page=1) {
   return dispatch => {
+    dispatch(requestPodcasts());
     api.getBookmarks(page)
     .then(result => {
       dispatch(createAction(Actions.GET_BOOKMARKS_SUCCESS, result.data));

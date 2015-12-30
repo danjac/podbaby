@@ -25,22 +25,40 @@ import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
 
+const SAMPLE_CATEGORIES = [
+  {
+    id: 1,
+    name: "Books"
+  },
+  {
+    id: 2,
+    name: "Comedy"
+  },
+  {
+    id: 3,
+    name: "Culture"
+  },
+  {
+    id: 4,
+    name: "Documentaries"
+  },
+  {
+    id: 5,
+    name: "History"
+  },
+  {
+    id: 6,
+    name: "Movies"
+  },
+];
+
+
 class MainNav extends React.Component {
-
-  handleSearch(event) {
-    event.preventDefault();
-    const node = this.refs.search.getInputDOMNode();
-    const query = node.value;
-    node.value = "";
-    this.props.dispatch(pushPath(`/podcasts/search/?q=${query}`))
-
-  }
 
   render() {
 
     const { auth } = this.props;
     const { createHref, isActive } = this.props.history;
-    const searchIcon = <Glyphicon glyph="search" />;
 
     return (
       <Navbar fixedTop={true}>
@@ -51,15 +69,18 @@ class MainNav extends React.Component {
         </Navbar.Header>
 
         {auth.isLoggedIn ?
-        <form className="navbar-form navbar-left" role="search" onSubmit={this.handleSearch.bind(this)}>
-          <Input ref="search" type="search" placeholder="Find a podcast" addonBefore={searchIcon} />
-        </form> : ''}
-
-        {auth.isLoggedIn ?
 
         <Nav pullLeft={true}>
+          <form role="search" className="navbar-form navbar-left">
+            <Input type="select" ref="category">
+              <option value="">Find by category</option>
+              {SAMPLE_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </Input>
+          </form>
+          <NavItem active={isActive("/podcasts/search/")}
+                   href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Search</NavItem>
           <NavItem active={isActive("/podcasts/new/")}
-            href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts</NavItem>
+                   href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts</NavItem>
           <NavItem active={isActive("/podcasts/subscriptions/")}
                    href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
           <NavItem active={isActive("/podcasts/bookmarks/")}

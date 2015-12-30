@@ -12,14 +12,6 @@ export class Bookmarks extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(actions.bookmarks.getBookmarks());
-    this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
-  }
-
-  handleLeavePage() {
-    const { dispatch, isLoading } = this.props;
-    if (!isLoading) {
-      dispatch(actions.podcasts.unloadPodcasts());
-    }
   }
 
   handleSelectPage(event, selectedEvent) {

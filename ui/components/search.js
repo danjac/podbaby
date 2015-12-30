@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
@@ -8,7 +10,8 @@ import {
   Glyphicon,
   ButtonGroup,
   Button,
-  Well
+  Well,
+  Input
 } from 'react-bootstrap';
 
 import  * as actions from '../actions';
@@ -52,30 +55,27 @@ const ChannelItem = props => {
 
 export class Search extends React.Component {
 
+  constructor(props) {
+    super(props);
+    const { search } = bindActionCreators(actions.search, this.props.dispatch);
+    this.search = search;
+  }
+
   componentDidMount() {
-    const { q } = this.props.location.query;
-    if (q) {
-      this.props.dispatch(actions.search.search(q));
-    }
-    this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
+    const query = this.props.location.query.q || "";
+    this.search(query);
   }
 
-  handleLeavePage() {
-    const { dispatch, isLoading } = this.props;
-    if (!isLoading) {
-      dispatch(actions.podcasts.unloadPodcasts());
+  handleSearch(event) {
+    event.preventDefault();
+    const value = this.refs.query.getValue();
+    if (value) {
+      this.search(value);
     }
   }
 
-  componentWillReceiveProps(newProps) {
-    const newQuery = newProps.location.query.q;
-    const oldQuery = this.props.location.query.q;
-    const isDiff = newQuery && oldQuery && newQuery !== oldQuery;
-    if (isDiff) {
-      console.log("fetching again", newQuery, oldQuery)
-      this.props.dispatch(actions.search.search(newQuery));
-    }
-    return isDiff;
+  handleFocus(event) {
+    this.refs.query.getInputDOMNode().select();
   }
 
   render() {
@@ -84,26 +84,36 @@ export class Search extends React.Component {
     const { createHref } = this.props.history;
 
     return (
-      <div>
-        {searchQuery ? <h2>Searching for "{searchQuery}"</h2> : ''}
-        {channels.map(channel => {
-          const subscribe = (event) => {
-            event.preventDefault();
-            const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-            dispatch(action(channel.id, channel.title));
-          };
-          return (
-            <ChannelItem key={channel.id}
-                         channel={channel}
-                         subscribe={subscribe}
-                         createHref={createHref} />
-          );
-        })}
-        {podcasts.length > 0 ? <hr /> : ''}
+    <div>
+      <form className="form" onSubmit={this.handleSearch.bind(this)}>
+
+        <Input type="search"
+               ref="query"
+               onClick={this.handleFocus.bind(this)}
+               placeholder="Find a channel or podcast" />
+        <Button type="submit" bsStyle="primary" className="form-control">
+          <Glyphicon glyph="search" /> Search
+        </Button>
+      </form>
+      {channels.map(channel => {
+        const subscribe = (event) => {
+          event.preventDefault();
+          const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
+          dispatch(action(channel.id, channel.title));
+        };
+        return (
+          <ChannelItem key={channel.id}
+                       channel={channel}
+                       subscribe={subscribe}
+                       createHref={createHref} />
+        );
+      })}
+      {podcasts.length > 0 ? <hr /> : ''}
+      {searchQuery ?
         <PodcastList actions={actions}
-                     showChannel={true}
-                     {...this.props} />
-      </div>
+                   showChannel={true}
+                   {...this.props} /> : '' }
+    </div>
     );
   }
 }
@@ -114,7 +124,7 @@ const mapStateToProps = state => {
   return {
     searchQuery: query,
     podcasts: podcasts || [],
-    channels,
+    channels: channels || [],
     showDetail,
     isLoading,
     player: state.player

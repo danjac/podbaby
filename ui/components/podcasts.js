@@ -69,7 +69,7 @@ export class PodcastList extends React.Component {
           const toggleSubscribe = event => {
             event.preventDefault();
             const action = podcast.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-            dispatch(action(podcast.id));
+            dispatch(action(podcast.channelId));
           };
 
           const toggleBookmark = event => {

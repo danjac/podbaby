@@ -62,6 +62,7 @@ export default function(state=initialState, action) {
         isLoading: false
       });
 
+    case Actions.PODCASTS_REQUEST:
     case Actions.UNLOAD_PODCASTS:
     case Actions.GET_BOOKMARKS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:

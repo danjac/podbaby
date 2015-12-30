@@ -3,6 +3,7 @@ package database
 import "github.com/jmoiron/sqlx"
 
 type DB struct {
+	*sqlx.DB
 	Users         UserDB
 	Channels      ChannelDB
 	Podcasts      PodcastDB
@@ -12,6 +13,7 @@ type DB struct {
 
 func New(db *sqlx.DB) *DB {
 	return &DB{
+		DB:            db,
 		Users:         &defaultUserDBImpl{db},
 		Channels:      &defaultChannelDBImpl{db},
 		Podcasts:      &defaultPodcastDBImpl{db},

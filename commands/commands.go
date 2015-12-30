@@ -32,6 +32,7 @@ func Serve(url string, port int, secretKey, env string) {
 	log.Info("Starting web service...")
 
 	db := database.New(sqlx.MustConnect("postgres", url))
+	defer db.Close()
 
 	var staticURL string
 	if env == "dev" {
@@ -56,6 +57,7 @@ func Serve(url string, port int, secretKey, env string) {
 func Fetch(url string) {
 
 	db := database.New(sqlx.MustConnect("postgres", url))
+	defer db.Close()
 
 	log := logrus.New()
 

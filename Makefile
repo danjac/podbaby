@@ -17,9 +17,7 @@ clean-frontend:
 clean-backend:
 	rm -rf bin
 
-clean:
-	clean-frontend
-	clean-backend
+clean: clean-frontend clean-backend
 
 test-backend:
 	go test ./...

@@ -1,4 +1,4 @@
 import { Actions } from '../constants';
 import { createAction } from './utils';
 
-export const unloadPodcasts = () => createAction(Actions.UNLOAD_PODCASTS);
+export const requestPodcasts = () => createAction(Actions.PODCASTS_REQUEST);

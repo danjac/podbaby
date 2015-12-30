@@ -11,14 +11,6 @@ export class Latest extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(actions.latest.getLatestPodcasts());
-    this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
-  }
-
-  handleLeavePage() {
-    const { dispatch, podcasts } = this.props;
-    if (podcasts.length > 0) {
-      dispatch(actions.podcasts.unloadPodcasts());
-    }
   }
 
   handleSelectPage(event, selectedEvent) {

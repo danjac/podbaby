@@ -19,14 +19,6 @@ export class Channel extends React.Component {
 
   componentDidMount(){
       this.props.dispatch(actions.channel.getChannel(this.props.params.id));
-      this.props.history.registerTransitionHook(this.handleLeavePage.bind(this));
-  }
-
-  handleLeavePage() {
-    const { dispatch, isLoading } = this.props;
-    if (!isLoading) {
-      dispatch(actions.podcasts.unloadPodcasts());
-    }
   }
 
   handleSubscribe(event) {
