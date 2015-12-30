@@ -27,8 +27,8 @@ func (db *defaultPodcastDBImpl) Search(query string, userID int64) ([]models.Pod
     EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
       AS is_subscribed
     FROM podcasts p, plainto_tsquery($2) as q, channels c
-    WHERE (tsv @@ q) AND p.channel_id = c.id
-    ORDER BY ts_rank_cd(tsv, plainto_tsquery($2)) DESC LIMIT 20`
+    WHERE (p.tsv @@ q) AND p.channel_id = c.id
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT 20`
 
 	var podcasts []models.Podcast
 	return podcasts, db.Select(&podcasts, sql, userID, query)

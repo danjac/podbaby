@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/api"
@@ -85,15 +86,30 @@ func Fetch(url string) {
 
 		// update channel
 
-		log.Info("Channel:" + channel.Title)
+		log.Info("Channel:"+channel.Title, " podcasts:", len(result.Items))
 
 		channel.Title = result.Channel.Title
 		channel.Image = result.Channel.Image.Url
 		channel.Description = result.Channel.Description
 
+		// we just want unique categories
+		categoryMap := make(map[string]string)
+
+		for _, category := range result.Channel.Categories {
+			categoryMap[category.Text] = category.Text
+		}
+
+		var categories []string
+		for _, category := range categoryMap {
+			categories = append(categories, category)
+		}
+
+		channel.Categories.String = strings.Join(categories, " ")
+		channel.Categories.Valid = true
+
 		if err := db.Channels.Create(&channel); err != nil {
 			log.Error(err)
-			return
+			continue
 		}
 
 		for _, item := range result.Items {
@@ -110,7 +126,7 @@ func Fetch(url string) {
 			pubDate, _ := item.ParsedPubDate()
 			podcast.PubDate = pubDate
 
-			log.Info("Podcast:" + podcast.Title)
+			//log.Info("Podcast:" + podcast.Title)
 
 			if err := db.Podcasts.Create(podcast); err != nil {
 				log.Error(err)

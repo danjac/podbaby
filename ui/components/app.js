@@ -25,34 +25,6 @@ import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
 
-const SAMPLE_CATEGORIES = [
-  {
-    id: 1,
-    name: "Books"
-  },
-  {
-    id: 2,
-    name: "Comedy"
-  },
-  {
-    id: 3,
-    name: "Culture"
-  },
-  {
-    id: 4,
-    name: "Documentaries"
-  },
-  {
-    id: 5,
-    name: "History"
-  },
-  {
-    id: 6,
-    name: "Movies"
-  },
-];
-
-
 class MainNav extends React.Component {
 
   render() {
@@ -71,12 +43,6 @@ class MainNav extends React.Component {
         {auth.isLoggedIn ?
 
         <Nav pullLeft={true}>
-          <form role="search" className="navbar-form navbar-left">
-            <Input type="select" ref="category">
-              <option value="">Find by category</option>
-              {SAMPLE_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </Input>
-          </form>
           <NavItem active={isActive("/podcasts/search/")}
                    href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Search</NavItem>
           <NavItem active={isActive("/podcasts/new/")}

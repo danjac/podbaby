@@ -1,9 +1,6 @@
 package database
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -22,12 +19,14 @@ type defaultChannelDBImpl struct {
 }
 
 func (db *defaultChannelDBImpl) GetAll() ([]models.Channel, error) {
+	sql := "SELECT id, title, description, categories, url, image FROM channels"
 	var channels []models.Channel
-	return channels, db.Select(&channels, "SELECT * FROM channels")
+	return channels, db.Select(&channels, sql)
 }
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
-	sql := `SELECT DISTINCT c.* FROM channels c
+	sql := `SELECT DISTINCT c.id, c.title, c.description, c.image, c.url
+    FROM channels c
   JOIN subscriptions s ON s.channel_id = c.id
   WHERE s.user_id=$1 AND title IS NOT NULL
   ORDER BY title`
@@ -37,27 +36,14 @@ func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel
 
 func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Channel, error) {
 
-	tokens := strings.Split(query, " ")
-
-	var searchArgs []interface{}
-
-	sql := `SELECT channels.*,
-    EXISTS(SELECT id FROM subscriptions WHERE channel_id=channels.id AND user_id=$1) AS is_subscribed
-    FROM channels WHERE`
-
-	searchArgs = append(searchArgs, userID)
-
-	var clauses []string
-
-	for counter, token := range tokens {
-		searchArgs = append(searchArgs, fmt.Sprintf("%%%s%%", token))
-		clauses = append(clauses, fmt.Sprintf("(title ILIKE $%d OR description ILIKE $%d)", counter+2, counter+2))
-	}
-
-	sql += " " + strings.Join(clauses, " AND ") + " ORDER BY title DESC LIMIT 20"
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image,
+    EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
+    FROM channels c, plainto_tsquery($2) as q
+    WHERE (c.tsv @@ q)
+    ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($2)) DESC LIMIT 10`
 
 	var channels []models.Channel
-	return channels, db.Select(&channels, sql, searchArgs...)
+	return channels, db.Select(&channels, sql, userID, query)
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {
@@ -71,11 +57,11 @@ func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel
 
 func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
 
-	query, args, err := sqlx.Named("SELECT upsert_channel (:url, :title, :description, :image)", ch)
+	query, args, err := sqlx.Named("SELECT upsert_channel (:url, :title, :description, :image, :categories)", ch)
 
 	if err != nil {
 		return err
 	}
 
-	return db.QueryRow(db.Rebind(query), args...).Scan(&ch.ID)
+	return db.QueryRowx(db.Rebind(query), args...).Scan(&ch.ID)
 }
