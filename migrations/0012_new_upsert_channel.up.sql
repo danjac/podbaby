@@ -13,7 +13,7 @@ RETURN channel_id;
 END IF;
 
 BEGIN
-INSERT INTO channels (title, description, image, url, categories, pub_date) VALUES (my_title, my_description, my_image, my_url, my_categories) RETURNING id INTO channel_id;
+INSERT INTO channels (title, description, image, url, categories) VALUES (my_title, my_description, my_image, my_url, my_categories) RETURNING id INTO channel_id;
 RETURN channel_id;
 EXCEPTION WHEN unique_violation THEN
 IF attempts = 1 THEN

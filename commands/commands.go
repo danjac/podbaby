@@ -3,13 +3,12 @@ package commands
 import (
 	"fmt"
 	"net/http"
-	"strings"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/api"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/feedparser"
-	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -48,6 +47,15 @@ func Serve(url string, port int, secretKey, env string) {
 		SecretKey: secretKey,
 	})
 
+	go func() {
+		for {
+			if err := api.Feedparser.FetchAll(); err != nil {
+				log.Error(err)
+			}
+			time.Sleep(time.Hour)
+		}
+	}()
+
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), api.Handler()); err != nil {
 		panic(err)
 	}
@@ -67,73 +75,9 @@ func Fetch(url string) {
 		ForceColors:   true,
 	}
 
-	log.Info("Starting podcast fetching...")
-
-	channels, err := db.Channels.SelectAll()
-
-	if err != nil {
+	f := feedparser.New(db, log)
+	if err := f.FetchAll(); err != nil {
 		panic(err)
-	}
-
-	for _, channel := range channels {
-
-		result, err := feedparser.Fetch(channel.URL)
-
-		if err != nil {
-			log.Error(err)
-			continue
-		}
-
-		// update channel
-
-		log.Info("Channel:"+channel.Title, " podcasts:", len(result.Items))
-
-		channel.Title = result.Channel.Title
-		channel.Image = result.Channel.Image.Url
-		channel.Description = result.Channel.Description
-
-		// we just want unique categories
-		categoryMap := make(map[string]string)
-
-		for _, category := range result.Channel.Categories {
-			categoryMap[category.Text] = category.Text
-		}
-
-		var categories []string
-		for _, category := range categoryMap {
-			categories = append(categories, category)
-		}
-
-		channel.Categories.String = strings.Join(categories, " ")
-		channel.Categories.Valid = true
-
-		if err := db.Channels.Create(&channel); err != nil {
-			log.Error(err)
-			continue
-		}
-
-		for _, item := range result.Items {
-			podcast := &models.Podcast{
-				ChannelID:   channel.ID,
-				Title:       item.Title,
-				Description: item.Description,
-			}
-			if len(item.Enclosures) == 0 {
-				log.Debug("Item has no enclosures")
-				continue
-			}
-			podcast.EnclosureURL = item.Enclosures[0].Url
-			pubDate, _ := item.ParsedPubDate()
-			podcast.PubDate = pubDate
-
-			//log.Info("Podcast:" + podcast.Title)
-
-			if err := db.Podcasts.Create(podcast); err != nil {
-				log.Error(err)
-				continue
-			}
-		}
-
 	}
 
 }

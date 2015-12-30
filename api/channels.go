@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/danjac/podbaby/decoders"
-	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
 )
 
@@ -59,53 +58,29 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
 	user, _ := getUser(r)
 
-	go func(url string, userID int64) {
+	channel := &models.Channel{
+		URL: decoder.URL,
+	}
 
-		result, err := feedparser.Fetch(url)
+	if err := s.DB.Channels.Create(channel); err != nil {
+		s.abort(w, r, err)
+		return
+	}
 
-		if err != nil {
+	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
+	go func(ch *models.Channel, user *models.User) {
+		if err := s.Feedparser.FetchChannel(ch); err != nil {
 			s.Log.Error(err)
 			return
 		}
-
-		channel := &models.Channel{
-			URL:         url,
-			Title:       result.Channel.Title,
-			Image:       result.Channel.Image.Url,
-			Description: result.Channel.Description,
-		}
-
-		if err := s.DB.Channels.Create(channel); err != nil {
+		if err := s.DB.Subscriptions.Create(ch.ID, user.ID); err != nil {
 			s.Log.Error(err)
-			return
 		}
-
-		if err := s.DB.Subscriptions.Create(channel.ID, userID); err != nil {
-			s.Log.Error(err)
-			return
-		}
-
-		for _, item := range result.Items {
-			podcast := &models.Podcast{
-				ChannelID:   channel.ID,
-				Title:       item.Title,
-				Description: item.Description,
-			}
-			if len(item.Enclosures) == 0 {
-				s.Log.Debug("Item has no enclosures")
-				continue
-			}
-			podcast.EnclosureURL = item.Enclosures[0].Url
-			pubDate, _ := item.ParsedPubDate()
-			podcast.PubDate = pubDate
-
-			if err := s.DB.Podcasts.Create(podcast); err != nil {
-				s.Log.Error(err)
-				return
-			}
-		}
-
-	}(decoder.URL, user.ID)
+	}(channel, user)
 
 	s.Render.Text(w, http.StatusCreated, "New channel")
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
+	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/securecookie"
@@ -30,11 +31,12 @@ type Config struct {
 }
 
 type Server struct {
-	DB     *database.DB
-	Config *Config
-	Log    *logrus.Logger
-	Render *render.Render
-	Cookie *securecookie.SecureCookie
+	DB         *database.DB
+	Config     *Config
+	Log        *logrus.Logger
+	Render     *render.Render
+	Cookie     *securecookie.SecureCookie
+	Feedparser feedparser.Feedparser
 }
 
 func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
@@ -43,12 +45,15 @@ func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
 		[]byte(cfg.SecretKey),
 		securecookie.GenerateRandomKey(32))
 
+	f := feedparser.New(db, log)
+
 	return &Server{
-		DB:     db,
-		Config: cfg,
-		Log:    log,
-		Render: render.New(),
-		Cookie: cookie,
+		DB:         db,
+		Config:     cfg,
+		Log:        log,
+		Render:     render.New(),
+		Cookie:     cookie,
+		Feedparser: f,
 	}
 }
 
