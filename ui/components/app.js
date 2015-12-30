@@ -33,7 +33,7 @@ class MainNav extends React.Component {
     const { createHref, isActive } = this.props.history;
 
     return (
-      <Navbar fixedTop={true}>
+      <Navbar inverse={true} fixedTop={true}>
         <Navbar.Header>
           <Navbar.Brand>
             <Link to={auth.isLoggedIn ? "/podcasts/new/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>

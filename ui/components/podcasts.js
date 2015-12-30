@@ -119,7 +119,7 @@ export const Podcast = props => {
   const header = showChannel ? <h3><a href={channelUrl}>{podcast.name}</a></h3> : <h3>{podcast.title}</h3>;
 
   return (
-    <Panel header={header}>
+    <Panel bsStyle="primary" header={header}>
       <div className="media">
         {showChannel ?
         (<div className="media-left media-middle">

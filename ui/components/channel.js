@@ -67,9 +67,9 @@ export class Channel extends React.Component {
                 </Col>
               </Row>
             </Grid>
-            {channel.description ? <Well dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           </div>
           </div>
+          {channel.description ? <Well dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           <hr />
           <PodcastList showChannel={false}
                        onSelectPage={this.handleSelectPage.bind(this)}
