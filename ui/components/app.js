@@ -44,9 +44,9 @@ class MainNav extends React.Component {
 
         <Nav pullLeft={true}>
           <NavItem active={isActive("/podcasts/search/")}
-                   href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Search</NavItem>
+                   href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Discover</NavItem>
           <NavItem active={isActive("/podcasts/new/")}
-                   href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New podcasts</NavItem>
+                   href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New episodes</NavItem>
           <NavItem active={isActive("/podcasts/subscriptions/")}
                    href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
           <NavItem active={isActive("/podcasts/bookmarks/")}

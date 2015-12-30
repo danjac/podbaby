@@ -7,7 +7,7 @@ import (
 
 // ChannelDB database model
 type ChannelDB interface {
-	GetAll() ([]models.Channel, error)
+	SelectAll() ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
 	Search(string, int64) ([]models.Channel, error)
 	GetByID(int64, int64) (*models.Channel, error)
@@ -18,7 +18,7 @@ type defaultChannelDBImpl struct {
 	*sqlx.DB
 }
 
-func (db *defaultChannelDBImpl) GetAll() ([]models.Channel, error) {
+func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
 	sql := "SELECT id, title, description, categories, url, image FROM channels"
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql)
@@ -47,9 +47,9 @@ func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Cha
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {
-	sql := `SELECT channels.*,
-        EXISTS(SELECT id FROM subscriptions WHERE channel_id=channels.id AND user_id=$1) AS is_subscribed
-        FROM channels
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image,
+        EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
+        FROM channels c
         WHERE id=$2`
 	channel := &models.Channel{}
 	return channel, db.Get(channel, sql, userID, id)

@@ -83,6 +83,10 @@ export class Search extends React.Component {
     const { dispatch, channels, podcasts, searchQuery } = this.props;
     const { createHref } = this.props.history;
 
+    const ifEmptyMsg = (
+      <span><b>Hint:</b> Try searching by category e.g. <em>music</em> or <em>science</em> or by name e.g. <em>Radio Lab</em></span>
+    );
+
     return (
     <div>
       <form className="form" onSubmit={this.handleSearch.bind(this)}>
@@ -111,8 +115,9 @@ export class Search extends React.Component {
       {podcasts.length > 0 ? <hr /> : ''}
       {searchQuery ?
         <PodcastList actions={actions}
-                   showChannel={true}
-                   {...this.props} /> : '' }
+                     showChannel={true}
+                     ifEmpty={ifEmptyMsg}
+                      {...this.props} /> : '' }
     </div>
     );
   }

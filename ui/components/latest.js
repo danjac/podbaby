@@ -21,7 +21,14 @@ export class Latest extends React.Component {
   }
 
   render() {
+
+    const { createHref } = this.props.history;
+
+    const ifEmptyMsg = (
+      <span>It appears you haven't subscribed to any channels yet.
+        Discover new channels and podcasts <a href={createHref("/search/")}>here</a>.</span>);
     return <PodcastList actions={actions}
+                        ifEmpty={ifEmptyMsg}
                         onSelectPage={this.handleSelectPage.bind(this)}
                         showChannel={true} {...this.props} />;
   }

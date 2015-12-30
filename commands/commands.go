@@ -69,7 +69,7 @@ func Fetch(url string) {
 
 	log.Info("Starting podcast fetching...")
 
-	channels, err := db.Channels.GetAll()
+	channels, err := db.Channels.SelectAll()
 
 	if err != nil {
 		panic(err)
