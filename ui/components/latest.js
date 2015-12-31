@@ -25,7 +25,7 @@ export class Latest extends React.Component {
     const { createHref } = this.props.history;
 
     const ifEmptyMsg = (
-      <span>It appears you haven't subscribed to any channels yet.
+      <span>You haven't subscribed to any channels yet.
         Discover new channels and podcasts <a href={createHref("/podcasts/search/")}>here</a>.</span>);
     return <PodcastList actions={actions}
                         ifEmpty={ifEmptyMsg}
