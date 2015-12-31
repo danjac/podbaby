@@ -11,7 +11,7 @@ export default function(state=initialState, action) {
     case Actions.SUBSCRIBE:
     case Actions.UNSUBSCRIBE:
       if (state.channel && state.channel.id === action.payload) {
-        channel = Object.assign({}, state.channel, { isSubscribed: action.type === Actions.SUBSCRIBE });
+        let channel = Object.assign({}, state.channel, { isSubscribed: action.type === Actions.SUBSCRIBE });
         return Object.assign({}, state, { channel });
       }
       return state;

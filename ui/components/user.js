@@ -39,6 +39,16 @@ export class User extends React.Component {
   render() {
     return (
       <div>
+        <h3>Change my username</h3>
+        <form className="form form-vertical">
+            <Input ref="name"
+                   type="name"
+                   required
+                   defaultValue={this.props.auth.name}  />
+            <ButtonInput bsStyle="primary"
+                         type="submit"
+                         value="Save" />
+        </form>
         <h3>Change my email address</h3>
         <form className="form form-vertical" onSubmit={this.handleSubmitEmail.bind(this)}>
             <Input ref="email"
@@ -51,17 +61,24 @@ export class User extends React.Component {
         </form>
         <h3>Change my password</h3>
         <form className="form form-vertical" onSubmit={this.handleSubmitPassword.bind(this)}>
+
             <Input ref="oldPassword"
                    type="password"
                    placeholder="Old password"
                    required />
+
             <Input ref="newPassword"
                    type="password"
                    placeholder="New password"
                    required />
+
             <ButtonInput bsStyle="primary"
                          type="submit"
                          value="Save" />
+        </form>
+        <hr />
+        <form>
+          <ButtonInput bsStyle="danger" className="form-control" value="Delete my account" />
         </form>
       </div>
     );

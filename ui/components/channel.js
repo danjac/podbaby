@@ -25,7 +25,7 @@ export class Channel extends React.Component {
     event.preventDefault();
     const { channel, dispatch } = this.props;
     const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-    dispatch(action(channel.id, channel.title));
+    dispatch(action(channel.id));
   }
 
   handleSelectPage(event, selectedEvent) {
@@ -62,7 +62,9 @@ export class Channel extends React.Component {
                 </Col>
                 <Col xs={6} md={3}>
                   <ButtonGroup>
-                    <Button title="Unsubscribe" onClick={this.handleSubscribe.bind(this)}><Glyphicon glyph="trash" /> Unsubscribe</Button>
+                    <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
+                            onClick={this.handleSubscribe.bind(this)}>
+                      <Glyphicon glyph={channel.isSubscribed ? 'trash': 'ok'} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button>
                   </ButtonGroup>
                 </Col>
               </Row>

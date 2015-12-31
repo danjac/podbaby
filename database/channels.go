@@ -27,9 +27,9 @@ func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
 	sql := `SELECT DISTINCT c.id, c.title, c.description, c.image, c.url
     FROM channels c
-  JOIN subscriptions s ON s.channel_id = c.id
-  WHERE s.user_id=$1 AND title IS NOT NULL
-  ORDER BY title`
+    JOIN subscriptions s ON s.channel_id = c.id
+    WHERE s.user_id=$1 AND title IS NOT NULL
+    ORDER BY title`
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql, userID)
 }
