@@ -1,6 +1,8 @@
 package api
 
 import (
+	"errors"
+	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
 	"github.com/unrolled/render"
@@ -9,7 +11,11 @@ import (
 	"testing"
 )
 
-type mockPodcastsDB struct{}
+var errMockDBError = errors.New("Fake DB error")
+
+type mockPodcastsDB struct {
+	hasError bool
+}
 
 func (db *mockPodcastsDB) SelectSubscribed(_, _ int64) (*models.PodcastList, error) {
 	return nil, nil
@@ -26,6 +32,9 @@ func (db *mockPodcastsDB) Search(_ string, _ int64) ([]models.Podcast, error) {
 func (db *mockPodcastsDB) Create(_ *models.Podcast) error { return nil }
 
 func (db *mockPodcastsDB) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
+	if db.hasError {
+		return nil, errMockDBError
+	}
 	result := &models.PodcastList{}
 	result.Podcasts = []models.Podcast{
 		models.Podcast{
@@ -35,6 +44,30 @@ func (db *mockPodcastsDB) SelectBookmarked(userID, page int64) (*models.PodcastL
 	}
 	result.Page = &models.Page{}
 	return result, nil
+}
+
+func TestGetBookmarksIfNotOk(t *testing.T) {
+
+	user := &models.User{
+		ID: 10,
+	}
+
+	getContext = mockGetContextWithUser(user)
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	w := httptest.NewRecorder()
+	s := &Server{
+		DB: &database.DB{
+			Podcasts: &mockPodcastsDB{hasError: true},
+		},
+		Log:    logrus.New(),
+		Render: render.New(),
+	}
+	s.getBookmarks(w, req)
+
+	if w.Code == http.StatusOK {
+		t.Fail()
+	}
 }
 
 func TestGetBookmarksIfOk(t *testing.T) {
