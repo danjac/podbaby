@@ -29,7 +29,8 @@ export default function(state=initialState, action) {
 
     case Actions.ADD_BOOKMARK:
     case Actions.DELETE_BOOKMARK:
-      podcasts = state.podcasts.map(podcast => {
+
+      podcasts = (state.podcasts || []).map(podcast => {
         if (podcast.id === action.payload) {
           podcast.isBookmarked = action.type === Actions.ADD_BOOKMARK;
         }
@@ -39,7 +40,8 @@ export default function(state=initialState, action) {
 
     case Actions.SUBSCRIBE:
     case Actions.UNSUBSCRIBE:
-      podcasts = state.podcasts.map(podcast => {
+
+      podcasts = (state.podcasts || []).map(podcast => {
         if (podcast.channelId === action.payload) {
           podcast.isSubscribed = action.type === Actions.SUBSCRIBE;
         }
@@ -50,6 +52,7 @@ export default function(state=initialState, action) {
     case Actions.GET_BOOKMARKS_SUCCESS:
     case Actions.LATEST_PODCASTS_SUCCESS:
     case Actions.GET_CHANNEL_SUCCESS:
+
       return Object.assign({}, state, {
         podcasts: action.payload.podcasts,
         page: action.payload.page,
