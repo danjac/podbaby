@@ -116,6 +116,7 @@ export class Player extends React.Component {
 
   render() {
     const { podcast } = this.props.player;
+    const { createHref } = this.props;
     return (
       <footer style={{
         position:"fixed",
@@ -132,7 +133,7 @@ export class Player extends React.Component {
         <Grid>
           <Row>
             <Col xs={6} md={6}>
-              Currently playing: <b>{podcast.name} : {podcast.title}</b>
+              Currently playing: <b><a href={createHref(`/podcasts/channel/${podcast.channelId}/`)}>{podcast.name}</a> : {podcast.title}</b>
             </Col>
             <Col xs={3} md={4}>
               <audio controls={true} autoPlay={true} src={podcast.enclosureUrl}>
@@ -220,6 +221,8 @@ export class App extends React.Component {
     if (!this.props.auth.isLoaded) {
       return <div><h1>Loading....</h1></div>;
     }
+    const { createHref } = this.props.history;
+
     return (
       <div>
         <MainNav onLogout={this.handleLogout.bind(this)}
@@ -233,6 +236,7 @@ export class App extends React.Component {
         </div>
         {this.props.auth.isLoggedIn && this.props.player.isPlaying ?
           <Player player={this.props.player}
+                  createHref={createHref}
                   onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
         <AddChannelModal show={this.props.addChannel.show}
                          container={this}

@@ -12,9 +12,15 @@ import (
 
 // authentication methods
 
+// wraps mux.Vars for easier testing
+
+var getVars = func(r *http.Request) map[string]string {
+	return mux.Vars(r)
+}
+
 func getInt64(r *http.Request, name string) (int64, error) {
 	badRequest := HTTPError{http.StatusBadRequest, errors.New("Invalid parameter for " + name)}
-	value, ok := mux.Vars(r)[name]
+	value, ok := getVars(r)[name]
 	if !ok {
 		return 0, badRequest
 	}
