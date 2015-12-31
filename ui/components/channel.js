@@ -7,8 +7,7 @@ import {
   Col,
   Glyphicon,
   ButtonGroup,
-  Button,
-  Well
+  Button
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
@@ -71,7 +70,7 @@ export class Channel extends React.Component {
             </Grid>
           </div>
           </div>
-          {channel.description ? <Well dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
+          {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           <hr />
           <PodcastList showChannel={false}
                        onSelectPage={this.handleSelectPage.bind(this)}

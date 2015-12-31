@@ -8,7 +8,8 @@ import {
   Button,
   ButtonGroup,
   Glyphicon,
-  Well
+  Well,
+  Panel
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
@@ -16,6 +17,7 @@ import * as  actions from '../actions';
 const ListItem = props => {
   const { channel, createHref, unsubscribe } = props;
   return (
+    <Panel>
     <div className="media">
       <div className="media-left">
         <a href="#">
@@ -27,11 +29,10 @@ const ListItem = props => {
         </a>
       </div>
       <div className="media-body">
-        <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
         <Grid>
           <Row>
             <Col xs={6} md={9}>
-              <Well>{channel.description}</Well>
+              <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
             </Col>
             <Col xs={6} md={3}>
               <ButtonGroup>
@@ -42,6 +43,9 @@ const ListItem = props => {
         </Grid>
       </div>
     </div>
+    {channel.description ? <Well style={{ marginTop: 20 }}>{channel.description}</Well> : ''}
+  </Panel>
+
   );
 };
 
