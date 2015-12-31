@@ -10,12 +10,26 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type contextGetter func(*http.Request, string) (interface{}, bool)
+type varsGetter func(*http.Request) map[string]string
+
+var getVars varsGetter
+var getContext contextGetter
+
 // authentication methods
 
-// wraps mux.Vars for easier testing
+func init() {
+	// wraps mux.Vars for easier testing
 
-var getVars = func(r *http.Request) map[string]string {
-	return mux.Vars(r)
+	getVars = func(r *http.Request) map[string]string {
+		return mux.Vars(r)
+	}
+
+	// wraps context
+
+	getContext = func(r *http.Request, key string) (interface{}, bool) {
+		return context.GetOk(r, key)
+	}
 }
 
 func getInt64(r *http.Request, name string) (int64, error) {
@@ -44,7 +58,7 @@ func getPage(r *http.Request) int64 {
 }
 
 func getUser(r *http.Request) (*models.User, bool) {
-	val, ok := context.GetOk(r, userKey)
+	val, ok := getContext(r, userKey)
 	if !ok {
 		return nil, false
 	}
