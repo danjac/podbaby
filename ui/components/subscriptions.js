@@ -52,6 +52,14 @@ export class Subscriptions extends React.Component {
   }
   render() {
     const { createHref } = this.props.history;
+    const { channels } = this.props;
+
+    if (!channels || channels.length === 0) {
+      return (
+        <span>You haven't subscribed to any channels yet.
+          Discover new channels and podcasts <a href={createHref("/podcasts/search/")}>here</a>.</span>);
+    }
+
     return (
       <div>
       {this.props.channels.map(channel => {
@@ -74,7 +82,7 @@ Subscriptions.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    channels: state.channels
+    channels: state.channels || []
   };
 };
 

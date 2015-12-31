@@ -1,20 +1,28 @@
 import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
     ButtonInput,
-    Input
+    Input,
+    Button
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
 
 export class User extends React.Component {
 
+  constructor(props) {
+    super(props);
+    const { dispatch } = this.props;
+    this.actions = bindActionCreators(actions.users, dispatch);
+  }
+
   handleSubmitEmail(event) {
     event.preventDefault();
     const email = this.refs.email.getValue();
     if (email) {
-      this.props.dispatch(actions.users.changeEmail(email));
+      this.actions.changeEmail(email);
     }
 
   }
@@ -31,24 +39,21 @@ export class User extends React.Component {
     if (oldPassword && newPassword){
       oldPasswordNode.value = "";
       newPasswordNode.value = "";
-      this.props.dispatch(actions.users.changePassword(oldPassword, newPassword));
+      this.actions.changePassword(oldPassword, newPassword);
     }
 
+  }
+
+  handleDelete(event) {
+    event.preventDefault();
+    if (window.confirm("Are you sure you want to delete this account? You will lose all your subscriptions and bookmarks!!!")) {
+      this.actions.deleteAccount();
+    }
   }
 
   render() {
     return (
       <div>
-        <h3>Change my username</h3>
-        <form className="form form-vertical">
-            <Input ref="name"
-                   type="name"
-                   required
-                   defaultValue={this.props.auth.name}  />
-            <ButtonInput bsStyle="primary"
-                         type="submit"
-                         value="Save" />
-        </form>
         <h3>Change my email address</h3>
         <form className="form form-vertical" onSubmit={this.handleSubmitEmail.bind(this)}>
             <Input ref="email"
@@ -77,9 +82,11 @@ export class User extends React.Component {
                          value="Save" />
         </form>
         <hr />
-        <form>
-          <ButtonInput bsStyle="danger" className="form-control" value="Delete my account" />
-        </form>
+        <div>
+          <Button bsStyle="danger"
+                  className="form-control"
+                  onClick={this.handleDelete.bind(this)}>Delete my account</Button>
+        </div>
       </div>
     );
   }

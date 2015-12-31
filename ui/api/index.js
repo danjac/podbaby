@@ -79,3 +79,7 @@ export function changePassword(oldPassword, newPassword) {
 export function recoverPassword(identifier) {
   return axios.post(`/api/auth/recoverpass/`, { identifier });
 }
+
+export function deleteAccount() {
+  return axios.delete("/api/user/");
+}

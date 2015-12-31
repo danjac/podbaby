@@ -39,6 +39,7 @@ func (s *Server) Handler() http.Handler {
 
 	user.Handle("/email/", s.requireAuth(s.changeEmail)).Methods("PATCH")
 	user.Handle("/password/", s.requireAuth(s.changePassword)).Methods("PATCH")
+	user.Handle("/", s.requireAuth(s.deleteAccount)).Methods("DELETE")
 
 	// channels
 

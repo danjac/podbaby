@@ -14,10 +14,16 @@ type UserDB interface {
 	IsEmail(string, int64) (bool, error)
 	UpdateEmail(string, int64) error
 	UpdatePassword(string, int64) error
+	DeleteUser(int64) error
 }
 
 type defaultUserDBImpl struct {
 	*sqlx.DB
+}
+
+func (db *defaultUserDBImpl) DeleteUser(userID int64) error {
+	_, err := db.Exec("DELETE FROM users WHERE id=$1", userID)
+	return err
 }
 
 func (db *defaultUserDBImpl) GetByID(id int64) (*models.User, error) {

@@ -34,6 +34,7 @@ export default function(state=initialState, action) {
     case Actions.CLOSE_RECOVER_PASSWORD_FORM:
       return Object.assign({}, state, { showRecoverPasswordForm: action.type === Actions.OPEN_RECOVER_PASSWORD_FORM });
 
+    case Actions.DELETE_ACCOUNT_SUCCESS:
     case Actions.LOGOUT:
       return initialState;
   }

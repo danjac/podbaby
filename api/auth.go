@@ -216,3 +216,12 @@ func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
 	}
 	s.Render.Text(w, http.StatusOK, "password updated")
 }
+
+func (s *Server) deleteAccount(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	if err := s.DB.Users.DeleteUser(user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "account deleted")
+}
