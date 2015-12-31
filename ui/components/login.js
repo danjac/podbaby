@@ -83,6 +83,8 @@ export class Login extends React.Component {
 
     return (
       <div>
+        <h1>Sign into your PodBaby account.</h1>
+        <hr />
         <form className="form-horizontal" onSubmit={this.handleLogin.bind(this)}>
             <Input required
               type="text"

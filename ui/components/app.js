@@ -36,11 +36,10 @@ class MainNav extends React.Component {
       <Navbar inverse={true} fixedTop={true}>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to={auth.isLoggedIn ? "/podcasts/new/" : "/" }><Glyphicon glyph="headphones" /> PodBaby</Link>
+            <Link to={createHref("/podcasts/new/")}><Glyphicon glyph="headphones" /> PodBaby</Link>
           </Navbar.Brand>
         </Navbar.Header>
 
-        {auth.isLoggedIn ?
 
         <Nav pullLeft={true}>
           <NavItem active={isActive("/podcasts/search/")}
@@ -52,20 +51,13 @@ class MainNav extends React.Component {
           <NavItem active={isActive("/podcasts/bookmarks/")}
                    href={createHref("/podcasts/bookmarks/")}><Glyphicon glyph="bookmark" /> Bookmarks</NavItem>
           <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
-        </Nav> : ''}
+        </Nav>
 
-        {auth.isLoggedIn ?
         <Nav pullRight={true}>
           <NavItem active={isActive("/user/")}
                     href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
           <NavItem href="#" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> Logout</NavItem>
-        </Nav> :
-        <Nav pullRight={true}>
-          <NavItem active={isActive("/login/")}
-                   href={createHref("/login/")}><Glyphicon glyph="log-in" /> Login</NavItem>
-          <NavItem active={isActive("/signup/")}
-                   href={createHref("/signup/")}><Glyphicon glyph="user" /> Signup</NavItem>
-        </Nav>}
+        </Nav>
 
       </Navbar>
     );
@@ -218,32 +210,38 @@ export class App extends React.Component {
 
   render() {
 
-    if (!this.props.auth.isLoaded) {
-      return <div><h1>Loading....</h1></div>;
-    }
     const { createHref } = this.props.history;
+    const { isLoggedIn } = this.props.auth;
 
-    return (
-      <div>
-        <MainNav onLogout={this.handleLogout.bind(this)}
-                 onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
-                 {...this.props} />
-               <AlertList alerts={this.props.alerts}
-                          onDismissAlert={this.handleDismissAlert.bind(this)} />
-
+    const pageContent = (
         <div className="container">
           {this.props.children}
         </div>
-        {this.props.auth.isLoggedIn && this.props.player.isPlaying ?
-          <Player player={this.props.player}
-                  createHref={createHref}
-                  onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
-        <AddChannelModal show={this.props.addChannel.show}
-                         container={this}
-                         onAdd={this.handleAddChannel.bind(this)}
-                         onClose={this.handleCloseAddChannelForm.bind(this)} />
-      </div>
     );
+
+    if (isLoggedIn) {
+      return (
+        <div>
+          <MainNav onLogout={this.handleLogout.bind(this)}
+                   onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
+                   {...this.props} />
+          <AlertList alerts={this.props.alerts}
+                     onDismissAlert={this.handleDismissAlert.bind(this)} />
+          {pageContent}
+          {this.props.player.isPlaying ?
+            <Player player={this.props.player}
+                    createHref={createHref}
+                    onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
+
+          <AddChannelModal show={this.props.addChannel.show}
+                           container={this}
+                           onAdd={this.handleAddChannel.bind(this)}
+                           onClose={this.handleCloseAddChannelForm.bind(this)} />
+        </div>
+      );
+    } else {
+      return pageContent;
+    }
   }
 }
 

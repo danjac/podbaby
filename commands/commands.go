@@ -34,17 +34,18 @@ func Serve(url string, port int, secretKey, env string) {
 	db := database.New(sqlx.MustConnect("postgres", url))
 	defer db.Close()
 
-	var staticURL string
+	var dynamicContentURL string
 	if env == "dev" {
-		staticURL = devStaticURL
+		dynamicContentURL = devStaticURL
 	} else {
-		staticURL = defaultStaticURL
+		dynamicContentURL = defaultStaticURL
 	}
 
 	api := api.New(db, log, &api.Config{
-		StaticURL: staticURL,
-		StaticDir: defaultStaticDir,
-		SecretKey: secretKey,
+		StaticURL:         defaultStaticURL,
+		DynamicContentURL: dynamicContentURL,
+		StaticDir:         defaultStaticDir,
+		SecretKey:         secretKey,
 	})
 
 	go func() {

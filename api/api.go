@@ -25,9 +25,10 @@ var errNotLoggedIn = errors.New("You are not logged in")
 
 // Config is server configuration
 type Config struct {
-	StaticURL string
-	StaticDir string
-	SecretKey string
+	StaticURL         string
+	DynamicContentURL string
+	StaticDir         string
+	SecretKey         string
 }
 
 type Server struct {

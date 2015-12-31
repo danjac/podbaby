@@ -29,8 +29,13 @@ export class Signup extends React.Component {
 
   }
   render() {
+
+    const { createHref } = this.props.history;
+
     return (
       <div>
+        <h1>Join PodBaby today.</h1>
+        <hr />
         <form className="form-horizontal"
               onSubmit={this.handleSubmit.bind(this)}>
             <Input required
@@ -50,6 +55,7 @@ export class Signup extends React.Component {
               className="form-control"
               type="submit">Signup</Button>
         </form>
+        <p><a href={createHref('/login/')}>Already a member? Log in here.</a></p>
       </div>
 
     );

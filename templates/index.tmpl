@@ -1,17 +1,9 @@
 <html>
   <head>
         <title>Podbaby</title>
-        <link rel="stylesheet" href="{{ .staticURL }}main.css">
+        <link rel="stylesheet" href="{{ .dynamicContentURL }}main.css">
         <style>
         body { padding-top: 80px; }
-        .content-transition-appear {
-            opacity: 0.01;
-          }
-
-        .content-transition-appear.example-appear-active {
-            opacity: 1;
-            transition: opacity .5s ease-in;
-        }
         </style>
     </head>
   <body>
@@ -22,7 +14,7 @@
     window.csrfToken = "{{ .csrfToken }}";
     window.user = {{ .user }};
     </script>
-    <script src="{{ .staticURL }}main.js"></script>
+    <script src="{{ .dynamicContentURL }}main.js"></script>
 
 
 </html>
