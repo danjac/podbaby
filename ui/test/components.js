@@ -67,19 +67,6 @@ describe('Podcast component', function() {
     assert.include(titles, 'Add to bookmarks');
   });
 
-  it('should show subcribe button if user is not subscribed', function() {
-
-    const podcast = makePodcast({ isSubscribed: false });
-    const props = makePodcastProps(podcast);
-    const component = <Wrapper><Podcast {...props} /></Wrapper>;
-    const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
-
-    const titles = buttons.map(node => node.getAttribute("title"));
-    assert.include(titles, 'Subscribe');
-  });
-
-
   it('should show unsubcribe button if user is subscribed', function() {
 
     const podcast = makePodcast({ isSubscribed: true });
@@ -110,7 +97,7 @@ describe('Podcast component', function() {
     const props = makePodcastProps(podcast, { showChannel: true });
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-object")
+    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-object")
     assert.equal(tags.length, 1)
     const h3 = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h3');
     assert.equal(h3.textContent, podcast.name);
@@ -122,7 +109,7 @@ const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-objec
     const props = makePodcastProps(podcast, { showChannel: false });
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-object")
+    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-object")
     assert.equal(tags.length, 0)
 
 //const shallowRenderer = TestUtils.createRenderer();
