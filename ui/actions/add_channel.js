@@ -10,7 +10,7 @@ export function add(url) {
     return dispatch => {
         api.addChannel(url)
         .then(result => {
-            dispatch(alerts.success("New channel added"));
+            dispatch(alerts.success("New channel added: see your subscriptions"));
             dispatch(createAction(Actions.ADD_CHANNEL_SUCCESS, result.data));
         })
         .catch(error => {

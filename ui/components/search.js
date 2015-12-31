@@ -11,7 +11,8 @@ import {
   ButtonGroup,
   Button,
   Well,
-  Input
+  Input,
+  Panel
 } from 'react-bootstrap';
 
 import  * as actions from '../actions';
@@ -21,6 +22,7 @@ import { sanitize, formatPubDate } from './utils';
 const ChannelItem = props => {
   const { channel, createHref, subscribe } = props;
   return (
+    <Panel>
     <div className="media">
       <div className="media-left">
         <a href="#">
@@ -32,11 +34,10 @@ const ChannelItem = props => {
         </a>
       </div>
       <div className="media-body">
-        <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
         <Grid>
           <Row>
             <Col xs={6} md={9}>
-              <Well>{channel.description}</Well>
+              <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
             </Col>
             <Col xs={6} md={3}>
               <ButtonGroup>
@@ -49,6 +50,8 @@ const ChannelItem = props => {
         </Grid>
       </div>
     </div>
+    {channel.description ? <Well style={{ marginTop: 20 }}>{channel.description}</Well> : ''}
+  </Panel>
   );
 };
 
