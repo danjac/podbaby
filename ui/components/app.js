@@ -36,7 +36,7 @@ class MainNav extends React.Component {
       <Navbar inverse={true} fixedTop={true}>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to={createHref("/podcasts/new/")}><Glyphicon glyph="headphones" /> PodBaby</Link>
+            <Link to="/podcasts/new/"><Glyphicon glyph="headphones" /> PodBaby</Link>
           </Navbar.Brand>
         </Navbar.Header>
 
@@ -108,7 +108,6 @@ export class Player extends React.Component {
 
   render() {
     const { podcast } = this.props.player;
-    const { createHref } = this.props;
     return (
       <footer style={{
         position:"fixed",
@@ -125,7 +124,7 @@ export class Player extends React.Component {
         <Grid>
           <Row>
             <Col xs={6} md={6}>
-              Currently playing: <b><a href={createHref(`/podcasts/channel/${podcast.channelId}/`)}>{podcast.name}</a> : {podcast.title}</b>
+              Currently playing: <b><Link to={`/podcasts/channel/${podcast.channelId}/`}>{podcast.name}</Link> : {podcast.title}</b>
             </Col>
             <Col xs={3} md={4}>
               <audio controls={true} autoPlay={true} src={podcast.enclosureUrl}>

@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
 import _ from 'lodash';
+import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import {
   Grid,
@@ -30,7 +31,6 @@ export class PodcastList extends React.Component {
       showChannel
     } = this.props;
 
-    const { createHref } = this.props.history;
 
     if (isLoading) {
       return (
@@ -58,7 +58,6 @@ export class PodcastList extends React.Component {
         {pagination}
         {podcasts.map(podcast => {
 
-          const channelUrl = createHref("/podcasts/channel/" + podcast.channelId + "/");
           const isPlaying = player.podcast && podcast.id === player.podcast.id;
 
           const togglePlayer = event => {
@@ -94,8 +93,7 @@ export class PodcastList extends React.Component {
                           toggleDetail={toggleDetail}
                           isPlaying={isPlaying}
                           togglePlayer={togglePlayer}
-                          toggleSubscribe={toggleSubscribe}
-                          channelUrl={channelUrl} />;
+                          toggleSubscribe={toggleSubscribe} />
         })}
         {pagination}
         </div>
@@ -108,7 +106,6 @@ export const Podcast = props => {
   const {
     podcast,
     showChannel,
-    channelUrl,
     isPlaying,
     isShowingDetail,
     togglePlayer,
@@ -116,20 +113,22 @@ export const Podcast = props => {
     toggleDetail,
     toggleBookmark } = props;
 
-  const header = showChannel ? <h3><a href={channelUrl}>{podcast.name}</a></h3> : <h3>{podcast.title}</h3>;
+  const channelUrl = `/podcasts/channel/${podcast.channelId}/`;
+
+  const header = showChannel ? <h3><Link to={channelUrl}>{podcast.name}</Link></h3> : <h3>{podcast.title}</h3>;
 
   return (
     <Panel bsStyle="primary" header={header}>
       <div className="media">
         {showChannel ?
         (<div className="media-left media-middle">
-          <a href={channelUrl}>
+          <Link to={channelUrl}>
             <img className="media-object"
                  height={60}
                  width={60}
                  src={podcast.image}
                  alt={podcast.name} />
-          </a>
+          </Link>
           </div> ) : ''}
         <div className="media-body">
           <Grid>
