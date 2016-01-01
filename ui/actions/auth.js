@@ -13,7 +13,6 @@ export function logout() {
     api.logout();
     dispatch(createAction(Actions.LOGOUT));
     dispatch(pushPath("/"));
-    dispatch(alerts.info("Bye for now!"))
   };
 }
 

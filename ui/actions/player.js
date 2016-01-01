@@ -1,5 +1,4 @@
-import { Actions } from '../constants';
-import { Storage } from '../constants';
+import { Actions, Storage } from '../constants';
 import { createAction } from './utils';
 
 export function setPodcast(podcast) {

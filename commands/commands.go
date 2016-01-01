@@ -3,7 +3,6 @@ package commands
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/api"
@@ -47,15 +46,6 @@ func Serve(url string, port int, secretKey, env string) {
 		StaticDir:         defaultStaticDir,
 		SecretKey:         secretKey,
 	})
-
-	go func() {
-		for {
-			if err := api.Feedparser.FetchAll(); err != nil {
-				log.Error(err)
-			}
-			time.Sleep(time.Hour)
-		}
-	}()
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), api.Handler()); err != nil {
 		panic(err)
