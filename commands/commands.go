@@ -3,23 +3,23 @@ package commands
 import (
 	"fmt"
 	"net/http"
+	"net/smtp"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/danjac/podbaby/api"
+	"github.com/danjac/podbaby/config"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/feedparser"
+	"github.com/danjac/podbaby/mailer"
+	"github.com/danjac/podbaby/server"
 	"github.com/jmoiron/sqlx"
 )
 
-// should be settings
-const (
-	defaultStaticURL = "/static/"
-	defaultStaticDir = "./static/"
-	devStaticURL     = "http://localhost:8080/static/"
-)
+func mustConnect(url string) *database.DB {
+	return database.New(sqlx.MustConnect("postgres", url))
+}
 
 // Serve runs the webserver
-func Serve(url string, port int, secretKey, env string) {
+func Serve(cfg *config.Config) {
 
 	log := logrus.New()
 
@@ -30,33 +30,30 @@ func Serve(url string, port int, secretKey, env string) {
 
 	log.Info("Starting web service...")
 
-	db := database.New(sqlx.MustConnect("postgres", url))
+	db := mustConnect(cfg.DatabaseURL)
 	defer db.Close()
 
-	var dynamicContentURL string
-	if env == "dev" {
-		dynamicContentURL = devStaticURL
-	} else {
-		dynamicContentURL = defaultStaticURL
-	}
+	mailer := mailer.New(
+		cfg.Mail.Addr,
+		smtp.PlainAuth(
+			cfg.Mail.ID,
+			cfg.Mail.User,
+			cfg.Mail.Password,
+			cfg.Mail.Host,
+		),
+	)
 
-	api := api.New(db, log, &api.Config{
-		StaticURL:         defaultStaticURL,
-		DynamicContentURL: dynamicContentURL,
-		StaticDir:         defaultStaticDir,
-		SecretKey:         secretKey,
-	})
-
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), api.Handler()); err != nil {
+	s := server.New(db, mailer, log, cfg)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), s.Handler()); err != nil {
 		panic(err)
 	}
 
 }
 
 // Fetch retrieves latest podcasts
-func Fetch(url string) {
+func Fetch(cfg *config.Config) {
 
-	db := database.New(sqlx.MustConnect("postgres", url))
+	db := mustConnect(cfg.DatabaseURL)
 	defer db.Close()
 
 	log := logrus.New()
