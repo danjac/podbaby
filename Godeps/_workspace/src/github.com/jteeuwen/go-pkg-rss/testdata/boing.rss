@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss2full.xsl"?>
+<?xml-stylesheet type="text/css" media="screen" href="http://feeds.feedburner.com/~d/styles/itemcontent.css"?>
+<rss xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" version="2.0">
+  <channel>
+    <title>Boing Boing</title>
+    <link>http://boingboing.net</link>
+    <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="http://feeds.feedburner.com/boingboing/iBag" />
+    <description>Brain candy for Happy Mutants</description>
+    <language>en-US</language>
+    <lastBuildDate>Wed, 27 Mar 2013 12:30:18 PDT</lastBuildDate>
+    <sy:updatePeriod xmlns:sy="http://purl.org/rss/1.0/modules/syndication/">hourly</sy:updatePeriod>
+    <sy:updateFrequency xmlns:sy="http://purl.org/rss/1.0/modules/syndication/">1</sy:updateFrequency>
+    <sy:updateBase xmlns:sy="http://purl.org/rss/1.0/modules/syndication/">2013-03-27T19:44:16Z</sy:updateBase>
+    <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="http://feeds.feedburner.com/boingboing/iBag" />
+    <feedburner:info uri="boingboing/ibag" />
+    <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" />
+    <image>
+      <link>http://boingboing.net</link>
+      <url>http://boingboing.net/icons/bb144.jpg</url>
+      <title>Boing Boing</title>
+    </image>
+    <feedburner:browserFriendly>This is an XML content feed. It is intended to be viewed in a newsreader or syndicated to another site.</feedburner:browserFriendly>
+    <item>
+      <title>Save Noisebridge!</title>
+      <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/EKKb-61Ismc/story01.htm</link>
+      <category>hackerspaces</category>
+      <category>Post</category>
+      <category>charitable giving</category>
+      <category>short</category>
+      <category>sfo</category>
+      <category>happy mutants</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cory Doctorow</dc:creator>
+      <pubDate>Wed, 27 Mar 2013 12:30:18 PDT</pubDate>
+      <guid isPermaLink="false">http://boingboing.net/?p=221544</guid>
+      <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+        <![CDATA[A reader writes, "Noisebridge, San Francisco's Hackerspace, is having <a href="https://www.noisebridge.net/pipermail/noisebridge-discuss/2013-March/035494.html">some hard times</a>, so we're throwing an epic benefit and party this Saturday, to include eclectic performers, interactive art, a raffle and more! For <a href="https://www.noisebridge.net/wiki/Art">more details</a>, if any BBers want to put on demos or ideas share them. <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a105a0e/mf.gif' border='0'/>
+        <div class='mf-viral'>
+          <table border='0'>
+            <tr>
+              <td valign='middle'>
+                <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Save+Noisebridge%21&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fsave-noisebridge.html" target="_blank">
+                  <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                </a>
+              </td>
+              <td valign='middle'>
+                <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Save+Noisebridge%21&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fsave-noisebridge.html" target="_blank">
+                  <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/EKKb-61Ismc" height="1" width="1"/>]]>
+      </content:encoded>
+        <description>A reader writes, "Noisebridge, San Francisco's Hackerspace, is having some hard times, so we're throwing an epic benefit and party this Saturday, to include eclectic performers, interactive art, a raffle and more! For more details, if any BBers want to put on demos or ideas share them.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a105a0e/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Save+Noisebridge%21&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fsave-noisebridge.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Save+Noisebridge%21&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fsave-noisebridge.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+        <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+        <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/save-noisebridge.html/feed</wfw:commentRss>
+        <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a105a0e/l/0Lboingboing0Bnet0C20A130C0A30C270Csave0Enoisebridge0Bhtml/story01.htm</feedburner:origLink>
+      </item>
+      <item>
+        <title>Policy Laundering: how the US Trade Rep is trading away America's right to unlock its devices</title>
+        <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/OaXSg9AF5Bo/story01.htm</link>
+        <category>Post</category>
+        <category>eff</category>
+        <category>dmca</category>
+        <category>Copyfight</category>
+        <category>politics</category>
+        <category>jailbreaking</category>
+        <category>wipo</category>
+        <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cory Doctorow</dc:creator>
+        <pubDate>Wed, 27 Mar 2013 12:19:05 PDT</pubDate>
+        <guid isPermaLink="false">http://boingboing.net/?p=221272</guid>
+        <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+          <![CDATA[<p> Some of America's worst copyright laws were passed through a profoundly undemocratic process called "policy laundering." This is what happens when an administration can't get Congress to pass a bad copyright law, so the US Trade Representative instead signs the US up to international treaties requiring America to pass the unpopular law. The 1998 Digital Millennium Copyright Act is one of the policy-laundered laws that has done enormous harm to the country. <p> Now the USTR is busy again, signing America up to treaties that undermine attempts by Congress to make phone unlocking and jailbreaking legal. America's official representative is going to other countries and telling them, "If you want to do business with America, you must ban jailbreaking and phone unlocking, and in return, we promise to keep those activities on the banned list, too." <p> In other words, America's trade reps are cramming a massively unpopular, harmful policy down the throats of its trading partners, while simultaneously locking America into the same policy, undermining Congress at the same time. <p> The Electronic Frontier Foundation wants you to take action on this. Maira Sutton and Parker Higgins have written a good article explaining policy laundering in depth. <blockquote>
+            <p> U.S. wireless carriers claim that unlocking your phone to change carriers is illegal under Section 1201 of the DMCA, which prohibits the removal of digital rights management (DRM) technology. Section 1201 of the DMCA also set up a triennial rulemaking procedure, whereby the public can ask for exceptions to the rule that you cannot remove DRM from your devices. Phone unlocking was not approved in the last round of DMCA rulemaking, raising the specter of lawsuits against phone owners. <p> In light of public outrage over this, several members of Congress have introduced legislation to legalize phone unlocking. Already, opponents are saying that an effective narrow fix—a permanent phone-unlocking exemption from Section 1201—may violate the Korea-US trade agreement. Regardless of whether such a claim is true, such chatter can be enough to slow down the pace of change, and make any political reformers of the DMCA more cautious than they might otherwise be. <p> Big Content interest groups like the Motion Picture Association of America, Recording Industry Association of America, and International Federation of the Phonographic Industry—just to name a few—continue to have a strong influence on US trade negotiators. They are lobbying hard for our government to promote international policies to strengthen their control over how and when the public can interact and experience their creative products. </blockquote>
+            <p>
+              <a href="https://www.eff.org/deeplinks/2013/03/ustr-secret-copyright-agreements-worldwide"> How the US Trade Rep Ratchets Up Worldwide Copyright Laws That Could Keep Your Devices Locked Forever </a>
+              <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a108cc3/mf.gif' border='0'/>
+              <div class='mf-viral'>
+                <table border='0'>
+                  <tr>
+                    <td valign='middle'>
+                      <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Policy+Laundering%3A+how+the+US+Trade+Rep+is+trading+away+America%27s+right+to+unlock+its+devices&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fpolicy-laundering-how-the-us.html" target="_blank">
+                        <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                      </a>
+                    </td>
+                    <td valign='middle'>
+                      <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Policy+Laundering%3A+how+the+US+Trade+Rep+is+trading+away+America%27s+right+to+unlock+its+devices&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fpolicy-laundering-how-the-us.html" target="_blank">
+                        <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/OaXSg9AF5Bo" height="1" width="1"/>]]>
+            </content:encoded>
+              <description>Some of America's worst copyright laws were passed through a profoundly undemocratic process called "policy laundering." This is what happens when an administration can't get Congress to pass a bad copyright law, so the US Trade Representative instead signs the US up to international treaties requiring America to pass the unpopular law. The 1998 Digital [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a108cc3/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Policy+Laundering%3A+how+the+US+Trade+Rep+is+trading+away+America%27s+right+to+unlock+its+devices&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fpolicy-laundering-how-the-us.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Policy+Laundering%3A+how+the+US+Trade+Rep+is+trading+away+America%27s+right+to+unlock+its+devices&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fpolicy-laundering-how-the-us.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+              <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+              <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/policy-laundering-how-the-us.html/feed</wfw:commentRss>
+              <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a108cc3/l/0Lboingboing0Bnet0C20A130C0A30C270Cpolicy0Elaundering0Ehow0Ethe0Eus0Bhtml/story01.htm</feedburner:origLink>
+            </item>
+            <item>
+              <title>Attack of the copyright trolls</title>
+              <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/7-xTX_SCMdk/story01.htm</link>
+              <category>Short</category>
+              <category>Copyfight</category>
+              <category>scams</category>
+              <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Rob Beschizza</dc:creator>
+              <pubDate>Wed, 27 Mar 2013 11:58:42 PDT</pubDate>
+              <guid isPermaLink="false">http://boingboing.net/?p=221535</guid>
+              <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                <![CDATA[Online, <a href=" http://techcrunch.com/2013/03/25/how-copyright-trolls-run-bait-car-operations-to-grab-pirates/">torrents of failed movies linger mysteriously, waiting to net downloaders in shakedown settlements</a> which seem to have little to do with preventing piracy. John Biggs covers <a href="http://techcrunch.com/2013/03/25/how-copyright-trolls-run-bait-car-operations-to-grab-pirates/">the details of a copyright trolls' legal and wildly profitable scam</a>. [TechCrunch] <a href="https://www.google.com/search?q=site%3Aboingboing.net+prenda+law&#038;aq=f&#038;oq=site%3Aboingboing.net+prenda+law&#038;aqs=chrome.0.57j58.4790j0&#038;sourceid=chrome&#038;ie=UTF-8">Previously</a>.<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a108a17/mf.gif' border='0'/>
+                <div class='mf-viral'>
+                  <table border='0'>
+                    <tr>
+                      <td valign='middle'>
+                        <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Attack+of+the+copyright+trolls&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fattack-of-the-copyright-trolls.html" target="_blank">
+                          <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                        </a>
+                      </td>
+                      <td valign='middle'>
+                        <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Attack+of+the+copyright+trolls&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fattack-of-the-copyright-trolls.html" target="_blank">
+                          <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/7-xTX_SCMdk" height="1" width="1"/>]]>
+              </content:encoded>
+                <description>Online, torrents of failed movies linger mysteriously, waiting to net downloaders in shakedown settlements which seem to have little to do with preventing piracy. John Biggs covers the details of a copyright trolls' legal and wildly profitable scam. [TechCrunch] Previously.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a108a17/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Attack+of+the+copyright+trolls&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fattack-of-the-copyright-trolls.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Attack+of+the+copyright+trolls&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fattack-of-the-copyright-trolls.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/attack-of-the-copyright-trolls.html/feed</wfw:commentRss>
+                <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a108a17/l/0Lboingboing0Bnet0C20A130C0A30C270Cattack0Eof0Ethe0Ecopyright0Etrolls0Bhtml/story01.htm</feedburner:origLink>
+              </item>
+              <item>
+                <title>Fifteen Years After A School Shooting</title>
+                <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/dFehmlVfR_0/story01.htm</link>
+                <category>Short</category>
+                <category>crime</category>
+                <category>gun control</category>
+                <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Rob Beschizza</dc:creator>
+                <pubDate>Wed, 27 Mar 2013 11:42:31 PDT</pubDate>
+                <guid isPermaLink="false">http://boingboing.net/?p=221533</guid>
+                <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                  <![CDATA[<em>Buzzfeed's</em> David Peisner writes about <a href="http://www.buzzfeed.com/djpeisner/the-ghosts-of-jonesboro-fifteen-years-after-a-notorious-scho">the aftermath of a 1998 school shooting in Jonesboro, Arkansas, that left five dead and ten more wounded</a>. To this day, the small town feels the pain&#8212;a pain shared by Newtown and many others.<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0feaff/mf.gif' border='0'/>
+                  <div class='mf-viral'>
+                    <table border='0'>
+                      <tr>
+                        <td valign='middle'>
+                          <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Fifteen+Years+After+A+School+Shooting&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ffifteen-years-after-a-school-s.html" target="_blank">
+                            <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                          </a>
+                        </td>
+                        <td valign='middle'>
+                          <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Fifteen+Years+After+A+School+Shooting&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ffifteen-years-after-a-school-s.html" target="_blank">
+                            <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/dFehmlVfR_0" height="1" width="1"/>]]>
+                </content:encoded>
+                  <description>Buzzfeed's David Peisner writes about the aftermath of a 1998 school shooting in Jonesboro, Arkansas, that left five dead and ten more wounded. To this day, the small town feels the pain&amp;#8212;a pain shared by Newtown and many others.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0feaff/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Fifteen+Years+After+A+School+Shooting&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ffifteen-years-after-a-school-s.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Fifteen+Years+After+A+School+Shooting&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ffifteen-years-after-a-school-s.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                  <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                  <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/fifteen-years-after-a-school-s.html/feed</wfw:commentRss>
+                  <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0feaff/l/0Lboingboing0Bnet0C20A130C0A30C270Cfifteen0Eyears0Eafter0Ea0Eschool0Es0Bhtml/story01.htm</feedburner:origLink>
+                </item>
+                <item>
+                  <title>Citizens who helped find killer cop denied reward</title>
+                  <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/w1D5CRLY504/story01.htm</link>
+                  <category>dorner</category>
+                  <category>Post</category>
+                  <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Rob Beschizza</dc:creator>
+                  <pubDate>Wed, 27 Mar 2013 10:59:27 PDT</pubDate>
+                  <guid isPermaLink="false">http://boingboing.net/?p=221522</guid>
+                  <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                    <![CDATA[<p>Ken Layne, writes that<a href="http://www.theawl.com/2013/03/sorry-cops"> the authorities have denied the rewards promised to those who helped them find cop-killer Christopher Dorner</a>. [The Awl] <blockquote>Three brave heroes who survived their encounters with Dorner have since claimed the reward, but the stingy governments and groups who offered the money now refuse to pay because Dorner somehow didn't survive an army of cops roasting and demolishing the mountain cabin he holed up inside for his last stand.</blockquote>
+                    <p>After the LAPD's <a href="http://boingboing.net/2013/02/10/lapd-hunting-dorner-shot-at-in.html">gung-ho public rampage</a> in search of Dorner, a final insult to the people they ostensibly serve seems entirely appropriate. <strong>Update:</strong> Commenter Ethan points out, though, that the LAPD itself is planning to honor reward offers: "It's the city of Riverside that withdrew the reward. Irvine is still planning to pay it out as is LA. The LAPD Deputy Chief said it would be disingenuous to deny the reward because Dorner was killed."<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f996b/mf.gif' border='0'/>
+                    <div class='mf-viral'>
+                      <table border='0'>
+                        <tr>
+                          <td valign='middle'>
+                            <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Citizens+who+helped+find+killer+cop+denied+reward&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcitizens-who-helped-find-kille.html" target="_blank">
+                              <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                            </a>
+                          </td>
+                          <td valign='middle'>
+                            <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Citizens+who+helped+find+killer+cop+denied+reward&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcitizens-who-helped-find-kille.html" target="_blank">
+                              <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/w1D5CRLY504" height="1" width="1"/>]]>
+                  </content:encoded>
+                    <description>Ken Layne, writes that the authorities have denied the rewards promised to those who helped them find cop-killer Christopher Dorner. [The Awl] Three brave heroes who survived their encounters with Dorner have since claimed the reward, but the stingy governments and groups who offered the money now refuse to pay because Dorner somehow didn't survive [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f996b/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Citizens+who+helped+find+killer+cop+denied+reward&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcitizens-who-helped-find-kille.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Citizens+who+helped+find+killer+cop+denied+reward&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcitizens-who-helped-find-kille.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                    <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                    <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/citizens-who-helped-find-kille.html/feed</wfw:commentRss>
+                    <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0f996b/l/0Lboingboing0Bnet0C20A130C0A30C270Ccitizens0Ewho0Ehelped0Efind0Ekille0Bhtml/story01.htm</feedburner:origLink>
+                  </item>
+                  <item>
+                    <title>Assemblage raygun</title>
+                    <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/MZhU0qxUQG4/story01.htm</link>
+                    <category>makers</category>
+                    <category>sculptures</category>
+                    <category>Post</category>
+                    <category>gift guide</category>
+                    <category>rayguns</category>
+                    <category>guns</category>
+                    <category>Steampunk</category>
+                    <category>happy mutants</category>
+                    <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cory Doctorow</dc:creator>
+                    <pubDate>Wed, 27 Mar 2013 10:45:38 PDT</pubDate>
+                    <guid isPermaLink="false">http://boingboing.net/?p=221311</guid>
+                    <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                      <![CDATA[<p>
+                        <img src="http://boingboing.net/wp-content/uploads/2013/03/Newsletter11-131.jpg" class="bordered">
+                          <br /> The latest piece from mad assemblage sculptor <a href="http://klockwerks.com/">Roger Wood</a> is this delightful ray-gun: "Another mental health break from clocks with this Steampunk ray gun and charging stand." <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fb8dc/mf.gif' border='0'/>
+                          <div class='mf-viral'>
+                            <table border='0'>
+                              <tr>
+                                <td valign='middle'>
+                                  <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Assemblage+raygun&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fassemblage-raygun.html" target="_blank">
+                                    <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                  </a>
+                                </td>
+                                <td valign='middle'>
+                                  <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Assemblage+raygun&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fassemblage-raygun.html" target="_blank">
+                                    <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                  </a>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                          <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/MZhU0qxUQG4" height="1" width="1"/>]]>
+                        </content:encoded>
+                          <description>The latest piece from mad assemblage sculptor Roger Wood is this delightful ray-gun: "Another mental health break from clocks with this Steampunk ray gun and charging stand."&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fb8dc/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Assemblage+raygun&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fassemblage-raygun.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Assemblage+raygun&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fassemblage-raygun.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                          <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                          <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/assemblage-raygun.html/feed</wfw:commentRss>
+                          <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0fb8dc/l/0Lboingboing0Bnet0C20A130C0A30C270Cassemblage0Eraygun0Bhtml/story01.htm</feedburner:origLink>
+                        </item>
+                        <item>
+                          <title>Honoring death by donating your body to science</title>
+                          <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/oEmcNsp7fcw/story01.htm</link>
+                          <category>human experimentation</category>
+                          <category>death</category>
+                          <category>Short</category>
+                          <category>research</category>
+                          <category>bodies</category>
+                          <category>Science</category>
+                          <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Maggie Koerth-Baker</dc:creator>
+                          <pubDate>Wed, 27 Mar 2013 10:15:52 PDT</pubDate>
+                          <guid isPermaLink="false">http://boingboing.net/?p=221517</guid>
+                          <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                            <![CDATA[i09's Annalee Newitz is donating her body to science when she dies. In a moving and fascinating article, she tells the story of her mother's death, how it led her to make this choice for herself, and <a href="http://io9.com/i-donated-my-body-to-medicine-458382155">what happens to bodies once they find their way into the hands of medical schools and scientists</a>. <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa07d/mf.gif' border='0'/>
+                            <div class='mf-viral'>
+                              <table border='0'>
+                                <tr>
+                                  <td valign='middle'>
+                                    <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Honoring+death+by+donating+your+body+to+science&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fhonoring-death-by-donating-you.html" target="_blank">
+                                      <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                    </a>
+                                  </td>
+                                  <td valign='middle'>
+                                    <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Honoring+death+by+donating+your+body+to+science&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fhonoring-death-by-donating-you.html" target="_blank">
+                                      <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                            <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/oEmcNsp7fcw" height="1" width="1"/>]]>
+                          </content:encoded>
+                            <description>i09's Annalee Newitz is donating her body to science when she dies. In a moving and fascinating article, she tells the story of her mother's death, how it led her to make this choice for herself, and what happens to bodies once they find their way into the hands of medical schools and scientists.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa07d/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Honoring+death+by+donating+your+body+to+science&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fhonoring-death-by-donating-you.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Honoring+death+by+donating+your+body+to+science&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fhonoring-death-by-donating-you.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                            <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                            <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/honoring-death-by-donating-you.html/feed</wfw:commentRss>
+                            <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa07d/l/0Lboingboing0Bnet0C20A130C0A30C270Chonoring0Edeath0Eby0Edonating0Eyou0Bhtml/story01.htm</feedburner:origLink>
+                          </item>
+                          <item>
+                            <title>Photos from on top of the Great Pyramid</title>
+                            <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/JizwZq5QZxI/story01.htm</link>
+                            <category>History</category>
+                            <category>Post</category>
+                            <category>egypt</category>
+                            <category>archaeology</category>
+                            <category>Engineering</category>
+                            <category>Wonders of the World</category>
+                            <category>pyramids</category>
+                            <category>Russians</category>
+                            <category>Science</category>
+                            <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Maggie Koerth-Baker</dc:creator>
+                            <pubDate>Wed, 27 Mar 2013 10:10:34 PDT</pubDate>
+                            <guid isPermaLink="false">http://boingboing.net/?p=221510</guid>
+                            <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                              <![CDATA[<p>
+                                <a href="http://boingboing.net/wp-content/uploads/2013/03/0_8e7fc_f480fc04_XXL.jpeg">
+                                  <img src="http://boingboing.net/wp-content/uploads/2013/03/0_8e7fc_f480fc04_XXL-600x382.jpeg" alt="" title="0_8e7fc_f480fc04_XXL" width="600" height="382" class="alignnone size-medium wp-image-221511" />
+                                </a>
+                              </p>
+                              <p>The Pyramids of Giza close to tourists at 4:00 pm. Recently, a group of Russians managed to hide out at the site after closing time and scramble up the Great Pyramid of Cheops in the fading light. <a href="http://www.microsofttranslator.com/bv.aspx?from=&#038;to=en&#038;a=http%3A%2F%2Fraskalov-vit.livejournal.com%2F131308.html">Naturally, they took photos. </a>(Because if there is one thing the Internet has taught me about Russians, it's that they like to climb to dangerous heights and then take photos.)</p>
+                              <p>These shots are kind of fabulous, not just for the thrill of "yeah, somebody broke the rules!", but because of the perspective you get from on high that isn't visible in the many ground-level shots I've seen. From on top of the Pyramid, you can see how the stone is pockmarked and carved &#8212; it really looks like something humans cut out of the Earth. You can also see the graffiti left by generations of tourists in multiple languages; English, Arabic, French, and more. And you can see the edge of the modern city, shimmering just at the horizon. I don't think I'd previously had such a profound sense of how closely modern Egyptians lived and worked to the Great Pyramid, before. What a fascinating view!</p>
+                              <em>
+                                <p>Thanks to <a href="http://stevesilberman.com">Steve Silberman</a> for the link!</p>
+                              </em>
+                              <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa080/mf.gif' border='0'/>
+                              <div class='mf-viral'>
+                                <table border='0'>
+                                  <tr>
+                                    <td valign='middle'>
+                                      <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Photos+from+on+top+of+the+Great+Pyramid&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fphotos-from-on-top-of-the-grea.html" target="_blank">
+                                        <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                      </a>
+                                    </td>
+                                    <td valign='middle'>
+                                      <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Photos+from+on+top+of+the+Great+Pyramid&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fphotos-from-on-top-of-the-grea.html" target="_blank">
+                                        <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                      </a>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </div>
+                              <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/JizwZq5QZxI" height="1" width="1"/>]]>
+                            </content:encoded>
+                              <description>The Pyramids of Giza close to tourists at 4:00 pm. Recently, a group of Russians managed to hide out at the site after closing time and scramble up the Great Pyramid of Cheops in the fading light. Naturally, they took photos. (Because if there is one thing the Internet has taught me about Russians, it's [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa080/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Photos+from+on+top+of+the+Great+Pyramid&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fphotos-from-on-top-of-the-grea.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Photos+from+on+top+of+the+Great+Pyramid&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fphotos-from-on-top-of-the-grea.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                              <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                              <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/photos-from-on-top-of-the-grea.html/feed</wfw:commentRss>
+                              <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa080/l/0Lboingboing0Bnet0C20A130C0A30C270Cphotos0Efrom0Eon0Etop0Eof0Ethe0Egrea0Bhtml/story01.htm</feedburner:origLink>
+                            </item>
+                            <item>
+                              <title>A friendly reminder: if you like Boing Boing the blog, join us on Twitter, Facebook, and Google+</title>
+                              <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/FXBiG3plX6g/story01.htm</link>
+                              <category>Post</category>
+                              <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                              <pubDate>Wed, 27 Mar 2013 10:08:53 PDT</pubDate>
+                              <guid isPermaLink="false">http://boingboing.net/?p=221514</guid>
+                              <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                <![CDATA[<img src="http://boingboing.net/wp-content/uploads/2013/02/Screen-Shot-2013-02-20-at-12.35.jpg" alt="Boing Boing, on social media" title="Boing Boing, on social media" width="900" height="253" class="aligncenter size-full wp-image-214359" />
+                                <p> Boing Boing is on <a href="http://twitter.com/boingboing">Twitter</a>, <a href="https://www.facebook.com/boingboing">Facebook</a>, and <a href="https://plus.google.com/communities/109358237008912109516">Google Plus</a>. Join us at the social network of your choice, or heck, all three of 'em.<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa084/mf.gif' border='0'/>
+                                <div class='mf-viral'>
+                                  <table border='0'>
+                                    <tr>
+                                      <td valign='middle'>
+                                        <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=A+friendly+reminder%3A+if+you+like+Boing+Boing+the+blog%2C+join+us+on+Twitter%2C+Facebook%2C+and+Google%2B&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fa-friendly-reminder-if-you-li-4.html" target="_blank">
+                                          <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                        </a>
+                                      </td>
+                                      <td valign='middle'>
+                                        <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=A+friendly+reminder%3A+if+you+like+Boing+Boing+the+blog%2C+join+us+on+Twitter%2C+Facebook%2C+and+Google%2B&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fa-friendly-reminder-if-you-li-4.html" target="_blank">
+                                          <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                                <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/FXBiG3plX6g" height="1" width="1"/>]]>
+                              </content:encoded>
+                                <description>Boing Boing is on Twitter, Facebook, and Google Plus. Join us at the social network of your choice, or heck, all three of 'em.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa084/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=A+friendly+reminder%3A+if+you+like+Boing+Boing+the+blog%2C+join+us+on+Twitter%2C+Facebook%2C+and+Google%2B&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fa-friendly-reminder-if-you-li-4.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=A+friendly+reminder%3A+if+you+like+Boing+Boing+the+blog%2C+join+us+on+Twitter%2C+Facebook%2C+and+Google%2B&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fa-friendly-reminder-if-you-li-4.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/a-friendly-reminder-if-you-li-4.html/feed</wfw:commentRss>
+                                <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0fa084/l/0Lboingboing0Bnet0C20A130C0A30C270Ca0Efriendly0Ereminder0Eif0Eyou0Eli0E40Bhtml/story01.htm</feedburner:origLink>
+                              </item>
+                              <item>
+                                <title>TIme-lapse of a particularly intense aurora borealis display</title>
+                                <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/-oyNcSRg4s4/story01.htm</link>
+                                <category>photography</category>
+                                <category>Post</category>
+                                <category>solar flare</category>
+                                <category>aurora borealis</category>
+                                <category>sun</category>
+                                <category>Space</category>
+                                <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">David Pescovitz</dc:creator>
+                                <pubDate>Wed, 27 Mar 2013 09:53:01 PDT</pubDate>
+                                <guid isPermaLink="false">http://boingboing.net/?p=221504</guid>
+                                <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                  <![CDATA[<!--www.youtube.com-->
+                                  <div class="video-container">
+                                    <iframe width="600" height="338" src="http://www.youtube.com/embed/ZmVK0ESAyG4?showinfo=0" frameborder="0" allowfullscreen>
+                                  </iframe>
+                                </div>
+                                  <p> Photographer <a href="https://twitter.com/Astrofotografen">Göran Strand</a> created this stunning time-lapse video made from photographs of the aurora borealis as seen from Östersund, Sweden on March 17, 2013. The video consists of 2,464 images taken over four hours. The extreme intensity of the aurora borealis display resulted from a huge solar storm spurred by two solar flares that erupted on March 6.<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed9f7/mf.gif' border='0'/>
+                                  <div class='mf-viral'>
+                                    <table border='0'>
+                                      <tr>
+                                        <td valign='middle'>
+                                          <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=TIme-lapse+of+a+particularly+intense+aurora+borealis+display&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftime-lapse-of-a-particularly-i.html" target="_blank">
+                                            <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                          </a>
+                                        </td>
+                                        <td valign='middle'>
+                                          <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=TIme-lapse+of+a+particularly+intense+aurora+borealis+display&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftime-lapse-of-a-particularly-i.html" target="_blank">
+                                            <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                          </a>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                  <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/-oyNcSRg4s4" height="1" width="1"/>]]>
+                                </content:encoded>
+                                  <description>&lt;a href="https://twitter.com/Astrofotografen"&gt;Göran Strand&lt;/a&gt; created this stunning time-lapse video made from photographs of the aurora borealis as seen from Östersund, Sweden on March 17, 2013.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed9f7/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=TIme-lapse+of+a+particularly+intense+aurora+borealis+display&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftime-lapse-of-a-particularly-i.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=TIme-lapse+of+a+particularly+intense+aurora+borealis+display&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftime-lapse-of-a-particularly-i.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                  <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                  <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/time-lapse-of-a-particularly-i.html/feed</wfw:commentRss>
+                                  <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed9f7/l/0Lboingboing0Bnet0C20A130C0A30C270Ctime0Elapse0Eof0Ea0Eparticularly0Ei0Bhtml/story01.htm</feedburner:origLink>
+                                </item>
+                                <item>
+                                  <title>English school (briefly) bans triangular desserts, citing food-fight shuriken risks</title>
+                                  <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/LLh-0RaiU3s/story01.htm</link>
+                                  <category>security theater</category>
+                                  <category>Post</category>
+                                  <category>not food</category>
+                                  <category>Food</category>
+                                  <category>uk</category>
+                                  <category>education</category>
+                                  <category>stupid</category>
+                                  <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cory Doctorow</dc:creator>
+                                  <pubDate>Wed, 27 Mar 2013 09:52:59 PDT</pubDate>
+                                  <guid isPermaLink="false">http://boingboing.net/?p=221266</guid>
+                                  <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                    <![CDATA[<p>
+                                      <img src="http://boingboing.net/wp-content/uploads/2013/03/2426046454_2bf98d0cef_z.jpg" class="bordered">
+                                        <br /> Castle View School in Canvey Island, Essex, England, briefly banned triangular flapjacks (not pancakes; the English call granola-bar-like food "flapjacks") after a student sustained an injury when another student threw a cornersome flapjack at him. The school authorities required that all flapjacks must be served in rectangular portions, to increase the safety of food-fights. <p> The ban did not stand very long. Public mockery seems to have killed it. <blockquote>
+                                          <p> According to one report, in 2011 British MP and Education Secretary Michael Gove was prevented from taking flapjacks into a cabinet meeting, after officials cited similar safety concerns. That is the only report of that alleged incident, however—although Gove was (and is) the Education Secretary, there does not appear to be any other evidence that he was ever frisked for flapjacks or that even the British government has actually classified them as a security risk. </blockquote>
+                                          <p>
+                                            <a href="http://www.loweringthebar.net/2013/03/triangular-treats-banned-due-to-risk-of-sharp-corners.html?utm_source=feedburner&#038;utm_medium=feed&#038;utm_campaign=Feed%3A+LoweringTheBar+%28Lowering+the+Bar%29">Triangular Treats Banned Due to Risk of Sharp Corners</a>
+                                            <p> (<i>Image: <a href="http://www.flickr.com/photos/ajy/2426046454/">Flapjacks...</a>, a Creative Commons <a href="http://creativecommons.org/licenses/by/2.0/deed.en">Attribution (2.0)</a> image from ajy's photostream</i>) <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed9f9/mf.gif' border='0'/>
+                                            <div class='mf-viral'>
+                                              <table border='0'>
+                                                <tr>
+                                                  <td valign='middle'>
+                                                    <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=English+school+%28briefly%29+bans+triangular+desserts%2C+citing+food-fight+shuriken+risks&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fenglish-school-briefly-bans.html" target="_blank">
+                                                      <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                    </a>
+                                                  </td>
+                                                  <td valign='middle'>
+                                                    <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=English+school+%28briefly%29+bans+triangular+desserts%2C+citing+food-fight+shuriken+risks&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fenglish-school-briefly-bans.html" target="_blank">
+                                                      <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                    </a>
+                                                  </td>
+                                                </tr>
+                                              </table>
+                                            </div>
+                                            <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/LLh-0RaiU3s" height="1" width="1"/>]]>
+                                          </content:encoded>
+                                            <description>Castle View School in Canvey Island, Essex, England, briefly banned triangular flapjacks (not pancakes; the English call granola-bar-like food "flapjacks") after a student sustained an injury when another student threw a cornersome flapjack at him. The school authorities required that all flapjacks must be served in rectangular portions, to increase the safety of food-fights. The [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed9f9/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=English+school+%28briefly%29+bans+triangular+desserts%2C+citing+food-fight+shuriken+risks&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fenglish-school-briefly-bans.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=English+school+%28briefly%29+bans+triangular+desserts%2C+citing+food-fight+shuriken+risks&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fenglish-school-briefly-bans.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                            <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                            <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/english-school-briefly-bans.html/feed</wfw:commentRss>
+                                            <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed9f9/l/0Lboingboing0Bnet0C20A130C0A30C270Cenglish0Eschool0Ebriefly0Ebans0Bhtml/story01.htm</feedburner:origLink>
+                                          </item>
+                                          <item>
+                                            <title>Thursday: White House/Tom Kalil Google Hangout about the maker movement</title>
+                                            <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/BRjZ538c-bc/story01.htm</link>
+                                            <category>maker</category>
+                                            <category>DIY</category>
+                                            <category>Post</category>
+                                            <category>happy mutant</category>
+                                            <category>obama</category>
+                                            <category>white house</category>
+                                            <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">David Pescovitz</dc:creator>
+                                            <pubDate>Wed, 27 Mar 2013 09:33:39 PDT</pubDate>
+                                            <guid isPermaLink="false">http://boingboing.net/?p=221493</guid>
+                                            <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                              <![CDATA[<img src="http://boingboing.net/wp-content/uploads/2013/03/NewImage80.jpg" alt="" title="NewImage80" width="600" height="399" class="aligncenter size-full wp-image-221498" />
+                                              <p> On Thursday (3/28) at 3pm ET, Boing Boing pal and White House innovation advisor Tom Kalil is hosting a Google Hangout to talk about the maker movement! Tom has been instrumental in helping President Obama and the administration understand the value of maker culture in sci/tech education. Joining Tom in the Hangout will be folks like MAKE founder Dale Dougherty, Super Awesome Maker Show's Super Awesome Sylvia, and Ford future tech lead Venkatesh Prasad. "<a href="http://www.whitehouse.gov/blog/2013/03/27/white-house-hangout-maker-movement">White House Hangout: The Maker Movement</a>" <p>
+                                              <small>
+                                                <em>(Above, President Obama checks out a soccer-playing robot built by Blue Bell, PA high school students. Photo by Pete Souza.)</em>
+                                              </small>
+                                              <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c1/mf.gif' border='0'/>
+                                              <div class='mf-viral'>
+                                                <table border='0'>
+                                                  <tr>
+                                                    <td valign='middle'>
+                                                      <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Thursday%3A+White+House%2FTom+Kalil+Google+Hangout+about+the+maker+movement&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwhite-housetom-kalil-google-h.html" target="_blank">
+                                                        <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                      </a>
+                                                    </td>
+                                                    <td valign='middle'>
+                                                      <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Thursday%3A+White+House%2FTom+Kalil+Google+Hangout+about+the+maker+movement&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwhite-housetom-kalil-google-h.html" target="_blank">
+                                                        <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                      </a>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                              </div>
+                                              <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/BRjZ538c-bc" height="1" width="1"/>]]>
+                                            </content:encoded>
+                                              <description>On Thursday (3/28) at 3pm ET, Boing Boing pal and White House innovation advisor Tom Kalil is hosting a Google Hangout to talk about the maker movement! Tom has been instrumental in helping President Obama and the administration understand the value of maker culture in sci/tech education. Joining Tom in the Hangout will be folks [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c1/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Thursday%3A+White+House%2FTom+Kalil+Google+Hangout+about+the+maker+movement&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwhite-housetom-kalil-google-h.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Thursday%3A+White+House%2FTom+Kalil+Google+Hangout+about+the+maker+movement&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwhite-housetom-kalil-google-h.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                              <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                              <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/white-housetom-kalil-google-h.html/feed</wfw:commentRss>
+                                              <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c1/l/0Lboingboing0Bnet0C20A130C0A30C270Cwhite0Ehousetom0Ekalil0Egoogle0Eh0Bhtml/story01.htm</feedburner:origLink>
+                                            </item>
+                                            <item>
+                                              <title>Watch the latest video posts in our Boing Boing video archive</title>
+                                              <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/owmMrY8BHkY/story01.htm</link>
+                                              <category>Post</category>
+                                              <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                                              <pubDate>Wed, 27 Mar 2013 09:25:04 PDT</pubDate>
+                                              <guid isPermaLink="false">http://boingboing.net/?p=221483</guid>
+                                              <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                <![CDATA[<img src="http://boingboing.net/wp-content/uploads/2013/03/Screen-Shot-2013-03-27-at-9.15.jpg" alt="" title="Screen-Shot-2013-03-27-at-9.15" width="600" height="514" class="bordered aligncenter size-full wp-image-221484" />
+                                                <p> We've gathered fresh video for you to surf and enjoy on the <a href="http://boingboing.net/category/video">Boing Boing video page</a>. The latest finds for your viewing pleasure include: <p>
+                                                <br />&#8226; Your WiFi-enabled camera might be spying on you. <br />&#8226; Cody R Wilson's 3D-printed guns: the VICE documentary <br />&#8226; Troll comments on YouTube video by sending comment via postal mail. <br />&#8226; Calculating product placement in hip hop songs: CDZA's $56 million musical shopping spree. <br />&#8226; Rap Quotes: site-specific street art with official-looking signs bearing hip hop lyrics. <br />&#8226; Telekinesis' latest video has a romantic ghost in the machine. <br />&#8226; Winny Puhh: through YouTube, bizarro Estonian punk band finds new global fame. <br />&#8226; A fisherman opened the uterus of an adult bull shark and found a two-headed shark pup inside. <p>
+                                                  <a href="http://boingboing.net/category/video">Boing Boing: Video!</a>
+                                                  <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c3/mf.gif' border='0'/>
+                                                  <div class='mf-viral'>
+                                                    <table border='0'>
+                                                      <tr>
+                                                        <td valign='middle'>
+                                                          <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Watch+the+latest+video+posts+in+our+Boing+Boing+video+archive&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwatch-the-latest-video-posts-i-2.html" target="_blank">
+                                                            <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                          </a>
+                                                        </td>
+                                                        <td valign='middle'>
+                                                          <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Watch+the+latest+video+posts+in+our+Boing+Boing+video+archive&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwatch-the-latest-video-posts-i-2.html" target="_blank">
+                                                            <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                          </a>
+                                                        </td>
+                                                      </tr>
+                                                    </table>
+                                                  </div>
+                                                  <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/owmMrY8BHkY" height="1" width="1"/>]]>
+                                                </content:encoded>
+                                                  <description>We've gathered fresh video for you to surf and enjoy on the Boing Boing video page. The latest finds for your viewing pleasure include: &amp;#8226; Your WiFi-enabled camera might be spying on you. &amp;#8226; Cody R Wilson's 3D-printed guns: the VICE documentary &amp;#8226; Troll comments on YouTube video by sending comment via postal mail. &amp;#8226; [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c3/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Watch+the+latest+video+posts+in+our+Boing+Boing+video+archive&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwatch-the-latest-video-posts-i-2.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Watch+the+latest+video+posts+in+our+Boing+Boing+video+archive&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwatch-the-latest-video-posts-i-2.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                  <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                  <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/watch-the-latest-video-posts-i-2.html/feed</wfw:commentRss>
+                                                  <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c3/l/0Lboingboing0Bnet0C20A130C0A30C270Cwatch0Ethe0Elatest0Evideo0Eposts0Ei0E20Bhtml/story01.htm</feedburner:origLink>
+                                                </item>
+                                                <item>
+                                                  <title>Naming the anonymous victims of US drone attacks</title>
+                                                  <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/P0RywqdU5dg/story01.htm</link>
+                                                  <category>Short</category>
+                                                  <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                                                  <pubDate>Wed, 27 Mar 2013 09:24:46 PDT</pubDate>
+                                                  <guid isPermaLink="false">http://boingboing.net/?p=221487</guid>
+                                                  <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                    <![CDATA[Less than 20% of drone victims have been named. UK-based NGO The Bureau of Investigative Journalism has a new project: <a href="http://t.co/FB9ZC8PlhQ">Name the Dead</a>. There's a fundraiser <a href="https://t.co/Rl2Ln2gjQ3">here</a>. <em>(HT: @<a href="https://twitter.com/ggreenwald/status/316727162717732865">ggreenwald</a>)</em>
+                                                    <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c4/mf.gif' border='0'/>
+                                                    <div class='mf-viral'>
+                                                      <table border='0'>
+                                                        <tr>
+                                                          <td valign='middle'>
+                                                            <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Naming+the+anonymous+victims+of+US+drone+attacks&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fnaming-the-anonymous-victims-o.html" target="_blank">
+                                                              <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                            </a>
+                                                          </td>
+                                                          <td valign='middle'>
+                                                            <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Naming+the+anonymous+victims+of+US+drone+attacks&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fnaming-the-anonymous-victims-o.html" target="_blank">
+                                                              <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                            </a>
+                                                          </td>
+                                                        </tr>
+                                                      </table>
+                                                    </div>
+                                                    <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/P0RywqdU5dg" height="1" width="1"/>]]>
+                                                  </content:encoded>
+                                                    <description>Less than 20% of drone victims have been named. UK-based NGO The Bureau of Investigative Journalism has a new project: Name the Dead. There's a fundraiser here. (HT: @ggreenwald)&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c4/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Naming+the+anonymous+victims+of+US+drone+attacks&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fnaming-the-anonymous-victims-o.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Naming+the+anonymous+victims+of+US+drone+attacks&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fnaming-the-anonymous-victims-o.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                    <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                    <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/naming-the-anonymous-victims-o.html/feed</wfw:commentRss>
+                                                    <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c4/l/0Lboingboing0Bnet0C20A130C0A30C270Cnaming0Ethe0Eanonymous0Evictims0Eo0Bhtml/story01.htm</feedburner:origLink>
+                                                  </item>
+                                                  <item>
+                                                    <title>University in Kansas offers Bachelor of Science degree in Drones</title>
+                                                    <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/BldpIMlOBeU/story01.htm</link>
+                                                    <category>Short</category>
+                                                    <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                                                    <pubDate>Wed, 27 Mar 2013 09:24:10 PDT</pubDate>
+                                                    <guid isPermaLink="false">http://boingboing.net/?p=221490</guid>
+                                                    <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                      <![CDATA["K-State is one of the first two Universities in the U.S. to <a href='http://www.salina.k-state.edu/aviation/uas/'>offer a Bachelor of Science in Unmanned Aircraft Systems (UAS)</a>. Our program uses a hands-on approach for learning and attaining the skills needed to safely operate and manage UAS -- it’s what sets K-State apart from the rest." [HT: @<a href="https://twitter.com/WilliamJDobson/status/316646202957520898">WilliamJDobson</a>]<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c5/mf.gif' border='0'/>
+                                                      <div class='mf-viral'>
+                                                        <table border='0'>
+                                                          <tr>
+                                                            <td valign='middle'>
+                                                              <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=University+in+Kansas+offers+Bachelor+of+Science+degree+in+Drones&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fkansas-university-offers-bache.html" target="_blank">
+                                                                <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                              </a>
+                                                            </td>
+                                                            <td valign='middle'>
+                                                              <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=University+in+Kansas+offers+Bachelor+of+Science+degree+in+Drones&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fkansas-university-offers-bache.html" target="_blank">
+                                                                <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                              </a>
+                                                            </td>
+                                                          </tr>
+                                                        </table>
+                                                      </div>
+                                                      <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/BldpIMlOBeU" height="1" width="1"/>]]>
+                                                    </content:encoded>
+                                                      <description>"K-State is one of the first two Universities in the U.S. to offer a Bachelor of Science in Unmanned Aircraft Systems (UAS). Our program uses a hands-on approach for learning and attaining the skills needed to safely operate and manage UAS -- it’s what sets K-State apart from the rest." [HT: @WilliamJDobson]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c5/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=University+in+Kansas+offers+Bachelor+of+Science+degree+in+Drones&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fkansas-university-offers-bache.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=University+in+Kansas+offers+Bachelor+of+Science+degree+in+Drones&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fkansas-university-offers-bache.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                      <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                      <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/kansas-university-offers-bache.html/feed</wfw:commentRss>
+                                                      <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0f45c5/l/0Lboingboing0Bnet0C20A130C0A30C270Ckansas0Euniversity0Eoffers0Ebache0Bhtml/story01.htm</feedburner:origLink>
+                                                    </item>
+                                                    <item>
+                                                      <title>Two-headed bull shark</title>
+                                                      <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/TFSc4RS9-NU/story01.htm</link>
+                                                      <category>mutants</category>
+                                                      <category>animal</category>
+                                                      <category>Video</category>
+                                                      <category>Weird</category>
+                                                      <category>Science</category>
+                                                      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">David Pescovitz</dc:creator>
+                                                      <pubDate>Wed, 27 Mar 2013 09:02:30 PDT</pubDate>
+                                                      <guid isPermaLink="false">http://boingboing.net/?p=221471</guid>
+                                                      <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                        <![CDATA[<!--www.youtube.com-->
+                                                        <div class="video-container">
+                                                          <iframe width="600" height="338" src="http://www.youtube.com/embed/YEY9E4dfLec?showinfo=0" frameborder="0" allowfullscreen>
+                                                        </iframe>
+                                                      </div>
+                                                        <p> A Gulf of Mexico fisherman opened the uterus of an adult bull shark and found a two-headed shark pup inside. According to Michigan State University researchers, this is the first two-headed bull shark confirmed by scientists. ""Given the timing of the shark's discovery with the Deepwater Horizon oil spill, I could see how some people may want to jump to conclusions," Michael Wagner, MSU assistant professor of fisheries and wildlife, wrote in a report in the Journal of Fish Biology. "Making that leap is unwarranted. We simply have no evidence to support that cause or any other." <em>(<a href="http://www.eurekalert.org/pub_releases/2013-03/msu-scf032513.php">EurekAlert!</a>)</em>
+                                                        <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed00a/mf.gif' border='0'/>
+                                                        <div class='mf-viral'>
+                                                          <table border='0'>
+                                                            <tr>
+                                                              <td valign='middle'>
+                                                                <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Two-headed+bull+shark&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftwo-headed-bull-shark.html" target="_blank">
+                                                                  <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                </a>
+                                                              </td>
+                                                              <td valign='middle'>
+                                                                <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Two-headed+bull+shark&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftwo-headed-bull-shark.html" target="_blank">
+                                                                  <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                </a>
+                                                              </td>
+                                                            </tr>
+                                                          </table>
+                                                        </div>
+                                                        <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/TFSc4RS9-NU" height="1" width="1"/>]]>
+                                                      </content:encoded>
+                                                        <description>A Gulf of Mexico fisherman opened the uterus of an adult bull shark and found a two-headed shark pup inside.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed00a/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Two-headed+bull+shark&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftwo-headed-bull-shark.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Two-headed+bull+shark&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftwo-headed-bull-shark.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                        <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                        <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/two-headed-bull-shark.html/feed</wfw:commentRss>
+                                                        <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed00a/l/0Lboingboing0Bnet0C20A130C0A30C270Ctwo0Eheaded0Ebull0Eshark0Bhtml/story01.htm</feedburner:origLink>
+                                                      </item>
+                                                      <item>
+                                                        <title>Winny Puhh: through YouTube, bizarro Estonian punk band finds new global fame</title>
+                                                        <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/st0VH8tYXQE/story01.htm</link>
+                                                        <category>music</category>
+                                                        <category>Video</category>
+                                                        <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                                                        <pubDate>Wed, 27 Mar 2013 08:48:47 PDT</pubDate>
+                                                        <guid isPermaLink="false">http://boingboing.net/?p=221459</guid>
+                                                        <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                          <![CDATA[<!--youtu.be-->
+                                                          <div class="video-container">
+                                                            <iframe width="600" height="338" src="http://www.youtube.com/embed/2dllo85ZSUk?showinfo=0" frameborder="0" allowfullscreen>
+                                                          </iframe>
+                                                        </div>
+                                                          <p>
+                                                            <img src="http://boingboing.net/wp-content/uploads/2013/03/winny-puhh.jpg" alt="" title="winny-puhh" width="640" height="400" class="alignright size-full wp-image-221460" /> The highly theatrical Estonian punk/metal/WTF band <a href="https://www.facebook.com/winnikas">Winny Puhh</a> have been around since 1993 or so, but online audiences around the world are discovering them by way of this video: the band performing their song “Meiecundimees üks Korsakov läks eile Lätti” on Eesti Laul 2013, the semifinals for the Estonian slot in <a href="http://en.wikipedia.org/wiki/Eurovision_Song_Contest_2013">Eurovision Song Contest 2013</a>. <p>
+                                                            <span id="more-221459">
+                                                          </span>
+                                                            <p>
+                                                              <em>Death and Taxes</em> magazine <a href="http://www.deathandtaxesmag.com/196071/are-new-viral-video-stars-winny-puhh-the-band-youve-been-looking-for/">has a good backgrounder here</a>, with more of their videos, all of which are weird, some of which are NSFW. <p>Listen <a href="http://www.last.fm/music/Winny+Puhh">to their songs here</a>. <p>
+                                                              <small>
+                                                                <em>* I know this is gonna shock you, but their name translates to "Winnie the Pooh." HT: <a href="http://vimeo.com/sydgaron">Syd Garon</a>!</em>
+                                                              </small>
+                                                              <P>
+                                                                <img src="http://boingboing.net/wp-content/uploads/2013/03/win.jpg" alt="" title="win" width="900" height="585" class="aligncenter size-full wp-image-221478" />
+                                                                <p>
+                                                                  <img src="http://boingboing.net/wp-content/uploads/2013/03/win2.jpg" alt="" title="win2" width="683" height="455" class="aligncenter size-full wp-image-221477" />
+                                                                  <p>
+                                                                    <img src="http://boingboing.net/wp-content/uploads/2013/03/404078_364768950274439_708580265_n.jpg" alt="" title="404078_364768950274439_708580265_n" width="960" height="639" class="aligncenter size-full wp-image-221462" />
+                                                                    <p>
+                                                                      <p class="caption">Photos courtesy of Winny Puu, via <a href="https://www.facebook.com/winnikas">the band's Facebook</a>.</p>
+                                                                      <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed013/mf.gif' border='0'/>
+                                                                      <div class='mf-viral'>
+                                                                        <table border='0'>
+                                                                          <tr>
+                                                                            <td valign='middle'>
+                                                                              <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Winny+Puhh%3A+through+YouTube%2C+bizarro+Estonian+punk+band+finds+new+global+fame&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwinny-puhh-bizarro-estonian-p.html" target="_blank">
+                                                                                <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                              </a>
+                                                                            </td>
+                                                                            <td valign='middle'>
+                                                                              <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Winny+Puhh%3A+through+YouTube%2C+bizarro+Estonian+punk+band+finds+new+global+fame&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwinny-puhh-bizarro-estonian-p.html" target="_blank">
+                                                                                <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                              </a>
+                                                                            </td>
+                                                                          </tr>
+                                                                        </table>
+                                                                      </div>
+                                                                      <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/st0VH8tYXQE" height="1" width="1"/>]]>
+                                                                    </content:encoded>
+                                                                      <description>Estonian punk/metal Winny Puhh have been around since 1993 or so, but online audiences around the world are discovering them by way of this video&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed013/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Winny+Puhh%3A+through+YouTube%2C+bizarro+Estonian+punk+band+finds+new+global+fame&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwinny-puhh-bizarro-estonian-p.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Winny+Puhh%3A+through+YouTube%2C+bizarro+Estonian+punk+band+finds+new+global+fame&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fwinny-puhh-bizarro-estonian-p.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                      <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                      <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/winny-puhh-bizarro-estonian-p.html/feed</wfw:commentRss>
+                                                                      <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0ed013/l/0Lboingboing0Bnet0C20A130C0A30C270Cwinny0Epuhh0Ebizarro0Eestonian0Ep0Bhtml/story01.htm</feedburner:origLink>
+                                                                    </item>
+                                                                    <item>
+                                                                      <title>Ocean scientists say 19-year-old's "realistic" plan to clean up the ocean isn't actually realistic</title>
+                                                                      <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/4_kdqK6KgLE/story01.htm</link>
+                                                                      <category>plastic</category>
+                                                                      <category>Short</category>
+                                                                      <category>follow ups</category>
+                                                                      <category>oceans</category>
+                                                                      <category>clean-up</category>
+                                                                      <category>Kids</category>
+                                                                      <category>Environment</category>
+                                                                      <category>Science</category>
+                                                                      <category>concepts</category>
+                                                                      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Maggie Koerth-Baker</dc:creator>
+                                                                      <pubDate>Wed, 27 Mar 2013 08:44:45 PDT</pubDate>
+                                                                      <guid isPermaLink="false">http://boingboing.net/?p=221455</guid>
+                                                                      <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                        <![CDATA[Earlier this week, Jason told you about <a href="http://boingboing.net/2013/03/26/19-year-old-develops-play-to-c.html">a TEDx talk in which 19-year-old Boyan Slat presents a plan to remove plastic from the world's oceans</a>. Lots of people are excited about this, which is reasonable. Particulate plastic in the ocean is a big problem that has, thus far, evaded any reasonable clean-up plans. There's just so much of it, it's so tiny, and the ocean is, you know, kind of huge. If a kid can come up with a plan that works, it would be fantastic. Unfortunately, <a href="http://deepseanews.com/2013/03/the-ocean-cleanup-the-newest-of-the-new-plans-to-remove-marine-plastic/">the ocean scientists at Deep Sea News say Slat's system isn't as simple and practical as he thinks it is</a>. Among the many problems: Slat's plan would catch (and kill) as many vitally important plankton as pieces of plastic, and it calls for mooring plastic-collecting ships in the open ocean where the water is 2000 meters deeper than the deepest mooring ever recorded. Here's a mantra to remember: TED Talks &#8212; interesting if true. <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e793c/mf.gif' border='0'/>
+                                                                        <div class='mf-viral'>
+                                                                          <table border='0'>
+                                                                            <tr>
+                                                                              <td valign='middle'>
+                                                                                <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Ocean+scientists+say+19-year-old%27s+%22realistic%22+plan+to+clean+up+the+ocean+isn%27t+actually+realistic&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Focean-scientists-say-19-year-o.html" target="_blank">
+                                                                                  <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                </a>
+                                                                              </td>
+                                                                              <td valign='middle'>
+                                                                                <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Ocean+scientists+say+19-year-old%27s+%22realistic%22+plan+to+clean+up+the+ocean+isn%27t+actually+realistic&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Focean-scientists-say-19-year-o.html" target="_blank">
+                                                                                  <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                </a>
+                                                                              </td>
+                                                                            </tr>
+                                                                          </table>
+                                                                        </div>
+                                                                        <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/4_kdqK6KgLE" height="1" width="1"/>]]>
+                                                                      </content:encoded>
+                                                                        <description>Earlier this week, Jason told you about a TEDx talk in which 19-year-old Boyan Slat presents a plan to remove plastic from the world's oceans. Lots of people are excited about this, which is reasonable. Particulate plastic in the ocean is a big problem that has, thus far, evaded any reasonable clean-up plans. There's just [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e793c/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Ocean+scientists+say+19-year-old%27s+%22realistic%22+plan+to+clean+up+the+ocean+isn%27t+actually+realistic&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Focean-scientists-say-19-year-o.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Ocean+scientists+say+19-year-old%27s+%22realistic%22+plan+to+clean+up+the+ocean+isn%27t+actually+realistic&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Focean-scientists-say-19-year-o.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                        <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                        <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/ocean-scientists-say-19-year-o.html/feed</wfw:commentRss>
+                                                                        <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e793c/l/0Lboingboing0Bnet0C20A130C0A30C270Cocean0Escientists0Esay0E190Eyear0Eo0Bhtml/story01.htm</feedburner:origLink>
+                                                                      </item>
+                                                                      <item>
+                                                                        <title>Lightest-ever aerogel is only twice as heavy as hydrogen</title>
+                                                                        <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/N25XG6Qw2YY/story01.htm</link>
+                                                                        <category>Post</category>
+                                                                        <category>new materials</category>
+                                                                        <category>Science</category>
+                                                                        <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Cory Doctorow</dc:creator>
+                                                                        <pubDate>Wed, 27 Mar 2013 08:43:10 PDT</pubDate>
+                                                                        <guid isPermaLink="false">http://boingboing.net/?p=221303</guid>
+                                                                        <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                          <![CDATA[<p>
+                                                                            <img src="http://boingboing.net/wp-content/uploads/2013/03/aero_11.jpg" class="bordered">
+                                                                              <br /> In a <em>Nature</em> paper called "<a href="http://www.nature.com/nature/journal/v494/n7438/full/494404a.html">Solid carbon, springy and light</a>, scientists from Zhejiang University in Hangzhou, China introduce a record-breakingly light aerogel, lighter than helium, only twice as heavy as hydrogen: <blockquote>
+                                                                              <p> Gao Chao's team had already been building macroscopic graphene materials in one and two dimensions; to create the new aerogel, the researchers branched out into the third dimension, using a new method of freeze drying the solutions of carbon nanotubes and graphene to create malleable carbon sponges. <p> PhD candidate Sun Haiyan explained, "It's somewhat like large space structures such as big stadiums, with steel bars as supports and high strength film as walls to achieve both lightness and strength. Here, carbon nanotubes are supports and graphene is the wall." <p> The new material is amazingly absorptive, able to suck in up to 900 times its own weight in oil at a rate of 68.8 grams per second — only oil, not water, which means it has massive potential as a cleaning material when it comes to events such as oil spills. </blockquote>
+                                                                              <p>
+                                                                                <a href="http://www.cnet.com.au/graphene-aerogel-is-the-new-worlds-lightest-substance-339343765.htm">Graphene aerogel is the new world's lightest substance</a> [Crave/Michelle Starr] <p> (<i>via <a href="http://blog.wired.com/sterling/">Beyond the Beyond</a>
+                                                                              </i>) <p> (<i>Image: Graphene aerogel resting on a delicate plant, Zhejiang University</i>)) <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e793d/mf.gif' border='0'/>
+                                                                              <div class='mf-viral'>
+                                                                                <table border='0'>
+                                                                                  <tr>
+                                                                                    <td valign='middle'>
+                                                                                      <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Lightest-ever+aerogel+is+only+twice+as+heavy+as+hydrogen&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Flightest-ever-aerogel-is-only.html" target="_blank">
+                                                                                        <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                      </a>
+                                                                                    </td>
+                                                                                    <td valign='middle'>
+                                                                                      <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Lightest-ever+aerogel+is+only+twice+as+heavy+as+hydrogen&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Flightest-ever-aerogel-is-only.html" target="_blank">
+                                                                                        <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                      </a>
+                                                                                    </td>
+                                                                                  </tr>
+                                                                                </table>
+                                                                              </div>
+                                                                              <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/N25XG6Qw2YY" height="1" width="1"/>]]>
+                                                                            </content:encoded>
+                                                                              <description>In a Nature paper called "Solid carbon, springy and light, scientists from Zhejiang University in Hangzhou, China introduce a record-breakingly light aerogel, lighter than helium, only twice as heavy as hydrogen: Gao Chao's team had already been building macroscopic graphene materials in one and two dimensions; to create the new aerogel, the researchers branched out [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e793d/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Lightest-ever+aerogel+is+only+twice+as+heavy+as+hydrogen&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Flightest-ever-aerogel-is-only.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Lightest-ever+aerogel+is+only+twice+as+heavy+as+hydrogen&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Flightest-ever-aerogel-is-only.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                              <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                              <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/lightest-ever-aerogel-is-only.html/feed</wfw:commentRss>
+                                                                              <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e793d/l/0Lboingboing0Bnet0C20A130C0A30C270Clightest0Eever0Eaerogel0Eis0Eonly0Bhtml/story01.htm</feedburner:origLink>
+                                                                            </item>
+                                                                            <item>
+                                                                              <title>Calling out Jane Goodall for a plagiarism and error-filled book</title>
+                                                                              <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/6AET2LOn0jo/story01.htm</link>
+                                                                              <category>errors</category>
+                                                                              <category>Short</category>
+                                                                              <category>big names</category>
+                                                                              <category>plagiarism</category>
+                                                                              <category>bad science</category>
+                                                                              <category>Science</category>
+                                                                              <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Maggie Koerth-Baker</dc:creator>
+                                                                              <pubDate>Wed, 27 Mar 2013 08:29:54 PDT</pubDate>
+                                                                              <guid isPermaLink="false">http://boingboing.net/?p=221441</guid>
+                                                                              <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                                <![CDATA[Jane Goodall's new book isn't just filled with plagiarism, writes Michael Moynihan at The Daily Beast,<a href="http://www.thedailybeast.com/articles/2013/03/26/jane-goodall-s-troubling-error-filled-new-book-seeds-of-hope.html"> it also drastically misconstrues agricultural science and presents poor sources </a>&#8212; for instance, books published by the <a href="http://en.wikipedia.org/wiki/Maharishi_University_of_Management">Maharishi University of Management</a> and written by people with no scientific training at all are probably not the best sources to use if you're trying to build a legitimate case against the technology of genetic engineering. <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e6246/mf.gif' border='0'/>
+                                                                                <div class='mf-viral'>
+                                                                                  <table border='0'>
+                                                                                    <tr>
+                                                                                      <td valign='middle'>
+                                                                                        <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Calling+out+Jane+Goodall+for+a+plagiarism+and+error-filled+book&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalling-out-jane-goodall-for-a.html" target="_blank">
+                                                                                          <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                        </a>
+                                                                                      </td>
+                                                                                      <td valign='middle'>
+                                                                                        <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Calling+out+Jane+Goodall+for+a+plagiarism+and+error-filled+book&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalling-out-jane-goodall-for-a.html" target="_blank">
+                                                                                          <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                        </a>
+                                                                                      </td>
+                                                                                    </tr>
+                                                                                  </table>
+                                                                                </div>
+                                                                                <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/6AET2LOn0jo" height="1" width="1"/>]]>
+                                                                              </content:encoded>
+                                                                                <description>Jane Goodall's new book isn't just filled with plagiarism, writes Michael Moynihan at The Daily Beast, it also drastically misconstrues agricultural science and presents poor sources &amp;#8212; for instance, books published by the Maharishi University of Management and written by people with no scientific training at all are probably not the best sources to use [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e6246/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Calling+out+Jane+Goodall+for+a+plagiarism+and+error-filled+book&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalling-out-jane-goodall-for-a.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Calling+out+Jane+Goodall+for+a+plagiarism+and+error-filled+book&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalling-out-jane-goodall-for-a.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                                <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                                <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/calling-out-jane-goodall-for-a.html/feed</wfw:commentRss>
+                                                                                <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e6246/l/0Lboingboing0Bnet0C20A130C0A30C270Ccalling0Eout0Ejane0Egoodall0Efor0Ea0Bhtml/story01.htm</feedburner:origLink>
+                                                                              </item>
+                                                                              <item>
+                                                                                <title>Are "theory" and "hypothesis" dead?</title>
+                                                                                <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/jTSqZtnWcHE/story01.htm</link>
+                                                                                <category>Short</category>
+                                                                                <category>language</category>
+                                                                                <category>words</category>
+                                                                                <category>communication</category>
+                                                                                <category>Science</category>
+                                                                                <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Maggie Koerth-Baker</dc:creator>
+                                                                                <pubDate>Wed, 27 Mar 2013 08:21:56 PDT</pubDate>
+                                                                                <guid isPermaLink="false">http://boingboing.net/?p=221405</guid>
+                                                                                <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                                  <![CDATA[Do you understand the difference between a "hypothesis" and a "theory"? Physics professor Rhett Alain thinks you probably don't. But he says that's not your fault. The words just aren't terribly precise, at least in the public parlance, and they only serve to make discussions about science confusing. He has a modest proposal: <a href="http://www.wired.com/wiredscience/2013/03/three-science-words-we-should-stop-using/">Let's replace them both with something that makes sense to the general public. </a>
+                                                                                  <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e6248/mf.gif' border='0'/>
+                                                                                  <div class='mf-viral'>
+                                                                                    <table border='0'>
+                                                                                      <tr>
+                                                                                        <td valign='middle'>
+                                                                                          <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Are+%22theory%22+and+%22hypothesis%22+dead%3F&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fare-theory-and-hypothesi.html" target="_blank">
+                                                                                            <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                          </a>
+                                                                                        </td>
+                                                                                        <td valign='middle'>
+                                                                                          <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Are+%22theory%22+and+%22hypothesis%22+dead%3F&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fare-theory-and-hypothesi.html" target="_blank">
+                                                                                            <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                          </a>
+                                                                                        </td>
+                                                                                      </tr>
+                                                                                    </table>
+                                                                                  </div>
+                                                                                  <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/jTSqZtnWcHE" height="1" width="1"/>]]>
+                                                                                </content:encoded>
+                                                                                  <description>Do you understand the difference between a "hypothesis" and a "theory"? Physics professor Rhett Alain thinks you probably don't. But he says that's not your fault. The words just aren't terribly precise, at least in the public parlance, and they only serve to make discussions about science confusing. He has a modest proposal: Let's replace [...]&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e6248/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Are+%22theory%22+and+%22hypothesis%22+dead%3F&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fare-theory-and-hypothesi.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Are+%22theory%22+and+%22hypothesis%22+dead%3F&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fare-theory-and-hypothesi.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                                  <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                                  <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/are-theory-and-hypothesi.html/feed</wfw:commentRss>
+                                                                                  <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e6248/l/0Lboingboing0Bnet0C20A130C0A30C270Care0Etheory0Eand0Ehypothesi0Bhtml/story01.htm</feedburner:origLink>
+                                                                                </item>
+                                                                                <item>
+                                                                                  <title>TOM THE DANCING BUG: Super-Fun-Pak Comix, featuring "How to Draw Doug," and more, More, MORE!</title>
+                                                                                  <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/oAiy5hXhNx8/story01.htm</link>
+                                                                                  <category>Comic</category>
+                                                                                  <category>tomthedancingbug</category>
+                                                                                  <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Ruben Bolling</dc:creator>
+                                                                                  <pubDate>Wed, 27 Mar 2013 08:11:23 PDT</pubDate>
+                                                                                  <guid isPermaLink="false">http://boingboing.net/?p=221232</guid>
+                                                                                  <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                                    <![CDATA[BE THE FIRST AMONG YOUR COHORT to see Tom the Dancing Bug, by <a href="http://twitter.com/rubenbolling">@RubenBolling</a>, every week! Members of the elite and prestigious INNER HIVE get the comic emailed to their inboxes at least a day before publication -- and much, much MORE! <p>Please click <a href="http://gocomics.typepad.com/tomthedancingbugblog/2012/05/join-the-inner-hive.html">HERE</a> for information. Thank you.<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5f53/mf.gif' border='0'/>
+                                                                                    <div class='mf-viral'>
+                                                                                      <table border='0'>
+                                                                                        <tr>
+                                                                                          <td valign='middle'>
+                                                                                            <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=TOM+THE+DANCING+BUG%3A+Super-Fun-Pak+Comix%2C+featuring+%22How+to+Draw+Doug%2C%22+and+more%2C+More%2C+MORE%21&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftom-the-dancing-bug-super-fun-7.html" target="_blank">
+                                                                                              <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                            </a>
+                                                                                          </td>
+                                                                                          <td valign='middle'>
+                                                                                            <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=TOM+THE+DANCING+BUG%3A+Super-Fun-Pak+Comix%2C+featuring+%22How+to+Draw+Doug%2C%22+and+more%2C+More%2C+MORE%21&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftom-the-dancing-bug-super-fun-7.html" target="_blank">
+                                                                                              <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                            </a>
+                                                                                          </td>
+                                                                                        </tr>
+                                                                                      </table>
+                                                                                    </div>
+                                                                                    <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/oAiy5hXhNx8" height="1" width="1"/>]]>
+                                                                                  </content:encoded>
+                                                                                    <description>Tom the Dancing Bug, IN WHICH you can learn How to Draw Doug, Woman-Man continues his/her thrilling adventures, Phil Collins has a close call, and MORE Super-Fun-Pak Comix!!&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5f53/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=TOM+THE+DANCING+BUG%3A+Super-Fun-Pak+Comix%2C+featuring+%22How+to+Draw+Doug%2C%22+and+more%2C+More%2C+MORE%21&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftom-the-dancing-bug-super-fun-7.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=TOM+THE+DANCING+BUG%3A+Super-Fun-Pak+Comix%2C+featuring+%22How+to+Draw+Doug%2C%22+and+more%2C+More%2C+MORE%21&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftom-the-dancing-bug-super-fun-7.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                                    <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                                    <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/tom-the-dancing-bug-super-fun-7.html/feed</wfw:commentRss>
+                                                                                    <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5f53/l/0Lboingboing0Bnet0C20A130C0A30C270Ctom0Ethe0Edancing0Ebug0Esuper0Efun0E70Bhtml/story01.htm</feedburner:origLink>
+                                                                                  </item>
+                                                                                  <item>
+                                                                                    <title>Telekinesis' latest video has a romantic ghost in the machine</title>
+                                                                                    <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/ulEalyKMl24/story01.htm</link>
+                                                                                    <category>music</category>
+                                                                                    <category>Video</category>
+                                                                                    <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Rob Beschizza</dc:creator>
+                                                                                    <pubDate>Wed, 27 Mar 2013 08:00:49 PDT</pubDate>
+                                                                                    <guid isPermaLink="false">http://boingboing.net/?p=221423</guid>
+                                                                                    <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                                      <![CDATA[<!--www.youtube.com-->
+                                                                                      <div class="video-container">
+                                                                                        <iframe width="600" height="338" src="http://www.youtube.com/embed/HG2U0U-v3FI?showinfo=0" frameborder="0" allowfullscreen>
+                                                                                      </iframe>
+                                                                                    </div>
+                                                                                      <em>Ghosts &#038; Creatures</em> is cut from <a href="www.telekinesismusic.com">Telekinesis' latest album</a>, <em>Dormarion</em>. Have you loved a computer so much as much as your first? <small>Actually, my first computer was a Sinclair ZX Spectrum, so yes. But anyway.</small>
+                                                                                      <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5b27/mf.gif' border='0'/>
+                                                                                      <div class='mf-viral'>
+                                                                                        <table border='0'>
+                                                                                          <tr>
+                                                                                            <td valign='middle'>
+                                                                                              <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Telekinesis%27+latest+video+has+a+romantic+ghost+in+the+machine&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftelekinesis-latest-video-has.html" target="_blank">
+                                                                                                <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                              </a>
+                                                                                            </td>
+                                                                                            <td valign='middle'>
+                                                                                              <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Telekinesis%27+latest+video+has+a+romantic+ghost+in+the+machine&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftelekinesis-latest-video-has.html" target="_blank">
+                                                                                                <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                              </a>
+                                                                                            </td>
+                                                                                          </tr>
+                                                                                        </table>
+                                                                                      </div>
+                                                                                      <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/ulEalyKMl24" height="1" width="1"/>]]>
+                                                                                    </content:encoded>
+                                                                                      <description>Have you loved a computer so much as much as your first?&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5b27/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Telekinesis%27+latest+video+has+a+romantic+ghost+in+the+machine&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftelekinesis-latest-video-has.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Telekinesis%27+latest+video+has+a+romantic+ghost+in+the+machine&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Ftelekinesis-latest-video-has.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                                      <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                                      <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/telekinesis-latest-video-has.html/feed</wfw:commentRss>
+                                                                                      <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5b27/l/0Lboingboing0Bnet0C20A130C0A30C270Ctelekinesis0Elatest0Evideo0Ehas0Bhtml/story01.htm</feedburner:origLink>
+                                                                                    </item>
+                                                                                    <item>
+                                                                                      <title>Rap Quotes: site-specific street art with official-looking signs bearing hip hop lyrics</title>
+                                                                                      <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/31XxaYfHi0g/story01.htm</link>
+                                                                                      <category>music</category>
+                                                                                      <category>Video</category>
+                                                                                      <category>Post</category>
+                                                                                      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                                                                                      <pubDate>Wed, 27 Mar 2013 07:49:13 PDT</pubDate>
+                                                                                      <guid isPermaLink="false">http://boingboing.net/?p=221403</guid>
+                                                                                      <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                                        <![CDATA[<img src="http://boingboing.net/wp-content/uploads/2013/03/BGE_DM7CMAEICCn.jpg" alt="" title="BGE_DM7CMAEICCn" width="900" height="675" class="bordered aligncenter size-full wp-image-221518" />
+                                                                                        <p>
+                                                                                          <img src="http://boingboing.net/wp-content/uploads/2013/03/rq-8984.jpg" alt="" title="rq-8984" width="442" height="275" class="bordered alignright size-full wp-image-221408" />Artist <a href="http://jayshells.com/">Jay Shells</a> combines his love of hip hop music and his formidable sign-making skills in "<a href="https://twitter.com/therapquotes">Rap Quotes</a>," with "<a href='http://animalnewyork.com/2013/jay-shells-rap-quotes/'>official-looking street signs quoting famous rap lyrics that shout out specific street corners and locations</a>."<p> He installs the signs at those same street corners and locations throughout New York City. <p>Video below. [Animal New York]<p>
+                                                                                          <span id="more-221403">
+                                                                                        </span>
+                                                                                          <br clear="all">
+                                                                                            <p>
+                                                                                              <!--youtu.be-->
+                                                                                              <div class="video-container">
+                                                                                                <iframe width="600" height="338" src="http://www.youtube.com/embed/54yahfgbqQE?showinfo=0" frameborder="0" allowfullscreen>
+                                                                                              </iframe>
+                                                                                            </div>
+                                                                                              <p>
+                                                                                                <img src="http://boingboing.net/wp-content/uploads/2013/03/rapquotessigns.jpg" alt="" title="rapquotessigns" width="896" height="989" class="aligncenter size-full wp-image-221425" />
+                                                                                                <p>
+                                                                                                  <em>(via <a href="https://twitter.com/EthanZ/status/316725997829505025">Ethan Zuckerman</a>)</em>
+                                                                                                  <img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5b28/mf.gif' border='0'/>
+                                                                                                  <div class='mf-viral'>
+                                                                                                    <table border='0'>
+                                                                                                      <tr>
+                                                                                                        <td valign='middle'>
+                                                                                                          <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Rap+Quotes%3A+site-specific+street+art+with+official-looking+signs+bearing+hip+hop+lyrics&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Frap-quotes-site-specific-stre.html" target="_blank">
+                                                                                                            <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                                          </a>
+                                                                                                        </td>
+                                                                                                        <td valign='middle'>
+                                                                                                          <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Rap+Quotes%3A+site-specific+street+art+with+official-looking+signs+bearing+hip+hop+lyrics&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Frap-quotes-site-specific-stre.html" target="_blank">
+                                                                                                            <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                                          </a>
+                                                                                                        </td>
+                                                                                                      </tr>
+                                                                                                    </table>
+                                                                                                  </div>
+                                                                                                  <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/31XxaYfHi0g" height="1" width="1"/>]]>
+                                                                                                </content:encoded>
+                                                                                                  <description>Artist Jay Shells combines his love of hip hop music and his formidable sign-making skills in "Rap Quotes."&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5b28/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Rap+Quotes%3A+site-specific+street+art+with+official-looking+signs+bearing+hip+hop+lyrics&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Frap-quotes-site-specific-stre.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Rap+Quotes%3A+site-specific+street+art+with+official-looking+signs+bearing+hip+hop+lyrics&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Frap-quotes-site-specific-stre.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                                                  <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                                                  <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/rap-quotes-site-specific-stre.html/feed</wfw:commentRss>
+                                                                                                  <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0e5b28/l/0Lboingboing0Bnet0C20A130C0A30C270Crap0Equotes0Esite0Especific0Estre0Bhtml/story01.htm</feedburner:origLink>
+                                                                                                </item>
+                                                                                                <item>
+                                                                                                  <title>Calculating product placement in hip hop songs: CDZA's $56 million musical shopping spree</title>
+                                                                                                  <link>http://feedproxy.google.com/~r/boingboing/iBag/~3/RN0nvFfyI_0/story01.htm</link>
+                                                                                                  <category>music</category>
+                                                                                                  <category>Video</category>
+                                                                                                  <category>Post</category>
+                                                                                                  <category>Funny</category>
+                                                                                                  <category>cdza</category>
+                                                                                                  <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Xeni Jardin</dc:creator>
+                                                                                                  <pubDate>Wed, 27 Mar 2013 07:41:45 PDT</pubDate>
+                                                                                                  <guid isPermaLink="false">http://boingboing.net/?p=221390</guid>
+                                                                                                  <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/">
+                                                                                                    <![CDATA[<!--youtu.be-->
+                                                                                                    <div class="video-container">
+                                                                                                      <iframe width="600" height="338" src="http://www.youtube.com/embed/p-tNks86Elk?showinfo=0" frameborder="0" allowfullscreen>
+                                                                                                    </iframe>
+                                                                                                  </div> How do you calculate the value of product placement in hip hop songs? <a href="http://joesabia.co">Joe Sabia</a>'s <a href="http://www.youtube.com/user/collectivecadenza?feature=watch">CDZA ("Collective Cadenza")</a> project on YouTube attempted to do just that, with a <a href="http://youtu.be/p-tNks86Elk">virtual 56 million dollar hip-hop shopping spree</a>. <p>Their "Methodology for price determination" breakdown follows: <span id="more-221390">
+                                                                                                </span>
+                                                                                                  <blockquote>
+                                                                                                    <p>Prices were calculated based on current retail or market value, not resale value. For vehicles, values for the most part were selected from the high end of the Manufacturer's Suggested Retail Price range. <p> ELECTRONICS<br /> Iyaz - Replay: 80GB Video iPod<br /> Notorious B.I.G. - Juicy: Super Nintendo/Sega Genesis prices were from packaged and unopened items found on eBay<br /> Chamillionaire - Ridin Dirty: We went with the PS1 price, even though Chamillionaire can probably afford a PS2.<br />
+                                                                                                    <p> HIGH END FASHION<br /> Black Eyed Peas - My Humps: Went with average prices for a lot of these accessories<br /> Macklemore - Thrift Shop: Yes mink fur coats can be this expensive<br />
+                                                                                                    <p> ACCESSORIES<br /> Bruno Mars - The Lazy Song<br /> Eminem - If I Had...: Nike Air Hat/Pair of Lugz<br /> Nelly - Air Force Ones: We should have gotten white ones, sorry.<br /> LMFAO - I'm in Miami Trick: Vans<br /> Notorious B.I.G. - Mo Money Mo Problems - Rolex<br /> Snoop Dogg - Drop it Like it's Hot: Went with a $9,100 rolex, even though they can be much more expensive. And a lower end bottle of Chandon at $109<br />
+                                                                                                    <p> BOOZE<br /> LMFAO - I'm in Miami Trick: Red Bull and an affordable Smirnoff even though they would probably drink Grey Groose<br /> Jagged Edge - Where the Party At: A fifth of Bacardi<br /> 50 Cent - In Da Club: A pint of Bacardi to sneak into the club<br /> Busta Rhymes - Pass the Courvoisier: A less expensive type and size<br /> Snoop Dogg - Gin and Juice: Seagram's Gin<br /> Ke$ha - TiK ToK: Jack Daniel's<br /> R. Kelly - Ignition Remix part 2: Got this empty bottle of magnum Cristal off of eBay for 25 bucks. <br />
+                                                                                                    <p> TRANSPORTATION<br /> Sir Mix-a-Lot - I Like Big Butts: Mercedes E Class<br /> Jay-Z - On to the Next One: Lexus and Range Rover<br /> Far East Movement - Like a G6: CDZA doesn't provide items to rent. We only provide items to BUY.<br /> Vanilla Ice - Ice, Ice Baby - Lamborghini<br />
+                                                                                                  </blockquote>
+                                                                                                  <p> This edition of CDZA's weekly musical experiments features Mark, Todd and Stasia from the <a href="http://www.youtube.com/show/keyofawesome">Key of Awesome</a>. <p> Related: <a href="http://www.zazzle.com/cdzamerch+gifts">CDZA merch</a>, and <a href="http://cdza.bandcamp.com/">an MP3 download</a>, neither of which cost $56 million.<img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0dfa7d/mf.gif' border='0'/>
+                                                                                                  <div class='mf-viral'>
+                                                                                                    <table border='0'>
+                                                                                                      <tr>
+                                                                                                        <td valign='middle'>
+                                                                                                          <a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&title=Calculating+product+placement+in+hip+hop+songs%3A+CDZA%27s+%2456+million+musical+shopping+spree&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalculating-product-placement.html" target="_blank">
+                                                                                                            <img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" />
+                                                                                                          </a>
+                                                                                                        </td>
+                                                                                                        <td valign='middle'>
+                                                                                                          <a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Calculating+product+placement+in+hip+hop+songs%3A+CDZA%27s+%2456+million+musical+shopping+spree&link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalculating-product-placement.html" target="_blank">
+                                                                                                            <img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" />
+                                                                                                          </a>
+                                                                                                        </td>
+                                                                                                      </tr>
+                                                                                                    </table>
+                                                                                                  </div>
+                                                                                                  <img src="http://feeds.feedburner.com/~r/boingboing/iBag/~4/RN0nvFfyI_0" height="1" width="1"/>]]>
+                                                                                                </content:encoded>
+                                                                                                  <description>How do you calculate the value of product placement in hip hop songs? With a $56 million dollar hip-hop shopping spree.&lt;img width='1' height='1' src='http://rss.feedsportal.com/c/35208/f/653965/s/2a0dfa7d/mf.gif' border='0'/&gt;&lt;div class='mf-viral'&gt;&lt;table border='0'&gt;&lt;tr&gt;&lt;td valign='middle'&gt;&lt;a href="http://share.feedsportal.com/viral/sendEmail.cfm?lang=en&amp;title=Calculating+product+placement+in+hip+hop+songs%3A+CDZA%27s+%2456+million+musical+shopping+spree&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalculating-product-placement.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/emailthis2.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;td valign='middle'&gt;&lt;a href="http://res.feedsportal.com/viral/bookmark.cfm?title=Calculating+product+placement+in+hip+hop+songs%3A+CDZA%27s+%2456+million+musical+shopping+spree&amp;link=http%3A%2F%2Fboingboing.net%2F2013%2F03%2F27%2Fcalculating-product-placement.html" target="_blank"&gt;&lt;img src="http://res3.feedsportal.com/images/bookmark.gif" border="0" /&gt;&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</description>
+                                                                                                  <slash:comments xmlns:slash="http://purl.org/rss/1.0/modules/slash/">0</slash:comments>
+                                                                                                  <wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://boingboing.net/2013/03/27/calculating-product-placement.html/feed</wfw:commentRss>
+                                                                                                  <feedburner:origLink>http://rss.feedsportal.com/c/35208/f/653965/s/2a0dfa7d/l/0Lboingboing0Bnet0C20A130C0A30C270Ccalculating0Eproduct0Eplacement0Bhtml/story01.htm</feedburner:origLink>
+                                                                                                </item>
+                                                                                              </channel>
+                                                                                            </rss>
+

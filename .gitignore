@@ -2,8 +2,6 @@ node_modules
 bower_components
 dist
 bin
-static
-_workspace
 *.swp
 *.log
 *.orig

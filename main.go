@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/codegangsta/cli"
+	"github.com/danjac/podbaby/Godeps/_workspace/src/github.com/codegangsta/cli"
+	_ "github.com/danjac/podbaby/Godeps/_workspace/src/github.com/joho/godotenv/autoload"
+	_ "github.com/danjac/podbaby/Godeps/_workspace/src/github.com/lib/pq"
 	"github.com/danjac/podbaby/commands"
 	"github.com/danjac/podbaby/config"
-	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/lib/pq"
 )
 
 func main() {
