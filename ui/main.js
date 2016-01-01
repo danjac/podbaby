@@ -4,7 +4,7 @@ import createHashHistory from 'history/lib/createHashHistory';
 import { Provider } from 'react-redux';
 import { syncReduxAndRouter } from 'redux-simple-router';
 
-import { auth } from './actions';
+import { auth, player } from './actions';
 import routes from './routes';
 import configureStore from './store';
 
@@ -22,5 +22,6 @@ const Container = props => {
 };
 
 store.dispatch(auth.setCurrentUser(window.user));
+store.dispatch(player.reloadPlayer());
 
 ReactDOM.render(<Container />, document.getElementById("app"));
