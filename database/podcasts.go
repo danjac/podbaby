@@ -51,7 +51,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
+	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
     EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
       AS is_bookmarked,
@@ -60,6 +60,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
     JOIN subscriptions s ON s.channel_id = p.channel_id
     JOIN channels c ON c.id = p.channel_id
     WHERE s.user_id=$1
+    GROUP BY p.id, p.title, c.image, c.title
     ORDER BY pub_date DESC
     OFFSET $2 LIMIT $3`
 	err := db.Select(
