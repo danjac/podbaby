@@ -6,6 +6,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/danjac/podbaby/commands"
 	"github.com/danjac/podbaby/config"
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 )
 

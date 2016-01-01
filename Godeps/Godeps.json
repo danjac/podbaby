@@ -35,6 +35,11 @@
 			"Rev": "3a92b1fd96032c4490fa618370fbf98ec69b680c"
 		},
 		{
+			"ImportPath": "github.com/joho/godotenv",
+			"Comment": "v1-10-g4ed1339",
+			"Rev": "4ed13390c0acd2ff4e371e64d8b97c8954138243"
+		},
+		{
 			"ImportPath": "github.com/jteeuwen/go-pkg-rss",
 			"Rev": "72391e6fd7384785fa3c46a405214a616d6c4a1d"
 		},

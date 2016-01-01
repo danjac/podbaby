@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"github.com/gorilla/securecookie"
 	"log"
 )
 
@@ -25,6 +26,7 @@ func New() *Config {
 		StaticDir:         defaultStaticDir,
 		StaticURL:         defaultStaticURL,
 		DynamicContentURL: devStaticURL,
+		SecretKey:         generateRandomKey(),
 	}
 }
 
@@ -64,4 +66,8 @@ type Config struct {
 	DynamicContentURL,
 	StaticDir,
 	SecretKey string
+}
+
+func generateRandomKey() string {
+	return string(securecookie.GenerateRandomKey(32))
 }
