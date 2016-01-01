@@ -27,10 +27,17 @@ export default function(store, history) {
     }
   };
 
+  const redirectIfLoggedIn = (nextState, replaceState) => {
+    const { auth } = store.getState();
+    if (auth.isLoggedIn) {
+      replaceState(null, "/podcasts/");
+    }
+  };
+
   return (
     <Router history={history}>
       <Route path="/" component={App}>
-        <IndexRoute component={Front} />
+        <IndexRoute component={Front} onEnter={redirectIfLoggedIn} />
         <Route path="/podcasts/" onEnter={requireAuth}>
           <IndexRedirect to="/podcasts/new/" />
           <Route path="/podcasts/new/" component={Latest} />
