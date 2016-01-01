@@ -73,8 +73,7 @@ Thanks,
 PodBaby
     `, user.Name, tempPassword, r.Host)
 
-	// send email to user
-	// TBD: add email config to server config
+	s.Log.Info(msg)
 	go func(msg string) {
 
 		err := s.Mailer.Send(
