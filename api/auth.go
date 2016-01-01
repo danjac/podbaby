@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"net/smtp"
 	"time"
 
 	"github.com/danjac/podbaby/decoders"
@@ -56,12 +55,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 		s.abort(w, r, err)
 		return
 	}
-
-	// send email to user
-	// TBD: add email config to server config
-	go func(r *http.Request, user *models.User, tempPassword string) {
-
-		msg := fmt.Sprintf(`Hi %s,
+	msg := fmt.Sprintf(`Hi %s,
 We've reset your password so you can sign back in again!
 
 Here is your new temporary password:
@@ -79,21 +73,21 @@ Thanks,
 PodBaby
     `, user.Name, tempPassword, r.Host)
 
-		s.Log.Info(msg)
+	// send email to user
+	// TBD: add email config to server config
+	go func(msg string) {
 
-		err := smtp.SendMail(
-			"mail.localhost:25",
-			nil, // auth
-			"sender@podbaby.me",
+		err := s.Mailer.Send(
+			"services@podbaby.me",
 			[]string{user.Email},
-			[]byte(msg),
+			"Your new password",
+			msg,
 		)
-
 		if err != nil {
 			s.Log.Error(err)
 		}
 
-	}(r, user, tempPassword)
+	}(msg)
 
 	s.Render.Text(w, http.StatusOK, "password sent")
 

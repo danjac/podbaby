@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"net/smtp"
 	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/feedparser"
+	"github.com/danjac/podbaby/mailer"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/securecookie"
@@ -29,6 +31,11 @@ type Config struct {
 	DynamicContentURL string
 	StaticDir         string
 	SecretKey         string
+	MailAddr          string
+	MailHost          string
+	MailUser          string
+	MailID            string
+	MailPassword      string
 }
 
 type Server struct {
@@ -38,6 +45,7 @@ type Server struct {
 	Render     *render.Render
 	Cookie     *securecookie.SecureCookie
 	Feedparser feedparser.Feedparser
+	Mailer     mailer.Mailer
 }
 
 func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
@@ -48,6 +56,18 @@ func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
 
 	f := feedparser.New(db, log)
 
+	auth := smtp.PlainAuth(
+		cfg.MailID,
+		cfg.MailUser,
+		cfg.MailPassword,
+		cfg.MailHost,
+	)
+
+	mailer := mailer.New(
+		cfg.MailAddr,
+		auth,
+	)
+
 	return &Server{
 		DB:         db,
 		Config:     cfg,
@@ -55,6 +75,7 @@ func New(db *database.DB, log *logrus.Logger, cfg *Config) *Server {
 		Render:     render.New(),
 		Cookie:     cookie,
 		Feedparser: f,
+		Mailer:     mailer,
 	}
 }
 

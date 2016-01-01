@@ -71,6 +71,9 @@ export class Channel extends React.Component {
           </div>
           </div>
           {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
+          <p>
+            <a href={channel.url}>RSS</a> {channel.website? <a target="_blank" href={channel.website}>Website</a> : ''}
+          </p>
           <hr />
           <PodcastList showChannel={false}
                        onSelectPage={this.handleSelectPage.bind(this)}

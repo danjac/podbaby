@@ -112,7 +112,7 @@ export class Player extends React.Component {
       <footer style={{
         position:"fixed",
         padding: "5px",
-        opacity: 0.7,
+        opacity: 0.8,
         backgroundColor: "#222",
         color: "#fff",
         fontWeight: "bold",
@@ -218,20 +218,23 @@ export class App extends React.Component {
         </div>
     );
 
+    const alertList = (
+        <AlertList alerts={this.props.alerts}
+                   onDismissAlert={this.handleDismissAlert.bind(this)} />
+    );
     if (isLoggedIn) {
       return (
         <div>
           <MainNav onLogout={this.handleLogout.bind(this)}
                    onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
                    {...this.props} />
-          <AlertList alerts={this.props.alerts}
-                     onDismissAlert={this.handleDismissAlert.bind(this)} />
           {pageContent}
           {this.props.player.isPlaying ?
             <Player player={this.props.player}
                     createHref={createHref}
                     onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
 
+          {alertList}
           <AddChannelModal show={this.props.addChannel.show}
                            container={this}
                            onAdd={this.handleAddChannel.bind(this)}
@@ -239,7 +242,12 @@ export class App extends React.Component {
         </div>
       );
     } else {
-      return pageContent;
+      return (
+        <div>
+          {pageContent}
+          {alertList}
+        </div>
+      );
     }
   }
 }
