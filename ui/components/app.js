@@ -33,10 +33,10 @@ class MainNav extends React.Component {
     const { createHref, isActive } = this.props.history;
 
     return (
-      <Navbar inverse={true} fixedTop={true}>
+      <Navbar fixedTop={true}>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/podcasts/new/"><Glyphicon glyph="headphones" /> PodBaby</Link>
+            <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Glyphicon glyph="headphones" /> PodBaby</Link>
           </Navbar.Brand>
         </Navbar.Header>
 
