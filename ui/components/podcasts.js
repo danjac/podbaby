@@ -14,6 +14,7 @@ import {
   Pagination
 } from 'react-bootstrap';
 
+import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
 
 export class PodcastList extends React.Component {
@@ -33,10 +34,7 @@ export class PodcastList extends React.Component {
 
 
     if (isLoading) {
-      return (
-        <div className="text-center" style={{ marginTop: 50 }}>
-          <h1><Glyphicon glyph="refresh" /> Loading...</h1>
-        </div>);
+      return <Loading />;
     }
 
     if (_.isEmpty(podcasts)) {

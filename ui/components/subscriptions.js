@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
+import Loading from './loading';
 
 const ListItem = props => {
   const { channel, createHref, unsubscribe } = props;
@@ -76,6 +77,10 @@ export class Subscriptions extends React.Component {
   render() {
     const { createHref } = this.props.history;
     const { channels, filter, isLoading } = this.props;
+
+    if (isLoading) {
+      return <Loading />;
+    }
 
     if (!channels && !isLoading && !filter) {
       return (

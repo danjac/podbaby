@@ -12,6 +12,7 @@ import {
 
 import * as actions from '../actions';
 import PodcastList from './podcasts';
+import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
 
 export class Channel extends React.Component {
@@ -38,10 +39,7 @@ export class Channel extends React.Component {
     const { channel, isLoading } = this.props;
 
     if (isLoading) {
-      return (
-        <div className="text-center" style={{ marginTop: 50 }}>
-          <h1><Glyphicon glyph="refresh" /> Loading...</h1>
-        </div>);
+      return <Loading />;
     }
 
     if (!channel) {
