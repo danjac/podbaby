@@ -99,9 +99,11 @@ export class Login extends React.Component {
               className="form-control"
               type="submit">Login</Button>
         </form>
-        <div>
+        <p>
           <a href="#" onClick={this.handleOpenRecoverPasswordForm.bind(this)}>Forgot your password?</a>
-        </div>
+        </p><p>
+          <Link to="/signup/">Not a member yet? Sign up today!</Link>
+        </p>
         <RecoverPasswordModal show={this.props.auth.showRecoverPasswordForm}
                               container={this}
                               onSubmit={this.handleRecoverPassword.bind(this)}
