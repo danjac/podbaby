@@ -10,7 +10,7 @@ export default function (state=initialState, action) {
     case Actions.SUBSCRIBE:
     case Actions.UNSUBSCRIBE:
       return Object.assign({}, state, {
-        channels: state.channels.map(channel => {
+        channels: (state.channels || []).map(channel => {
           if (channel.id === action.payload) {
             channel.isSubscribed = action.type === Actions.SUBSCRIBE;
           }
