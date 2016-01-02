@@ -7,12 +7,19 @@
         body { padding-top: 80px; }
         @font-face {
             font-family: GoodDog;
-            src: url("/static/GoodDog.otf") format("opentype");
+            src: url("{{ .staticURL }}GoodDog.otf") format("opentype");
         }
         </style>
     </head>
   <body>
         <div id="app"></div>
+        <footer>
+            <div class="container text-center">
+                <p class="text-muted credit">
+                &copy; Dan Jacob 2016 <a href="https://github.com/danjac/podbaby">Github</a>
+                </p>
+            </div>
+        </footer>
     </body>
     <script>
     window.__ENV__ = "";
