@@ -2,7 +2,7 @@ package models
 
 import "math"
 
-const defaultPageSize = 30
+const defaultPageSize = 10
 
 func NewPage(page int64, numRows int64) *Page {
 	p := &Page{
