@@ -56,24 +56,29 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	msg := fmt.Sprintf(`Hi %s,
+
 We've reset your password so you can sign back in again!
 
 Here is your new temporary password:
 
 %s
 
-You can login here:
+You can login here with this email address or your username:
 
-%s/#/login/
+%s://%s/#/login/
 
-Change your password as soon as possible!
+Make sure to change your password as soon as possible!
 
 Thanks,
 
 PodBaby
-    `, user.Name, tempPassword, r.Host)
+    `,
+		user.Name,
+		tempPassword,
+		r.URL.Scheme,
+		r.URL.Host,
+	)
 
-	s.Log.Info(msg)
 	go func(msg string) {
 
 		err := s.Mailer.Send(
