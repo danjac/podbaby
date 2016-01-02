@@ -65,7 +65,7 @@ Here is your new temporary password:
 
 You can login here with this email address or your username:
 
-%s://%s/#/login/
+https://%s/#/login/
 
 Make sure to change your password as soon as possible!
 
@@ -75,8 +75,7 @@ PodBaby
     `,
 		user.Name,
 		tempPassword,
-		r.URL.Scheme,
-		r.URL.Host,
+		r.Host,
 	)
 
 	go func(msg string) {
