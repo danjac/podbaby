@@ -37,10 +37,11 @@ class MainNav extends React.Component {
         <Navbar.Header>
           <Navbar.Brand>
             <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Glyphicon glyph="headphones" /> PodBaby</Link>
+            <Navbar.Toggle />
           </Navbar.Brand>
         </Navbar.Header>
 
-
+        <Navbar.Collapse>
         <Nav pullLeft={true}>
           <NavItem active={isActive("/podcasts/search/")}
                    href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Discover</NavItem>
@@ -58,6 +59,7 @@ class MainNav extends React.Component {
                     href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
           <NavItem href="#" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> Logout</NavItem>
         </Nav>
+      </Navbar.Collapse>
 
       </Navbar>
     );
