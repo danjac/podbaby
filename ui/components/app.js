@@ -37,29 +37,29 @@ class MainNav extends React.Component {
         <Navbar.Header>
           <Navbar.Brand>
             <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Glyphicon glyph="headphones" /> PodBaby</Link>
-            <Navbar.Toggle />
           </Navbar.Brand>
+          <Navbar.Toggle />
         </Navbar.Header>
 
         <Navbar.Collapse>
-        <Nav pullLeft={true}>
-          <NavItem active={isActive("/podcasts/search/")}
-                   href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Discover</NavItem>
-          <NavItem active={isActive("/podcasts/new/")}
-                   href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New episodes</NavItem>
-          <NavItem active={isActive("/podcasts/subscriptions/")}
-                   href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
-          <NavItem active={isActive("/podcasts/bookmarks/")}
-                   href={createHref("/podcasts/bookmarks/")}><Glyphicon glyph="bookmark" /> Bookmarks</NavItem>
-          <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
-        </Nav>
+          <Nav pullLeft>
+            <NavItem active={isActive("/podcasts/search/")}
+                     href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Discover</NavItem>
+            <NavItem active={isActive("/podcasts/new/")}
+                     href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New episodes</NavItem>
+            <NavItem active={isActive("/podcasts/subscriptions/")}
+                     href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
+            <NavItem active={isActive("/podcasts/bookmarks/")}
+                     href={createHref("/podcasts/bookmarks/")}><Glyphicon glyph="bookmark" /> Bookmarks</NavItem>
+            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
+          </Nav>
 
-        <Nav pullRight={true}>
-          <NavItem active={isActive("/user/")}
-                    href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
-          <NavItem href="#" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> Logout</NavItem>
-        </Nav>
-      </Navbar.Collapse>
+          <Nav pullRight>
+            <NavItem active={isActive("/user/")}
+                      href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
+            <NavItem href="#" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> Logout</NavItem>
+          </Nav>
+        </Navbar.Collapse>
 
       </Navbar>
     );
