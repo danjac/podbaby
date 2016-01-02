@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
@@ -9,7 +10,8 @@ import {
   ButtonGroup,
   Glyphicon,
   Well,
-  Panel
+  Panel,
+  Input
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
@@ -51,14 +53,31 @@ const ListItem = props => {
 
 
 export class Subscriptions extends React.Component {
-  componentDidMount() {
-    this.props.dispatch(actions.channels.getChannels());
+
+  constructor(props) {
+    super(props);
+    const { dispatch } = this.props;
+    this.actions = bindActionCreators(actions.channels, dispatch);
   }
+
+  componentDidMount() {
+    this.actions.getChannels();
+  }
+
+  handleFilterChannels() {
+    const value = _.trim(this.refs.filter.getValue());
+    this.actions.filterChannels(value);
+  }
+
+  handleFocus() {
+    this.refs.filter.getInputDOMNode().select();
+  }
+
   render() {
     const { createHref } = this.props.history;
-    const { channels } = this.props;
+    const { channels, filter, isLoading } = this.props;
 
-    if (!channels || channels.length === 0) {
+    if (!channels && !isLoading && !filter) {
       return (
         <span>You haven't subscribed to any channels yet.
           Discover new channels and podcasts <a href={createHref("/podcasts/search/")}>here</a>.</span>);
@@ -66,6 +85,12 @@ export class Subscriptions extends React.Component {
 
     return (
       <div>
+        <Input className="form-control"
+               type="search"
+               ref="filter"
+               onFocus={this.handleFocus.bind(this)}
+               onKeyUp={this.handleFilterChannels.bind(this)}
+               placeholder="Find a channel" />
       {this.props.channels.map(channel => {
         const unsubscribe = () => {
             this.props.dispatch(actions.subscribe.unsubscribe(channel.id, channel.title));
@@ -85,9 +110,7 @@ Subscriptions.propTypes = {
 };
 
 const mapStateToProps = state => {
-  return {
-    channels: state.channels || []
-  };
+  return state.channels;
 };
 
 export default connect(mapStateToProps)(Subscriptions);

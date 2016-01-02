@@ -1,7 +1,8 @@
 import { Actions } from '../constants';
 
 const initialState = {
-  channel: null
+  channel: null,
+  isLoading: false
 };
 
 export default function(state=initialState, action) {
@@ -17,10 +18,13 @@ export default function(state=initialState, action) {
       return state;
 
     case Actions.GET_CHANNEL_SUCCESS:
-      return Object.assign({}, state, { channel: action.payload.channel });
+      return Object.assign({}, state, { channel: action.payload.channel, isLoading: false });
 
     case Actions.GET_CHANNEL_FAILURE:
-      return initialState;
+      return Object.assign({}, state, { channel: null, isLoading: false });
+
+    case Actions.GET_CHANNEL_REQUEST:
+      return Object.assign({}, state, { channel: null, isLoading: true });
   }
   return state;
 }

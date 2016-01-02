@@ -36,8 +36,16 @@ export class Channel extends React.Component {
 
   render() {
     const { channel, isLoading } = this.props;
+
+    if (isLoading) {
+      return (
+        <div className="text-center" style={{ marginTop: 50 }}>
+          <h1><Glyphicon glyph="refresh" /> Loading...</h1>
+        </div>);
+    }
+
     if (!channel) {
-      return <div></div>;
+      return <div>Sorry, could not find this channel.</div>;
     }
     const isSubscribed = channel.isSubscribed;
 
@@ -72,7 +80,7 @@ export class Channel extends React.Component {
           </div>
           {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
           <p>
-            <a href={channel.url}>RSS</a> {channel.website? <a target="_blank" href={channel.website}>Website</a> : ''}
+            <a href={channel.url}>RSS Feed</a> {channel.website? <a target="_blank" href={channel.website}>Website</a> : ''}
           </p>
           <hr />
           <PodcastList showChannel={false}
@@ -92,8 +100,11 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => {
+
   const { channel } = state.channel;
-  const { podcasts, page, showDetail, isLoading } = state.podcasts;
+  const { podcasts, page, showDetail } = state.podcasts;
+  const isLoading = state.channel.isLoading || state.podcasts.isLoading;
+
   return {
     player: state.player,
     podcasts: podcasts || [],
