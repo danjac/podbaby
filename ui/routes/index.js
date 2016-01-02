@@ -14,6 +14,7 @@ import User from '../components/user';
 import PageNotFound from '../components/not_found';
 
 import { alerts } from '../actions';
+import { getChannel } from '../actions/channel';
 import { loginRequired } from '../actions/auth';
 
 export default function(store, history) {
@@ -34,6 +35,10 @@ export default function(store, history) {
     }
   };
 
+  const getNextChannel = nextState => {
+    store.dispatch(getChannel(nextState.params.id));
+  };
+
   return (
     <Router history={history}>
       <Route path="/" component={App}>
@@ -44,7 +49,9 @@ export default function(store, history) {
           <Route path="/podcasts/search/" component={Search} />
           <Route path="/podcasts/subscriptions/" component={Subscriptions} />
           <Route path="/podcasts/bookmarks/" component={Bookmarks} />
-          <Route path="/podcasts/channel/:id/" component={Channel} />
+          <Route path="/podcasts/channel/:id/"
+                 component={Channel}
+                 onEnter={getNextChannel} />
         </Route>
         <Route path="/login/" component={Login} />
         <Route path="/signup/" component={Signup} />

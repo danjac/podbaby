@@ -17,10 +17,6 @@ import { sanitize, formatPubDate } from './utils';
 
 export class Channel extends React.Component {
 
-  componentDidMount(){
-      this.props.dispatch(actions.channel.getChannel(this.props.params.id));
-  }
-
   handleSubscribe(event) {
     event.preventDefault();
     const { channel, dispatch } = this.props;
