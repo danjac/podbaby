@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"database/sql"
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/models"
 )
@@ -58,29 +59,43 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
 	user, _ := getUser(r)
 
-	channel := &models.Channel{
-		URL: decoder.URL,
-	}
+	channel, err := s.DB.Channels.GetByURL(decoder.URL, user.ID)
 
-	if err := s.DB.Channels.Create(channel); err != nil {
-		s.abort(w, r, err)
-		return
-	}
+	isNewChannel := false
 
-	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
-	}
-
-	go func(ch *models.Channel, user *models.User) {
-		if err := s.Feedparser.FetchChannel(ch); err != nil {
-			s.Log.Error(err)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			isNewChannel = true
+		} else {
+			s.abort(w, r, err)
 			return
 		}
-		if err := s.DB.Subscriptions.Create(ch.ID, user.ID); err != nil {
-			s.Log.Error(err)
-		}
-	}(channel, user)
+	}
 
-	s.Render.Text(w, http.StatusCreated, "New channel")
+	if isNewChannel {
+		channel = &models.Channel{
+			URL: decoder.URL,
+		}
+		if err := s.Feedparser.FetchChannel(channel); err != nil {
+			s.abort(w, r, err)
+			return
+		}
+	}
+
+	if !channel.IsSubscribed {
+		if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
+			s.abort(w, r, err)
+			return
+		}
+		channel.IsSubscribed = true
+	}
+
+	var status int
+	if isNewChannel {
+		status = http.StatusCreated
+	} else {
+		status = http.StatusOK
+	}
+
+	s.Render.JSON(w, status, channel)
 }

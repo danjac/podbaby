@@ -33,6 +33,12 @@ func main() {
 					Usage:       "Secret key",
 					Destination: &cfg.SecretKey,
 				},
+				cli.StringFlag{
+					Name:        "cookie-secret",
+					EnvVar:      "SECURE_COOKIE_KEY",
+					Usage:       "32-bit secure key",
+					Destination: &cfg.SecureCookieKey,
+				},
 				cli.IntFlag{
 					Name:        "port",
 					Value:       5000,

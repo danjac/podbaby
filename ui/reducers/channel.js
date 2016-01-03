@@ -17,6 +17,9 @@ export default function(state=initialState, action) {
       }
       return state;
 
+    case Actions.ADD_CHANNEL_SUCCESS:
+      return Object.assign({}, state, { channel: action.payload, isLoading: false });
+
     case Actions.GET_CHANNEL_SUCCESS:
       return Object.assign({}, state, { channel: action.payload.channel, isLoading: false });
 

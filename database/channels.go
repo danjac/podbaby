@@ -11,6 +11,7 @@ type ChannelDB interface {
 	SelectSubscribed(int64) ([]models.Channel, error)
 	Search(string, int64) ([]models.Channel, error)
 	GetByID(int64, int64) (*models.Channel, error)
+	GetByURL(string, int64) (*models.Channel, error)
 	Create(*models.Channel) error
 }
 
@@ -28,7 +29,7 @@ func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel
 	sql := `SELECT DISTINCT c.id, c.title, c.description, c.image, c.url
     FROM channels c
     JOIN subscriptions s ON s.channel_id = c.id
-    WHERE s.user_id=$1 AND title IS NOT NULL
+    WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
     ORDER BY title`
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql, userID)
@@ -44,6 +45,15 @@ func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Cha
 
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql, userID, query)
+}
+
+func (db *defaultChannelDBImpl) GetByURL(url string, userID int64) (*models.Channel, error) {
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image,
+        EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
+        FROM channels c
+        WHERE url=$2`
+	channel := &models.Channel{}
+	return channel, db.Get(channel, sql, userID, url)
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {

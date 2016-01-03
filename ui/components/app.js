@@ -9,10 +9,6 @@ import {
   Navbar,
   Glyphicon,
   Badge,
-  Input,
-  Button,
-  ButtonGroup,
-  Modal,
   Alert,
   Grid,
   Row,
@@ -24,6 +20,7 @@ import { connect } from 'react-redux';
 import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
+import AddChannelModal from './add_channel';
 
 class MainNav extends React.Component {
 
@@ -66,41 +63,6 @@ class MainNav extends React.Component {
   }
 }
 
-
-class AddChannelModal extends React.Component {
-
-  handleAdd(event){
-    event.preventDefault();
-    const node = this.refs.url.getInputDOMNode();
-    this.props.onAdd(node.value);
-    node.value = "";
-  }
-
-  render() {
-    const { show, onClose, container } = this.props;
-    return (
-      <Modal show={show}
-             aria-labelledby="add-channel-modal-title"
-             container={container}
-             onHide={onClose}>
-        <Modal.Header closeButton>
-          <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <form className="form" onSubmit={this.handleAdd.bind(this)}>
-              <Input required type="text" placeholder="RSS URL of the channel" ref="url" />
-              <ButtonGroup>
-              <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
-              <Button bsStyle="default" onClick={onClose}><Glyphicon glyph="remove" /> Cancel</Button>
-            </ButtonGroup>
-            </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
-
-
-}
 
 export class Player extends React.Component {
   handleClose(event) {
@@ -237,7 +199,7 @@ export class App extends React.Component {
                     onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
 
           {alertList}
-          <AddChannelModal show={this.props.addChannel.show}
+          <AddChannelModal {...this.props.addChannel}
                            container={this}
                            onAdd={this.handleAddChannel.bind(this)}
                            onClose={this.handleCloseAddChannelForm.bind(this)} />

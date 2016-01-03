@@ -65,6 +65,7 @@ type Config struct {
 	StaticURL,
 	DynamicContentURL,
 	StaticDir,
+	SecureCookieKey,
 	SecretKey string
 }
 

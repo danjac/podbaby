@@ -2,6 +2,7 @@ package server
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"errors"
 	"net/http"
 	"time"
@@ -40,9 +41,12 @@ func New(db *database.DB,
 	log *logrus.Logger,
 	cfg *config.Config) *Server {
 
+	secureCookieKey, _ := base64.StdEncoding.DecodeString(cfg.SecureCookieKey)
+
 	cookie := securecookie.New(
 		[]byte(cfg.SecretKey),
-		securecookie.GenerateRandomKey(32))
+		secureCookieKey,
+	)
 
 	f := feedparser.New(db, log)
 
