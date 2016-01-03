@@ -4,10 +4,11 @@ import {
   Modal,
   Input,
   Button,
-  Glyphicon,
   ButtonGroup,
   ProgressBar
 } from 'react-bootstrap';
+
+import Icon from './icon';
 
 export class AddChannelModal extends React.Component {
 
@@ -63,8 +64,8 @@ export class AddChannelModal extends React.Component {
             <form className="form" onSubmit={this.handleAdd.bind(this)}>
               <Input required type="text" placeholder="RSS URL of the channel" ref="url" />
               <ButtonGroup>
-              <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Add channel</Button>
-              <Button bsStyle="default" onClick={onClose}><Glyphicon glyph="remove" /> Cancel</Button>
+              <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add channel</Button>
+              <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>
             </ButtonGroup>
             </form>
             )}

@@ -5,13 +5,13 @@ import {
   Grid,
   Row,
   Col,
-  Glyphicon,
   ButtonGroup,
   Button
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import PodcastList from './podcasts';
+import Icon from './icon';
 import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
 
@@ -43,6 +43,8 @@ export class Channel extends React.Component {
     }
     const isSubscribed = channel.isSubscribed;
 
+    const website = channel.website.Valid ? channel.website.String : "";
+
     return (
       <div>
         <div className="media">
@@ -56,30 +58,27 @@ export class Channel extends React.Component {
             </a>
           </div>
           <div className="media-body">
-            <Grid>
-              <Row>
-                <Col xs={6} md={9}>
                   <h2 className="media-heading">{channel.title}</h2>
-                </Col>
-                <Col xs={6} md={3}>
-                  <ButtonGroup>
-                    <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
-                            onClick={this.handleSubscribe.bind(this)}>
-                      <Glyphicon glyph={channel.isSubscribed ? 'trash': 'ok'} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button>
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </Grid>
           </div>
-          </div>
-          {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
-          <p>
-            <a href={channel.url}>RSS Feed</a> {channel.website? <a target="_blank" href={channel.website}>Website</a> : ''}
-          </p>
-          <hr />
-          <PodcastList showChannel={false}
-                       onSelectPage={this.handleSelectPage.bind(this)}
-                       actions={actions} {...this.props} />
+        </div>
+        {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
+        <ButtonGroup>
+          <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
+                  onClick={this.handleSubscribe.bind(this)}>
+            <Icon icon={channel.isSubscribed ? 'trash': 'ok'} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button>
+          <a className="btn btn-default" title="Link to RSS Feed" target="_blank" href={channel.url}>
+            <Icon icon="rss" /> Link to RSS feed
+          </a>
+          {website ? (
+          <a className="btn btn-default" title="Link to home page" target="_blank" href={website}>
+            <Icon icon="globe" /> Link to website
+          </a>
+          ) : ''}
+        </ButtonGroup>
+        <hr />
+        <PodcastList showChannel={false}
+                     onSelectPage={this.handleSelectPage.bind(this)}
+                     actions={actions} {...this.props} />
       </div>
     );
   }

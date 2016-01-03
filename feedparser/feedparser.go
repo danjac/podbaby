@@ -14,6 +14,25 @@ type Result struct {
 	Items   []*rss.Item
 }
 
+func (result *Result) GetWebsiteLink() string {
+	for _, link := range result.Channel.Links {
+		found := false
+		if link.Type == "" && link.Rel == "" {
+			for _, item := range result.Items {
+				for _, itemLink := range item.Links {
+					if itemLink.Href == link.Href {
+						found = true
+					}
+				}
+			}
+			if !found {
+				return link.Href
+			}
+		}
+	}
+	return ""
+}
+
 type Feedparser interface {
 	FetchChannel(*models.Channel) error
 	FetchAll() error
@@ -43,6 +62,12 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	channel.Title = result.Channel.Title
 	channel.Image = result.Channel.Image.Url
 	channel.Description = result.Channel.Description
+
+	link := result.GetWebsiteLink()
+	if link != "" {
+		channel.Website.String = result.GetWebsiteLink()
+		channel.Website.Valid = true
+	}
 
 	// we just want unique categories
 	categoryMap := make(map[string]string)

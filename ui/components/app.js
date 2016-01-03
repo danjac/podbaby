@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import 'bootswatch/paper/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 import {
   Nav,
   NavItem,
   Navbar,
-  Glyphicon,
   Badge,
   Alert,
   Grid,
@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
+import Icon from './icon';
 import AddChannelModal from './add_channel';
 
 class MainNav extends React.Component {
@@ -33,7 +34,7 @@ class MainNav extends React.Component {
       <Navbar fixedTop={true}>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Glyphicon glyph="headphones" /> PodBaby</Link>
+            <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Icon icon="headphones" /> PodBaby</Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
@@ -41,20 +42,20 @@ class MainNav extends React.Component {
         <Navbar.Collapse>
           <Nav pullLeft>
             <NavItem active={isActive("/podcasts/search/")}
-                     href={createHref("/podcasts/search/")}><Glyphicon glyph="search" /> Discover</NavItem>
+              href={createHref("/podcasts/search/")}><Icon icon="search" /> Discover</NavItem>
             <NavItem active={isActive("/podcasts/new/")}
-                     href={createHref("/podcasts/new/")}><Glyphicon glyph="flash" /> New episodes</NavItem>
+                     href={createHref("/podcasts/new/")}><Icon icon="flash" /> New episodes</NavItem>
             <NavItem active={isActive("/podcasts/subscriptions/")}
-                     href={createHref("/podcasts/subscriptions/")}><Glyphicon glyph="list" /> Subscriptions</NavItem>
+                     href={createHref("/podcasts/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
             <NavItem active={isActive("/podcasts/bookmarks/")}
-                     href={createHref("/podcasts/bookmarks/")}><Glyphicon glyph="bookmark" /> Bookmarks</NavItem>
-            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Glyphicon glyph="plus" /> Add new</NavItem>
+                     href={createHref("/podcasts/bookmarks/")}><Icon icon="bookmark" /> Bookmarks</NavItem>
+            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Icon icon="plus" /> Add new</NavItem>
           </Nav>
 
           <Nav pullRight>
             <NavItem active={isActive("/user/")}
-                      href={createHref("/user/")}><Glyphicon glyph="cog" /> {auth.name}</NavItem>
-            <NavItem href="#" onClick={this.props.onLogout}><Glyphicon glyph="log-out" /> Logout</NavItem>
+                      href={createHref("/user/")}><Icon icon="cog" /> {auth.name}</NavItem>
+            <NavItem href="#" onClick={this.props.onLogout}><Icon icon="sign-out" /> Logout</NavItem>
           </Nav>
         </Navbar.Collapse>
 
@@ -97,7 +98,7 @@ export class Player extends React.Component {
               </audio>
             </Col>
             <Col xs={3} md={2} mdPush={2}>
-              <a href="#" onClick={this.handleClose.bind(this)} style={{ color: "#fff" }}><Glyphicon glyph="remove" /> Close</a>
+              <a href="#" onClick={this.handleClose.bind(this)} style={{ color: "#fff" }}><Icon icon="remove" /> Close</a>
             </Col>
           </Row>
         </Grid>

@@ -12,6 +12,7 @@ type Channel struct {
 	Categories   sql.NullString `db:"categories" json:"-"`
 	Image        string         `db:"image" json:"image"`
 	URL          string         `db:"url" json:"url"`
+	Website      sql.NullString `db:"website" json:"website"`
 	CreatedAt    time.Time      `db:"created_at" json:"createdAt"`
 	IsSubscribed bool           `db:"is_subscribed" json:"isSubscribed"`
 }

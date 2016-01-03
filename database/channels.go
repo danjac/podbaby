@@ -20,13 +20,14 @@ type defaultChannelDBImpl struct {
 }
 
 func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
-	sql := "SELECT id, title, description, categories, url, image FROM channels"
+	sql := "SELECT id, title, description, categories, url, image, website FROM channels"
 	var channels []models.Channel
 	return channels, db.Select(&channels, sql)
 }
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
-	sql := `SELECT DISTINCT c.id, c.title, c.description, c.image, c.url
+	sql := `SELECT DISTINCT c.id, c.title, c.description, c.image, c.url, c.website,
+    1 AS is_subscribed
     FROM channels c
     JOIN subscriptions s ON s.channel_id = c.id
     WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
@@ -37,7 +38,7 @@ func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel
 
 func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Channel, error) {
 
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image,
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website,
     EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
     FROM channels c, plainto_tsquery($2) as q
     WHERE (c.tsv @@ q)
@@ -48,7 +49,7 @@ func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Cha
 }
 
 func (db *defaultChannelDBImpl) GetByURL(url string, userID int64) (*models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image,
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website,
         EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
         FROM channels c
         WHERE url=$2`
@@ -57,7 +58,7 @@ func (db *defaultChannelDBImpl) GetByURL(url string, userID int64) (*models.Chan
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image,
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website,
         EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
         FROM channels c
         WHERE id=$2`
@@ -67,7 +68,14 @@ func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel
 
 func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
 
-	query, args, err := sqlx.Named("SELECT upsert_channel (:url, :title, :description, :image, :categories)", ch)
+	query, args, err := sqlx.Named(`
+        SELECT upsert_channel (
+            :url, 
+            :title, 
+            :description, 
+            :image, 
+            :categories, 
+            :website)`, ch)
 
 	if err != nil {
 		return err

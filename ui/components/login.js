@@ -9,11 +9,11 @@ import {
   Input,
   Button,
   ButtonGroup,
-  Modal,
-  Glyphicon
+  Modal
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
+import Icon from './icon';
 
 export class RecoverPasswordModal extends React.Component {
 
@@ -40,8 +40,8 @@ export class RecoverPasswordModal extends React.Component {
             <form className="form" onSubmit={this.handleSubmit.bind(this)}>
               <Input required type="text" placeholder="Your username or email address" ref="identifier" />
               <ButtonGroup>
-                <Button bsStyle="primary" type="submit"><Glyphicon glyph="plus" /> Submit</Button>
-                <Button bsStyle="default" onClick={onClose}><Glyphicon glyph="remove" /> Cancel</Button>
+                <Button bsStyle="primary" type="submit"><Icon icon="send" /> Send</Button>
+                <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>
               </ButtonGroup>
             </form>
         </Modal.Body>
@@ -85,7 +85,7 @@ export class Login extends React.Component {
 
     return (
       <div>
-        <h1>Sign into your PodBaby account.</h1>
+        <h2>Sign into your PodBaby account.</h2>
         <hr />
         <form className="form-horizontal" onSubmit={this.handleLogin.bind(this)}>
             <Input required
@@ -99,7 +99,7 @@ export class Login extends React.Component {
             <Button
               bsStyle="primary"
               className="form-control"
-              type="submit">Login</Button>
+              type="submit"><Icon icon="sign-in" /> Login</Button>
         </form>
         <p>
           <a href="#" onClick={this.handleOpenRecoverPasswordForm.bind(this)}>Forgot your password?</a>

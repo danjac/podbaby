@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import {
   Grid,
@@ -8,17 +9,17 @@ import {
   Col,
   Button,
   ButtonGroup,
-  Glyphicon,
   Well,
   Panel,
   Input
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
+import Icon from './icon';
 import Loading from './loading';
 
 const ListItem = props => {
-  const { channel, createHref, unsubscribe } = props;
+  const { channel, toggleSubscribe } = props;
   return (
     <Panel>
     <div className="media">
@@ -35,11 +36,12 @@ const ListItem = props => {
         <Grid>
           <Row>
             <Col xs={6} md={9}>
-              <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
+              <h4 className="media-heading"><Link to={`/podcasts/channel/${channel.id}/`}>{channel.title}</Link></h4>
             </Col>
             <Col xs={6} md={3}>
               <ButtonGroup>
-                <Button title="Unsubscribe" onClick={unsubscribe}><Glyphicon glyph="trash" /> Unsubscribe</Button>
+                <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
+                        onClick={toggleSubscribe}><Icon icon={channel.isSubscribed ? 'trash' : 'plus'} /> {channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}</Button>
               </ButtonGroup>
             </Col>
           </Row>
@@ -75,7 +77,6 @@ export class Subscriptions extends React.Component {
   }
 
   render() {
-    const { createHref } = this.props.history;
     const { channels, filter, isLoading } = this.props;
 
     if (isLoading) {
@@ -85,7 +86,7 @@ export class Subscriptions extends React.Component {
     if (!channels && !isLoading && !filter) {
       return (
         <span>You haven't subscribed to any channels yet.
-          Discover new channels and podcasts <a href={createHref("/podcasts/search/")}>here</a>.</span>);
+          Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
     }
 
     return (
@@ -97,13 +98,13 @@ export class Subscriptions extends React.Component {
                onKeyUp={this.handleFilterChannels.bind(this)}
                placeholder="Find a channel" />
       {this.props.channels.map(channel => {
-        const unsubscribe = () => {
-            this.props.dispatch(actions.subscribe.unsubscribe(channel.id, channel.title));
+        const toggleSubscribe = () => {
+            const action = channel.isSubscribed  ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
+            this.props.dispatch(action(channel.id));
         };
         return <ListItem key={channel.id}
                          channel={channel}
-                         unsubscribe={unsubscribe}
-                         createHref={createHref} />;
+                         toggleSubscribe={toggleSubscribe} />;
       })}
       </div>
     );

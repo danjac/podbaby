@@ -48,6 +48,8 @@
     "axios": "^0.8.1",
     "bootstrap": "^3.3.6",
     "bootswatch": "^3.3.6",
+    "classnames": "^2.2.1",
+    "font-awesome": "^4.5.0",
     "history": "^1.13.1",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",

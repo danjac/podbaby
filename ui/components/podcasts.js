@@ -6,7 +6,6 @@ import {
   Grid,
   Row,
   Col,
-  Glyphicon,
   ButtonGroup,
   Button,
   Well,
@@ -14,6 +13,7 @@ import {
   Pagination
 } from 'react-bootstrap';
 
+import Icon from './icon';
 import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
 
@@ -137,13 +137,13 @@ export const Podcast = props => {
               </Col>
               <Col xs={6} mdPush={2} md={3}>
                 <ButtonGroup>
-                  <Button onClick={togglePlayer}><Glyphicon glyph={ isPlaying ? 'stop': 'play' }  /></Button>
-                  <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Glyphicon glyph="download" /></a>
+                  <Button title={ isPlaying ? "Play": "Stop" } onClick={togglePlayer}><Icon icon={ isPlaying ? 'stop': 'play' }  /></Button>
+                  <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Icon icon="download" /></a>
                   <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
-                    <Glyphicon glyph={podcast.isBookmarked ? 'remove' : 'bookmark'} />
+                    <Icon icon={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
                   {showChannel ? (<Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={toggleSubscribe}>
-                    <Glyphicon glyph={podcast.isSubscribed ? "trash" : "plus"} title={podcast.isSubscribed ? 'Unsubscribe' : 'Subscribe'} />
+                    <Icon icon={podcast.isSubscribed ? "trash" : "plus"} title={podcast.isSubscribed ? 'Unsubscribe' : 'Subscribe'} />
                   </Button>) : ''}
                 </ButtonGroup>
               </Col>
@@ -154,7 +154,7 @@ export const Podcast = props => {
       {podcast.description ?
       (<div style={{paddingTop: "30px"}}>
         <Button className="form-control" onClick={toggleDetail}>
-        <Glyphicon glyph={isShowingDetail ? 'chevron-up' : 'chevron-down'} />
+        <Icon icon={isShowingDetail ? 'chevron-up' : 'chevron-down'} />
         </Button>
       </div>) : ''}
       {podcast.description && isShowingDetail  ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}

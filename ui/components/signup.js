@@ -2,12 +2,15 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { Link } from 'react-router';
+
 import {
   Input,
   Button
 } from 'react-bootstrap';
 
 import { auth } from '../actions';
+import Icon from './icon';
 
 export class Signup extends React.Component {
 
@@ -30,11 +33,9 @@ export class Signup extends React.Component {
   }
   render() {
 
-    const { createHref } = this.props.history;
-
     return (
       <div>
-        <h1>Join PodBaby today.</h1>
+        <h2>Join PodBaby today.</h2>
         <hr />
         <form className="form-horizontal"
               onSubmit={this.handleSubmit.bind(this)}>
@@ -53,9 +54,9 @@ export class Signup extends React.Component {
             <Button
               bsStyle="primary"
               className="form-control"
-              type="submit">Signup</Button>
+              type="submit"><Icon icon="sign-in" /> Signup</Button>
         </form>
-        <p><a href={createHref('/login/')}>Already a member? Log in here.</a></p>
+        <p><Link to='/login/'>Already a member? Log in here.</Link></p>
       </div>
 
     );

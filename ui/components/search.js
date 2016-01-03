@@ -7,7 +7,6 @@ import {
   Grid,
   Row,
   Col,
-  Glyphicon,
   ButtonGroup,
   Button,
   Well,
@@ -17,6 +16,7 @@ import {
 
 import  * as actions from '../actions';
 import PodcastList from './podcasts';
+import Icon from './icon';
 import { sanitize, formatPubDate } from './utils';
 
 const ChannelItem = props => {
@@ -42,7 +42,7 @@ const ChannelItem = props => {
             <Col xs={6} md={3}>
               <ButtonGroup>
                 <Button title={channel.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={subscribe}>
-                  <Glyphicon glyph={channel.isSubscribed ? "trash" : "ok"} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+                  <Icon icon={channel.isSubscribed ? "trash" : "ok"} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
                 </Button>
               </ButtonGroup>
             </Col>
@@ -99,7 +99,7 @@ export class Search extends React.Component {
                onClick={this.handleFocus.bind(this)}
                placeholder="Find a channel or podcast" />
         <Button type="submit" bsStyle="primary" className="form-control">
-          <Glyphicon glyph="search" /> Search
+          <Icon icon="search" /> Search
         </Button>
       </form>
       {channels.map(channel => {

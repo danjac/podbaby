@@ -7,17 +7,29 @@ const initialState = {
   isLoading: false
 };
 
+const subscribeChannels = (channels, channel_id, subscribed) => {
+  return channels.map(channel => {
+    if (channel.id === channel_id) {
+      channel.isSubscribed = subscribed;
+    }
+    return channel;
+  });
+}
+
 export default function(state=initialState, action) {
-let channels, filter;
+
+  let channels, requestedChannels, filter, subscribed;
 
   switch(action.type) {
+
+    case Actions.SUBSCRIBE:
     case Actions.UNSUBSCRIBE:
 
-      channels = _.reject(
-        state.channels,
-        channel => channel.id === action.payload);
+      subscribed = action.type === Actions.SUBSCRIBE;
+      channels = subscribeChannels(state.channels, action.payload, subscribed);
+      requestedChannels = subscribeChannels(state.requestedChannels, action.payload, subscribed);
 
-      return Object.assign({}, state, { channels, requestedChannels: channels });
+      return Object.assign({}, state, { channels, requestedChannels });
 
     case Actions.FILTER_CHANNELS:
       filter = action.payload ? new RegExp(action.payload, "i") : null;
