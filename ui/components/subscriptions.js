@@ -93,7 +93,7 @@ export class Subscriptions extends React.Component {
         <Input className="form-control"
                type="search"
                ref="filter"
-               onFocus={this.handleFocus.bind(this)}
+               onClick={this.handleFocus.bind(this)}
                onKeyUp={this.handleFilterChannels.bind(this)}
                placeholder="Find a channel" />
       {this.props.channels.map(channel => {
