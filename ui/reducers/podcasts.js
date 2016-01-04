@@ -24,7 +24,7 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, { showDetail });
 
     case Actions.HIDE_PODCAST_DETAIL:
-      showDetail = _.reject(id => id === action.payload);
+      showDetail = _.reject(state.showDetail, id => id === action.payload);
       return Object.assign({}, state, { showDetail });
 
     case Actions.ADD_BOOKMARK:
