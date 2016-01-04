@@ -26,6 +26,10 @@ class Player extends React.Component {
     event.currentTarget.currentTime = this.props.player.currentTime;
   }
 
+  handleBookmark() {
+    this.props.onToggleBookmark();
+  }
+
   render() {
     const { player } = this.props;
     const { podcast } = player;
@@ -59,9 +63,10 @@ class Player extends React.Component {
             </Col>
             <Col xs={3} md={2} mdPush={2}>
               <ButtonGroup style={{ color: "#fff" }}>
-                <Button bsSize="sm">
+                {podcast.isBookmarked ? '' :
+                <Button bsSize="sm" onClick={this.handleBookmark.bind(this)}>
                     <Icon icon="bookmark" />
-                </Button>
+                </Button>}
                 <Button bsSize="sm" onClick={this.handleClose.bind(this)}>
                   <Icon icon="remove" />
                 </Button>

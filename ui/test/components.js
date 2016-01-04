@@ -72,7 +72,7 @@ describe('Podcast component', function() {
     const props = makePodcastProps(podcast, { showChannel: true });
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-object")
+    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-body")
     assert.equal(tags.length, 1)
     const h3 = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h3');
     assert.equal(h3.textContent, podcast.name);

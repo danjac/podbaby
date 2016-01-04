@@ -100,6 +100,7 @@ export class App extends React.Component {
       auth: bindActionCreators(actions.auth, dispatch),
       addChannel: bindActionCreators(actions.addChannel, dispatch),
       search: bindActionCreators(actions.search, dispatch),
+      bookmarks: bindActionCreators(actions.bookmarks, dispatch),
       player: bindActionCreators(actions.player, dispatch),
       alerts: bindActionCreators(actions.alerts, dispatch)
     }
@@ -130,6 +131,12 @@ export class App extends React.Component {
 
   handleClosePlayer() {
     this.actions.player.close(this.props.player);
+  }
+
+  handleTogglePlayerBookmark() {
+    if (this.props.player.podcast) {
+      this.actions.bookmarks.addBookmark(this.props.player.podcast.id);
+    }
   }
 
   handleUpdatePlayerTime(event) {
@@ -163,6 +170,7 @@ export class App extends React.Component {
           {pageContent}
           {this.props.player.isPlaying ?
             <Player player={this.props.player}
+                    onToggleBookmark={this.handleTogglePlayerBookmark.bind(this)}
                     onTimeUpdate={this.handleUpdatePlayerTime.bind(this)}
                     onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
 

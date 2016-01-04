@@ -13,6 +13,11 @@ export default function(state=initialState, action) {
         podcast: action.payload,
         isPlaying: !!action.payload
       });
+    case Actions.ADD_BOOKMARK:
+    case Actions.DELETE_BOOKMARK:
+      let isBookmarked = action.type === Actions.ADD_BOOKMARK;
+      let podcast = Object.assign({}, state.podcast, { isBookmarked: isBookmarked });
+      return Object.assign({}, state, { podcast });
     case Actions.PLAYER_TIME_UPDATE:
       return Object.assign({}, state, { currentTime: action.payload });
     case Actions.CLOSE_PLAYER:
