@@ -9,8 +9,10 @@ import {
   Button
 } from 'react-bootstrap';
 
+
 import * as actions from '../actions';
 import PodcastList from './podcasts';
+import Image from './image';
 import Icon from './icon';
 import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
@@ -50,11 +52,13 @@ export class Channel extends React.Component {
         <div className="media">
           <div className="media-left">
             <a href="#">
-              <img className="media-object"
-                   height={60}
-                   width={60}
-                   src={channel.image}
-                   alt={channel.title} />
+              <Image className="media-object"
+                     src={channel.image}
+                     errSrc='/static/podcast.png'
+                     imgProps={{
+                     height:60,
+                     width:60,
+                     alt:channel.title }} />
             </a>
           </div>
           <div className="media-body">

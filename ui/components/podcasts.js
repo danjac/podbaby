@@ -14,6 +14,7 @@ import {
 } from 'react-bootstrap';
 
 import Icon from './icon';
+import Image from './image';
 import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
 
@@ -123,11 +124,13 @@ export const Podcast = props => {
         {showChannel ? (
         <div className="media-left media-middle">
           <Link to={channelUrl}>
-            <img className="media-object"
-                 height={60}
-                 width={60}
-                 src={podcast.image}
-                 alt={podcast.name} />
+              <Image className="media-object"
+                     src={podcast.image}
+                     errSrc='/static/podcast.png'
+                     imgProps={{
+                     height:60,
+                     width:60,
+                     alt:podcast.name }} />
           </Link>
           </div>
           ) : '' }

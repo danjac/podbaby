@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -16,28 +17,33 @@ import {
 
 import  * as actions from '../actions';
 import PodcastList from './podcasts';
+import Image from './image';
 import Icon from './icon';
 import { sanitize, formatPubDate } from './utils';
 
 const ChannelItem = props => {
-  const { channel, createHref, subscribe } = props;
+  const { channel, subscribe } = props;
+  const url = `/podcasts/channel/${channel.id}/`;
+
   return (
     <Panel>
     <div className="media">
       <div className="media-left">
-        <a href="#">
-          <img className="media-object"
-               height={60}
-               width={60}
+        <Link to={url}>
+        <Image className="media-object"
                src={channel.image}
-               alt={channel.title} />
-        </a>
+               errSrc='/static/podcast.png'
+               imgProps={{
+               height:60,
+               width:60,
+               alt:channel.title }} />
+        </Link>
       </div>
       <div className="media-body">
         <Grid>
           <Row>
             <Col xs={6} md={9}>
-              <h4 className="media-heading"><a href={createHref("/podcasts/channel/" + channel.id + "/")}>{channel.title}</a></h4>
+              <h4 className="media-heading"><Link to={url}>{channel.title}</Link></h4>
             </Col>
             <Col xs={6} md={3}>
               <ButtonGroup>
@@ -83,7 +89,6 @@ export class Search extends React.Component {
   render() {
 
     const { dispatch, channels, podcasts, searchQuery } = this.props;
-    const { createHref } = this.props.history;
 
     const ifEmptyMsg = (
       <span><b>Hint:</b> Try searching by category e.g. <em>music</em> or <em>science</em> or by name e.g. <em>Radio Lab</em></span>
@@ -110,8 +115,7 @@ export class Search extends React.Component {
         return (
           <ChannelItem key={channel.id}
                        channel={channel}
-                       subscribe={subscribe}
-                       createHref={createHref} />
+                       subscribe={subscribe} />
         );
       })}
       {podcasts.length > 0 ? <hr /> : ''}

@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
+import Image from './image';
 import Icon from './icon';
 import Loading from './loading';
 
@@ -25,11 +26,14 @@ const ListItem = props => {
     <div className="media">
       <div className="media-left">
         <a href="#">
-          <img className="media-object"
-               height={60}
-               width={60}
+
+        <Image className="media-object"
                src={channel.image}
-               alt={channel.title} />
+               errSrc='/static/podcast.png'
+               imgProps={{
+               height:60,
+               width:60,
+               alt:channel.title }} />
         </a>
       </div>
       <div className="media-body">
