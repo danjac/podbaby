@@ -41,14 +41,13 @@ const ListItem = props => {
             <Col xs={6} md={3}>
               <ButtonGroup>
                 <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
-                        onClick={toggleSubscribe}><Icon icon={channel.isSubscribed ? 'trash' : 'plus'} /> {channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}</Button>
+                        onClick={toggleSubscribe}><Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}</Button>
               </ButtonGroup>
             </Col>
           </Row>
         </Grid>
       </div>
     </div>
-    {channel.description ? <Well style={{ marginTop: 20 }}>{channel.description}</Well> : ''}
   </Panel>
 
   );

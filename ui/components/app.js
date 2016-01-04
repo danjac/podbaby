@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import 'bootswatch/paper/bootstrap.min.css';
+import 'bootswatch/spacelab/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 import {
@@ -31,7 +31,7 @@ class MainNav extends React.Component {
     const { createHref, isActive } = this.props.history;
 
     return (
-      <Navbar fixedTop={true}>
+      <Navbar fixedTop inverse>
         <Navbar.Header>
           <Navbar.Brand>
             <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Icon icon="headphones" /> PodBaby</Link>
@@ -49,7 +49,7 @@ class MainNav extends React.Component {
                      href={createHref("/podcasts/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
             <NavItem active={isActive("/podcasts/bookmarks/")}
                      href={createHref("/podcasts/bookmarks/")}><Icon icon="bookmark" /> Bookmarks</NavItem>
-            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Icon icon="plus" /> Add new</NavItem>
+            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Icon icon="plus" /> Add a channel</NavItem>
           </Nav>
 
           <Nav pullRight>
@@ -130,6 +130,7 @@ const AlertList = props => {
   );
 };
 
+
 export class App extends React.Component {
 
   constructor(props) {
@@ -196,7 +197,6 @@ export class App extends React.Component {
           {pageContent}
           {this.props.player.isPlaying ?
             <Player player={this.props.player}
-                    createHref={createHref}
                     onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
 
           {alertList}

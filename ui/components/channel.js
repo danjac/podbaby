@@ -65,7 +65,7 @@ export class Channel extends React.Component {
         <ButtonGroup>
           <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
                   onClick={this.handleSubscribe.bind(this)}>
-            <Icon icon={channel.isSubscribed ? 'trash': 'ok'} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button>
+            <Icon icon={channel.isSubscribed ? 'unlink': 'link'} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button>
           <a className="btn btn-default" title="Link to RSS Feed" target="_blank" href={channel.url}>
             <Icon icon="rss" /> Link to RSS feed
           </a>

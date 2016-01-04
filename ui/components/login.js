@@ -38,7 +38,11 @@ export class RecoverPasswordModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
             <form className="form" onSubmit={this.handleSubmit.bind(this)}>
-              <Input required type="text" placeholder="Your username or email address" ref="identifier" />
+              <Input required
+                     type="text"
+                     placeholder="Your username or email address"
+                     help="We'll send you a new random password so you can log back in again."
+                     ref="identifier" />
               <ButtonGroup>
                 <Button bsStyle="primary" type="submit"><Icon icon="send" /> Send</Button>
                 <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>

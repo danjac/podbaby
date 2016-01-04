@@ -63,12 +63,6 @@ export class PodcastList extends React.Component {
             dispatch(actions.player.setPodcast(isPlaying ? null : podcast));
           };
 
-          const toggleSubscribe = event => {
-            event.preventDefault();
-            const action = podcast.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-            dispatch(action(podcast.channelId));
-          };
-
           const toggleBookmark = event => {
             event.preventDefault();
             const action = podcast.isBookmarked ? actions.bookmarks.deleteBookmark : actions.bookmarks.addBookmark;
@@ -90,8 +84,7 @@ export class PodcastList extends React.Component {
                           isShowingDetail={isShowingDetail}
                           toggleDetail={toggleDetail}
                           isPlaying={isPlaying}
-                          togglePlayer={togglePlayer}
-                          toggleSubscribe={toggleSubscribe} />
+                          togglePlayer={togglePlayer} />
         })}
         {pagination}
         </div>
@@ -107,19 +100,28 @@ export const Podcast = props => {
     isPlaying,
     isShowingDetail,
     togglePlayer,
-    toggleSubscribe,
     toggleDetail,
     toggleBookmark } = props;
 
   const channelUrl = `/podcasts/channel/${podcast.channelId}/`;
+  const title = <h4>{podcast.title}</h4>;
 
-  const header = showChannel ? <h3><Link to={channelUrl}>{podcast.name}</Link></h3> : <h3>{podcast.title}</h3>;
+  let header = title;
+
+  if (showChannel) {
+    header = (
+      <div>
+        <h3><Link to={`/podcasts/channel/${podcast.channelId}/`}>{podcast.name}</Link></h3>
+        {title}
+      </div>
+    );
+  }
 
   return (
-    <Panel bsStyle="primary" header={header}>
+    <Panel>
       <div className="media">
-        {showChannel ?
-        (<div className="media-left media-middle">
+        {showChannel ? (
+        <div className="media-left media-middle">
           <Link to={channelUrl}>
             <img className="media-object"
                  height={60}
@@ -127,37 +129,32 @@ export const Podcast = props => {
                  src={podcast.image}
                  alt={podcast.name} />
           </Link>
-          </div> ) : ''}
+          </div>
+          ) : '' }
         <div className="media-body">
           <Grid>
             <Row>
-              <Col xs={6} md={6}>
-                {showChannel ? <h4>{podcast.title}</h4> : ''}
-                <br /><b>{formatPubDate(podcast.pubDate)}</b>
+              <Col xs={6} md={9}>
+              {header}
+              <p><small><time dateTime={podcast.pubDate}>{formatPubDate(podcast.pubDate)}</time></small></p>
               </Col>
-              <Col xs={6} mdPush={2} md={3}>
+              <Col xs={6} md={3}>
                 <ButtonGroup>
                   <Button title={ isPlaying ? "Play": "Stop" } onClick={togglePlayer}><Icon icon={ isPlaying ? 'stop': 'play' }  /></Button>
                   <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Icon icon="download" /></a>
                   <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
                     <Icon icon={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
-                  {showChannel ? (<Button title={podcast.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={toggleSubscribe}>
-                    <Icon icon={podcast.isSubscribed ? "trash" : "plus"} title={podcast.isSubscribed ? 'Unsubscribe' : 'Subscribe'} />
-                  </Button>) : ''}
+                  {podcast.description ?
+                  <Button title={isShowingDetail ? 'Hide details' : 'Show details'} onClick={toggleDetail}><Icon icon="question" /></Button>
+                  : ''}
                 </ButtonGroup>
               </Col>
             </Row>
           </Grid>
         </div>
       </div>
-      {podcast.description ?
-      (<div style={{paddingTop: "30px"}}>
-        <Button className="form-control" onClick={toggleDetail}>
-        <Icon icon={isShowingDetail ? 'chevron-up' : 'chevron-down'} />
-        </Button>
-      </div>) : ''}
-      {podcast.description && isShowingDetail  ? <Well dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+      {podcast.description && isShowingDetail  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
   </Panel>
   );
 };

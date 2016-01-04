@@ -4,22 +4,31 @@
         <link rel="stylesheet" href="{{ .dynamicContentURL }}main.css">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <style>
+        html, body { height: 100%; }
         body { padding-top: 80px; }
         @font-face {
             font-family: GoodDog;
             src: url("{{ .staticURL }}GoodDog.otf") format("opentype");
         }
+        #app {
+            min-height: 100%;
+            height: auto !important;
+            height: 100%;
+        }
+        #credits {
+            height: 150px;
+        }
         </style>
     </head>
-  <body>
+    <body>
         <div id="app"></div>
-        <footer>
-            <div class="container text-center">
-                <p class="text-muted credit">
-                &copy; Dan Jacob 2016 <a href="https://github.com/danjac/podbaby">Github</a> <b>This site uses cookies.</b>
-                </p>
-            </div>
-        </footer>
+      <footer id="credits">
+          <div class="container text-center">
+              <p class="text-muted credit">
+              &copy; Dan Jacob 2016 <a href="https://github.com/danjac/podbaby">Github</a> <b>This site uses <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">cookies</a>.</b>
+              </p>
+          </div>
+      </footer>
     </body>
     <script>
     window.__ENV__ = "";

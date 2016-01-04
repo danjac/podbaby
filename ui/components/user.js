@@ -3,12 +3,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
-    ButtonInput,
     Input,
     Button
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
+import Icon from './icon';
 
 export class User extends React.Component {
 
@@ -60,9 +60,7 @@ export class User extends React.Component {
                    type="email"
                    required
                    defaultValue={this.props.auth.email}  />
-            <ButtonInput bsStyle="primary"
-                         type="submit"
-                         value="Save" />
+                 <Button bsStyle="primary" className="form-control" type="submit"><Icon icon="save" /> Save new email address</Button>
         </form>
         <h3>Change my password</h3>
         <form className="form form-vertical" onSubmit={this.handleSubmitPassword.bind(this)}>
@@ -77,15 +75,16 @@ export class User extends React.Component {
                    placeholder="New password"
                    required />
 
-            <ButtonInput bsStyle="primary"
-                         type="submit"
-                         value="Save" />
+                 <Button bsStyle="primary" className="form-control" type="submit"><Icon icon="save" /> Save new password</Button>
         </form>
         <hr />
         <div>
           <Button bsStyle="danger"
                   className="form-control"
-                  onClick={this.handleDelete.bind(this)}>Delete my account</Button>
+                  onClick={this.handleDelete.bind(this)}><Icon icon="trash" /> Delete my account</Button>
+          <p className="text-center">
+            <b>This will completely and irreversably delete your account, including all your subscriptions and bookmarks.</b>
+          </p>
         </div>
       </div>
     );

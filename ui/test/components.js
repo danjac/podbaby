@@ -67,31 +67,6 @@ describe('Podcast component', function() {
     assert.include(titles, 'Add to bookmarks');
   });
 
-  it('should show unsubcribe button if user is subscribed', function() {
-
-    const podcast = makePodcast({ isSubscribed: true });
-    const props = makePodcastProps(podcast);
-    const component = <Wrapper><Podcast {...props} /></Wrapper>;
-    const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
-
-    const titles = buttons.map(node => node.getAttribute("title"));
-    assert.include(titles, 'Unsubscribe');
-  });
-
-  it('should show subcribe button if user is not subscribed', function() {
-
-    const podcast = makePodcast({ isSubscribed: false });
-    const props = makePodcastProps(podcast);
-    const component = <Wrapper><Podcast {...props} /></Wrapper>;
-    const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
-
-    const titles = buttons.map(node => node.getAttribute("title"));
-    assert.include(titles, 'Subscribe');
-  });
-
-
   it('should show channel if showChannel is true', function() {
     const podcast = makePodcast();
     const props = makePodcastProps(podcast, { showChannel: true });

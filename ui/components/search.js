@@ -42,7 +42,7 @@ const ChannelItem = props => {
             <Col xs={6} md={3}>
               <ButtonGroup>
                 <Button title={channel.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={subscribe}>
-                  <Icon icon={channel.isSubscribed ? "trash" : "ok"} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+                  <Icon icon={channel.isSubscribed ? "unlink" : "link"} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
                 </Button>
               </ButtonGroup>
             </Col>
@@ -50,7 +50,6 @@ const ChannelItem = props => {
         </Grid>
       </div>
     </div>
-    {channel.description ? <Well style={{ marginTop: 20 }}>{channel.description}</Well> : ''}
   </Panel>
   );
 };

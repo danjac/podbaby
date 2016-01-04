@@ -47,6 +47,13 @@ export class AddChannelModal extends React.Component {
 
   render() {
     const { show, onClose, container, pending } = this.props;
+
+    const helpText = (
+      <div>Enter the URL of the RSS feed you want to subscribe to, for example:
+        <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
+      </div>
+    );
+
     return (
       <Modal show={show}
              aria-labelledby="add-channel-modal-title"
@@ -62,7 +69,10 @@ export class AddChannelModal extends React.Component {
             </div>
             ) : (
             <form className="form" onSubmit={this.handleAdd.bind(this)}>
-              <Input required type="text" placeholder="RSS URL of the channel" ref="url" />
+              <Input required
+                     type="text"
+                     ref="url"
+                     help={helpText} />
               <ButtonGroup>
               <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add channel</Button>
               <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>
