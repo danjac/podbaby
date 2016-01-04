@@ -146,7 +146,7 @@ export const Podcast = props => {
                     <Icon icon={podcast.isBookmarked ? 'remove' : 'bookmark'} />
                   </Button>
                   {podcast.description ?
-                  <Button title={isShowingDetail ? 'Hide details' : 'Show details'} onClick={toggleDetail}><Icon icon="question" /></Button>
+                  <Button title={isShowingDetail ? 'Hide details' : 'Show details'} onClick={toggleDetail}><Icon icon={isShowingDetail ? 'compress': 'expand'} /></Button>
                   : ''}
                 </ButtonGroup>
               </Col>
