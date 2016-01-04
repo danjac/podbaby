@@ -83,7 +83,7 @@ export class User extends React.Component {
                   className="form-control"
                   onClick={this.handleDelete.bind(this)}><Icon icon="trash" /> Delete my account</Button>
           <p className="text-center">
-            <b>This will completely and irreversably delete your account, including all your subscriptions and bookmarks.</b>
+            <b>This will completely and irreversibly delete your account, including all your subscriptions and bookmarks.</b>
           </p>
         </div>
       </div>

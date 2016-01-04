@@ -72,6 +72,12 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	tx, err := s.DB.Begin()
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
 	if isNewChannel {
 		channel = &models.Channel{
 			URL: decoder.URL,
@@ -88,6 +94,11 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		channel.IsSubscribed = true
+	}
+
+	if err := tx.Commit(); err != nil {
+		s.abort(w, r, err)
+		return
 	}
 
 	var status int

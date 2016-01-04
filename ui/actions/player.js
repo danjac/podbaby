@@ -1,19 +1,33 @@
 import { Actions, Storage } from '../constants';
 import { createAction } from './utils';
 
-export function setPodcast(podcast) {
-  if (podcast) {
-    window.sessionStorage.setItem(Storage.CURRENT_PODCAST, JSON.stringify(podcast));
-  } else {
+const removePlayerFromSession = () => {
     window.sessionStorage.removeItem(Storage.CURRENT_PODCAST);
-  }
+};
+
+const savePlayerToSession = player => {
+    window.sessionStorage.setItem(Storage.CURRENT_PODCAST, JSON.stringify(player));
+};
+
+export function updateTime(player, currentTime) {
+  savePlayerToSession(player);
+  return createAction(Actions.PLAYER_TIME_UPDATE, currentTime);
+}
+
+export function setPodcast(player, podcast) {
+  savePlayerToSession(player);
   return createAction(Actions.CURRENTLY_PLAYING, podcast);
+}
+
+export function close(player, podcast) {
+  removePlayerFromSession();
+  return createAction(Actions.CLOSE_PLAYER);
 }
 
 // reload player from session
 export function reloadPlayer() {
   const data = window.sessionStorage.getItem(Storage.CURRENT_PODCAST);
-  const podcast = data ? JSON.parse(data) : null;
-  return createAction(Actions.CURRENTLY_PLAYING, podcast);
+  const player = data ? JSON.parse(data) : null;
+  return createAction(Actions.RELOAD_PLAYER, player);
 }
 
