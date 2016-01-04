@@ -37,7 +37,7 @@ func (db *defaultPodcastDBImpl) Search(query string, userID int64) ([]models.Pod
 
 func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(p.id) FROM podcasts p
+	sql := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
   JOIN subscriptions s ON s.channel_id = p.channel_id
   WHERE s.user_id=$1`
 
@@ -74,7 +74,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 
 func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(p.id) FROM podcasts p
+	sql := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
   JOIN bookmarks b ON b.podcast_id = p.id
   WHERE b.user_id=$1`
 
@@ -88,7 +88,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT DISTINCT p.id, p.title, p.enclosure_url, p.description,
+	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
     EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
       AS is_subscribed,
@@ -97,6 +97,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id
     WHERE b.user_id=$1
+    GROUP BY p.id, p.title, c.title, c.image
     ORDER BY p.title
     OFFSET $2 LIMIT $3`
 

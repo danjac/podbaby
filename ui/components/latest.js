@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import * as actions from '../actions';
 
@@ -22,11 +23,9 @@ export class Latest extends React.Component {
 
   render() {
 
-    const { createHref } = this.props.history;
-
     const ifEmptyMsg = (
       <span>You haven't subscribed to any channels yet.
-        Discover new channels and podcasts <a href={createHref("/podcasts/search/")}>here</a>.</span>);
+        Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
     return <PodcastList actions={actions}
                         ifEmpty={ifEmptyMsg}
                         onSelectPage={this.handleSelectPage.bind(this)}

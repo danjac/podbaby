@@ -143,7 +143,7 @@ export const Podcast = props => {
               </Col>
               <Col xs={6} md={3}>
                 <ButtonGroup>
-                  <Button title={ isPlaying ? "Play": "Stop" } onClick={togglePlayer}><Icon icon={ isPlaying ? 'stop': 'play' }  /></Button>
+                  <Button title={ isPlaying ? "Stop": "Play" } onClick={togglePlayer}><Icon icon={ isPlaying ? 'stop': 'play' }  /></Button>
                   <a title="Download this podcast" className="btn btn-default" href={podcast.enclosureUrl}><Icon icon="download" /></a>
                   <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
                     <Icon icon={podcast.isBookmarked ? 'remove' : 'bookmark'} />
