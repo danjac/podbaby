@@ -18,7 +18,7 @@ export class Recent extends React.Component {
     event.preventDefault();
     const { dispatch } = this.props;
     const page = selectedEvent.eventKey;
-    dispatch(actions.plays.getRecentlyPlayed());
+    dispatch(actions.plays.getRecentlyPlayed(page));
   }
 
   render() {
