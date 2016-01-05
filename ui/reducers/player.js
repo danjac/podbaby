@@ -11,7 +11,8 @@ export default function(state=initialState, action) {
     case Actions.CURRENTLY_PLAYING:
       return Object.assign({}, state, {
         podcast: action.payload,
-        isPlaying: !!action.payload
+        isPlaying: !!action.payload,
+        currentTime: 0
       });
     case Actions.ADD_BOOKMARK:
     case Actions.DELETE_BOOKMARK:
