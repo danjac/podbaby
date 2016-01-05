@@ -48,7 +48,7 @@ class Player extends React.Component {
         }}>
         <Grid>
           <Row>
-            <Col xs={6} md={6}>
+            <Col xs={6} md={5}>
               <b><Link to={`/podcasts/channel/${podcast.channelId}/`}>{podcast.name}</Link> : {podcast.title}</b>
             </Col>
             <Col xs={3} md={4}>
@@ -61,8 +61,12 @@ class Player extends React.Component {
                 Download from <a href="#">here</a>.
               </audio>
             </Col>
-            <Col xs={3} md={2} mdPush={2}>
+            <Col xs={3} md={3} mdPush={2}>
               <ButtonGroup style={{ color: "#fff" }}>
+                <a download
+                   title="Download this podcast"
+                   className="btn btn-sm btn-default"
+                   href={podcast.enclosureUrl}><Icon icon="download" /></a>
                 {podcast.isBookmarked ? '' :
                 <Button bsSize="sm" onClick={this.handleBookmark.bind(this)}>
                     <Icon icon="bookmark" />
