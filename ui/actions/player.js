@@ -1,3 +1,4 @@
+import * as api from '../api';
 import { Actions, Storage } from '../constants';
 import { createAction } from './utils';
 
@@ -15,7 +16,12 @@ export function updateTime(player, currentTime) {
 }
 
 export function setPodcast(player, podcast) {
-  savePlayerToSession(player);
+  if (podcast) {
+    api.nowPlaying(podcast.id);
+    savePlayerToSession(player);
+  } else {
+    removePlayerFromSession();
+  }
   return createAction(Actions.CURRENTLY_PLAYING, podcast);
 }
 

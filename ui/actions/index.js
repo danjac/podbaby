@@ -10,6 +10,7 @@ import * as channel from './channel';
 import * as subscribe from './subscribe';
 import * as bookmarks from './bookmarks';
 import * as showDetail from './show_detail';
+import * as plays from './plays';
 import * as podcasts from './podcasts';
 
 export {
@@ -25,5 +26,6 @@ export {
   subscribe,
   bookmarks,
   showDetail,
+  plays,
   alerts,
 };

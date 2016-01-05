@@ -70,6 +70,13 @@ func (s *Server) Handler() http.Handler {
 	bookmarks.Handle("/{id}/", s.requireAuth(s.addBookmark)).Methods("POST")
 	bookmarks.Handle("/{id}/", s.requireAuth(s.removeBookmark)).Methods("DELETE")
 
+	// plays
+
+	plays := api.PathPrefix("/plays/").Subrouter()
+
+	plays.Handle("/", s.requireAuth(s.getPlays)).Methods("GET")
+	plays.Handle("/{id}/", s.requireAuth(s.addPlay)).Methods("POST")
+
 	// podcasts
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()

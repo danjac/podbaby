@@ -1,0 +1,27 @@
+package server
+
+import "net/http"
+
+func (s *Server) addPlay(w http.ResponseWriter, r *http.Request) {
+	podcastID, err := getInt64(r, "id")
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	user, _ := getUser(r)
+	if err := s.DB.Plays.Create(podcastID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusCreated, "played")
+}
+
+func (s *Server) getPlays(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	result, err := s.DB.Podcasts.SelectPlayed(user.ID, getPage(r))
+	if err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.JSON(w, http.StatusOK, result)
+}

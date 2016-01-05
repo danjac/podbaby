@@ -48,6 +48,14 @@ export function getLatestPodcasts(page=1) {
   return axios.get("/api/podcasts/latest/", { params: { page } });
 }
 
+export function nowPlaying(id) {
+  return axios.post(`/api/plays/${id}/`);
+}
+
+export function getRecentlyPlayed(page=1) {
+  return axios.get("/api/plays/", { params: { page } });
+}
+
 export function subscribe(id) {
   return axios.post(`/api/subscriptions/${id}/`);
 }

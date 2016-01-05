@@ -7,6 +7,7 @@ import Login from '../components/login';
 import Signup from '../components/signup';
 import Search from '../components/search';
 import Latest from '../components/latest';
+import Recent from '../components/recent';
 import Subscriptions from '../components/subscriptions';
 import Bookmarks from '../components/bookmarks';
 import Channel from '../components/channel';
@@ -49,6 +50,7 @@ export default function(store, history) {
           <Route path="/podcasts/search/" component={Search} />
           <Route path="/podcasts/subscriptions/" component={Subscriptions} />
           <Route path="/podcasts/bookmarks/" component={Bookmarks} />
+          <Route path="/podcasts/recent/" component={Recent} />
           <Route path="/podcasts/channel/:id/"
                  component={Channel}
                  onEnter={getNextChannel} />

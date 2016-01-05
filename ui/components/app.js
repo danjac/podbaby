@@ -5,9 +5,6 @@ import 'bootswatch/spacelab/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 import {
-  Nav,
-  NavItem,
-  Navbar,
   Badge,
   Alert,
   Grid,
@@ -20,51 +17,10 @@ import { connect } from 'react-redux';
 import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
+
 import Player from './player';
-import Icon from './icon';
+import NavBar from './navbar';
 import AddChannelModal from './add_channel';
-
-class MainNav extends React.Component {
-
-  render() {
-
-    const { auth } = this.props;
-    const { createHref, isActive } = this.props.history;
-
-    return (
-      <Navbar fixedTop inverse>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Icon icon="headphones" /> PodBaby</Link>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-
-        <Navbar.Collapse>
-          <Nav pullLeft>
-            <NavItem active={isActive("/podcasts/search/")}
-              href={createHref("/podcasts/search/")}><Icon icon="search" /> Search</NavItem>
-            <NavItem active={isActive("/podcasts/new/")}
-                     href={createHref("/podcasts/new/")}><Icon icon="flash" /> New episodes</NavItem>
-            <NavItem active={isActive("/podcasts/subscriptions/")}
-                     href={createHref("/podcasts/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
-            <NavItem active={isActive("/podcasts/bookmarks/")}
-                     href={createHref("/podcasts/bookmarks/")}><Icon icon="bookmark" /> Bookmarks</NavItem>
-            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Icon icon="plus" /> Add a channel</NavItem>
-          </Nav>
-
-          <Nav pullRight>
-            <NavItem active={isActive("/user/")}
-                      href={createHref("/user/")}><Icon icon="cog" /> {auth.name}</NavItem>
-            <NavItem href="#" onClick={this.props.onLogout}><Icon icon="sign-out" /> Logout</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-
-      </Navbar>
-    );
-  }
-}
-
 
 
 const AlertList = props => {
@@ -164,8 +120,8 @@ export class App extends React.Component {
     if (isLoggedIn) {
       return (
         <div>
-          <MainNav onLogout={this.handleLogout.bind(this)}
-                   onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
+          <NavBar onLogout={this.handleLogout.bind(this)}
+                  onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
                    {...this.props} />
           {pageContent}
           {this.props.player.isPlaying ?

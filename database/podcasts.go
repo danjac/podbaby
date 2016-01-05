@@ -10,6 +10,7 @@ type PodcastDB interface {
 	SelectSubscribed(int64, int64) (*models.PodcastList, error)
 	SelectByChannelID(int64, int64, int64) (*models.PodcastList, error)
 	SelectBookmarked(int64, int64) (*models.PodcastList, error)
+	SelectPlayed(int64, int64) (*models.PodcastList, error)
 	Search(string, int64) ([]models.Podcast, error)
 	Create(*models.Podcast) error
 }
@@ -32,6 +33,46 @@ func (db *defaultPodcastDBImpl) Search(query string, userID int64) ([]models.Pod
 
 	var podcasts []models.Podcast
 	return podcasts, db.Select(&podcasts, sql, userID, query)
+
+}
+
+func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.PodcastList, error) {
+
+	sql := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
+    JOIN plays pl ON pl.podcast_id = p.id
+    WHERE pl.user_id=$1`
+
+	var numRows int64
+
+	if err := db.QueryRow(sql, userID).Scan(&numRows); err != nil {
+		return nil, err
+	}
+
+	result := &models.PodcastList{
+		Page: models.NewPage(page, numRows),
+	}
+
+	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, p.pub_date, c.title AS name, c.image,
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
+      AS is_bookmarked,
+    EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
+      AS is_subscribed
+    FROM podcasts p
+    JOIN plays pl ON pl.podcast_id = p.id
+    JOIN channels c ON c.id = p.channel_id
+    WHERE pl.user_id=$1
+    GROUP BY p.id, c.title, c.image, pl.created_at
+    ORDER BY pl.created_at DESC
+    OFFSET $2 LIMIT $3`
+
+	err := db.Select(
+		&result.Podcasts,
+		sql,
+		userID,
+		result.Page.Offset,
+		result.Page.PageSize)
+	return result, err
 
 }
 

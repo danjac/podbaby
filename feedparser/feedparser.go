@@ -98,6 +98,7 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 			continue
 		}
 		podcast.EnclosureURL = item.Enclosures[0].Url
+		// unfortunately brokenness in date parsing affects some RSS formats
 		pubDate, _ := item.ParsedPubDate()
 		podcast.PubDate = pubDate
 

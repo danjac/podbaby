@@ -50,6 +50,7 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, { podcasts });
 
     case Actions.GET_BOOKMARKS_SUCCESS:
+    case Actions.GET_RECENT_PLAYS_SUCCESS:
     case Actions.LATEST_PODCASTS_SUCCESS:
     case Actions.GET_CHANNEL_SUCCESS:
 
@@ -68,6 +69,7 @@ export default function(state=initialState, action) {
     case Actions.PODCASTS_REQUEST:
     case Actions.UNLOAD_PODCASTS:
     case Actions.GET_BOOKMARKS_FAILURE:
+    case Actions.GET_RECENT_PLAYS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:
       return initialState;
   }
