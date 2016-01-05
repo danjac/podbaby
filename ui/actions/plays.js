@@ -2,6 +2,15 @@ import * as api from '../api';
 
 import { Actions } from '../constants';
 import { createAction } from './utils';
+import * as alerts from './alerts';
+
+export function clearAll() {
+  api.clearAllPlayed();
+  return dispatch => {
+    alerts.success("All podcasts have been removed from your recently played list");
+    dispatch(createAction(Actions.CLEAR_RECENT_PLAYS));
+  };
+}
 
 export function getRecentlyPlayed(page=1) {
   return dispatch => {

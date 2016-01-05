@@ -78,9 +78,7 @@ export class Search extends React.Component {
   handleSearch(event) {
     event.preventDefault();
     const value = this.refs.query.getValue();
-    if (value) {
-      this.search(value);
-    }
+    this.search(_.trim(value));
   }
 
   handleFocus(event) {

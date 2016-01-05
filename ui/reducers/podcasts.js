@@ -66,11 +66,18 @@ export default function(state=initialState, action) {
         isLoading: false
       });
 
+    case Actions.CLEAR_RECENT_PLAYS:
+      return Object.assign({}, state, { podcasts: [] });
+
+    case Actions.CLEAR_SEARCH:
+
+    case Actions.SEARCH_REQUEST:
     case Actions.PODCASTS_REQUEST:
-    case Actions.UNLOAD_PODCASTS:
+
     case Actions.GET_BOOKMARKS_FAILURE:
     case Actions.GET_RECENT_PLAYS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:
+
       return initialState;
   }
   return state;

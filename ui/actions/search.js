@@ -8,15 +8,11 @@ import { requestPodcasts } from './podcasts';
 export function search (query) {
 
   if (!query) {
-    return createAction(Actions.SEARCH_SUCCESS, {
-      channels: [],
-      podcasts: [],
-      isLoading: false
-    });
+    return createAction(Actions.CLEAR_SEARCH);
   }
   return (dispatch, getState) => {
     dispatch(requestPodcasts());
-    dispatch(createAction(Actions.SEARCH, query));
+    dispatch(createAction(Actions.SEARCH_REQUEST, query));
     api.search(query)
     .then(result => {
       dispatch(createAction(Actions.SEARCH_SUCCESS, result.data));

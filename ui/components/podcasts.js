@@ -38,7 +38,7 @@ export class PodcastList extends React.Component {
       return <Loading />;
     }
 
-    const emptyMsg = typeof ifEmpty === "undefined" ? 'No podcasts found' : '';
+    const emptyMsg = typeof ifEmpty === "undefined" ? 'No podcasts found' : ifEmpty;
     if (_.isEmpty(podcasts)) {
       return <div>{emptyMsg}</div>
     }

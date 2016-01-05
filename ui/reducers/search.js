@@ -18,7 +18,10 @@ export default function (state=initialState, action) {
         }),
       });
 
-    case Actions.SEARCH:
+    case Actions.CLEAR_SEARCH:
+      return initialState;
+
+    case Actions.SEARCH_REQUEST:
       return Object.assign({}, state, { query: action.payload });
 
     case Actions.SEARCH_SUCCESS:

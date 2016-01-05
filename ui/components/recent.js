@@ -2,31 +2,56 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { Button } from 'react-bootstrap';
+import _ from 'lodash';
 
 import * as actions from '../actions';
 
+import Icon from './icon';
 import PodcastList from './podcasts';
 
 export class Recent extends React.Component {
 
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     const { dispatch } = this.props;
-    dispatch(actions.plays.getRecentlyPlayed());
+    this.actions = bindActionCreators(actions.plays, dispatch);
+  }
+
+  componentDidMount() {
+    this.actions.getRecentlyPlayed();
   }
 
   handleSelectPage(event, selectedEvent) {
     event.preventDefault();
-    const { dispatch } = this.props;
     const page = selectedEvent.eventKey;
-    dispatch(actions.plays.getRecentlyPlayed(page));
+    this.actions.getRecentlyPlayed(page);
+  }
+
+  handleClearAll(event) {
+    event.preventDefault();
+    if (window.confirm("Are you sure you want to remove all the podcasts in your recently played list?")) {
+      this.actions.clearAll();
+    }
   }
 
   render() {
 
-    return <PodcastList actions={actions}
-                        ifEmpty="No recently played podcasts"
-                        onSelectPage={this.handleSelectPage.bind(this)}
-                        showChannel={true} {...this.props} />;
+    return (
+        <div>
+          <PodcastList actions={actions}
+                       ifEmpty="No recently played podcasts"
+                       onSelectPage={this.handleSelectPage.bind(this)}
+                       showChannel={true} {...this.props} />
+          {!_.isEmpty(this.props.podcasts) && !this.props.isLoading ?
+          <Button className="form-control"
+                  bsStyle="primary"
+                  onClick={this.handleClearAll.bind(this)}>
+                  <Icon icon="trash" /> Clear my recently played list
+          </Button> : ''}
+        </div>
+      );
+
   }
 }
 

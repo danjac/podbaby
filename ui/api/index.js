@@ -56,6 +56,10 @@ export function getRecentlyPlayed(page=1) {
   return axios.get("/api/plays/", { params: { page } });
 }
 
+export function clearAllPlayed() {
+  return axios.delete("/api/plays/");
+}
+
 export function subscribe(id) {
   return axios.post(`/api/subscriptions/${id}/`);
 }

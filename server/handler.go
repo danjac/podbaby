@@ -75,6 +75,7 @@ func (s *Server) Handler() http.Handler {
 	plays := api.PathPrefix("/plays/").Subrouter()
 
 	plays.Handle("/", s.requireAuth(s.getPlays)).Methods("GET")
+	plays.Handle("/", s.requireAuth(s.deleteAllPlays)).Methods("DELETE")
 	plays.Handle("/{id}/", s.requireAuth(s.addPlay)).Methods("POST")
 
 	// podcasts

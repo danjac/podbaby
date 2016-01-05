@@ -25,3 +25,12 @@ func (s *Server) getPlays(w http.ResponseWriter, r *http.Request) {
 	}
 	s.Render.JSON(w, http.StatusOK, result)
 }
+
+func (s *Server) deleteAllPlays(w http.ResponseWriter, r *http.Request) {
+	user, _ := getUser(r)
+	if err := s.DB.Plays.DeleteAll(user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	s.Render.Text(w, http.StatusOK, "all plays removed")
+}
