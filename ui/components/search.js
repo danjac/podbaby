@@ -72,6 +72,7 @@ export class Search extends React.Component {
   componentDidMount() {
     const query = this.props.location.query.q || "";
     this.search(query);
+    this.refs.query.getInputDOMNode().focus();
   }
 
   handleSearch(event) {
@@ -90,14 +91,9 @@ export class Search extends React.Component {
 
     const { dispatch, channels, podcasts, searchQuery } = this.props;
 
-    const ifEmptyMsg = (
-      <span><b>Hint:</b> Try searching by category e.g. <em>music</em> or <em>science</em> or by name e.g. <em>Radio Lab</em></span>
-    );
-
     return (
     <div>
       <form className="form" onSubmit={this.handleSearch.bind(this)}>
-
         <Input type="search"
                ref="query"
                onClick={this.handleFocus.bind(this)}
@@ -122,7 +118,7 @@ export class Search extends React.Component {
       {searchQuery ?
         <PodcastList actions={actions}
                      showChannel={true}
-                     ifEmpty={ifEmptyMsg}
+                     ifEmpty=''
                       {...this.props} /> : '' }
     </div>
     );

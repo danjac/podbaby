@@ -68,6 +68,7 @@ export class Subscriptions extends React.Component {
 
   componentDidMount() {
     this.actions.getChannels();
+    this.refs.filter.getInputDOMNode().focus();
   }
 
   handleFilterChannels() {

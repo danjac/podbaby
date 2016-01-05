@@ -38,8 +38,9 @@ export class PodcastList extends React.Component {
       return <Loading />;
     }
 
+    const emptyMsg = typeof ifEmpty === "undefined" ? 'No podcasts found' : '';
     if (_.isEmpty(podcasts)) {
-      return <div>{ifEmpty || "No podcasts found"}</div>
+      return <div>{emptyMsg}</div>
     }
 
     const pagination = (
