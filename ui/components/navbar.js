@@ -32,10 +32,10 @@ class NavBar extends React.Component {
 
         <Navbar.Collapse>
           <Nav pullLeft>
-            <NavItem active={isActive("/podcasts/search/")}
-              href={createHref("/podcasts/search/")}><Icon icon="search" /> Search</NavItem>
             <NavItem active={isActive("/podcasts/new/")}
                      href={createHref("/podcasts/new/")}><Icon icon="flash" /> New episodes</NavItem>
+            <NavItem active={isActive("/podcasts/search/")}
+              href={createHref("/podcasts/search/")}><Icon icon="search" /> Search</NavItem>
             <NavItem active={isActive("/podcasts/subscriptions/")}
                      href={createHref("/podcasts/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
             <NavItem active={isActive("/podcasts/bookmarks/")}
