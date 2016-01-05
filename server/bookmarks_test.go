@@ -21,6 +21,10 @@ func (db *mockPodcastsDB) SelectSubscribed(_, _ int64) (*models.PodcastList, err
 	return nil, nil
 }
 
+func (db *mockPodcastsDB) SelectPlayed(_, _ int64) (*models.PodcastList, error) {
+	return nil, nil
+}
+
 func (db *mockPodcastsDB) SelectByChannelID(_, _, _ int64) (*models.PodcastList, error) {
 	return nil, nil
 }
