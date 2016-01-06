@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { pushPath } from 'redux-simple-router';
 
 import * as actions from '../actions';
+import { bindAllActionCreators } from '../actions/utils';
 
 import Player from './player';
 import NavBar from './navbar';
@@ -51,15 +52,7 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     const { dispatch } = this.props;
-
-    this.actions = {
-      auth: bindActionCreators(actions.auth, dispatch),
-      addChannel: bindActionCreators(actions.addChannel, dispatch),
-      search: bindActionCreators(actions.search, dispatch),
-      bookmarks: bindActionCreators(actions.bookmarks, dispatch),
-      player: bindActionCreators(actions.player, dispatch),
-      alerts: bindActionCreators(actions.alerts, dispatch)
-    }
+    this.actions = bindAllActionCreators(actions, dispatch);
   }
 
   handleLogout(event) {

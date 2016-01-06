@@ -66,10 +66,6 @@ export class Subscriptions extends React.Component {
     this.actions = bindActionCreators(actions.channels, dispatch);
   }
 
-  componentDidMount() {
-    this.actions.getChannels();
-  }
-
   handleFilterChannels() {
     const value = _.trim(this.refs.filter.getValue());
     this.actions.filterChannels(value);

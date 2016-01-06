@@ -9,11 +9,6 @@ import PodcastList from './podcasts';
 
 export class Latest extends React.Component {
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(actions.latest.getLatestPodcasts());
-  }
-
   handleSelectPage(event, selectedEvent) {
     event.preventDefault();
     const { dispatch } = this.props;

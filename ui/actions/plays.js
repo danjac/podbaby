@@ -7,7 +7,7 @@ import * as alerts from './alerts';
 export function clearAll() {
   api.clearAllPlayed();
   return dispatch => {
-    alerts.success("All podcasts have been removed from your recently played list");
+    dispatch(alerts.success("All podcasts have been removed from your recently played list"));
     dispatch(createAction(Actions.CLEAR_RECENT_PLAYS));
   };
 }

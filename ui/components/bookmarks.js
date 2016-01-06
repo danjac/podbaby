@@ -9,11 +9,6 @@ import PodcastList from './podcasts';
 
 export class Bookmarks extends React.Component {
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(actions.bookmarks.getBookmarks());
-  }
-
   handleSelectPage(event, selectedEvent) {
     event.preventDefault();
     const { dispatch } = this.props;

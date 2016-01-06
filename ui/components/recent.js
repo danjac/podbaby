@@ -18,10 +18,6 @@ export class Recent extends React.Component {
     this.actions = bindActionCreators(actions.plays, dispatch);
   }
 
-  componentDidMount() {
-    this.actions.getRecentlyPlayed();
-  }
-
   handleSelectPage(event, selectedEvent) {
     event.preventDefault();
     const page = selectedEvent.eventKey;
