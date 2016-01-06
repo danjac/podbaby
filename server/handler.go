@@ -54,6 +54,8 @@ func (s *Server) Handler() http.Handler {
 	search := api.PathPrefix("/search/").Subrouter()
 
 	search.Handle("/", s.requireAuth(s.search)).Methods("GET")
+	search.Handle("/bookmarks/", s.requireAuth(s.searchBookmarks)).Methods("GET")
+	search.Handle("/channel/{id}/", s.requireAuth(s.searchChannel)).Methods("GET")
 
 	// subscriptions
 

@@ -16,7 +16,7 @@ type Podcast struct {
 	Description  string    `db:"description" json:"description"`
 	EnclosureURL string    `db:"enclosure_url" json:"enclosureUrl"`
 	PubDate      time.Time `db:"pub_date" json:"pubDate"`
-	CreatedAt    time.Time `db:"created_at" json:"createdAt"`
 	IsBookmarked bool      `db:"is_bookmarked" json:"isBookmarked"`
 	IsSubscribed bool      `db:"is_subscribed" json:"isSubscribed"`
+	CreatedAt    time.Time `db:"created_at" json:"-"`
 }

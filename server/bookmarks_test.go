@@ -33,6 +33,14 @@ func (db *mockPodcastsDB) Search(_ string, _ int64) ([]models.Podcast, error) {
 	return nil, nil
 }
 
+func (db *mockPodcastsDB) SearchBookmarked(_ string, _ int64) ([]models.Podcast, error) {
+	return nil, nil
+}
+
+func (db *mockPodcastsDB) SearchByChannelID(_ string, _, _ int64) ([]models.Podcast, error) {
+	return nil, nil
+}
+
 func (db *mockPodcastsDB) Create(_ *models.Podcast) error { return nil }
 
 func (db *mockPodcastsDB) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {

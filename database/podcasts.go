@@ -5,6 +5,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const maxSearchRows = 20
+
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
 	SelectSubscribed(int64, int64) (*models.PodcastList, error)
@@ -12,6 +14,8 @@ type PodcastDB interface {
 	SelectBookmarked(int64, int64) (*models.PodcastList, error)
 	SelectPlayed(int64, int64) (*models.PodcastList, error)
 	Search(string, int64) ([]models.Podcast, error)
+	SearchBookmarked(string, int64) ([]models.Podcast, error)
+	SearchByChannelID(string, int64, int64) ([]models.Podcast, error)
 	Create(*models.Podcast) error
 }
 
@@ -24,15 +28,42 @@ func (db *defaultPodcastDBImpl) Search(query string, userID int64) ([]models.Pod
 	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, p.pub_date, c.title AS name, c.image,
     EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
-      AS is_bookmarked,
-    EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
-      AS is_subscribed
+      AS is_bookmarked
     FROM podcasts p, plainto_tsquery($2) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT 20`
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
 
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, sql, userID, query)
+	return podcasts, db.Select(&podcasts, sql, userID, query, maxSearchRows)
+
+}
+
+func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64, userID int64) ([]models.Podcast, error) {
+
+	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, p.pub_date, c.title AS name, c.image,
+    EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$2)
+      AS is_bookmarked
+    FROM podcasts p, plainto_tsquery($3) as q, channels c
+    WHERE (p.tsv @@ q) AND p.channel_id = c.id AND c.id=$1
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($3)) DESC LIMIT $4`
+
+	var podcasts []models.Podcast
+	return podcasts, db.Select(&podcasts, sql, channelID, userID, query, maxSearchRows)
+
+}
+
+func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]models.Podcast, error) {
+
+	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, p.pub_date, c.title AS name, c.image,
+    1 AS is_bookmarked
+    FROM podcasts p, plainto_tsquery($2) as q, channels c, bookmarks b
+    WHERE (p.tsv @@ q) AND p.channel_id = c.id AND b.podcast_id = p.id AND b.user_id=$1
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
+
+	var podcasts []models.Podcast
+	return podcasts, db.Select(&podcasts, sql, userID, query, maxSearchRows)
 
 }
 
@@ -55,9 +86,7 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, p.pub_date, c.title AS name, c.image,
     EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
-      AS is_bookmarked,
-    EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
-      AS is_subscribed
+      AS is_bookmarked
     FROM podcasts p
     JOIN plays pl ON pl.podcast_id = p.id
     JOIN channels c ON c.id = p.channel_id
@@ -95,8 +124,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
     EXISTS(SELECT id FROM bookmarks WHERE podcast_id=p.id AND user_id=$1)
-      AS is_bookmarked,
-    1 AS is_subscribed
+      AS is_bookmarked
     FROM podcasts p
     JOIN subscriptions s ON s.channel_id = p.channel_id
     JOIN channels c ON c.id = p.channel_id
@@ -131,8 +159,6 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date,
-    EXISTS(SELECT id FROM subscriptions WHERE channel_id=p.channel_id AND user_id=$1)
-      AS is_subscribed,
     1 AS is_bookmarked
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id

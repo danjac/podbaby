@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -6,7 +7,8 @@ import {
   Row,
   Col,
   ButtonGroup,
-  Button
+  Button,
+  Input
 } from 'react-bootstrap';
 
 
@@ -18,6 +20,17 @@ import Loading from './loading';
 import { sanitize, formatPubDate } from './utils';
 
 export class Channel extends React.Component {
+
+  handleSearch(event) {
+    event.preventDefault();
+    const { channel, dispatch } = this.props;
+    const query = _.trim(this.refs.query.getValue());
+    if (query) {
+      dispatch(actions.channel.searchChannel(query, channel.id));
+    } else {
+      dispatch(actions.channel.getChannel(channel.id));
+    }
+  }
 
   handleSubscribe(event) {
     event.preventDefault();
@@ -80,6 +93,14 @@ export class Channel extends React.Component {
           ) : ''}
         </ButtonGroup>
         <hr />
+        <form onSubmit={this.handleSearch.bind(this)}>
+          <Input type="search"
+                 ref="query"
+                 placeholder="Find a podcast in this channel" />
+          <Button bsStyle="primary"
+                  type="submit"
+                  className="form-control"><Icon icon="search" /> Search</Button>
+        </form>
         <PodcastList showChannel={false}
                      onSelectPage={this.handleSelectPage.bind(this)}
                      actions={actions} {...this.props} />

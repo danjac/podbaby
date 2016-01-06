@@ -49,6 +49,12 @@ export default function(state=initialState, action) {
       });
       return Object.assign({}, state, { podcasts });
 
+    case Actions.CHANNEL_SEARCH_SUCCESS:
+      return Object.assign({}, state, {
+          podcasts: action.payload,
+          isLoading: false
+        });
+
     case Actions.GET_BOOKMARKS_SUCCESS:
     case Actions.GET_RECENT_PLAYS_SUCCESS:
     case Actions.LATEST_PODCASTS_SUCCESS:
@@ -74,6 +80,7 @@ export default function(state=initialState, action) {
     case Actions.SEARCH_REQUEST:
     case Actions.PODCASTS_REQUEST:
 
+    case Actions.CHANNEL_SEARCH_FAILURE:
     case Actions.GET_BOOKMARKS_FAILURE:
     case Actions.GET_RECENT_PLAYS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:
