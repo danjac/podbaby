@@ -6,3 +6,4 @@ bin
 *.log
 *.orig
 .env
+:w

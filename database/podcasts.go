@@ -59,7 +59,7 @@ func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]
     p.channel_id, p.pub_date, c.title AS name, c.image,
     1 AS is_bookmarked
     FROM podcasts p, plainto_tsquery($2) as q, channels c, bookmarks b
-    WHERE (p.tsv @@ q) AND p.channel_id = c.id AND b.podcast_id = p.id AND b.user_id=$1
+    WHERE (p.tsv @@ q OR c.tsv @@ q) AND p.channel_id = c.id AND b.podcast_id = p.id AND b.user_id=$1
     ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
 
 	var podcasts []models.Podcast
