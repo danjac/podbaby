@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -76,13 +77,13 @@ export class Subscriptions extends React.Component {
   }
 
   render() {
-    const { channels, filter, isLoading } = this.props;
+    const { channels, requestedChannels, filter, isLoading } = this.props;
 
     if (isLoading) {
       return <Loading />;
     }
 
-    if (!channels && !isLoading && !filter) {
+    if (_.isEmpty(requestedChannels) && !isLoading) {
       return (
         <span>You haven't subscribed to any channels yet.
           Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
@@ -110,7 +111,8 @@ export class Subscriptions extends React.Component {
 }
 
 Subscriptions.propTypes = {
-    channels: PropTypes.array.isRequired
+    channels: PropTypes.array.isRequired,
+    requestedChannels: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {
