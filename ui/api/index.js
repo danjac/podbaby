@@ -36,6 +36,11 @@ export function searchChannel(query, id) {
   return axios.get(`/api/search/channel/${id}/`, { params: { q: query } });
 }
 
+export function searchBookmarks(query) {
+  return axios.get("/api/search/bookmarks/", { params: { q: query } });
+}
+
+
 export function addChannel(url) {
   return axios.post("/api/channels/", { url });
 }

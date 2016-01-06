@@ -56,8 +56,8 @@ export class Channel extends React.Component {
     if (!channel) {
       return <div>Sorry, could not find this channel.</div>;
     }
-    const isSubscribed = channel.isSubscribed;
 
+    const isSubscribed = channel.isSubscribed;
     const website = channel.website.Valid ? channel.website.String : "";
 
     return (

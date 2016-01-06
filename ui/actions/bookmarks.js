@@ -34,3 +34,16 @@ export function getBookmarks(page=1) {
     });
   }
 }
+
+export function searchBookmarks(query) {
+  return dispatch => {
+      dispatch(requestPodcasts());
+      api.searchBookmarks(query)
+      .then(result => {
+        dispatch(createAction(Actions.BOOKMARKS_SEARCH_SUCCESS, result.data));
+      })
+      .catch(error => {
+          dispatch(createAction(Actions.BOOKMARKS_SEARCH_FAILURE, { error }));
+      });
+  };
+}
