@@ -67,16 +67,14 @@ export class PodcastList extends React.Component {
 
           const toggleBookmark = event => {
             event.preventDefault();
-            const action = podcast.isBookmarked ? actions.bookmarks.deleteBookmark : actions.bookmarks.addBookmark;
-            dispatch(action(podcast.id));
+            dispatch(actions.bookmarks.toggleBookmark(podcast));
           };
 
           const isShowingDetail = this.props.showDetail.includes(podcast.id);
 
           const toggleDetail = event => {
             event.preventDefault();
-            const action = isShowingDetail ? actions.showDetail.hidePodcastDetail : actions.showDetail.showPodcastDetail;
-            dispatch(action(podcast.id));
+            dispatch(actions.showDetail.toggleDetail(podcast, isShowingDetail));
           };
 
           return <Podcast key={podcast.id}

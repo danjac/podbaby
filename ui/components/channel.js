@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
@@ -22,15 +23,24 @@ import { sanitize, formatPubDate } from './utils';
 
 export class Channel extends React.Component {
 
+  constructor(props) {
+    super(props);
+    const { dispatch } = this.props;
+    this.actions = {
+      channel: bindActionCreators(actions.channel, dispatch),
+      subscribe: bindActionCreators(actions.subscribe, dispatch)
+    };
+  }
+
   handleSearch(event) {
     event.preventDefault();
-    const { channel, dispatch } = this.props;
+    const { channel } = this.props;
     const value = this.refs.query.getValue();
     const query = _.trim(value);
     if (query) {
-      dispatch(actions.channel.searchChannel(query, channel.id));
+      this.actions.channel.searchChannel(query, channel.id);
     } else {
-      dispatch(actions.channel.getChannel(channel.id));
+      this.actions.channel.getChannel(channel.id);
     }
   }
 
@@ -42,22 +52,21 @@ export class Channel extends React.Component {
   handleClearSearch(event) {
     event.preventDefault();
     const { channel, dispatch } = this.props;
-    dispatch(actions.channel.getChannel(channel.id));
+    this.actions.channel.getChannel(channel.id);
     this.refs.query.getInputDOMNode().value = "";
   }
 
   handleSubscribe(event) {
     event.preventDefault();
-    const { channel, dispatch } = this.props;
-    const action = channel.isSubscribed ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-    dispatch(action(channel.id));
+    const { channel } = this.props;
+    this.actions.subscribe.toggleSubscribe(channel);
   }
 
   handleSelectPage(event, selectedEvent) {
     event.preventDefault();
-    const { dispatch } = this.props;
+    const { channel } = this.props;
     const page = selectedEvent.eventKey;
-    dispatch(actions.channel.getChannel(this.props.params.id, page));
+    this.actions.channel.getChannel(channel.id, page);
   }
 
   render() {

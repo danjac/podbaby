@@ -33,7 +33,7 @@ const AlertList = props => {
         position: "fixed",
         height: "50px",
         width: "100%",
-        bottom: 20,
+        top: 90,
         zIndex: 200
       }}>
       {props.alerts.map(alert => {
@@ -84,7 +84,7 @@ export class App extends React.Component {
 
   handleTogglePlayerBookmark() {
     if (this.props.player.podcast) {
-      this.actions.bookmarks.addBookmark(this.props.player.podcast.id);
+      this.actions.bookmarks.toggleBookmark(this.props.player.podcast);
     }
   }
 

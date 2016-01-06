@@ -4,6 +4,9 @@ import * as alerts from './alerts';
 import { requestPodcasts } from './podcasts';
 import { createAction } from './utils';
 
+export function toggleBookmark(podcast) {
+  return podcast.isBookmarked ? deleteBookmark(podcast.id) : addBookmark(podcast.id);
+}
 
 export function addBookmark(podcastId) {
   return dispatch => {

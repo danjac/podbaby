@@ -67,11 +67,11 @@ class Player extends React.Component {
                    title="Download this podcast"
                    className="btn btn-sm btn-default"
                    href={podcast.enclosureUrl}><Icon icon="download" /></a>
-                {podcast.isBookmarked ? '' :
-                <Button bsSize="sm" onClick={this.handleBookmark.bind(this)}>
-                    <Icon icon="bookmark" />
-                </Button>}
-                <Button bsSize="sm" onClick={this.handleClose.bind(this)}>
+                 <Button title={podcast.isBookmarked ? 'Remove bookmark' : 'Add bookmark '}
+                         bsSize="sm" onClick={this.handleBookmark.bind(this)}>
+                    <Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
+                </Button>
+                <Button title='Close player' bsSize="sm" onClick={this.handleClose.bind(this)}>
                   <Icon icon="remove" />
                 </Button>
               </ButtonGroup>

@@ -98,8 +98,7 @@ export class Subscriptions extends React.Component {
                placeholder="Find a channel" />
       {this.props.channels.map(channel => {
         const toggleSubscribe = () => {
-            const action = channel.isSubscribed  ? actions.subscribe.unsubscribe : actions.subscribe.subscribe;
-            this.props.dispatch(action(channel.id));
+            this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
         };
         return <ListItem key={channel.id}
                          channel={channel}

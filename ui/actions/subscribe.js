@@ -3,6 +3,10 @@ import { Actions } from '../constants';
 import * as alerts from './alerts';
 import { createAction } from './utils';
 
+export function toggleSubscribe(channel) {
+  return channel.isSubscribed ? unsubscribe(channel.id) : subscribe(channel.id);
+}
+
 export function subscribe(id) {
   return dispatch => {
     api.subscribe(id);
