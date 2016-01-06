@@ -26,7 +26,17 @@ export class Bookmarks extends React.Component {
     } else {
       this.actions.getBookmarks();
     }
+  }
 
+  handleClearSearch(event) {
+    event.preventDefault();
+    this.refs.query.getInputDOMNode().value = "";
+    this.actions.getBookmarks();
+  }
+
+  handleClickSearch(event) {
+    event.preventDefault();
+    this.refs.query.getInputDOMNode().select();
   }
 
   handleSelectPage(event, selectedEvent) {
@@ -36,15 +46,25 @@ export class Bookmarks extends React.Component {
   }
 
   render() {
+    const { query } = this.props;
     return (
       <div>
         <form onSubmit={this.handleSearch.bind(this)}>
           <Input type="search"
                  ref="query"
+                 onClick={this.handleClickSearch.bind(this)}
                  placeholder="Find a podcast in your bookmarks" />
-          <Button bsStyle="primary"
-                  type="submit"
-                  className="form-control"><Icon icon="search" /> Search</Button>
+          <Input>
+            <Button bsStyle="primary"
+                    type="submit"
+                    defaultValue={query}
+                    className="form-control"><Icon icon="search" /> Search</Button>
+          </Input>
+          {query ? <Input>
+            <Button bsStyle="default"
+                    onClick={this.handleClearSearch.bind(this)}
+                    className="form-control"><Icon icon="refresh" /> Show all bookmarks</Button>
+          </Input> : ''}
         </form>
         <PodcastList actions={actions}
                             showChannel={true}
@@ -64,12 +84,14 @@ Bookmarks.propTypes = {
 };
 
 const mapStateToProps = state => {
+  const { query } = state.bookmarks;
   const { podcasts, page, showDetail, isLoading } = state.podcasts;
   return {
     podcasts: podcasts || [],
     showDetail,
     page,
     isLoading,
+    query,
     player: state.player
   };
 };

@@ -43,7 +43,6 @@ export class Channel extends React.Component {
     event.preventDefault();
     const { channel, dispatch } = this.props;
     dispatch(actions.channel.getChannel(channel.id));
-    this.refs.query.getInputDOMNode().value = "";
   }
 
   handleSubscribe(event) {
@@ -73,6 +72,14 @@ export class Channel extends React.Component {
 
     const isSubscribed = channel.isSubscribed;
     const website = channel.website.Valid ? channel.website.String : "";
+
+    const searchBtnValue = (
+      <span><Icon icon="search" /> Search</span>
+    );
+
+    const reloadBtnValue = (
+      <span><Icon icon="refresh" /> Reload</span>
+    );
 
     return (
       <div>
@@ -113,14 +120,14 @@ export class Channel extends React.Component {
                  defaultValue={query}
                  onClick={this.handleClickSearch.bind(this)}
                  placeholder="Find a podcast in this channel" />
-          <Input>
-            <Button bsStyle="primary"
-                    type="submit"
-                    className="form-control"><Icon icon="search" /> Search</Button>
-          </Input>
-          {query ? <Input><Button bsStyle="default"
-                           onClick={this.handleClearSearch.bind(this)}
-                           className="form-control"><Icon icon="refresh" /> Show all podcasts</Button></Input> : ''}
+          <ButtonInput bsStyle="primary"
+                       type="submit"
+                       value="Search"
+                       className="form-control" />
+          {query ? <ButtonInput bsStyle="default"
+                                value={reloadBtnValue}
+                                onClick={this.handleClearSearch.bind(this)}
+                                className="form-control" /> : ''}
         </form>
         <PodcastList showChannel={false}
                      onSelectPage={this.handleSelectPage.bind(this)}

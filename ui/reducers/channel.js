@@ -2,6 +2,7 @@ import { Actions } from '../constants';
 
 const initialState = {
   channel: null,
+  query: "",
   isLoading: false
 };
 
@@ -17,11 +18,18 @@ export default function(state=initialState, action) {
       }
       return state;
 
+    case Actions.CHANNEL_SEARCH_REQUEST:
+      return Object.assign({}, state, { query: action.payload });
+
     case Actions.ADD_CHANNEL_SUCCESS:
       return Object.assign({}, state, { channel: action.payload, isLoading: false });
 
     case Actions.GET_CHANNEL_SUCCESS:
-      return Object.assign({}, state, { channel: action.payload.channel, isLoading: false });
+      return Object.assign({}, state, {
+        channel: action.payload.channel,
+        isLoading: false,
+        query: ""
+      });
 
     case Actions.GET_CHANNEL_FAILURE:
       return Object.assign({}, state, { channel: null, isLoading: false });

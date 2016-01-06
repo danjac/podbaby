@@ -6,6 +6,7 @@ import { requestPodcasts } from './podcasts';
 export function searchChannel(query, id) {
   return dispatch => {
       dispatch(requestPodcasts());
+      dispatch(createAction(Actions.CHANNEL_SEARCH_REQUEST, query));
       api.searchChannel(query, id)
       .then(result => {
         dispatch(createAction(Actions.CHANNEL_SEARCH_SUCCESS, result.data));

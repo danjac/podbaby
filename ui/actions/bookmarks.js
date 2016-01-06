@@ -23,6 +23,7 @@ export function deleteBookmark(podcastId) {
 
 export function getBookmarks(page=1) {
   return dispatch => {
+    dispatch(createAction(Actions.CLEAR_BOOKMARKS_SEARCH));
     dispatch(createAction(Actions.PODCASTS_REQUEST));
     dispatch(requestPodcasts());
     api.getBookmarks(page)
@@ -38,6 +39,7 @@ export function getBookmarks(page=1) {
 export function searchBookmarks(query) {
   return dispatch => {
       dispatch(requestPodcasts());
+      dispatch(createAction(Actions.BOOKMARKS_SEARCH_REQUEST, query));
       api.searchBookmarks(query)
       .then(result => {
         dispatch(createAction(Actions.BOOKMARKS_SEARCH_SUCCESS, result.data));
