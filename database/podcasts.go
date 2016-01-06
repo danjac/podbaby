@@ -130,7 +130,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
     JOIN channels c ON c.id = p.channel_id
     WHERE s.user_id=$1
     GROUP BY p.id, p.title, c.image, c.title
-    ORDER BY pub_date DESC
+    ORDER BY p.pub_date DESC
     OFFSET $2 LIMIT $3`
 	err := db.Select(
 		&result.Podcasts,

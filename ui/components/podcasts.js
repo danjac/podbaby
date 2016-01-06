@@ -106,14 +106,14 @@ export const Podcast = props => {
     toggleBookmark } = props;
 
   const channelUrl = `/podcasts/channel/${podcast.channelId}/`;
-  const title = <h4>{podcast.title}</h4>;
+  const title = <h5>{podcast.title}</h5>;
 
   let header = title;
 
   if (showChannel) {
     header = (
       <div>
-        <h3><Link to={`/podcasts/channel/${podcast.channelId}/`}>{podcast.name}</Link></h3>
+        <h4><Link to={`/podcasts/channel/${podcast.channelId}/`}>{podcast.name}</Link></h4>
         {title}
       </div>
     );
@@ -150,17 +150,18 @@ export const Podcast = props => {
                      className="btn btn-default"
                      href={podcast.enclosureUrl}><Icon icon="download" /></a>
                   <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
-                    <Icon icon={podcast.isBookmarked ? 'remove' : 'bookmark'} />
+                    <Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
                   </Button>
-                  {podcast.description ?
-                  <Button title={isShowingDetail ? 'Hide details' : 'Show details'} onClick={toggleDetail}><Icon icon={isShowingDetail ? 'compress': 'expand'} /></Button>
-                  : ''}
                 </ButtonGroup>
               </Col>
             </Row>
           </Grid>
-        </div>
       </div>
+      {podcast.description ?
+      <Button className="form-control"
+              title={isShowingDetail ? 'Hide details' : 'Show details'}
+              onClick={toggleDetail}><Icon icon={isShowingDetail ? 'chevron-up': 'chevron-down'} /></Button> : ''}
+    </div>
       {podcast.description && isShowingDetail  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
   </Panel>
   );
