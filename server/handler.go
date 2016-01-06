@@ -20,6 +20,9 @@ func (s *Server) Handler() http.Handler {
 	// front page
 	router.HandleFunc("/", s.indexPage)
 
+	// OPML
+	router.Handle("/{prefix}.opml", s.requireAuth(s.getOPML)).Methods("GET")
+
 	// API
 
 	api := router.PathPrefix("/api/").Subrouter()

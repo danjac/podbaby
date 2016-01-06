@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import moment from 'moment';
 
 import {
   Grid,
@@ -97,6 +98,10 @@ export class Subscriptions extends React.Component {
                onClick={this.handleFocus.bind(this)}
                onKeyUp={this.handleFilterChannels.bind(this)}
                placeholder="Find a channel" />
+        <Input>
+          <a className="btn btn-default form-control"
+            href={`/podbaby-${moment().format('YYYY-MM-DD')}.opml`} download><Icon icon="download" /> Download OPML</a>
+        </Input>
       {this.props.channels.map(channel => {
         const toggleSubscribe = () => {
             this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
