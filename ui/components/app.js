@@ -79,7 +79,7 @@ export class App extends React.Component {
   }
 
   handleClosePlayer() {
-    this.actions.player.close(this.props.player);
+    this.actions.player.close();
   }
 
   handleTogglePlayerBookmark() {
@@ -90,8 +90,7 @@ export class App extends React.Component {
 
   handleUpdatePlayerTime(event) {
     this.actions.player.updateTime(
-      this.props.player,
-      event.currentTarget.currentTime,
+      event.currentTarget.currentTime
     );
   }
 

@@ -10,22 +10,28 @@ const savePlayerToSession = player => {
     window.sessionStorage.setItem(Storage.CURRENT_PODCAST, JSON.stringify(player));
 };
 
-export function updateTime(player, currentTime) {
-  savePlayerToSession(player);
-  return createAction(Actions.PLAYER_TIME_UPDATE, currentTime);
-}
-
-export function setPodcast(player, podcast) {
-  if (podcast) {
-    api.nowPlaying(podcast.id);
+export function updateTime(currentTime) {
+  return (dispatch, getState) => {
+    const { player } = getState();
+    dispatch(createAction(Actions.PLAYER_TIME_UPDATE, currentTime));
     savePlayerToSession(player);
-  } else {
-    removePlayerFromSession();
-  }
-  return createAction(Actions.CURRENTLY_PLAYING, podcast);
+  };
 }
 
-export function close(player, podcast) {
+export function togglePlayer(podcast) {
+
+  if (podcast.isPlaying) {
+    return close();
+  }
+
+  return (dispatch, getState) => {
+    dispatch(createAction(Actions.CURRENTLY_PLAYING, podcast));
+    const { player } = getState();
+    savePlayerToSession(player);
+  };
+}
+
+export function close() {
   removePlayerFromSession();
   return createAction(Actions.CLOSE_PLAYER);
 }

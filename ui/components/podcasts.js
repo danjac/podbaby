@@ -60,7 +60,7 @@ export class PodcastList extends React.Component {
 
           const togglePlayer = event => {
             event.preventDefault();
-            dispatch(actions.player.setPodcast(player, podcast.isPlaying ? null : podcast));
+            dispatch(actions.player.togglePlayer(podcast));
           };
 
           const toggleBookmark = event => {
