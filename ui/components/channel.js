@@ -15,7 +15,7 @@ import {
 
 
 import * as actions from '../actions';
-import { podcastsSelector } from '../selectors';
+import { podcastsSelector, channelSelector } from '../selectors';
 import PodcastList from './podcasts';
 import Image from './image';
 import Icon from './icon';
@@ -75,7 +75,6 @@ export class Channel extends React.Component {
       channel,
       isChannelLoading,
       isPodcastsLoading,
-      isSubscribed,
       query,
       isLoggedIn } = this.props;
 
@@ -88,6 +87,7 @@ export class Channel extends React.Component {
     }
 
     const website = channel.website.Valid ? channel.website.String : "";
+    const { isSubscribed } = channel;
 
     return (
       <div>
@@ -158,23 +158,17 @@ Channel.propTypes = {
 
 const mapStateToProps = state => {
 
-  const { channel, query } = state.channel;
+  const { query } = state.channel;
   const { page } = state.podcasts;
   const isChannelLoading = state.channel.isLoading;
   const isPodcastsLoading = state.podcasts.isLoading;
   const { isLoggedIn } = state.auth;
   const podcasts = podcastsSelector(state);
-
-  let isSubscribed = false;
-
-  if (channel) {
-    isSubscribed = channel.isSubscribed = state.subscriptions.includes(channel.id);
-  }
+  const channel = channelSelector(state);
 
   return {
-    podcasts: podcasts,
+    podcasts,
     channel,
-    isSubscribed,
     query,
     page,
     isChannelLoading,

@@ -1,21 +1,51 @@
 import { createSelector } from 'reselect';
 
+const podcastsPreSelector = state => state.podcasts.podcasts || [];
+const podcastPreSelector = state => state.podcast.podcast || [];
+
 const playerSelector = state => state.player;
-const podcastsSelector = state => state.podcasts.podcasts || [];
 const detailSelector = state => state.podcasts.showDetail || [];
 const bookmarksSelector = state => state.bookmarks.bookmarks || [];
 
-export default createSelector(
-  [ podcastsSelector,
+const isBookmarked = (bookmarks, podcast) => {
+  return bookmarks.includes(podcast.id);
+};
+
+const isShowDetail = (showDetail, podcast) => {
+  return showDetail.includes(podcast.id);
+};
+
+const isPlaying = (player, podcast) => {
+  return player.podcast && player.podcast.id === podcast.id;
+};
+
+const assign = (podcast, bookmarks, showDetail, player) => {
+  if (!podcast) return null;
+  return Object.assign({}, podcast, {
+    isBookmarked: isBookmarked(bookmarks, podcast),
+    isShowDetail: isShowDetail(showDetail, podcast),
+    isPlaying: isPlaying(player, podcast)
+  });
+};
+
+export const podcastSelector = createSelector(
+  [ podcastPreSelector,
+    detailSelector,
+    bookmarksSelector,
+    playerSelector ],
+  (podcast, showDetail, bookmarks, player) => {
+    return assign(podcast, bookmarks, showDetail, player);
+  }
+);
+
+export const podcastsSelector = createSelector(
+  [ podcastsPreSelector,
     detailSelector,
     bookmarksSelector,
     playerSelector ],
   (podcasts, showDetail, bookmarks, player) => {
     return podcasts.map(podcast => {
-      podcast.isBookmarked = bookmarks.includes(podcast.id);
-      podcast.isShowDetail = showDetail.includes(podcast.id);
-      podcast.isPlaying = player.podcast && player.podcast.id === podcast.id;
-      return podcast;
+      return assign(podcast, bookmarks, showDetail, player);
     });
   }
 );

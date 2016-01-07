@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../actions';
+import { podcastSelector } from '../selectors';
 import { bindAllActionCreators } from '../actions/utils';
 import { Podcast } from './podcasts';
 import Loading from './loading';
@@ -33,9 +34,7 @@ class PodcastDetail extends React.Component {
     const {
       podcast,
       isLoading,
-      isLoggedIn,
-      player,
-      bookmarks
+      isLoggedIn
     } = this.props;
 
     if (isLoading) {
@@ -45,10 +44,6 @@ class PodcastDetail extends React.Component {
     if (!podcast) {
       return <div>Sorry, no podcast found</div>;
     }
-
-    // move these to a selector
-    podcast.isBookmarked = bookmarks.includes(podcast.id);
-    podcast.isPlaying = player.podcast && player.podcast.id === podcast.id;
 
     return <Podcast podcast={podcast}
                     showChannel={true}
@@ -62,17 +57,16 @@ class PodcastDetail extends React.Component {
 
 const mapStateToProps = state => {
 
-  const { podcast, isLoading } = state.podcast;
+  const podcast = podcastSelector(state);
+
+  const { isLoading } = state.podcast;
   const { isLoggedIn } = state.auth;
   const { bookmarks } = state.bookmarks;
-  const player = state.player;
 
   return {
     podcast,
     isLoading,
-    isLoggedIn,
-    bookmarks,
-    player
+    isLoggedIn
   };
 };
 
