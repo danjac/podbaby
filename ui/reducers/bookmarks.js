@@ -15,7 +15,8 @@ export default function(state=initialState, action) {
 
     case Actions.LOGIN_SUCCESS:
     case Actions.CURRENT_USER:
-      return Object.assign({}, state, { bookmarks: action.payload.bookmarks || [] });
+      bookmarks = (action.payload && action.payload.bookmarks) || [];
+      return Object.assign({}, state, { bookmarks });
 
     case Actions.LOGOUT:
       return Object.assign({}, state, { bookmarks: [] });

@@ -10,14 +10,6 @@ export default function(state=initialState, action) {
 
   switch(action.type) {
 
-    case Actions.SUBSCRIBE:
-    case Actions.UNSUBSCRIBE:
-      if (state.channel && state.channel.id === action.payload) {
-        let channel = Object.assign({}, state.channel, { isSubscribed: action.type === Actions.SUBSCRIBE });
-        return Object.assign({}, state, { channel });
-      }
-      return state;
-
     case Actions.CHANNEL_SEARCH_REQUEST:
       return Object.assign({}, state, { query: action.payload });
 

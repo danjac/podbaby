@@ -71,9 +71,15 @@ export class Channel extends React.Component {
   }
 
   render() {
-    const { channel, isLoading, query, isLoggedIn } = this.props;
+    const {
+      channel,
+      isChannelLoading,
+      isPodcastsLoading,
+      isSubscribed,
+      query,
+      isLoggedIn } = this.props;
 
-    if (isLoading && !query) {
+    if (isChannelLoading) {
       return <Loading />;
     }
 
@@ -81,7 +87,6 @@ export class Channel extends React.Component {
       return <div>Sorry, could not find this channel.</div>;
     }
 
-    const isSubscribed = channel.isSubscribed;
     const website = channel.website.Valid ? channel.website.String : "";
 
     return (
@@ -104,9 +109,10 @@ export class Channel extends React.Component {
         </div>
         {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
         <ButtonGroup>
-          <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
+          {isLoggedIn ?
+          <Button title={isSubscribed ? 'Unsubscribe': 'Subscribe'}
                   onClick={this.handleSubscribe.bind(this)}>
-            <Icon icon={channel.isSubscribed ? 'unlink': 'link'} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button>
+            <Icon icon={isSubscribed ? 'unlink': 'link'} /> {isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button> : ''}
           <a className="btn btn-default" title="Link to RSS Feed" target="_blank" href={channel.url}>
             <Icon icon="rss" /> Link to RSS feed
           </a>
@@ -132,10 +138,11 @@ export class Channel extends React.Component {
                            onClick={this.handleClearSearch.bind(this)}
                            className="form-control"><Icon icon="refresh" /> Show all podcasts</Button></Input> : ''}
         </form>
+        {isPodcastsLoading && !query ? <Loading /> :
         <PodcastList showChannel={false}
                      isLoggedIn={isLoggedIn}
                      onSelectPage={this.handleSelectPage.bind(this)}
-                     actions={actions} {...this.props} />
+                     actions={actions} {...this.props} /> }
       </div>
     );
   }
@@ -153,17 +160,26 @@ const mapStateToProps = state => {
 
   const { channel, query } = state.channel;
   const { page } = state.podcasts;
-  const isLoading = state.channel.isLoading || state.podcasts.isLoading;
+  const isChannelLoading = state.channel.isLoading;
+  const isPodcastsLoading = state.podcasts.isLoading;
   const { isLoggedIn } = state.auth;
   const podcasts = podcastsSelector(state);
+
+  let isSubscribed = false;
+
+  if (channel) {
+    isSubscribed = channel.isSubscribed = state.subscriptions.includes(channel.id);
+  }
 
   return {
     podcasts: podcasts,
     channel,
+    isSubscribed,
     query,
-    isLoading,
-    isLoggedIn,
-    page
+    page,
+    isChannelLoading,
+    isPodcastsLoading,
+    isLoggedIn
   };
 };
 

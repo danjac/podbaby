@@ -6,60 +6,15 @@ import { Link } from 'react-router';
 import moment from 'moment';
 
 import {
-  Grid,
-  Row,
-  Col,
-  Button,
-  ButtonGroup,
-  Well,
   Panel,
   Input
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
 import { channelsSelector } from '../selectors';
-import Image from './image';
 import Icon from './icon';
 import Loading from './loading';
-
-const ListItem = props => {
-  const { channel, toggleSubscribe } = props;
-  return (
-    <Panel>
-    <div className="media">
-      <div className="media-left">
-        <a href="#">
-
-        <Image className="media-object"
-               src={channel.image}
-               errSrc='/static/podcast.png'
-               imgProps={{
-               height:60,
-               width:60,
-               alt:channel.title }} />
-        </a>
-      </div>
-      <div className="media-body">
-        <Grid>
-          <Row>
-            <Col xs={6} md={9}>
-              <h4 className="media-heading"><Link to={`/podcasts/channel/${channel.id}/`}>{channel.title}</Link></h4>
-            </Col>
-            <Col xs={6} md={3}>
-              <ButtonGroup>
-                <Button title={channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}
-                        onClick={toggleSubscribe}><Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {channel.isSubscribed ? 'Unsubscribe': 'Subscribe'}</Button>
-              </ButtonGroup>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    </div>
-  </Panel>
-
-  );
-};
-
+import ChannelItem from './channel_item';
 
 export class Subscriptions extends React.Component {
 
@@ -88,7 +43,7 @@ export class Subscriptions extends React.Component {
     if (_.isEmpty(unfilteredChannels) && !isLoading) {
       return (
         <span>You haven't subscribed to any channels yet.
-          Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
+          Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
     }
 
     return (
@@ -107,9 +62,10 @@ export class Subscriptions extends React.Component {
         const toggleSubscribe = () => {
             this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
         };
-        return <ListItem key={channel.id}
-                         channel={channel}
-                         toggleSubscribe={toggleSubscribe} />;
+        return <ChannelItem key={channel.id}
+                            channel={channel}
+                            isLoggedIn={true}
+                            subscribe={toggleSubscribe} />;
       })}
       </div>
     );

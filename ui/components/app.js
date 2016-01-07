@@ -109,7 +109,6 @@ export class App extends React.Component {
         <AlertList alerts={this.props.alerts}
                    onDismissAlert={this.handleDismissAlert.bind(this)} />
     );
-    if (isLoggedIn) {
       return (
         <div>
           <NavBar onLogout={this.handleLogout.bind(this)}
@@ -129,14 +128,6 @@ export class App extends React.Component {
                            onClose={this.handleCloseAddChannelForm.bind(this)} />
         </div>
       );
-    } else {
-      return (
-        <div>
-          {pageContent}
-          {alertList}
-        </div>
-      );
-    }
   }
 }
 

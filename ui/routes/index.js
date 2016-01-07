@@ -39,7 +39,7 @@ export default function(store, history) {
   const redirectIfLoggedIn = (nextState, replaceState) => {
     const { auth } = store.getState();
     if (auth.isLoggedIn) {
-      replaceState(null, "/podcasts/");
+      replaceState(null, "/new/");
     }
   };
 
@@ -47,32 +47,34 @@ export default function(store, history) {
     <Router history={history}>
       <Route path="/" component={App}>
         <IndexRoute component={Front} onEnter={redirectIfLoggedIn} />
-        <Route path="/podcasts/" onEnter={requireAuth}>
-          <IndexRedirect to="/podcasts/new/" />
 
-          <Route path="/podcasts/new/"
-                 component={Latest}
-                 onEnter={() => actions.latest.getLatestPodcasts()} />
+        <Route path="/member/" onEnter={requireAuth}>
 
-          <Route path="/podcasts/search/" component={Search} />
+          <IndexRedirect to="/member/subscriptions/" />
 
-          <Route path="/podcasts/subscriptions/"
+          <Route path="/member/subscriptions/"
                  component={Subscriptions}
                  onEnter={() => actions.channels.getChannels()} />
 
-          <Route path="/podcasts/bookmarks/"
+          <Route path="/member/bookmarks/"
                  component={Bookmarks}
                  onEnter={() => actions.bookmarks.getBookmarks()} />
 
-          <Route path="/podcasts/recent/"
+          <Route path="/member/recent/"
                  component={Recent}
                  onEnter={() => actions.plays.getRecentlyPlayed()} />
-
-          <Route path="/podcasts/channel/:id/"
-                 component={Channel}
-                 onEnter={nextState => actions.channel.getChannel(nextState.params.id)} />
-
         </Route>
+
+        <Route path="/new/"
+               component={Latest}
+               onEnter={() => actions.latest.getLatestPodcasts()} />
+
+        <Route path="/search/" component={Search} />
+
+        <Route path="/channel/:id/"
+               component={Channel}
+               onEnter={nextState => actions.channel.getChannel(nextState.params.id)} />
+
         <Route path="/login/" component={Login} />
         <Route path="/signup/" component={Signup} />
         <Route path="/user/" component={User} onEnter={requireAuth} />

@@ -49,7 +49,7 @@ class Player extends React.Component {
         <Grid>
           <Row>
             <Col xs={6} md={5}>
-              <b><Link to={`/podcasts/channel/${podcast.channelId}/`}>{podcast.name}</Link> : {podcast.title}</b>
+              <b><Link to={`/channel/${podcast.channelId}/`}>{podcast.name}</Link> : {podcast.title}</b>
             </Col>
             <Col xs={3} md={4}>
               <audio controls

@@ -8,7 +8,7 @@ export default function(state=initialState, action) {
 
     case Actions.LOGIN_SUCCESS:
     case Actions.CURRENT_USER:
-      return action.payload.subscriptions || [];
+      return (action.payload && action.payload.subscriptions) || [];
 
     case Actions.LOGOUT:
       return [];

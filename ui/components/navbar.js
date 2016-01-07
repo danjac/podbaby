@@ -18,38 +18,49 @@ class NavBar extends React.Component {
 
   render() {
 
-    const { auth } = this.props;
+    const { isLoggedIn, name } = this.props.auth;
     const { createHref, isActive } = this.props.history;
 
     return (
       <Navbar fixedTop inverse>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link style={{ fontFamily: "GoodDog" }} to="/podcasts/new/"><Icon icon="headphones" /> PodBaby</Link>
+            <Link style={{ fontFamily: "GoodDog" }} to="/"><Icon icon="headphones" /> PodBaby</Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
 
         <Navbar.Collapse>
           <Nav pullLeft>
-            <NavItem active={isActive("/podcasts/new/")}
-                     href={createHref("/podcasts/new/")}><Icon icon="flash" /> New episodes</NavItem>
-            <NavItem active={isActive("/podcasts/search/")}
-              href={createHref("/podcasts/search/")}><Icon icon="search" /> Search</NavItem>
-            <NavItem active={isActive("/podcasts/subscriptions/")}
-                     href={createHref("/podcasts/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
-            <NavItem active={isActive("/podcasts/bookmarks/")}
-                     href={createHref("/podcasts/bookmarks/")}><Icon icon="bookmark" /> Bookmarks</NavItem>
-            <NavItem active={isActive("/podcasts/recent/")}
-                     href={createHref("/podcasts/recent/")}><Icon icon="clock-o" /> Recently played</NavItem>
+            <NavItem active={isActive("/new/")}
+                     href={createHref("/new/")}><Icon icon="flash" /> New episodes</NavItem>
+            <NavItem active={isActive("/search/")}
+              href={createHref("/search/")}><Icon icon="search" /> Search</NavItem>
+          </Nav>
+          {isLoggedIn ?
+          <Nav pullLeft>
+            <NavItem active={isActive("/member/subscriptions/")}
+                     href={createHref("/member/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
+            <NavItem active={isActive("/member/bookmarks/")}
+                     href={createHref("/member/bookmarks/")}><Icon icon="bookmark" /> Bookmarks</NavItem>
+            <NavItem active={isActive("/member/recent/")}
+                     href={createHref("/member/recent/")}><Icon icon="clock-o" /> Recently played</NavItem>
             <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Icon icon="plus" /> Add a channel</NavItem>
           </Nav>
+          : ''}
 
+          {isLoggedIn ?
           <Nav pullRight>
             <NavItem active={isActive("/user/")}
-                      href={createHref("/user/")}><Icon icon="cog" /> {auth.name}</NavItem>
+                      href={createHref("/user/")}><Icon icon="cog" /> {name}</NavItem>
             <NavItem href="#" onClick={this.props.onLogout}><Icon icon="sign-out" /> Logout</NavItem>
-          </Nav>
+          </Nav> :
+          <Nav pullRight>
+            <NavItem active={isActive("/login/")}
+                     href={createHref("/login/")}><Icon icon="sign-in" /> Login</NavItem>
+            <NavItem active={isActive("/signup/")}
+                     href={createHref("/signup/")}><Icon icon="sign-in" /> Signup</NavItem>
+          </Nav>}
         </Navbar.Collapse>
 
       </Navbar>

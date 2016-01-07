@@ -44,7 +44,7 @@ export function login(identifier, password) {
     .then(result => {
       // call to api...
       const { auth } = getState();
-      const nextPath = auth.redirectTo || '/podcasts/new/';
+      const nextPath = auth.redirectTo || '/new/';
       dispatch(createAction(Actions.LOGIN_SUCCESS, result.data));
       dispatch(pushPath(nextPath));
       dispatch(alerts.success(`Welcome back, ${result.data.name}`))
@@ -61,7 +61,7 @@ export function signup(name, email, password) {
     api.signup(name, email, password)
     .then(result => {
       dispatch(createAction(Actions.SIGNUP_SUCCESS, result.data));
-      dispatch(pushPath('/podcasts/new/'));
+      dispatch(pushPath('/new/'));
     })
     .catch(error => {
       dispatch(createAction(Actions.SIGNUP_FAILURE, { error }));

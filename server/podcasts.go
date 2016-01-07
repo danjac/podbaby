@@ -6,14 +6,13 @@ import (
 )
 
 func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
-	user, ok := getUser(r)
+	user, err := s.getUserFromCookie(r)
 
 	var (
-		err    error
 		result *models.PodcastList
 	)
 
-	if ok {
+	if err == nil { // user authenticated
 		result, err = s.DB.Podcasts.SelectSubscribed(user.ID, getPage(r))
 	} else {
 		result, err = s.DB.Podcasts.SelectAll(getPage(r))

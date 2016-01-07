@@ -1,66 +1,14 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import {
-  Grid,
-  Row,
-  Col,
-  ButtonGroup,
-  Button,
-  Well,
-  Input,
-  Panel
-} from 'react-bootstrap';
+import { Button, Input } from 'react-bootstrap';
 
 import  * as actions from '../actions';
 import { podcastsSelector, channelsSelector } from '../selectors';
+import ChannelItem from './channel_item';
 import PodcastList from './podcasts';
-import Image from './image';
 import Icon from './icon';
-import { sanitize, formatPubDate } from './utils';
-
-const ChannelItem = props => {
-  const { channel, subscribe } = props;
-  const url = `/podcasts/channel/${channel.id}/`;
-
-  return (
-    <Panel>
-    <div className="media">
-      <div className="media-left">
-        <Link to={url}>
-        <Image className="media-object"
-               src={channel.image}
-               errSrc='/static/podcast.png'
-               imgProps={{
-               height:60,
-               width:60,
-               alt:channel.title }} />
-        </Link>
-      </div>
-      <div className="media-body">
-        <Grid>
-          <Row>
-            <Col xs={6} md={9}>
-              <h4 className="media-heading"><Link to={url}>{channel.title}</Link></h4>
-            </Col>
-            <Col xs={6} md={3}>
-              <ButtonGroup>
-                <Button title={channel.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={subscribe}>
-                  <Icon icon={channel.isSubscribed ? "unlink" : "link"} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-                </Button>
-              </ButtonGroup>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    </div>
-  </Panel>
-  );
-};
-
 
 export class Search extends React.Component {
 
@@ -88,7 +36,12 @@ export class Search extends React.Component {
 
   render() {
 
-    const { dispatch, channels, podcasts, searchQuery } = this.props;
+  const {
+    dispatch,
+    channels,
+    podcasts,
+    isLoading,
+    searchQuery } = this.props;
 
     const help = (
       searchQuery ? '' :
@@ -109,6 +62,7 @@ export class Search extends React.Component {
           <Icon icon="search" /> Search
         </Button>
       </form>
+      {!isLoading && channels.length == 0 && podcasts.length == 0 && searchQuery ? <div>Sorry, no results found for your search.</div> : ''}
       {channels.map(channel => {
         const subscribe = (event) => {
           event.preventDefault();
@@ -117,7 +71,8 @@ export class Search extends React.Component {
         return (
           <ChannelItem key={channel.id}
                        channel={channel}
-                       subscribe={subscribe} />
+                       subscribe={subscribe}
+                       {...this.props} />
         );
       })}
       {podcasts.length > 0 ? <hr /> : ''}

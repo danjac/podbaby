@@ -15,7 +15,7 @@ export function add(url) {
         .then(result => {
             dispatch(alerts.success("New channel added"));
             dispatch(createAction(Actions.ADD_CHANNEL_SUCCESS, result.data));
-            dispatch(pushPath(`/podcasts/channel/${result.data.id}/`));
+            dispatch(pushPath(`/channel/${result.data.id}/`));
         })
         .catch(error => {
             dispatch(createAction(Actions.ADD_CHANNEL_FAILURE, { error }));
