@@ -13,6 +13,9 @@ export default function(state=initialState, action) {
     case Actions.LOGOUT:
       return [];
 
+    case Actions.ADD_CHANNEL_SUCCESS:
+      return state.concat(action.payload.id);
+
     case Actions.SUBSCRIBE:
       return state.concat(action.payload);
 
