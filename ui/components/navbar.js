@@ -16,13 +16,36 @@ import Icon from './icon';
 
 class NavBar extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { expanded: false };
+  }
+
+  handleToggle() {
+    this.setState({ expanded: !this.state.expanded });
+  }
+
+  handleSelected() {
+    this.setState({ expanded: false });
+  }
+
+  handleOpenAddChannelForm(event) {
+    this.props.onOpenAddChannelForm(event);
+    this.handleSelected();
+  }
+
   render() {
 
     const { isLoggedIn, name } = this.props.auth;
     const { createHref, isActive } = this.props.history;
 
+    const handleSelected = this.handleSelected.bind(this);
+
     return (
-      <Navbar fixedTop inverse>
+      <Navbar fixedTop
+              inverse
+              expanded={this.state.expanded}
+              onToggle={this.handleToggle.bind(this)}>
         <Navbar.Header>
           <Navbar.Brand>
             <Link style={{ fontFamily: "GoodDog" }} to="/"><Icon icon="headphones" /> PodBaby</Link>
@@ -33,33 +56,42 @@ class NavBar extends React.Component {
         <Navbar.Collapse>
           <Nav pullLeft>
             <NavItem active={isActive("/new/")}
-                     href={createHref("/new/")}><Icon icon="flash" /> New episodes</NavItem>
+                     href={createHref("/new/")}
+                     onClick={handleSelected}><Icon icon="flash" /> New episodes</NavItem>
             <NavItem active={isActive("/search/")}
-              href={createHref("/search/")}><Icon icon="search" /> Search</NavItem>
+                     href={createHref("/search/")}
+                     onClick={handleSelected}><Icon icon="search" /> Search</NavItem>
           </Nav>
           {isLoggedIn ?
           <Nav pullLeft>
             <NavItem active={isActive("/member/subscriptions/")}
-                     href={createHref("/member/subscriptions/")}><Icon icon="list" /> Subscriptions</NavItem>
+                     href={createHref("/member/subscriptions/")}
+                     onClick={handleSelected}><Icon icon="list" /> Subscriptions</NavItem>
             <NavItem active={isActive("/member/bookmarks/")}
-                     href={createHref("/member/bookmarks/")}><Icon icon="bookmark" /> Bookmarks</NavItem>
+                     href={createHref("/member/bookmarks/")}
+                     onClick={handleSelected}><Icon icon="bookmark" /> Bookmarks</NavItem>
             <NavItem active={isActive("/member/recent/")}
-                     href={createHref("/member/recent/")}><Icon icon="clock-o" /> Recently played</NavItem>
-            <NavItem onClick={this.props.onOpenAddChannelForm} href="#"><Icon icon="plus" /> Add a channel</NavItem>
+                     href={createHref("/member/recent/")}
+                     onClick={handleSelected}><Icon icon="clock-o" /> Recently played</NavItem>
+            <NavItem onClick={this.handleOpenAddChannelForm.bind(this)}
+                     href="#"><Icon icon="plus" /> Add a channel</NavItem>
           </Nav>
           : ''}
 
           {isLoggedIn ?
           <Nav pullRight>
             <NavItem active={isActive("/user/")}
-                      href={createHref("/user/")}><Icon icon="cog" /> {name}</NavItem>
+                     href={createHref("/user/")}
+                     onClick={handleSelected}><Icon icon="cog" /> {name}</NavItem>
             <NavItem href="#" onClick={this.props.onLogout}><Icon icon="sign-out" /> Logout</NavItem>
           </Nav> :
           <Nav pullRight>
             <NavItem active={isActive("/login/")}
-                     href={createHref("/login/")}><Icon icon="sign-in" /> Login</NavItem>
+                     href={createHref("/login/")}
+                     onClick={handleSelected}><Icon icon="sign-in" /> Login</NavItem>
             <NavItem active={isActive("/signup/")}
-                     href={createHref("/signup/")}><Icon icon="sign-in" /> Signup</NavItem>
+                     href={createHref("/signup/")}
+                     onClick={handleSelected}><Icon icon="sign-in" /> Signup</NavItem>
           </Nav>}
         </Navbar.Collapse>
 

@@ -76,6 +76,7 @@ export class PodcastList extends React.Component {
                           isLoggedIn={isLoggedIn}
                           podcast={podcast}
                           showChannel={showChannel}
+                          showExpanded={false}
                           toggleBookmark={toggleBookmark}
                           toggleDetail={toggleDetail}
                           togglePlayer={togglePlayer} />

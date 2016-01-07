@@ -24,6 +24,8 @@ const makePodcastProps = (podcast, props={}) => {
     toggleDetail: _.noop,
     toggleBookmark: _.noop,
     showChannel: true,
+    showExpanded: false,
+    isLoggedIn: true,
     isPlaying: false,
     channelUrl: "/channel/11/",
     ...props

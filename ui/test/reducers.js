@@ -8,19 +8,13 @@ describe('Channels', function() {
   it('Shows filtered channels', function() {
 
     const state = {
-      requestedChannels: [
-        {
-          id: 100,
-          title: 'test1'
-        }
-      ],
       channels: [
         {
           id: 100,
           title: 'test1'
         }
       ],
-      filter: null
+      filter: ""
     };
 
     const action = {
@@ -30,22 +24,13 @@ describe('Channels', function() {
 
     const newState = channelsReducer(state, action);
 
-    assert.equal(newState.channels.length, 0);
-    // requestedChannels should remain the same
-    assert.equal(newState.requestedChannels.length, 1);
-    assert.notEqual(newState.filter, null);
+    assert.equal(newState.filter, "foo");
 
   });
 
   it('Shows all channels if filter is empty', function() {
 
     const state = {
-      requestedChannels: [
-        {
-          id: 100,
-          title: 'test1'
-        }
-      ],
       channels: [
         {
           id: 100,
@@ -62,9 +47,7 @@ describe('Channels', function() {
 
     const newState = channelsReducer(state, action);
 
-    assert.equal(newState.channels.length, 1);
-    assert.equal(newState.requestedChannels.length, 1);
-    assert.equal(newState.filter, null);
+    assert.equal(newState.filter, "");
 
   });
 

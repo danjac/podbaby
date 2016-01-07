@@ -130,7 +130,7 @@ export class App extends React.Component {
                            container={this}
                            onAdd={this.handleAddChannel.bind(this)}
                            onClose={this.handleCloseAddChannelForm.bind(this)} />
-        </div>
+    </div>
       );
   }
 }

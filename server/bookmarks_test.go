@@ -17,6 +17,10 @@ type mockPodcastsDB struct {
 	hasError bool
 }
 
+func (db *mockPodcastsDB) SelectAll(_ int64) (*models.PodcastList, error) {
+	return nil, nil
+}
+
 func (db *mockPodcastsDB) SelectSubscribed(_, _ int64) (*models.PodcastList, error) {
 	return nil, nil
 }
@@ -25,11 +29,11 @@ func (db *mockPodcastsDB) SelectPlayed(_, _ int64) (*models.PodcastList, error) 
 	return nil, nil
 }
 
-func (db *mockPodcastsDB) SelectByChannelID(_, _, _ int64) (*models.PodcastList, error) {
+func (db *mockPodcastsDB) SelectByChannelID(_, _ int64) (*models.PodcastList, error) {
 	return nil, nil
 }
 
-func (db *mockPodcastsDB) Search(_ string, _ int64) ([]models.Podcast, error) {
+func (db *mockPodcastsDB) Search(_ string) ([]models.Podcast, error) {
 	return nil, nil
 }
 
@@ -37,7 +41,11 @@ func (db *mockPodcastsDB) SearchBookmarked(_ string, _ int64) ([]models.Podcast,
 	return nil, nil
 }
 
-func (db *mockPodcastsDB) SearchByChannelID(_ string, _, _ int64) ([]models.Podcast, error) {
+func (db *mockPodcastsDB) SearchByChannelID(_ string, _ int64) ([]models.Podcast, error) {
+	return nil, nil
+}
+
+func (db *mockPodcastsDB) GetByID(_ int64) (*models.Podcast, error) {
 	return nil, nil
 }
 
