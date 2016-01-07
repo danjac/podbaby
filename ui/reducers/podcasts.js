@@ -27,28 +27,6 @@ export default function(state=initialState, action) {
       showDetail = _.reject(state.showDetail, id => id === action.payload);
       return Object.assign({}, state, { showDetail });
 
-    case Actions.ADD_BOOKMARK:
-    case Actions.DELETE_BOOKMARK:
-
-      podcasts = (state.podcasts || []).map(podcast => {
-        if (podcast.id === action.payload) {
-          podcast.isBookmarked = action.type === Actions.ADD_BOOKMARK;
-        }
-        return podcast;
-      });
-      return Object.assign({}, state, { podcasts });
-
-    case Actions.SUBSCRIBE:
-    case Actions.UNSUBSCRIBE:
-
-      podcasts = (state.podcasts || []).map(podcast => {
-        if (podcast.channelId === action.payload) {
-          podcast.isSubscribed = action.type === Actions.SUBSCRIBE;
-        }
-        return podcast;
-      });
-      return Object.assign({}, state, { podcasts });
-
     case Actions.CHANNEL_SEARCH_SUCCESS:
     case Actions.BOOKMARKS_SEARCH_SUCCESS:
       return Object.assign({}, state, {

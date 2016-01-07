@@ -7,6 +7,7 @@ import { Button, Input } from 'react-bootstrap';
 import Icon from './icon';
 
 import * as actions from '../actions';
+import { podcastsSelector } from '../selectors';
 import PodcastList from './podcasts';
 
 
@@ -69,6 +70,7 @@ export class Bookmarks extends React.Component {
         <PodcastList actions={actions}
                             showChannel={true}
                             ifEmpty="No bookmarks found"
+                            isLoggedIn={true}
                             onSelectPage={this.handleSelectPage.bind(this)}
                             {...this.props} />
       </div>
@@ -85,14 +87,12 @@ Bookmarks.propTypes = {
 
 const mapStateToProps = state => {
   const { query } = state.bookmarks;
-  const { podcasts, page, showDetail, isLoading } = state.podcasts;
+  const { page, isLoading } = state.podcasts;
   return {
-    podcasts: podcasts || [],
-    showDetail,
+    podcasts: podcastsSelector(state),
     page,
     isLoading,
     query,
-    player: state.player
   };
 };
 

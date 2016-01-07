@@ -24,10 +24,10 @@ export class PodcastList extends React.Component {
     const {
       actions,
       dispatch,
+      isLoggedIn,
       podcasts,
       page,
       onSelectPage,
-      player,
       isLoading,
       ifEmpty,
       showChannel
@@ -58,11 +58,9 @@ export class PodcastList extends React.Component {
         {pagination}
         {podcasts.map(podcast => {
 
-          const isPlaying = player.podcast && podcast.id === player.podcast.id;
-
           const togglePlayer = event => {
             event.preventDefault();
-            dispatch(actions.player.setPodcast(player, isPlaying ? null : podcast));
+            dispatch(actions.player.setPodcast(player, podcast.isPlaying ? null : podcast));
           };
 
           const toggleBookmark = event => {
@@ -70,20 +68,17 @@ export class PodcastList extends React.Component {
             dispatch(actions.bookmarks.toggleBookmark(podcast));
           };
 
-          const isShowingDetail = this.props.showDetail.includes(podcast.id);
-
           const toggleDetail = event => {
             event.preventDefault();
-            dispatch(actions.showDetail.toggleDetail(podcast, isShowingDetail));
+            dispatch(actions.showDetail.toggleDetail(podcast));
           };
 
           return <Podcast key={podcast.id}
+                          isLoggedIn={isLoggedIn}
                           podcast={podcast}
                           showChannel={showChannel}
                           toggleBookmark={toggleBookmark}
-                          isShowingDetail={isShowingDetail}
                           toggleDetail={toggleDetail}
-                          isPlaying={isPlaying}
                           togglePlayer={togglePlayer} />
         })}
         {pagination}
@@ -97,8 +92,7 @@ export const Podcast = props => {
   const {
     podcast,
     showChannel,
-    isPlaying,
-    isShowingDetail,
+    isLoggedIn,
     togglePlayer,
     toggleDetail,
     toggleBookmark } = props;
@@ -142,14 +136,14 @@ export const Podcast = props => {
               </Col>
               <Col xs={6} md={3}>
                 <ButtonGroup>
-                  <Button title={ isPlaying ? "Stop": "Play" } onClick={togglePlayer}><Icon icon={ isPlaying ? 'stop': 'play' }  /></Button>
+                  <Button title={ podcast.isPlaying ? "Stop": "Play" } onClick={togglePlayer}><Icon icon={ podcast.isPlaying ? 'stop': 'play' }  /></Button>
                   <a download
                      title="Download this podcast"
                      className="btn btn-default"
                      href={podcast.enclosureUrl}><Icon icon="download" /></a>
-                  <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
+                   {isLoggedIn ? <Button onClick={toggleBookmark} title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}>
                     <Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
-                  </Button>
+                  </Button> : ''}
                 </ButtonGroup>
               </Col>
             </Row>
@@ -157,10 +151,10 @@ export const Podcast = props => {
       </div>
       {podcast.description ?
       <Button className="form-control"
-              title={isShowingDetail ? 'Hide details' : 'Show details'}
-              onClick={toggleDetail}><Icon icon={isShowingDetail ? 'chevron-up': 'chevron-down'} /></Button> : ''}
+              title={podcast.isShowDetail ? 'Hide details' : 'Show details'}
+              onClick={toggleDetail}><Icon icon={podcast.isShowDetail ? 'chevron-up': 'chevron-down'} /></Button> : ''}
     </div>
-      {podcast.description && isShowingDetail  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+      {podcast.description && podcast.isShowDetail  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
   </Panel>
   );
 };

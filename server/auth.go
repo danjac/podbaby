@@ -158,6 +158,17 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
 		return
 	}
+
+	// get bookmarks & subscriptions
+	if user.Bookmarks, err = s.DB.Bookmarks.SelectByUserID(user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+	if user.Subscriptions, err = s.DB.Subscriptions.SelectByUserID(user.ID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
 	// login user
 	s.setAuthCookie(w, user.ID)
 

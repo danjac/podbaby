@@ -2,8 +2,8 @@ import { Actions } from '../constants';
 
 import { createAction } from './utils';
 
-export function toggleDetail(podcast, isShowingDetail) {
-  return isShowingDetail ? hidePodcastDetail(podcast.id) : showPodcastDetail(podcast.id);
+export function toggleDetail(podcast) {
+  return podcast.isShowDetail ? hidePodcastDetail(podcast.id) : showPodcastDetail(podcast.id);
 }
 
 export function hidePodcastDetail(podcastId) {

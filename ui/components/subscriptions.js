@@ -17,6 +17,7 @@ import {
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
+import { channelsSelector } from '../selectors';
 import Image from './image';
 import Icon from './icon';
 import Loading from './loading';
@@ -78,13 +79,13 @@ export class Subscriptions extends React.Component {
   }
 
   render() {
-    const { channels, requestedChannels, filter, isLoading } = this.props;
+    const { channels, unfilteredChannels, isLoading } = this.props;
 
     if (isLoading) {
       return <Loading />;
     }
 
-    if (_.isEmpty(requestedChannels) && !isLoading) {
+    if (_.isEmpty(unfilteredChannels) && !isLoading) {
       return (
         <span>You haven't subscribed to any channels yet.
           Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
@@ -116,12 +117,14 @@ export class Subscriptions extends React.Component {
 }
 
 Subscriptions.propTypes = {
-    channels: PropTypes.array.isRequired,
-    requestedChannels: PropTypes.array.isRequired
+    channels: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {
-  return state.channels;
+  return {
+    isLoading: state.channels.isLoading,
+    ...channelsSelector(state)
+  };
 };
 
 export default connect(mapStateToProps)(Subscriptions);

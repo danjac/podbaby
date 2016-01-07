@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import * as actions from '../actions';
+import { podcastsSelector } from '../selectors';
 
 import PodcastList from './podcasts';
 
@@ -36,12 +37,13 @@ Latest.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, showDetail, page, isLoading } = state.podcasts;
+  const { page, isLoading } = state.podcasts;
+  const { isLoggedIn } = state.auth;
   return {
-    podcasts: podcasts || [],
-    showDetail,
+    podcasts: podcastsSelector(state),
     isLoading,
     page,
+    isLoggedIn,
     player: state.player
   };
 };

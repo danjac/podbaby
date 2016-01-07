@@ -9,13 +9,12 @@ import (
 )
 
 func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
-	user, _ := getUser(r)
 	channelID, err := getInt64(r, "id")
 	if err != nil {
 		s.abort(w, r, err)
 		return
 	}
-	channel, err := s.DB.Channels.GetByID(channelID, user.ID)
+	channel, err := s.DB.Channels.GetByID(channelID)
 	if err != nil {
 		s.abort(w, r, err)
 		return
@@ -23,7 +22,7 @@ func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
 	detail := &models.ChannelDetail{
 		Channel: channel,
 	}
-	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, user.ID, getPage(r))
+	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, getPage(r))
 	if err != nil {
 		s.abort(w, r, err)
 		return
@@ -59,7 +58,7 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 
 	user, _ := getUser(r)
 
-	channel, err := s.DB.Channels.GetByURL(decoder.URL, user.ID)
+	channel, err := s.DB.Channels.GetByURL(decoder.URL)
 
 	isNewChannel := false
 
@@ -88,12 +87,9 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if !channel.IsSubscribed {
-		if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
-			s.abort(w, r, err)
-			return
-		}
-		channel.IsSubscribed = true
+	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
+		s.abort(w, r, err)
+		return
 	}
 
 	if err := tx.Commit(); err != nil {

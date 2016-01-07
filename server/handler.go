@@ -48,17 +48,17 @@ func (s *Server) Handler() http.Handler {
 
 	channels := api.PathPrefix("/channels/").Subrouter()
 
+	channels.HandleFunc("/{id}/", s.getChannelDetail).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.getChannels)).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.addChannel)).Methods("POST")
-	channels.Handle("/{id}/", s.requireAuth(s.getChannelDetail)).Methods("GET")
 
 	// search
 
 	search := api.PathPrefix("/search/").Subrouter()
 
-	search.Handle("/", s.requireAuth(s.search)).Methods("GET")
+	search.HandleFunc("/", s.search).Methods("GET")
+	search.HandleFunc("/channel/{id}/", s.searchChannel).Methods("GET")
 	search.Handle("/bookmarks/", s.requireAuth(s.searchBookmarks)).Methods("GET")
-	search.Handle("/channel/{id}/", s.requireAuth(s.searchChannel)).Methods("GET")
 
 	// subscriptions
 
@@ -87,7 +87,7 @@ func (s *Server) Handler() http.Handler {
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
 
-	podcasts.Handle("/latest/", s.requireAuth(s.getLatestPodcasts)).Methods("GET")
+	podcasts.HandleFunc("/latest/", s.getLatestPodcasts).Methods("GET")
 
 	return nosurf.NewPure(router)
 }

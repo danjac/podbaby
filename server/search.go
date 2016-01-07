@@ -9,18 +9,17 @@ import (
 
 func (s *Server) search(w http.ResponseWriter, r *http.Request) {
 
-	user, _ := getUser(r)
 	query := strings.Trim(r.FormValue("q"), " ")
 
 	result := &models.SearchResult{}
 
 	if query != "" {
 		var err error
-		if result.Channels, err = s.DB.Channels.Search(query, user.ID); err != nil {
+		if result.Channels, err = s.DB.Channels.Search(query); err != nil {
 			s.abort(w, r, err)
 			return
 		}
-		if result.Podcasts, err = s.DB.Podcasts.Search(query, user.ID); err != nil {
+		if result.Podcasts, err = s.DB.Podcasts.Search(query); err != nil {
 			s.abort(w, r, err)
 			return
 		}
@@ -49,7 +48,6 @@ func (s *Server) searchBookmarks(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) searchChannel(w http.ResponseWriter, r *http.Request) {
 
-	user, _ := getUser(r)
 	query := strings.Trim(r.FormValue("q"), " ")
 
 	channelID, err := getInt64(r, "id")
@@ -61,7 +59,7 @@ func (s *Server) searchChannel(w http.ResponseWriter, r *http.Request) {
 	var podcasts []models.Podcast
 
 	if query != "" {
-		if podcasts, err = s.DB.Podcasts.SearchByChannelID(query, channelID, user.ID); err != nil {
+		if podcasts, err = s.DB.Podcasts.SearchByChannelID(query, channelID); err != nil {
 			s.abort(w, r, err)
 			return
 		}

@@ -10,6 +10,7 @@ import channelsReducer from './channels';
 import channelReducer from './channel';
 import podcastsReducer from './podcasts';
 import bookmarksReducer from './bookmarks';
+import subscriptionsReducer from './subscriptions';
 
 export default combineReducers({
   routing: routeReducer,
@@ -21,5 +22,6 @@ export default combineReducers({
   channels: channelsReducer,
   channel: channelReducer,
   bookmarks: bookmarksReducer,
+  subscriptions: subscriptionsReducer,
   podcasts: podcastsReducer
 });

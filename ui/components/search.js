@@ -16,6 +16,7 @@ import {
 } from 'react-bootstrap';
 
 import  * as actions from '../actions';
+import { podcastsSelector, channelsSelector } from '../selectors';
 import PodcastList from './podcasts';
 import Image from './image';
 import Icon from './icon';
@@ -131,15 +132,20 @@ export class Search extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { podcasts, showDetail, isLoading } = state.podcasts;
-  const { query, channels } = state.search;
+
+  const { isLoading } = state.podcasts;
+  const { query } = state.search;
+  const { isLoggedIn } = state.auth;
+
+  const podcasts = podcastsSelector(state);
+  const { channels } = channelsSelector(state);
+
   return {
     searchQuery: query,
-    podcasts: podcasts || [],
-    channels: channels || [],
-    showDetail,
+    podcasts: podcasts,
+    channels: channels,
     isLoading,
-    player: state.player
+    isLoggedIn
   };
 };
 

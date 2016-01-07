@@ -9,9 +9,9 @@ import (
 type ChannelDB interface {
 	SelectAll() ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
-	Search(string, int64) ([]models.Channel, error)
-	GetByID(int64, int64) (*models.Channel, error)
-	GetByURL(string, int64) (*models.Channel, error)
+	Search(string) ([]models.Channel, error)
+	GetByID(int64) (*models.Channel, error)
+	GetByURL(string) (*models.Channel, error)
 	Create(*models.Channel) error
 }
 
@@ -26,8 +26,7 @@ func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
 }
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.image, c.url, c.website,
-    1 AS is_subscribed
+	sql := `SELECT c.id, c.title, c.description, c.image, c.url, c.website
     FROM channels c
     JOIN subscriptions s ON s.channel_id = c.id
     WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
@@ -37,34 +36,31 @@ func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel
 	return channels, db.Select(&channels, sql, userID)
 }
 
-func (db *defaultChannelDBImpl) Search(query string, userID int64) ([]models.Channel, error) {
+func (db *defaultChannelDBImpl) Search(query string) ([]models.Channel, error) {
 
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website,
-    EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
-    FROM channels c, plainto_tsquery($2) as q
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
+    FROM channels c, plainto_tsquery($1) as q
     WHERE (c.tsv @@ q)
-    ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($2)) DESC LIMIT 10`
+    ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 10`
 
 	var channels []models.Channel
-	return channels, db.Select(&channels, sql, userID, query)
+	return channels, db.Select(&channels, sql, query)
 }
 
-func (db *defaultChannelDBImpl) GetByURL(url string, userID int64) (*models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website,
-        EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
+func (db *defaultChannelDBImpl) GetByURL(url string) (*models.Channel, error) {
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
         FROM channels c
-        WHERE url=$2`
+        WHERE url=$1`
 	channel := &models.Channel{}
-	return channel, db.Get(channel, sql, userID, url)
+	return channel, db.Get(channel, sql, url)
 }
 
-func (db *defaultChannelDBImpl) GetByID(id int64, userID int64) (*models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website,
-        EXISTS(SELECT id FROM subscriptions WHERE channel_id=c.id AND user_id=$1) AS is_subscribed
+func (db *defaultChannelDBImpl) GetByID(id int64) (*models.Channel, error) {
+	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
         FROM channels c
-        WHERE id=$2`
+        WHERE id=$1`
 	channel := &models.Channel{}
-	return channel, db.Get(channel, sql, userID, id)
+	return channel, db.Get(channel, sql, id)
 }
 
 func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {

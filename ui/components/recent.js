@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 import _ from 'lodash';
 
 import * as actions from '../actions';
+import { podcastsSelector } from '../selectors';
 
 import Icon from './icon';
 import PodcastList from './podcasts';
@@ -37,6 +38,7 @@ export class Recent extends React.Component {
         <div>
           <PodcastList actions={actions}
                        ifEmpty="No recently played podcasts"
+                       isLoggedIn={true}
                        onSelectPage={this.handleSelectPage.bind(this)}
                        showChannel={true} {...this.props} />
           {!_.isEmpty(this.props.podcasts) && !this.props.isLoading ?
@@ -59,13 +61,11 @@ Recent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { podcasts, showDetail, page, isLoading } = state.podcasts;
+  const { page, isLoading } = state.podcasts;
   return {
-    podcasts: podcasts || [],
-    showDetail,
+    podcasts: podcastsSelector(state),
     isLoading,
     page,
-    player: state.player
   };
 };
 

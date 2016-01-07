@@ -22,6 +22,7 @@ func (m *defaultMailer) Send(from string, to []string, subject, message string) 
 
 	parts := []string{
 		"To: " + strings.Join(to, ","),
+		"From: " + from,
 		"Subject: " + subject,
 		"",
 		message,

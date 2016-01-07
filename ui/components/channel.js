@@ -15,6 +15,7 @@ import {
 
 
 import * as actions from '../actions';
+import { podcastsSelector } from '../selectors';
 import PodcastList from './podcasts';
 import Image from './image';
 import Icon from './icon';
@@ -70,7 +71,7 @@ export class Channel extends React.Component {
   }
 
   render() {
-    const { channel, isLoading, query } = this.props;
+    const { channel, isLoading, query, isLoggedIn } = this.props;
 
     if (isLoading && !query) {
       return <Loading />;
@@ -132,6 +133,7 @@ export class Channel extends React.Component {
                            className="form-control"><Icon icon="refresh" /> Show all podcasts</Button></Input> : ''}
         </form>
         <PodcastList showChannel={false}
+                     isLoggedIn={isLoggedIn}
                      onSelectPage={this.handleSelectPage.bind(this)}
                      actions={actions} {...this.props} />
       </div>
@@ -150,16 +152,17 @@ Channel.propTypes = {
 const mapStateToProps = state => {
 
   const { channel, query } = state.channel;
-  const { podcasts, page, showDetail } = state.podcasts;
+  const { page } = state.podcasts;
   const isLoading = state.channel.isLoading || state.podcasts.isLoading;
+  const { isLoggedIn } = state.auth;
+  const podcasts = podcastsSelector(state);
 
   return {
-    player: state.player,
-    podcasts: podcasts || [],
+    podcasts: podcasts,
     channel,
     query,
-    showDetail,
     isLoading,
+    isLoggedIn,
     page
   };
 };
