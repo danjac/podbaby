@@ -57,6 +57,11 @@ export function getLatestPodcasts(page=1) {
   return axios.get("/api/podcasts/latest/", { params: { page } });
 }
 
+export function getPodcast(id) {
+  return axios.get(`/api/podcasts/detail/${id}/`);
+}
+
+
 export function nowPlaying(id) {
   return axios.post(`/api/plays/${id}/`);
 }

@@ -33,7 +33,6 @@ export class PodcastList extends React.Component {
       showChannel
     } = this.props;
 
-
     if (isLoading) {
       return <Loading />;
     }
@@ -92,23 +91,26 @@ export const Podcast = props => {
   const {
     podcast,
     showChannel,
+    showExpanded,
     isLoggedIn,
     togglePlayer,
     toggleDetail,
     toggleBookmark } = props;
 
-  const channelUrl = `/podcasts/channel/${podcast.channelId}/`;
-  const title = <h5>{podcast.title}</h5>;
+  const channelUrl = `/channel/${podcast.channelId}/`;
+  const podcastUrl = `/podcast/${podcast.id}/`;
 
-  let header = title;
+  let header;
 
   if (showChannel) {
     header = (
       <div>
-        <h4><Link to={`/channel/${podcast.channelId}/`}>{podcast.name}</Link></h4>
-        {title}
+        <h4><Link to={showExpanded ? channelUrl : podcastUrl}>{podcast.name}</Link></h4>
+        <h5>{podcast.title}</h5>
       </div>
     );
+  } else {
+    header = <h5><Link to={podcastUrl}>{podcast.title}</Link></h5>;
   }
 
   return (
@@ -149,12 +151,12 @@ export const Podcast = props => {
             </Row>
           </Grid>
       </div>
-      {podcast.description ?
+      {podcast.description && !showExpanded ?
       <Button className="form-control"
               title={podcast.isShowDetail ? 'Hide details' : 'Show details'}
               onClick={toggleDetail}><Icon icon={podcast.isShowDetail ? 'chevron-up': 'chevron-down'} /></Button> : ''}
     </div>
-      {podcast.description && podcast.isShowDetail  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+      {podcast.description && (podcast.isShowDetail || showExpanded)  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
   </Panel>
   );
 };

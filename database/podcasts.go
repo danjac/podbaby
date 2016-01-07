@@ -9,6 +9,7 @@ const maxSearchRows = 20
 
 // PodcastDB manages DB queries to podcasts
 type PodcastDB interface {
+	GetByID(int64) (*models.Podcast, error)
 	SelectAll(int64) (*models.PodcastList, error)
 	SelectSubscribed(int64, int64) (*models.PodcastList, error)
 	SelectByChannelID(int64, int64) (*models.PodcastList, error)
@@ -22,6 +23,19 @@ type PodcastDB interface {
 
 type defaultPodcastDBImpl struct {
 	*sqlx.DB
+}
+
+func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
+
+	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
+    p.channel_id, c.title AS name, c.image, p.pub_date
+    FROM podcasts p
+    JOIN channels c ON c.id = p.channel_id
+    WHERE p.id=$1`
+
+	podcast := &models.Podcast{}
+	err := db.Get(podcast, sql, id)
+	return podcast, err
 }
 
 func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {

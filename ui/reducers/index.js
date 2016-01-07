@@ -9,6 +9,7 @@ import alertsReducer from './alerts';
 import channelsReducer from './channels';
 import channelReducer from './channel';
 import podcastsReducer from './podcasts';
+import podcastReducer from './podcast';
 import bookmarksReducer from './bookmarks';
 import subscriptionsReducer from './subscriptions';
 
@@ -23,5 +24,6 @@ export default combineReducers({
   channel: channelReducer,
   bookmarks: bookmarksReducer,
   subscriptions: subscriptionsReducer,
-  podcasts: podcastsReducer
+  podcasts: podcastsReducer,
+  podcast: podcastReducer
 });

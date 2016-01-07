@@ -17,6 +17,7 @@ import Recent from '../components/recent';
 import Subscriptions from '../components/subscriptions';
 import Bookmarks from '../components/bookmarks';
 import Channel from '../components/channel';
+import Podcast from '../components/podcast';
 import User from '../components/user';
 import PageNotFound from '../components/not_found';
 
@@ -40,14 +41,17 @@ export default function(store, history) {
     const { auth } = store.getState();
     if (auth.isLoggedIn) {
       replaceState(null, "/new/");
+    } else {
+      replaceState(null, "/front/");
     }
   };
 
   return (
     <Router history={history}>
       <Route path="/" component={App}>
-        <IndexRoute component={Front} onEnter={redirectIfLoggedIn} />
+        <IndexRoute onEnter={redirectIfLoggedIn} />
 
+        <Route component={Front} path="/front/" />
         <Route path="/member/" onEnter={requireAuth}>
 
           <IndexRedirect to="/member/subscriptions/" />
@@ -74,6 +78,10 @@ export default function(store, history) {
         <Route path="/channel/:id/"
                component={Channel}
                onEnter={nextState => actions.channel.getChannel(nextState.params.id)} />
+
+        <Route path="/podcast/:id/"
+               component={Podcast}
+               onEnter={nextState => actions.podcasts.getPodcast(nextState.params.id)} />
 
         <Route path="/login/" component={Login} />
         <Route path="/signup/" component={Signup} />

@@ -22,6 +22,7 @@ const Front = props => {
       <p>
         PodBaby makes it easy to find and listen to your favorite podcasts, and to disover new sources of podcasting nirvana.
       </p>
+      <p><Link className="btn btn-lg btn-primary" to='/new/'>Browse podcasts</Link></p>
       <p><Link className="btn btn-lg btn-success" to='/signup/'>Join now</Link></p>
       <p><Link to='/login/'>Already a member? Log in here.</Link></p>
       </div>

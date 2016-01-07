@@ -96,8 +96,10 @@ export class App extends React.Component {
 
   render() {
 
-    const { createHref } = this.props.history;
+    const { createHref, isActive } = this.props.history;
     const { isLoggedIn } = this.props.auth;
+
+    const hideNavbar = isActive("/front/");
 
     const pageContent = (
         <div className="container">
@@ -111,12 +113,14 @@ export class App extends React.Component {
     );
       return (
         <div>
+          {hideNavbar ? '' :
           <NavBar onLogout={this.handleLogout.bind(this)}
                   onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
-                   {...this.props} />
+                   {...this.props} />}
           {pageContent}
           {this.props.player.isPlaying ?
             <Player player={this.props.player}
+                    isLoggedIn={isLoggedIn}
                     onToggleBookmark={this.handleTogglePlayerBookmark.bind(this)}
                     onTimeUpdate={this.handleUpdatePlayerTime.bind(this)}
                     onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}

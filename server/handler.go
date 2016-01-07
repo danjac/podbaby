@@ -87,6 +87,7 @@ func (s *Server) Handler() http.Handler {
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
 
+	podcasts.HandleFunc("/detail/{id}/", s.getPodcast).Methods("GET")
 	podcasts.HandleFunc("/latest/", s.getLatestPodcasts).Methods("GET")
 
 	return nosurf.NewPure(router)
