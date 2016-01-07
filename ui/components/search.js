@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Input } from 'react-bootstrap';
+import { Button, Input, Tabs, Tab } from 'react-bootstrap';
 
 import  * as actions from '../actions';
 import { podcastsSelector, channelsSelector } from '../selectors';
@@ -34,14 +34,75 @@ export class Search extends React.Component {
     this.refs.query.getInputDOMNode().select();
   }
 
+  renderSearchResults() {
+
+    const {
+      dispatch,
+      channels,
+      podcasts,
+      isLoading,
+      searchQuery } = this.props;
+
+      if (isLoading) {
+        return '';
+      }
+
+      if (channels.length == 0 &&
+          podcasts.length == 0 &&
+          searchQuery) return <div>Sorry, no results found for your search.</div>;
+
+      const channelItems = channels.length > 0 && channels.map(channel => {
+
+        const subscribe = event => {
+          event.preventDefault();
+          dispatch(actions.subscribe.toggleSubscribe(channel));
+        };
+
+        return (
+          <ChannelItem key={channel.id}
+                       channel={channel}
+                       subscribe={subscribe}
+                       {...this.props} />
+        );
+
+      });
+
+      const podcastItems = podcasts.length > 0 ?
+
+        <PodcastList actions={actions}
+                     showChannel={true}
+                     ifEmpty=''
+                      {...this.props} /> : '';
+
+      if (podcastItems && channelItems) {
+
+        const tabStyle = { marginTop: 20 };
+
+        return (
+          <Tabs defaultActiveKey={1}>
+            <Tab eventKey={1} title="Podcasts" style={tabStyle}>
+              {podcastItems}
+            </Tab>
+            <Tab eventKey={2} title="Channels" style={tabStyle}>
+              {channelItems}
+            </Tab>
+          </Tabs>
+        );
+
+      } else if (channelItems) {
+
+        return <div>{channelItems}</div>;
+
+      } else if (podcastItems) {
+
+        return podcastItems;
+      }
+
+  }
+
   render() {
 
-  const {
-    dispatch,
-    channels,
-    podcasts,
-    isLoading,
-    searchQuery } = this.props;
+    const { searchQuery } = this.props;
 
     const help = (
       searchQuery ? '' :
@@ -51,39 +112,22 @@ export class Search extends React.Component {
       );
 
     return (
-    <div>
-      <form className="form" onSubmit={this.handleSearch.bind(this)}>
-        <Input type="search"
-               ref="query"
-               help={help}
-               onClick={this.handleFocus.bind(this)}
-               placeholder="Find a channel or podcast" />
-        <Button type="submit" bsStyle="primary" className="form-control">
-          <Icon icon="search" /> Search
-        </Button>
-      </form>
-      {!isLoading && channels.length == 0 && podcasts.length == 0 && searchQuery ? <div>Sorry, no results found for your search.</div> : ''}
-      {channels.map(channel => {
-        const subscribe = (event) => {
-          event.preventDefault();
-          dispatch(actions.subscribe.toggleSubscribe(channel));
-        };
-        return (
-          <ChannelItem key={channel.id}
-                       channel={channel}
-                       subscribe={subscribe}
-                       {...this.props} />
-        );
-      })}
-      {podcasts.length > 0 ? <hr /> : ''}
-      {searchQuery ?
-        <PodcastList actions={actions}
-                     showChannel={true}
-                     ifEmpty=''
-                      {...this.props} /> : '' }
-    </div>
-    );
+
+      <div>
+        <form className="form" onSubmit={this.handleSearch.bind(this)}>
+          <Input type="search"
+                 ref="query"
+                 help={help}
+                 onClick={this.handleFocus.bind(this)}
+                 placeholder="Find a channel or podcast" />
+          <Button type="submit" bsStyle="primary" className="form-control">
+            <Icon icon="search" /> Search
+          </Button>
+        </form>
+        {this.renderSearchResults()}
+      </div>);
   }
+
 }
 
 const mapStateToProps = state => {
