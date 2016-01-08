@@ -27,6 +27,7 @@ func init() {
 		"Mon, 2 Jan 2006 15:04 +0000",
 		"Mon, 02 Jan 2006 15:04 +0000",
 		"Monday, 2 January 2006 15:04:05 MST",
+		"Monday, 2 Jan 2006 15:04:05 MST",
 		"2 January 2006 15:04:05 MST",
 		"2 Jan 2006 15:04:05 MST",
 	}
@@ -120,20 +121,26 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 			Title:       item.Title,
 			Description: item.Description,
 		}
+
 		if len(item.Enclosures) == 0 {
 			continue
 		}
+
+		podcast.EnclosureURL = item.Enclosures[0].Url
+
 		if item.Guid == nil {
 			f.Log.Debug("Podcast ID:" + podcast.Title + " has no GUID, using pub date")
-			// use pub date as standin Guid
-			podcast.Guid = item.PubDate
+			// use pub date + URL as standin Guid
+
+			podcast.Guid = item.PubDate + ":" + podcast.EnclosureURL
+
 		} else {
 			podcast.Guid = *item.Guid
 		}
 		if podcast.Guid == "" {
 			f.Log.Error("Could not find suitable GUID for " + podcast.Title)
 		}
-		podcast.EnclosureURL = item.Enclosures[0].Url
+
 		var pubDate time.Time
 
 		// try using the builtin RSS parser first
