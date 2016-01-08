@@ -33,6 +33,10 @@ class Player extends React.Component {
   render() {
     const { player, isLoggedIn } = this.props;
     const { podcast } = player;
+    const btnStyle = {
+      color: "#fff",
+      backgroundColor: "#222"
+    };
     return (
       <footer style={{
         position:"fixed",
@@ -69,13 +73,19 @@ class Player extends React.Component {
                 <a download
                    title="Download this podcast"
                    className="btn btn-sm btn-default"
+                   style={btnStyle}
                    href={podcast.enclosureUrl}><Icon icon="download" /></a>
                  {isLoggedIn ?
                  <Button title={podcast.isBookmarked ? 'Remove bookmark' : 'Add bookmark '}
-                         bsSize="sm" onClick={this.handleBookmark.bind(this)}>
+                         bsSize="sm"
+                         style={btnStyle}
+                         onClick={this.handleBookmark.bind(this)}>
                     <Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
                 </Button> : ''}
-                <Button title='Close player' bsSize="sm" onClick={this.handleClose.bind(this)}>
+                <Button title='Close player'
+                        bsSize="sm"
+                        style={btnStyle}
+                        onClick={this.handleClose.bind(this)}>
                   <Icon icon="remove" />
                 </Button>
               </ButtonGroup>
