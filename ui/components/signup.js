@@ -37,6 +37,9 @@ export class Signup extends React.Component {
       <div>
         <h2>Join PodBaby today.</h2>
         <hr />
+        <p className="lead">
+          As a member you can subscribe to podcast feeds and keep track of your favorite episodes.
+        </p>
         <form className="form-horizontal"
               onSubmit={this.handleSubmit.bind(this)}>
             <Input required
