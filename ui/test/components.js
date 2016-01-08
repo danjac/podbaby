@@ -76,8 +76,8 @@ describe('Podcast component', function() {
     const rendered = TestUtils.renderIntoDocument(component, 'div');
     const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-body")
     assert.equal(tags.length, 1)
-    const h4 = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h4');
-    assert.equal(h4.textContent, podcast.name);
+    const h5 = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h5');
+    assert.equal(h5.textContent, podcast.name);
 
   });
 
