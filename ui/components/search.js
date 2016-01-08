@@ -3,12 +3,14 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Input, Tabs, Tab } from 'react-bootstrap';
+import DocumentTitle from 'react-document-title';
 
 import  * as actions from '../actions';
 import { podcastsSelector, channelsSelector } from '../selectors';
 import ChannelItem from './channel_item';
 import PodcastList from './podcasts';
 import Icon from './icon';
+import { getTitle } from './utils';
 
 export class Search extends React.Component {
 
@@ -112,20 +114,22 @@ export class Search extends React.Component {
       );
 
     return (
-
-      <div>
-        <form className="form" onSubmit={this.handleSearch.bind(this)}>
-          <Input type="search"
-                 ref="query"
-                 help={help}
-                 onClick={this.handleFocus.bind(this)}
-                 placeholder="Find a channel or podcast" />
-          <Button type="submit" bsStyle="primary" className="form-control">
-            <Icon icon="search" /> Search
-          </Button>
-        </form>
-        {this.renderSearchResults()}
-      </div>);
+      <DocumentTitle title={getTitle('Search podcasts')}>
+        <div>
+          <form className="form" onSubmit={this.handleSearch.bind(this)}>
+            <Input type="search"
+                   ref="query"
+                   help={help}
+                   onClick={this.handleFocus.bind(this)}
+                   placeholder="Find a channel or podcast" />
+            <Button type="submit" bsStyle="primary" className="form-control">
+              <Icon icon="search" /> Search
+            </Button>
+          </form>
+          {this.renderSearchResults()}
+        </div>
+      </DocumentTitle>
+    );
   }
 
 }

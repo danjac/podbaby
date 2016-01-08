@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Button } from 'react-bootstrap';
 import _ from 'lodash';
+import DocumentTitle from 'react-document-title';
 
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 
+import { getTitle } from './utils';
 import Icon from './icon';
 import PodcastList from './podcasts';
 
@@ -35,6 +37,7 @@ export class Recent extends React.Component {
   render() {
 
     return (
+      <DocumentTitle title={getTitle('My recently played podcasts')}>
         <div>
           <PodcastList actions={actions}
                        ifEmpty="No recently played podcasts"
@@ -48,6 +51,7 @@ export class Recent extends React.Component {
                   <Icon icon="trash" /> Clear my recently played list
           </Button> : ''}
         </div>
+      </DocumentTitle>
       );
 
   }

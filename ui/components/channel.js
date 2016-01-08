@@ -21,7 +21,7 @@ import PodcastList from './podcasts';
 import Image from './image';
 import Icon from './icon';
 import Loading from './loading';
-import { sanitize, formatPubDate } from './utils';
+import { sanitize, formatPubDate, getTitle } from './utils';
 
 export class Channel extends React.Component {
 
@@ -91,7 +91,7 @@ export class Channel extends React.Component {
     const { isSubscribed } = channel;
 
     return (
-      <DocumentTitle title={`PodBaby | ${channel.title}`}>
+      <DocumentTitle title={getTitle(channel.title)}>
         <div>
         <div className="media">
           <div className="media-left">

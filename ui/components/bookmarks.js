@@ -2,13 +2,15 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 
 import { Button, Input } from 'react-bootstrap';
-import Icon from './icon';
 
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 import PodcastList from './podcasts';
+import Icon from './icon';
+import { getTitle } from './utils';
 
 
 export class Bookmarks extends React.Component {
@@ -49,6 +51,7 @@ export class Bookmarks extends React.Component {
   render() {
     const { query } = this.props;
     return (
+      <DocumentTitle title={getTitle('My bookmarks')}>
       <div>
         <form onSubmit={this.handleSearch.bind(this)}>
           <Input type="search"
@@ -74,6 +77,7 @@ export class Bookmarks extends React.Component {
                             onSelectPage={this.handleSelectPage.bind(this)}
                             {...this.props} />
       </div>
+    </DocumentTitle>
     );
   }
 }

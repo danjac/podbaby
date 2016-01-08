@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
+import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 
 import {
@@ -9,6 +10,7 @@ import {
 
 import * as actions from '../actions';
 import Icon from './icon';
+import { getTitle } from './utils';
 
 export class User extends React.Component {
 
@@ -53,6 +55,7 @@ export class User extends React.Component {
 
   render() {
     return (
+    <DocumentTitle title={getTitle('My settings')}>
       <div>
         <h3>Change my email address</h3>
         <form className="form form-vertical" onSubmit={this.handleSubmitEmail.bind(this)}>
@@ -87,6 +90,7 @@ export class User extends React.Component {
           </p>
         </div>
       </div>
+    </DocumentTitle>
     );
   }
 

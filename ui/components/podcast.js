@@ -6,6 +6,7 @@ import * as actions from '../actions';
 import { podcastSelector } from '../selectors';
 import { bindAllActionCreators } from '../actions/utils';
 import { Podcast } from './podcasts';
+import { getTitle } from './utils';
 import Loading from './loading';
 
 class PodcastDetail extends React.Component {
@@ -47,7 +48,7 @@ class PodcastDetail extends React.Component {
     }
 
     return (
-      <DocumentTitle title={`PodBaby | ${podcast.name} | ${podcast.title}`}>
+      <DocumentTitle title={getTitle(podcast.name, podcast.title)}>
       <Podcast podcast={podcast}
                showChannel={true}
                showExpanded={true}

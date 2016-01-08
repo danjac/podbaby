@@ -17,3 +17,8 @@ export const sanitize = dirty => {
 };
 
 export const formatPubDate = pubDate => moment(pubDate).format("MMMM Do YYYY");
+
+export function getTitle () {
+  const args = Array.prototype.slice.call(arguments);
+  return ["Podbaby"].concat(args).join(" | ");
+}

@@ -8,6 +8,7 @@ import DocumentTitle from 'react-document-title';
 import { auth, player } from './actions';
 import routes from './routes';
 import configureStore from './store';
+import { getTitle } from './components/utils';
 
 const history = createHashHistory();
 const store = configureStore();
@@ -17,7 +18,7 @@ syncReduxAndRouter(history, store);
 const Container = props => {
 
   return (
-  <DocumentTitle title="PodBaby">
+  <DocumentTitle title={getTitle()}>
     <Provider store={store}>
       {routes(store, history)}
     </Provider>

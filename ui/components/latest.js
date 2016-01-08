@@ -2,10 +2,12 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import DocumentTitle from 'react-document-title';
 
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 
+import { getTitle } from './utils';
 import PodcastList from './podcasts';
 
 export class Latest extends React.Component {
@@ -22,10 +24,15 @@ export class Latest extends React.Component {
     const ifEmptyMsg = (
       <span>You haven't subscribed to any channels yet.
         Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
-    return <PodcastList actions={actions}
-                        ifEmpty={ifEmptyMsg}
-                        onSelectPage={this.handleSelectPage.bind(this)}
-                        showChannel={true} {...this.props} />;
+
+    return (
+      <DocumentTitle title={getTitle('Latest podcasts')}>
+        <PodcastList actions={actions}
+                     ifEmpty={ifEmptyMsg}
+                     onSelectPage={this.handleSelectPage.bind(this)}
+                     showChannel={true} {...this.props} />
+      </DocumentTitle>
+    );
   }
 }
 

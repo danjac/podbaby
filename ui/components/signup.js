@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
 
 import {
@@ -11,6 +11,7 @@ import {
 
 import { auth } from '../actions';
 import Icon from './icon';
+import { getTitle } from './utils';
 
 export class Signup extends React.Component {
 
@@ -34,6 +35,7 @@ export class Signup extends React.Component {
   render() {
 
     return (
+    <DocumentTitle title={getTitle('Signup')}>
       <div>
         <h2>Join PodBaby today.</h2>
         <hr />
@@ -61,6 +63,7 @@ export class Signup extends React.Component {
         </form>
         <p><Link to='/login/'>Already a member? Log in here.</Link></p>
       </div>
+    </DocumentTitle>
 
     );
   }

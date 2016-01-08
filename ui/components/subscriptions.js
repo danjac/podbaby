@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import moment from 'moment';
+import DocumentTitle from 'react-document-title';
 
 import {
   Panel,
@@ -14,6 +15,7 @@ import {
 import * as  actions from '../actions';
 import { channelsSelector } from '../selectors';
 import Icon from './icon';
+import { getTitle } from './utils';
 import Loading from './loading';
 import ChannelItem from './channel_item';
 
@@ -65,6 +67,7 @@ export class Subscriptions extends React.Component {
                   activePage={page.page} /> : '');
 
     return (
+      <DocumentTitle title={getTitle('My subscriptions')}>
       <div>
         <Input className="form-control"
                type="search"
@@ -87,6 +90,7 @@ export class Subscriptions extends React.Component {
                             subscribe={toggleSubscribe} />;
       })}
       </div>
+    </DocumentTitle>
     );
   }
 }

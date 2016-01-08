@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import DocumentTitle from 'react-document-title';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -13,6 +14,7 @@ import {
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
+import { getTitle } from './utils';
 import Icon from './icon';
 
 export class RecoverPasswordModal extends React.Component {
@@ -88,6 +90,7 @@ export class Login extends React.Component {
   render() {
 
     return (
+    <DocumentTitle title={getTitle("Login")}>
       <div>
         <h2>Sign into your PodBaby account.</h2>
         <hr />
@@ -115,6 +118,7 @@ export class Login extends React.Component {
                               onSubmit={this.handleRecoverPassword.bind(this)}
                               onClose={this.handleCloseRecoverPasswordForm.bind(this)} />
       </div>
+    </DocumentTitle>
 
     );
   }
