@@ -26,9 +26,8 @@ export function deleteBookmark(podcastId) {
 
 export function getBookmarks(page=1) {
   return dispatch => {
-    dispatch(createAction(Actions.CLEAR_BOOKMARKS_SEARCH));
-    dispatch(createAction(Actions.PODCASTS_REQUEST));
     dispatch(requestPodcasts());
+    dispatch(createAction(Actions.CLEAR_BOOKMARKS_SEARCH));
     api.getBookmarks(page)
     .then(result => {
       dispatch(createAction(Actions.GET_BOOKMARKS_SUCCESS, result.data));
