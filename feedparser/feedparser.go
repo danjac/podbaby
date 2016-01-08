@@ -5,9 +5,29 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
+	"github.com/jinzhu/now"
 	rss "github.com/jteeuwen/go-pkg-rss"
 	"strings"
+	"time"
 )
+
+func init() {
+	// support for additional pub date formats we've found
+	formats := []string{
+		"Mon, 02 Jan 2006 15:04:05 +0000",
+		"Mon, 02 Jan 2006 15:04:05 MST",
+		"Mon, 2 Jan 2006 15:04:05 MST",
+		"Mon, 2 Jan 2006 15:04:05 -0700",
+		"Mon, 5 January 2006 15:04:05 MST",
+		"Mon, 02 Jan 2006 15:04:05 -0700",
+		"Mon, 02 January 2006 15:04:05 MST",
+		"2 January 2006 15:04:05 MST",
+		"2 Jan 2006 15:04:05 MST",
+	}
+	for _, format := range formats {
+		now.TimeFormats = append(now.TimeFormats, format)
+	}
+}
 
 type Result struct {
 	Channel *rss.Channel
@@ -98,13 +118,21 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 			continue
 		}
 		podcast.EnclosureURL = item.Enclosures[0].Url
-		// unfortunately brokenness in date parsing affects some RSS formats
-		pubDate, _ := item.ParsedPubDate()
+		var pubDate time.Time
+
+		// try using the builtin RSS parser first
+		if pubDate, err = item.ParsedPubDate(); err != nil {
+			// try some other parsers
+			pubDate, err = now.Parse(item.PubDate)
+			// pubdate will be "empty", we'll have to live with that
+			// but log anyway if we can fix that format
+			if err != nil {
+				f.Log.Error(err)
+			}
+		}
 		podcast.PubDate = pubDate
 
-		//log.Info("Podcast:" + podcast.Title)
-
-		if err := f.DB.Podcasts.Create(podcast); err != nil {
+		if err = f.DB.Podcasts.Create(podcast); err != nil {
 			return err
 		}
 	}
