@@ -112,7 +112,6 @@ export const Podcast = props => {
   } else {
     header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
   }
-  console.log(sanitize(podcast.description))
   return (
     <Panel>
       <div className="media">

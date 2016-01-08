@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 
 import {
   Grid,
@@ -90,7 +91,8 @@ export class Channel extends React.Component {
     const { isSubscribed } = channel;
 
     return (
-      <div>
+      <DocumentTitle title={`PodBaby | ${channel.title}`}>
+        <div>
         <div className="media">
           <div className="media-left">
             <a href="#">
@@ -144,6 +146,7 @@ export class Channel extends React.Component {
                      onSelectPage={this.handleSelectPage.bind(this)}
                      actions={actions} {...this.props} /> }
       </div>
+      </DocumentTitle>
     );
   }
 }

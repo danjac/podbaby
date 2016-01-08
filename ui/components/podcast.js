@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 
 import * as actions from '../actions';
 import { podcastSelector } from '../selectors';
@@ -45,13 +46,17 @@ class PodcastDetail extends React.Component {
       return <div>Sorry, no podcast found</div>;
     }
 
-    return <Podcast podcast={podcast}
-                    showChannel={true}
-                    showExpanded={true}
-                    toggleBookmark={this.handleToggleBookmark.bind(this)}
-                    toggleDetail={this.handleToggleDetail.bind(this)}
-                    togglePlayer={this.handleTogglePlayer.bind(this)}
-                    isLoggedIn={isLoggedIn} />
+    return (
+      <DocumentTitle title={`PodBaby | ${podcast.name} | ${podcast.title}`}>
+      <Podcast podcast={podcast}
+               showChannel={true}
+               showExpanded={true}
+               toggleBookmark={this.handleToggleBookmark.bind(this)}
+               toggleDetail={this.handleToggleDetail.bind(this)}
+               togglePlayer={this.handleTogglePlayer.bind(this)}
+               isLoggedIn={isLoggedIn} />
+      </DocumentTitle>
+    );
   }
 }
 
