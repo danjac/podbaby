@@ -21,6 +21,9 @@ func init() {
 		"Mon, 5 January 2006 15:04:05 MST",
 		"Mon, 02 Jan 2006 15:04:05 -0700",
 		"Mon, 02 January 2006 15:04:05 MST",
+		"Mon, 02 January 2006 15:04:05 +0000",
+		"Mon, 02 January 2006 15:04:05 -0700",
+		"Mon, 2 January 2006 15:04:05 -0700",
 		"2 January 2006 15:04:05 MST",
 		"2 Jan 2006 15:04:05 MST",
 	}
@@ -125,7 +128,7 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 			// try some other parsers
 			pubDate, err = now.Parse(item.PubDate)
 			// pubdate will be "empty", we'll have to live with that
-			// but log anyway if we can fix that format
+			// but log anyway to see if we can fix that format
 			if err != nil {
 				f.Log.Error(err)
 			}
