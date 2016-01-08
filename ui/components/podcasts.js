@@ -112,7 +112,7 @@ export const Podcast = props => {
   } else {
     header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
   }
-
+  console.log(sanitize(podcast.description))
   return (
     <Panel>
       <div className="media">
@@ -157,7 +157,7 @@ export const Podcast = props => {
               onClick={toggleDetail}><Icon icon={podcast.isShowDetail ? 'chevron-up': 'chevron-down'} /></Button> : ''}
     </div>
     {podcast.description && (podcast.isShowDetail || showExpanded)  ?
-    <p className={showExpanded ? 'lead': 'well'} style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+    <p className={showExpanded ? 'lead': ''} style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
   </Panel>
   );
 };
