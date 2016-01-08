@@ -240,7 +240,14 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 }
 
 func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
-	query, args, err := sqlx.Named("SELECT insert_podcast(:channel_id, :title, :description, :enclosure_url, :pub_date)", pc)
+	query, args, err := sqlx.Named(`
+        SELECT insert_podcast(
+            :channel_id, 
+            :guid,
+            :title, 
+            :description, 
+            :enclosure_url, 
+            :pub_date)`, pc)
 	if err != nil {
 		return err
 	}

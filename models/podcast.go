@@ -10,6 +10,7 @@ type PodcastList struct {
 type Podcast struct {
 	ID           int64     `db:"id" json:"id"`
 	ChannelID    int64     `db:"channel_id" json:"channelId"`
+	Guid         string    `db:"guid" json:"-"`
 	Name         string    `db:"name" json:"name"`
 	Image        string    `db:"image" json:"image"`
 	Title        string    `db:"title" json:"title"`

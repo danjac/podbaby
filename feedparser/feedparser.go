@@ -120,6 +120,11 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 		if len(item.Enclosures) == 0 {
 			continue
 		}
+		if item.Guid == nil {
+			f.Log.Error("Podcast ID:" + podcast.Title + " has no GUID")
+			continue
+		}
+		podcast.Guid = *item.Guid
 		podcast.EnclosureURL = item.Enclosures[0].Url
 		var pubDate time.Time
 
