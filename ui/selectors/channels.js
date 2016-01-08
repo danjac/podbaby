@@ -49,6 +49,8 @@ export const channelsSelector = createSelector(
       numPages: numPages
     }
 
+    console.log(filteredChannels.length, page);
+
     const paginatedChannels = filteredChannels.slice(start, end);
 
     return {

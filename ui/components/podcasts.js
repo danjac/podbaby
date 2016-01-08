@@ -8,7 +8,6 @@ import {
   Col,
   ButtonGroup,
   Button,
-  Well,
   Panel,
   Pagination
 } from 'react-bootstrap';
@@ -157,7 +156,8 @@ export const Podcast = props => {
               title={podcast.isShowDetail ? 'Hide details' : 'Show details'}
               onClick={toggleDetail}><Icon icon={podcast.isShowDetail ? 'chevron-up': 'chevron-down'} /></Button> : ''}
     </div>
-      {podcast.description && (podcast.isShowDetail || showExpanded)  ? <Well style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
+    {podcast.description && (podcast.isShowDetail || showExpanded)  ?
+    <p className={showExpanded ? 'lead': 'well'} style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(podcast.description)} /> : ''}
   </Panel>
   );
 };

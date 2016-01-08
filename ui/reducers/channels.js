@@ -14,7 +14,7 @@ export default function(state=initialState, action) {
   switch(action.type) {
 
     case Actions.FILTER_CHANNELS:
-      return Object.assign({}, state, { filter: action.payload });
+      return Object.assign({}, state, { filter: action.payload, page: 1 });
 
     case Actions.SELECT_CHANNELS_PAGE:
       return Object.assign({}, state, { page: action.payload });
