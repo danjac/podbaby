@@ -5,10 +5,6 @@ axios.interceptors.request.use(config => {
     return config;
 }, error => Promise.reject(error));
 
-export function getCurrentUser() {
-  return axios.get("/api/auth/currentuser/");
-}
-
 export function logout() {
   return axios.delete("/api/auth/logout/");
 }

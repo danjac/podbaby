@@ -7,7 +7,8 @@ import moment from 'moment';
 
 import {
   Panel,
-  Input
+  Input,
+  Pagination
 } from 'react-bootstrap';
 
 import * as  actions from '../actions';
@@ -29,12 +30,18 @@ export class Subscriptions extends React.Component {
     this.actions.filterChannels(value);
   }
 
+  handleSelectPage(event, selectedEvent) {
+    event.preventDefault();
+    const page = selectedEvent.eventKey;
+    this.actions.selectPage(page);
+  }
+
   handleFocus() {
     this.refs.filter.getInputDOMNode().select();
   }
 
   render() {
-    const { channels, unfilteredChannels, isLoading } = this.props;
+    const { page, channels, unfilteredChannels, isLoading } = this.props;
 
     if (isLoading) {
       return <Loading />;
@@ -46,6 +53,17 @@ export class Subscriptions extends React.Component {
           Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
     }
 
+    const pagination = (
+      page  && page.numPages > 1 ?
+      <Pagination onSelect={this.handleSelectPage.bind(this)}
+                  first
+                  last
+                  prev
+                  next
+                  maxButtons={6}
+                  items={page.numPages}
+                  activePage={page.page} /> : '');
+
     return (
       <div>
         <Input className="form-control"
@@ -53,11 +71,12 @@ export class Subscriptions extends React.Component {
                ref="filter"
                onClick={this.handleFocus.bind(this)}
                onKeyUp={this.handleFilterChannels.bind(this)}
-               placeholder="Find a channel" />
+               placeholder="Find a subscription" />
         <Input>
           <a className="btn btn-default form-control"
             href={`/podbaby-${moment().format('YYYY-MM-DD')}.opml`} download><Icon icon="download" /> Download OPML</a>
         </Input>
+        {pagination}
       {this.props.channels.map(channel => {
         const toggleSubscribe = () => {
             this.props.dispatch(actions.subscribe.toggleSubscribe(channel));

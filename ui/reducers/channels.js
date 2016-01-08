@@ -3,7 +3,8 @@ import { Actions } from '../constants';
 const initialState = {
   channels: [],
   filter: "",
-  isLoading: false
+  isLoading: false,
+  page: 1
 };
 
 export default function(state=initialState, action) {
@@ -14,6 +15,9 @@ export default function(state=initialState, action) {
 
     case Actions.FILTER_CHANNELS:
       return Object.assign({}, state, { filter: action.payload });
+
+    case Actions.SELECT_CHANNELS_PAGE:
+      return Object.assign({}, state, { page: action.payload });
 
     case Actions.GET_CHANNELS_REQUEST:
       return Object.assign({}, state, { isLoading: true });
@@ -32,7 +36,8 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, {
         channels: channels,
         isLoading: false,
-        filter: ""
+        filter: "",
+        page: 1
       });
 
     case Actions.CLEAR_SEARCH:
@@ -41,7 +46,8 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, {
         channels: [],
         isLoading: false,
-        filter: ""
+        filter: "",
+        page: 1
       });
 
 }

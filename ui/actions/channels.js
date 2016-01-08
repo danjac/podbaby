@@ -6,6 +6,10 @@ export function filterChannels(filter) {
   return createAction(Actions.FILTER_CHANNELS, filter);
 }
 
+export function selectPage(page) {
+  return createAction(Actions.SELECT_CHANNELS_PAGE, page);
+}
+
 export function getChannels() {
     return dispatch => {
         dispatch(createAction(Actions.GET_CHANNELS_REQUEST));
