@@ -106,12 +106,12 @@ export const Podcast = props => {
   if (showChannel) {
     header = (
       <div>
-        <h4><Link to={showExpanded ? channelUrl : podcastUrl}>{podcast.name}</Link></h4>
-        <h5>{podcast.title}</h5>
+        <h4>{showExpanded ? podcast.title : <Link to={podcastUrl}>{podcast.title}</Link>}</h4>
+        <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
       </div>
     );
   } else {
-    header = <h5><Link to={podcastUrl}>{podcast.title}</Link></h5>;
+    header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
   }
 
   return (
