@@ -43,7 +43,6 @@ class NavBar extends React.Component {
 
     return (
       <Navbar fixedTop
-              inverse
               expanded={this.state.expanded}
               onToggle={this.handleToggle.bind(this)}>
         <Navbar.Header>

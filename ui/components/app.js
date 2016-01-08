@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import 'bootswatch/spacelab/bootstrap.min.css';
+import 'bootswatch/paper/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 import {
