@@ -210,6 +210,7 @@ func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	s.Log.Info("passwords:", decoder.OldPassword)
 	// validate old password first
 
 	if !user.CheckPassword(decoder.OldPassword) {

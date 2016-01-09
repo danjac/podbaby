@@ -13,10 +13,8 @@ func Decode(r *http.Request, data interface{}) error {
 	if err := json.NewDecoder(r.Body).Decode(data); err != nil {
 		return err
 	}
-	if _, err := govalidator.ValidateStruct(data); err != nil {
-		return err
-	}
-	return nil
+	_, err := govalidator.ValidateStruct(data)
+	return err
 }
 
 type RecoverPassword struct {
@@ -24,25 +22,25 @@ type RecoverPassword struct {
 }
 
 type Signup struct {
-	Name     string `json:"name",valid:"length(3), required"`
-	Email    string `json:"email",valid:"email,required"`
-	Password string `json:"password",valid:"length(6), required"`
+	Name     string `json:"name" valid:"required,length(3|100)"`
+	Email    string `json:"email" valid:"required,email"`
+	Password string `json:"password" valid:"required,length(6|1000)"`
 }
 
 type Login struct {
-	Identifier string `json:"identifier",valid:"required"`
-	Password   string `json:"password",valid:"required"`
+	Identifier string `json:"identifier" valid:"required"`
+	Password   string `json:"password" valid:"required"`
 }
 
 type NewChannel struct {
-	URL string `json:"url",valid:"url,required"`
+	URL string `json:"url" valid:"required,url"`
 }
 
 type NewEmail struct {
-	Email string `json:"email",valid:"email,required"`
+	Email string `json:"email" valid:"required,email"`
 }
 
 type NewPassword struct {
-	OldPassword string `json:"oldPassword",valid:"length(6),required"`
-	NewPassword string `json:"newPassword",valid:"length(6),required"`
+	OldPassword string `json:"oldPassword"  valid:"required"`
+	NewPassword string `json:"newPassword"  valid:"required,length(6|1000)"`
 }
