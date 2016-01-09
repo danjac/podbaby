@@ -1,17 +1,77 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
+import { reduxForm } from 'redux-form';
+import validator from 'validator';
 
 import {
   Input,
   Button
 } from 'react-bootstrap';
 
+import * as api from '../api';
 import { auth } from '../actions';
 import Icon from '../components/icon';
 import { getTitle } from './utils';
+
+const validate = values => {
+
+  const { name, email, password } = values;
+  const errors = {};
+
+  if (!name || name.length < 3 || name.length > 60) {
+    errors.name = "Name must be between 3 and 60 characters in length";
+  }
+
+  if (!email || !validator.isEmail(email)) {
+    errors.email = "A valid email address is required";
+  }
+
+  if (!password || password.length < 6) {
+    errors.password = "Password must be at least 6 characters";
+  }
+
+  return errors;
+};
+
+const asyncValidate = (values, dispatch) => {
+
+  const checkName = () => {
+    if (!values.name) return false;
+    return api.isName(values.name)
+    .then(result => {
+      if (result.data) {
+        return { name: "This name is already in use" };
+      }
+  })};
+
+  const checkEmail = () => {
+    if (!values.email) return false;
+    return api.isEmail(values.email)
+    .then(result => {
+      if (result.data) {
+        return { email: "This email is already in use" };
+      }
+  })};
+
+  return Promise.all([
+    checkEmail(),
+    checkName()
+  ])
+  .then(errors => {
+    const result = _.reduce(errors, (result, error) => {
+      if (error) {
+        return Object.assign({}, result, error);
+      }
+    }, {});
+    console.log("RESULT:", result);
+    return result;
+  });
+
+};
 
 export class Signup extends React.Component {
 
@@ -21,18 +81,23 @@ export class Signup extends React.Component {
     this.actions = bindActionCreators(auth, dispatch);
   }
 
-  handleSubmit(event) {
-
-    event.preventDefault();
-
-    const name = this.refs.name.getInputDOMNode().value;
-    const email = this.refs.email.getInputDOMNode().value;
-    const password = this.refs.password.getInputDOMNode().value;
-
-    this.actions.signup(name, email, password);
-
+  handleSubmit(values) {
+    const { name, email, password } = values;
+    console.log("submitting!!!", name, email, password)
+//this.actions.signup(name, email, password);
   }
+
   render() {
+
+    const {
+      fields: { name, email, password },
+      error,
+      handleSubmit,
+      resetForm,
+      submitting
+    } = this.props;
+
+    const onSubmit = handleSubmit(this.handleSubmit.bind(this));
 
     return (
     <DocumentTitle title={getTitle('Signup')}>
@@ -43,21 +108,23 @@ export class Signup extends React.Component {
           As a member you can subscribe to podcast feeds and keep track of your favorite episodes.
         </p>
         <form className="form-horizontal"
-              onSubmit={this.handleSubmit.bind(this)}>
-            <Input required
-              type="text"
-              ref="name"
-              placeholder="Name" />
-            <Input required
-              type="email"
-              ref="email"
-              placeholder="Email address" />
-            <Input required
-              type="password"
-              ref="password"
-              placeholder="Password" />
+              onSubmit={onSubmit}>
+              <Input hasFeedback={name.touched} bsStyle={name.touched ? ( name.error ? 'error': 'success' ) : undefined}>
+                <input type="text" className="form-control" placeholder="Name" {...name} />
+                {name.touched && name.error && <div className="help-block">{name.error}</div>}
+              </Input>
+              <Input hasFeedback={email.touched} bsStyle={email.touched ? ( email.error ? 'error': 'success' ) : undefined}>
+                <input type="email" className="form-control" placeholder="Email address" {...email} />
+                {email.touched && email.error && <div className="help-block">{email.error}</div>}
+              </Input>
+              <Input hasFeedback={password.touched} bsStyle={password.touched ? ( password.error ? 'error': 'success' ) : undefined}>
+                <input type="password" className="form-control" placeholder="Password" {...password} />
+                {password.touched && password.error && <div className="help-block">{password.error}</div>}
+              </Input>
             <Button
               bsStyle="primary"
+              disabled={submitting}
+              onClick={onSubmit}
               className="form-control"
               type="submit"><Icon icon="sign-in" /> Signup</Button>
         </form>
@@ -70,7 +137,16 @@ export class Signup extends React.Component {
 };
 
 Signup.propTypes = {
+  fields: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  resetForm: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  asyncValidating: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired
 };
 
-export default connect()(Signup);
+const fields = ['name', 'email', 'password'];
+const asyncBlurFields = ['name', 'email'];
+
+export default reduxForm({ form: 'signup', fields, validate, asyncValidate, asyncBlurFields })(Signup);

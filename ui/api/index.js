@@ -90,6 +90,15 @@ export function deleteBookmark(id) {
   return axios.delete(`/api/bookmarks/${id}/`);
 }
 
+export function isName(name) {
+  return axios.get(`/api/user/name/`, { params: { name } });
+}
+
+
+export function isEmail(email) {
+  return axios.get(`/api/user/email/`, { params: { email } });
+}
+
 export function changeEmail(email) {
   return axios.patch(`/api/user/email/`, { email });
 }

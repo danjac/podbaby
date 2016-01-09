@@ -96,6 +96,53 @@ PodBaby
 
 }
 
+func (s *Server) isName(w http.ResponseWriter, r *http.Request) {
+
+	var (
+		err    error
+		exists bool
+	)
+
+	name := r.FormValue("name")
+	if name == "" {
+		s.Render.Text(w, http.StatusBadRequest, "name param required")
+		return
+	}
+
+	if exists, err = s.DB.Users.IsName(name); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
+	s.Render.JSON(w, http.StatusOK, exists)
+}
+
+func (s *Server) isEmail(w http.ResponseWriter, r *http.Request) {
+	var (
+		err    error
+		exists bool
+		userID int64
+	)
+
+	email := r.FormValue("email")
+	if email == "" {
+		s.Render.Text(w, http.StatusBadRequest, "email param required")
+		return
+	}
+
+	if user, err := s.getUserFromCookie(r); err == nil {
+		userID = user.ID
+	}
+
+	if exists, err = s.DB.Users.IsEmail(email, userID); err != nil {
+		s.abort(w, r, err)
+		return
+	}
+
+	s.Render.JSON(w, http.StatusOK, exists)
+
+}
+
 func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 
 	decoder := &decoders.Signup{}

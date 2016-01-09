@@ -40,6 +40,9 @@ func (s *Server) Handler() http.Handler {
 
 	user := api.PathPrefix("/user/").Subrouter()
 
+	user.HandleFunc("/name/", s.isName).Methods("GET")
+	user.HandleFunc("/email/", s.isEmail).Methods("GET")
+
 	user.Handle("/email/", s.requireAuth(s.changeEmail)).Methods("PATCH")
 	user.Handle("/password/", s.requireAuth(s.changePassword)).Methods("PATCH")
 	user.Handle("/", s.requireAuth(s.deleteAccount)).Methods("DELETE")
