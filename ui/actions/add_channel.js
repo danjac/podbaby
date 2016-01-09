@@ -8,17 +8,10 @@ import { createAction } from './utils';
 export const open = () => createAction(Actions.OPEN_ADD_CHANNEL_FORM);
 export const close = () => createAction(Actions.CLOSE_ADD_CHANNEL_FORM);
 
-export function add(url) {
-    return dispatch => {
-        dispatch(createAction(Actions.ADD_CHANNEL_REQUEST));
-        api.addChannel(url)
-        .then(result => {
-            dispatch(alerts.success("New channel added"));
-            dispatch(createAction(Actions.ADD_CHANNEL_SUCCESS, result.data));
-            dispatch(pushPath(`/channel/${result.data.id}/`));
-        })
-        .catch(error => {
-            dispatch(createAction(Actions.ADD_CHANNEL_FAILURE, { error }));
-        });
-    };
+export function complete(channel) {
+  return dispatch => {
+      dispatch(alerts.success("New channel added"));
+      dispatch(createAction(Actions.ADD_CHANNEL_SUCCESS, channel));
+      dispatch(pushPath(`/channel/${channel.id}/`));
+  };
 }

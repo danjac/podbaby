@@ -15,8 +15,6 @@ import {
 
 import * as api from '../api';
 import { auth } from '../actions';
-import { createAction } from '../actions/utils';
-import { Actions } from '../constants';
 import { getTitle } from './utils';
 import { FormGroup } from '../components/form';
 import Icon from '../components/icon';
@@ -90,8 +88,7 @@ export class Signup extends React.Component {
     return new Promise((resolve, reject) => {
       api.signup(name, email, password)
       .then(result => {
-        dispatch(createAction(Actions.SIGNUP_SUCCESS, result.data));
-        dispatch(pushPath('/new/'));
+        this.actions.signupComplete(result.data);
         resolve();
       }, error => {
         reject(error.data);

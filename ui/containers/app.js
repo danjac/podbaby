@@ -70,8 +70,8 @@ export class App extends React.Component {
     this.actions.addChannel.close();
   }
 
-  handleAddChannel(url) {
-    this.actions.addChannel.add(url);
+  handleAddChannel(channel) {
+    this.actions.addChannel.complete(channel);
   }
 
   handleDismissAlert(id) {

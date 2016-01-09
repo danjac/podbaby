@@ -24,47 +24,27 @@ export function closeRecoverPasswordForm() {
   return createAction(Actions.CLOSE_RECOVER_PASSWORD_FORM);
 }
 
-export function recoverPassword(identifier) {
+export function recoverPasswordComplete(identifier) {
   return dispatch => {
     dispatch(createAction(Actions.CLOSE_RECOVER_PASSWORD_FORM));
-    api.recoverPassword(identifier)
-    .then(result => {
-      dispatch(createAction(Actions.RECOVER_PASSWORD_SUCCESS));
-      dispatch(alerts.success("Please check your email inbox to recover your password"));
-    })
-    .catch(error => {
-      dispatch(createAction(Actions.RECOVER_PASSWORD_FAILURE, { error }));
-    });
-  }
-}
-export function login(identifier, password) {
-  return (dispatch, getState) => {
-    dispatch(createAction(Actions.LOGIN));
-    api.login(identifier, password)
-    .then(result => {
-      // call to api...
-      const { auth } = getState();
-      const nextPath = auth.redirectTo || '/new/';
-      dispatch(createAction(Actions.LOGIN_SUCCESS, result.data));
-      dispatch(pushPath(nextPath));
-      dispatch(alerts.success(`Welcome back, ${result.data.name}`))
-    })
-    .catch(error => {
-      dispatch(createAction(Actions.LOGIN_FAILURE, { error }));
-    });
-  }
+    dispatch(createAction(Actions.RECOVER_PASSWORD_SUCCESS));
+    dispatch(alerts.success("Please check your email inbox to recover your password"));
+  };
 }
 
-export function signup(name, email, password) {
+export function loginComplete(loginInfo) {
+  return (dispatch, getState) => {
+      const { auth } = getState();
+      const nextPath = auth.redirectTo || '/new/';
+      dispatch(createAction(Actions.LOGIN_SUCCESS, loginInfo));
+      dispatch(pushPath(nextPath));
+      dispatch(alerts.success(`Welcome back, ${loginInfo.name}`))
+  };
+}
+
+export function signupComplete(signupInfo) {
   return dispatch =>  {
-    dispatch(createAction(Actions.SIGNUP));
-    api.signup(name, email, password)
-    .then(result => {
-      dispatch(createAction(Actions.SIGNUP_SUCCESS, result.data));
-      dispatch(pushPath('/new/'));
-    })
-    .catch(error => {
-      dispatch(createAction(Actions.SIGNUP_FAILURE, { error }));
-    });
+    dispatch(createAction(Actions.SIGNUP_SUCCESS, signupInfo));
+    dispatch(pushPath('/new/'));
   };
 }

@@ -10,6 +10,7 @@ import {
   ProgressBar
 } from 'react-bootstrap';
 
+import * as api from '../api';
 import Icon from './icon';
 import { FormGroup } from './form';
 
@@ -47,6 +48,19 @@ export class AddChannelModal extends React.Component {
     return this.props !== newProps;
   }
 
+  handleAddChannel(values) {
+    return new Promise((resolve, reject) => {
+      api.addChannel(values.url)
+      .then(result => {
+        this.props.onAdd(result.data);
+        this.props.resetForm();
+        resolve();
+      }, error => {
+        reject({_error: error.data});
+      });
+    });
+  }
+
   render() {
     const { show, onClose, container, pending } = this.props;
 
@@ -54,13 +68,9 @@ export class AddChannelModal extends React.Component {
       handleSubmit,
       fields: { url },
       submitting,
-      resetForm
+      resetForm,
+      error
     } = this.props;
-
-    const handleAdd = values => {
-      this.props.onAdd(values.url);
-      resetForm();
-    };
 
     const handleClose = event => {
       resetForm();
@@ -81,7 +91,8 @@ export class AddChannelModal extends React.Component {
               <ProgressBar now={this.state.progress} />
             </div>
             ) : (
-            <form className="form" onSubmit={handleSubmit(handleAdd)}>
+            <form className="form" onSubmit={handleSubmit(this.handleAddChannel.bind(this))}>
+              {error ? <b>Sorry, we were unable to add this feed.</b> : ''}
                <FormGroup field={url}>
                 <input type="text" className="form-control"  {...url} />
               </FormGroup>

@@ -10,11 +10,13 @@ import { reduxForm } from 'redux-form';
 import {
   Input,
   Button,
+  Alert,
   ButtonGroup,
   Modal
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
+import * as api from '../api';
 import Icon from '../components/icon';
 import { FormGroup } from '../components/form';
 import { getTitle } from './utils';
@@ -34,9 +36,10 @@ export class RecoverPasswordModal extends React.Component {
       submitting,
       onSubmit,
       resetForm,
+      error,
       show,
       onClose,
-      container
+      container,
     } = this.props;
 
     const handleOnClose = () => {
@@ -58,6 +61,7 @@ export class RecoverPasswordModal extends React.Component {
           <Modal.Title id="recover-password-modal-title">Recover password</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {error ? <b>Sorry, we were unable to find your account.</b> : ''}
               <p>We'll send you a new random password so you can log back in again.</p>
             <form className="form" onSubmit={handleOnSubmit}>
               <FormGroup field={identifier}>
@@ -139,15 +143,34 @@ export class Login extends React.Component {
     super(props);
     const { dispatch } = this.props;
     this.actions = bindActionCreators(actions.auth, dispatch);
+    this.alerts = bindActionCreators(actions.alerts, dispatch);
   }
 
   handleLogin(values) {
     const { identifier, password } = values;
-    this.actions.login(identifier, password);
+    return new Promise((resolve, reject) => {
+      return api.login(identifier, password)
+      .then(result => {
+        this.actions.loginComplete(result.data);
+        resolve();
+      }, error => {
+        this.alerts.warning("Sorry, you were unable to log in");
+        reject({_error: error.data});
+      });
+    });
   }
 
   handleRecoverPassword(values) {
-    this.actions.recoverPassword(values.identifier);
+    const { identifier } = values;
+    return new Promise((resolve, reject) => {
+      return api.recoverPassword(identifier)
+      .then(result => {
+        this.actions.recoverPasswordComplete();
+        resolve();
+      }, error => {
+        reject({_error: error.data});
+      });
+    });
   }
 
   handleOpenRecoverPasswordForm(event) {
