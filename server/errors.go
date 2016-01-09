@@ -2,10 +2,9 @@ package server
 
 import (
 	"database/sql"
-	"net/http"
-
 	"github.com/Sirupsen/logrus"
-	"github.com/asaskevich/govalidator"
+	"github.com/danjac/podbaby/decoders"
+	"net/http"
 )
 
 type Error interface {
@@ -41,7 +40,7 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 	var msg string
 
 	switch e := err.(error).(type) {
-	case govalidator.Errors:
+	case decoders.Errors:
 		s.Render.JSON(w, http.StatusBadRequest, err)
 	case Error:
 		msg = "HTTP Error"
