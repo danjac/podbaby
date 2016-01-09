@@ -62,11 +62,16 @@ export class AddChannelModal extends React.Component {
       resetForm();
     };
 
+    const handleClose = event => {
+      resetForm();
+      onClose(event);
+    };
+
     return (
       <Modal show={show}
              aria-labelledby="add-channel-modal-title"
              container={container}
-             onHide={onClose}>
+             onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
         </Modal.Header>
@@ -85,7 +90,7 @@ export class AddChannelModal extends React.Component {
             </p>
               <ButtonGroup>
               <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add channel</Button>
-              <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>
+              <Button bsStyle="default" onClick={handleClose}><Icon icon="remove" /> Cancel</Button>
             </ButtonGroup>
             </form>
             )}
