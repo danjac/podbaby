@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap';
 
 import Icon from './icon';
+import { FormGroup } from './form';
 
 const validate = values => {
   return values.url && validator.isURL(values.url) ? {} : {
@@ -76,14 +77,12 @@ export class AddChannelModal extends React.Component {
             </div>
             ) : (
             <form className="form" onSubmit={handleSubmit(handleAdd)}>
-              <Input hasFeedback={url.touched}
-                     bsStyle={url.touched ? ( url.error ? 'error': 'success' ) : undefined}>
+               <FormGroup field={url}>
                 <input type="text" className="form-control"  {...url} />
-                {url.touched && url.error && <div className="help-block">{url.error}</div>}
-      <div className="help-block">Enter the URL of the RSS feed you want to subscribe to, for example:
-        <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
-      </div>
-              </Input>
+              </FormGroup>
+            <p>Enter the URL of the RSS feed you want to subscribe to, for example:
+              <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
+            </p>
               <ButtonGroup>
               <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add channel</Button>
               <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>

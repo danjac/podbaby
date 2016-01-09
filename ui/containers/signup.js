@@ -14,8 +14,9 @@ import {
 
 import * as api from '../api';
 import { auth } from '../actions';
-import Icon from '../components/icon';
 import { getTitle } from './utils';
+import { FormGroup } from '../components/form';
+import Icon from '../components/icon';
 
 const validate = values => {
 
@@ -66,6 +67,7 @@ const asyncValidate = (values, dispatch) => {
       if (error) {
         return Object.assign({}, result, error);
       }
+      return result;
     }, {});
     return result;
   });
@@ -107,18 +109,18 @@ export class Signup extends React.Component {
         </p>
         <form className="form-horizontal"
               onSubmit={onSubmit}>
-              <Input hasFeedback={name.touched} bsStyle={name.touched ? ( name.error ? 'error': 'success' ) : undefined}>
+
+              <FormGroup field={name}>
                 <input type="text" className="form-control" placeholder="Name" {...name} />
-                {name.touched && name.error && <div className="help-block">{name.error}</div>}
-              </Input>
-              <Input hasFeedback={email.touched} bsStyle={email.touched ? ( email.error ? 'error': 'success' ) : undefined}>
+              </FormGroup>
+
+              <FormGroup field={email}>
                 <input type="email" className="form-control" placeholder="Email address" {...email} />
-                {email.touched && email.error && <div className="help-block">{email.error}</div>}
-              </Input>
-              <Input hasFeedback={password.touched} bsStyle={password.touched ? ( password.error ? 'error': 'success' ) : undefined}>
+              </FormGroup>
+
+              <FormGroup field={password}>
                 <input type="password" className="form-control" placeholder="Password" {...password} />
-                {password.touched && password.error && <div className="help-block">{password.error}</div>}
-              </Input>
+              </FormGroup>
             <Button
               bsStyle="primary"
               disabled={submitting}
@@ -140,7 +142,7 @@ Signup.propTypes = {
   error: PropTypes.string,
   resetForm: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  asyncValidating: PropTypes.string.isRequired,
+  asyncValidating: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired
 };
 

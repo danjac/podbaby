@@ -16,6 +16,7 @@ import {
 
 import * as actions from '../actions';
 import Icon from '../components/icon';
+import { FormGroup } from '../components/form';
 import { getTitle } from './utils';
 
 const validateRecoverPassword = values => {
@@ -31,16 +32,22 @@ export class RecoverPasswordModal extends React.Component {
       fields: { identifier },
       handleSubmit,
       submitting,
+      onSubmit,
       resetForm,
       show,
       onClose,
       container
     } = this.props;
 
-  const handleOnClose = () => {
+    const handleOnClose = () => {
       resetForm();
       onClose();
-    }
+    };
+
+    const handleOnSubmit = () => {
+      handleSubmit();
+      resetForm();
+    };
 
     return (
       <Modal show={show}
@@ -51,18 +58,15 @@ export class RecoverPasswordModal extends React.Component {
           <Modal.Title id="recover-password-modal-title">Recover password</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <form className="form" onSubmit={handleSubmit}>
-               <Input hasFeedback={identifier.touched} bsStyle={identifier.touched ? ( identifier.error ? 'error': 'success' ) : undefined}>
-                        <input type="text" className="form-control" placeholder="Email address or name" {...identifier} />
-                        {identifier.touched && identifier.error && <div className="help-block">{identifier.error}</div>}
-
-                        <span className="help-block">We'll send you a new random password so you can log back in again.</span>
-                </Input>
-
+              <p>We'll send you a new random password so you can log back in again.</p>
+            <form className="form" onSubmit={handleOnSubmit}>
+              <FormGroup field={identifier}>
+                  <input type="text" className="form-control" placeholder="Email address or name" {...identifier} />
+              </FormGroup>
               <ButtonGroup>
                 <Button bsStyle="primary"
                         disabled={submitting}
-                        onClick={handleSubmit}
+                        onClick={handleOnSubmit}
                         type="submit"><Icon icon="send" /> Send</Button>
                 <Button bsStyle="default" onClick={handleOnClose}><Icon icon="remove" /> Cancel</Button>
               </ButtonGroup>
@@ -104,16 +108,13 @@ export class LoginForm extends React.Component {
     return (
       <form className="form-horizontal" onSubmit={handleSubmit}>
 
-         <Input hasFeedback={identifier.touched} bsStyle={identifier.touched ? ( identifier.error ? 'error': 'success' ) : undefined}>
-                  <input type="text" className="form-control" placeholder="Email address or name" {...identifier} />
-                  {identifier.touched && identifier.error && <div className="help-block">{identifier.error}</div>}
-          </Input>
+        <FormGroup field={identifier}>
+          <input type="text" className="form-control" placeholder="Email address or name" {...identifier} />
+        </FormGroup>
 
-
-         <Input hasFeedback={password.touched} bsStyle={password.touched ? ( password.error ? 'error': 'success' ) : undefined}>
-                  <input type="password" className="form-control" placeholder="Password" {...password} />
-                  {password.touched && password.error && <div className="help-block">{password.error}</div>}
-          </Input>
+        <FormGroup field={password}>
+          <input type="password" className="form-control" placeholder="Password" {...password} />
+        </FormGroup>
 
           <Button
             bsStyle="primary"

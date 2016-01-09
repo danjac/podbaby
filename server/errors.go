@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/asaskevich/govalidator"
 )
 
 type Error interface {
@@ -40,6 +41,8 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 	var msg string
 
 	switch e := err.(error).(type) {
+	case govalidator.Errors:
+		s.Render.JSON(w, http.StatusBadRequest, err)
 	case Error:
 		msg = "HTTP Error"
 		http.Error(w, e.Error(), e.Status())
@@ -47,5 +50,7 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 		msg = "Internal Server Error"
 		http.Error(w, "Sorry, an error occurred", http.StatusInternalServerError)
 	}
-	logger.Error(msg)
+	if msg != "" {
+		logger.Error(msg)
+	}
 }

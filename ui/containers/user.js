@@ -12,6 +12,7 @@ import {
 
 import * as actions from '../actions';
 import Icon from '../components/icon';
+import { FormGroup } from '../components/form';
 import { getTitle } from './utils';
 
 const validateChangeEmail = values => {
@@ -32,10 +33,9 @@ export class ChangeEmailForm extends React.Component {
     return (
       <form className="form form-vertical"
             onSubmit={handleSubmit}>
-          <Input hasFeedback={email.touched} bsStyle={email.touched ? ( email.error ? 'error': 'success' ) : undefined}>
+            <FormGroup field={email}>
                 <input type="email" className="form-control" placeholder="Your new email address" {...email} />
-                {email.touched && email.error && <div className="help-block">{email.error}</div>}
-            </Input>
+            </FormGroup>
           <Button bsStyle="primary"
                   className="form-control"
                   disabled={submitting}
@@ -84,14 +84,15 @@ export class ChangePasswordForm extends React.Component {
 
     return (
         <form className="form form-vertical" onSubmit={onSubmit}>
-            <Input hasFeedback={oldPassword.touched} bsStyle={oldPassword.touched ? ( oldPassword.error ? 'error': 'success' ) : undefined}>
+
+          <FormGroup field={oldPassword}>
                 <input type="password" className="form-control" placeholder="Your old password" {...oldPassword} />
-                {oldPassword.touched && oldPassword.error && <div className="help-block">{oldPassword.error}</div>}
-              </Input>
-            <Input hasFeedback={newPassword.touched} bsStyle={newPassword.touched ? ( newPassword.error ? 'error': 'success' ) : undefined}>
-                <input type="password" className="form-control" placeholder="Your new password" {...newPassword} />
-                {newPassword.touched && newPassword.error && <div className="help-block">{newPassword.error}</div>}
-              </Input>
+          </FormGroup>
+
+          <FormGroup field={newPassword}>
+                <input type="password" className="form-control" placeholder="Your old password" {...newPassword} />
+          </FormGroup>
+
 
             <Button bsStyle="primary" className="form-control" type="submit"><Icon icon="save" /> Save new password</Button>
         </form>
