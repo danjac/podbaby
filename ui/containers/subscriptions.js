@@ -15,9 +15,9 @@ import {
 import * as  actions from '../actions';
 import { channelsSelector } from '../selectors';
 import Icon from '../components/icon';
-import { getTitle } from '../components/utils';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
+import { getTitle } from './utils';
 
 export class Subscriptions extends React.Component {
 

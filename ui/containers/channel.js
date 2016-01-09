@@ -21,7 +21,8 @@ import PodcastList from '../components/podcasts';
 import Image from '../components/image';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
-import { sanitize, formatPubDate, getTitle } from '../components/utils';
+import { sanitize } from '../components/utils';
+import { getTitle } from './utils';
 
 export class Channel extends React.Component {
 

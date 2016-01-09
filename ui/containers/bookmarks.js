@@ -10,7 +10,7 @@ import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 import PodcastList from '../components/podcasts';
 import Icon from '../components/icon';
-import { getTitle } from '../components/utils';
+import { getTitle } from './utils';
 
 
 export class Bookmarks extends React.Component {

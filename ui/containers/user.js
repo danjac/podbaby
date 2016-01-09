@@ -10,7 +10,7 @@ import {
 
 import * as actions from '../actions';
 import Icon from '../components/icon';
-import { getTitle } from '../components/utils';
+import { getTitle } from './utils';
 
 export class User extends React.Component {
 

@@ -8,7 +8,7 @@ import DocumentTitle from 'react-document-title';
 import { auth, player } from './actions';
 import routes from './routes';
 import configureStore from './store';
-import { getTitle } from './components/utils';
+import { getTitle } from './containers/utils';
 
 const history = createHashHistory();
 const store = configureStore();

@@ -10,7 +10,7 @@ import { podcastsSelector, channelsSelector } from '../selectors';
 import ChannelItem from '../components/channel_item';
 import PodcastList from '../components/podcasts';
 import Icon from '../components/icon';
-import { getTitle } from '../components/utils';
+import { getTitle } from './utils';
 
 export class Search extends React.Component {
 

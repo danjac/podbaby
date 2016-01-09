@@ -11,7 +11,7 @@ import {
 
 import { auth } from '../actions';
 import Icon from '../components/icon';
-import { getTitle } from '../components/utils';
+import { getTitle } from './utils';
 
 export class Signup extends React.Component {
 

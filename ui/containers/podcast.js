@@ -6,8 +6,8 @@ import * as actions from '../actions';
 import { podcastSelector } from '../selectors';
 import { bindAllActionCreators } from '../actions/utils';
 import Podcast from '../components/podcast_item';
-import { getTitle } from '../components/utils';
 import Loading from '../components/loading';
+import { getTitle } from './utils';
 
 class PodcastDetail extends React.Component {
 
