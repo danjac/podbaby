@@ -4,7 +4,7 @@ import { Well } from 'react-bootstrap';
 
 const PageNotFound = props => {
   return (
-    <Well>Sorry, nothing to find here.</Well>
+    <p className="lead">Sorry, nothing to find here.</p>
   );
 };
 

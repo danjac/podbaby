@@ -14,8 +14,8 @@ import {
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
-import { getTitle } from './utils';
-import Icon from './icon';
+import { getTitle } from '../components/utils';
+import Icon from '../components/icon';
 
 export class RecoverPasswordModal extends React.Component {
 

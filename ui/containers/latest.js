@@ -7,8 +7,8 @@ import DocumentTitle from 'react-document-title';
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 
-import { getTitle } from './utils';
-import PodcastList from './podcasts';
+import { getTitle } from '../components/utils';
+import PodcastList from '../components/podcasts';
 
 export class Latest extends React.Component {
 

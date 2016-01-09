@@ -10,8 +10,8 @@ import {
 } from 'react-bootstrap';
 
 import { auth } from '../actions';
-import Icon from './icon';
-import { getTitle } from './utils';
+import Icon from '../components/icon';
+import { getTitle } from '../components/utils';
 
 export class Signup extends React.Component {
 

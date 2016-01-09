@@ -17,11 +17,11 @@ import {
 
 import * as actions from '../actions';
 import { podcastsSelector, channelSelector } from '../selectors';
-import PodcastList from './podcasts';
-import Image from './image';
-import Icon from './icon';
-import Loading from './loading';
-import { sanitize, formatPubDate, getTitle } from './utils';
+import PodcastList from '../components/podcasts';
+import Image from '../components/image';
+import Icon from '../components/icon';
+import Loading from '../components/loading';
+import { sanitize, formatPubDate, getTitle } from '../components/utils';
 
 export class Channel extends React.Component {
 

@@ -14,10 +14,10 @@ import {
 
 import * as  actions from '../actions';
 import { channelsSelector } from '../selectors';
-import Icon from './icon';
-import { getTitle } from './utils';
-import Loading from './loading';
-import ChannelItem from './channel_item';
+import Icon from '../components/icon';
+import { getTitle } from '../components/utils';
+import Loading from '../components/loading';
+import ChannelItem from '../components/channel_item';
 
 export class Subscriptions extends React.Component {
 

@@ -7,10 +7,10 @@ import DocumentTitle from 'react-document-title';
 
 import  * as actions from '../actions';
 import { podcastsSelector, channelsSelector } from '../selectors';
-import ChannelItem from './channel_item';
-import PodcastList from './podcasts';
-import Icon from './icon';
-import { getTitle } from './utils';
+import ChannelItem from '../components/channel_item';
+import PodcastList from '../components/podcasts';
+import Icon from '../components/icon';
+import { getTitle } from '../components/utils';
 
 export class Search extends React.Component {
 

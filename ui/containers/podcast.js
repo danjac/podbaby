@@ -5,9 +5,9 @@ import DocumentTitle from 'react-document-title';
 import * as actions from '../actions';
 import { podcastSelector } from '../selectors';
 import { bindAllActionCreators } from '../actions/utils';
-import { Podcast } from './podcasts';
-import { getTitle } from './utils';
-import Loading from './loading';
+import Podcast from '../components/podcast_item';
+import { getTitle } from '../components/utils';
+import Loading from '../components/loading';
 
 class PodcastDetail extends React.Component {
 

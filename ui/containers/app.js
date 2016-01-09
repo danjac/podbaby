@@ -19,9 +19,9 @@ import { pushPath } from 'redux-simple-router';
 import * as actions from '../actions';
 import { bindAllActionCreators } from '../actions/utils';
 
-import Player from './player';
-import NavBar from './navbar';
-import AddChannelModal from './add_channel';
+import Player from '../components/player';
+import NavBar from '../components/navbar';
+import AddChannelModal from '../components/add_channel';
 
 
 const AlertList = props => {

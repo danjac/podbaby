@@ -9,9 +9,9 @@ import DocumentTitle from 'react-document-title';
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 
-import { getTitle } from './utils';
-import Icon from './icon';
-import PodcastList from './podcasts';
+import { getTitle } from '../components/utils';
+import Icon from '../components/icon';
+import PodcastList from '../components/podcasts';
 
 export class Recent extends React.Component {
 

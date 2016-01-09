@@ -8,9 +8,9 @@ import { Button, Input } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
-import PodcastList from './podcasts';
-import Icon from './icon';
-import { getTitle } from './utils';
+import PodcastList from '../components/podcasts';
+import Icon from '../components/icon';
+import { getTitle } from '../components/utils';
 
 
 export class Bookmarks extends React.Component {

@@ -7,19 +7,19 @@ import {
   IndexRedirect
 } from 'react-router';
 
-import App from '../components/app';
-import Front from '../components/front';
-import Login from '../components/login';
-import Signup from '../components/signup';
-import Search from '../components/search';
-import Latest from '../components/latest';
-import Recent from '../components/recent';
-import Subscriptions from '../components/subscriptions';
-import Bookmarks from '../components/bookmarks';
-import Channel from '../components/channel';
-import Podcast from '../components/podcast';
-import User from '../components/user';
-import PageNotFound from '../components/not_found';
+import App from '../containers/app';
+import Front from '../containers/front';
+import Login from '../containers/login';
+import Signup from '../containers/signup';
+import Search from '../containers/search';
+import Latest from '../containers/latest';
+import Recent from '../containers/recent';
+import Subscriptions from '../containers/subscriptions';
+import Bookmarks from '../containers/bookmarks';
+import Channel from '../containers/channel';
+import Podcast from '../containers/podcast';
+import User from '../containers/user';
+import PageNotFound from '../containers/not_found';
 
 import * as actionCreators from '../actions';
 import { bindAllActionCreators } from '../actions/utils';
