@@ -67,7 +67,6 @@ const asyncValidate = (values, dispatch) => {
         return Object.assign({}, result, error);
       }
     }, {});
-    console.log("RESULT:", result);
     return result;
   });
 
@@ -83,8 +82,7 @@ export class Signup extends React.Component {
 
   handleSubmit(values) {
     const { name, email, password } = values;
-    console.log("submitting!!!", name, email, password)
-//this.actions.signup(name, email, password);
+    this.actions.signup(name, email, password);
   }
 
   render() {
@@ -142,11 +140,16 @@ Signup.propTypes = {
   error: PropTypes.string,
   resetForm: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  asyncValidating: PropTypes.bool.isRequired,
+  asyncValidating: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired
 };
 
 const fields = ['name', 'email', 'password'];
 const asyncBlurFields = ['name', 'email'];
 
-export default reduxForm({ form: 'signup', fields, validate, asyncValidate, asyncBlurFields })(Signup);
+export default reduxForm({
+  form: 'signup',
+  fields,
+  validate,
+  asyncValidate,
+  asyncBlurFields })(Signup);

@@ -1,4 +1,6 @@
 import React from 'react';
+import { reduxForm } from 'redux-form';
+import validator from 'validator';
 
 import {
   Modal,
@@ -9,6 +11,12 @@ import {
 } from 'react-bootstrap';
 
 import Icon from './icon';
+
+const validate = values => {
+  return values.url && validator.isURL(values.url) ? {} : {
+    url: "You must provide a valid URL"
+  };
+}
 
 export class AddChannelModal extends React.Component {
 
@@ -22,13 +30,6 @@ export class AddChannelModal extends React.Component {
       progress: 0,
       interval: null
     }
-  }
-
-  handleAdd(event){
-    event.preventDefault();
-    const node = this.refs.url.getInputDOMNode();
-    this.props.onAdd(node.value);
-    node.value = "";
   }
 
   componentWillReceiveProps(newProps) {
@@ -48,11 +49,17 @@ export class AddChannelModal extends React.Component {
   render() {
     const { show, onClose, container, pending } = this.props;
 
-    const helpText = (
-      <div>Enter the URL of the RSS feed you want to subscribe to, for example:
-        <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
-      </div>
-    );
+    const {
+      handleSubmit,
+      fields: { url },
+      submitting,
+      resetForm
+    } = this.props;
+
+    const handleAdd = values => {
+      this.props.onAdd(values.url);
+      resetForm();
+    };
 
     return (
       <Modal show={show}
@@ -68,11 +75,15 @@ export class AddChannelModal extends React.Component {
               <ProgressBar now={this.state.progress} />
             </div>
             ) : (
-            <form className="form" onSubmit={this.handleAdd.bind(this)}>
-              <Input required
-                     type="text"
-                     ref="url"
-                     help={helpText} />
+            <form className="form" onSubmit={handleSubmit(handleAdd)}>
+              <Input hasFeedback={url.touched}
+                     bsStyle={url.touched ? ( url.error ? 'error': 'success' ) : undefined}>
+                <input type="text" className="form-control"  {...url} />
+                {url.touched && url.error && <div className="help-block">{url.error}</div>}
+      <div className="help-block">Enter the URL of the RSS feed you want to subscribe to, for example:
+        <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
+      </div>
+              </Input>
               <ButtonGroup>
               <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add channel</Button>
               <Button bsStyle="default" onClick={onClose}><Icon icon="remove" /> Cancel</Button>
@@ -86,4 +97,9 @@ export class AddChannelModal extends React.Component {
 
 }
 
-export default AddChannelModal;
+
+export default reduxForm({
+  form: 'add-channel',
+  fields: ['url'],
+  validate
+})(AddChannelModal);

@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
+import { reduxForm } from 'redux-form';
+import validator from 'validator';
 
 import {
     Input,
@@ -12,6 +14,98 @@ import * as actions from '../actions';
 import Icon from '../components/icon';
 import { getTitle } from './utils';
 
+const validateChangeEmail = values => {
+  return values.email && validator.isEmail(values.email) ? {} :
+    { email: 'Please provide a valid email address' };
+};
+
+export class ChangeEmailForm extends React.Component {
+
+  render() {
+
+    const {
+      handleSubmit,
+      submitting,
+      fields: { email }
+    } = this.props;
+
+    return (
+      <form className="form form-vertical"
+            onSubmit={handleSubmit}>
+          <Input hasFeedback={email.touched} bsStyle={email.touched ? ( email.error ? 'error': 'success' ) : undefined}>
+                <input type="email" className="form-control" placeholder="Your new email address" {...email} />
+                {email.touched && email.error && <div className="help-block">{email.error}</div>}
+            </Input>
+          <Button bsStyle="primary"
+                  className="form-control"
+                  disabled={submitting}
+                  type="submit"><Icon icon="save" /> Save new email address</Button>
+      </form>
+    );
+
+  }
+}
+
+ChangeEmailForm = reduxForm({
+  form: 'change-email',
+  fields: ['email'],
+  validate: validateChangeEmail
+}, state => ({
+  initialValues: state.auth
+}))(ChangeEmailForm);
+
+
+const validateChangePassword = values => {
+  const errors = {};
+
+  if (!values.oldPassword) {
+    errors.oldPassword = "Please provide your old password";
+  }
+  if (!validator.isLength(values.newPassword, 6)) {
+    errors.newPassword = "Your new password must be at least 6 characters in length";
+  }
+  return errors;
+};
+
+
+export class ChangePasswordForm extends React.Component {
+  render() {
+    const {
+      handleSubmit,
+      fields: { oldPassword, newPassword },
+      submitting,
+      resetForm
+    } = this.props;
+
+    const onSubmit = () => {
+      handleSubmit();
+      resetForm();
+    };
+
+    return (
+        <form className="form form-vertical" onSubmit={onSubmit}>
+            <Input hasFeedback={oldPassword.touched} bsStyle={oldPassword.touched ? ( oldPassword.error ? 'error': 'success' ) : undefined}>
+                <input type="password" className="form-control" placeholder="Your old password" {...oldPassword} />
+                {oldPassword.touched && oldPassword.error && <div className="help-block">{oldPassword.error}</div>}
+              </Input>
+            <Input hasFeedback={newPassword.touched} bsStyle={newPassword.touched ? ( newPassword.error ? 'error': 'success' ) : undefined}>
+                <input type="password" className="form-control" placeholder="Your new password" {...newPassword} />
+                {newPassword.touched && newPassword.error && <div className="help-block">{newPassword.error}</div>}
+              </Input>
+
+            <Button bsStyle="primary" className="form-control" type="submit"><Icon icon="save" /> Save new password</Button>
+        </form>
+
+    );
+  }
+}
+
+ChangePasswordForm = reduxForm({
+  form: 'change-password',
+  fields: ['oldPassword', 'newPassword'],
+  validate: validateChangePassword
+})(ChangePasswordForm);
+
 export class User extends React.Component {
 
   constructor(props) {
@@ -20,30 +114,13 @@ export class User extends React.Component {
     this.actions = bindActionCreators(actions.users, dispatch);
   }
 
-  handleSubmitEmail(event) {
-    event.preventDefault();
-    const email = this.refs.email.getValue();
-    if (email) {
-      this.actions.changeEmail(email);
-    }
-
+  handleSubmitEmail(values) {
+    this.actions.changeEmail(values.email);
   }
 
-  handleSubmitPassword(event) {
-    event.preventDefault();
-
-    const oldPasswordNode = this.refs.oldPassword.getInputDOMNode();
-    const newPasswordNode = this.refs.newPassword.getInputDOMNode();
-
-    const oldPassword = oldPasswordNode.value;
-    const newPassword = newPasswordNode.value;
-
-    if (oldPassword && newPassword){
-      oldPasswordNode.value = "";
-      newPasswordNode.value = "";
-      this.actions.changePassword(oldPassword, newPassword);
-    }
-
+  handleSubmitPassword(values) {
+    const { oldPassword, newPassword } = values;
+    this.actions.changePassword(oldPassword, newPassword);
   }
 
   handleDelete(event) {
@@ -58,28 +135,9 @@ export class User extends React.Component {
     <DocumentTitle title={getTitle('My settings')}>
       <div>
         <h3>Change my email address</h3>
-        <form className="form form-vertical" onSubmit={this.handleSubmitEmail.bind(this)}>
-            <Input ref="email"
-                   type="email"
-                   required
-                   defaultValue={this.props.auth.email}  />
-                 <Button bsStyle="primary" className="form-control" type="submit"><Icon icon="save" /> Save new email address</Button>
-        </form>
+        <ChangeEmailForm onSubmit={this.handleSubmitEmail.bind(this)} />
         <h3>Change my password</h3>
-        <form className="form form-vertical" onSubmit={this.handleSubmitPassword.bind(this)}>
-
-            <Input ref="oldPassword"
-                   type="password"
-                   placeholder="Old password"
-                   required />
-
-            <Input ref="newPassword"
-                   type="password"
-                   placeholder="New password"
-                   required />
-
-                 <Button bsStyle="primary" className="form-control" type="submit"><Icon icon="save" /> Save new password</Button>
-        </form>
+        <ChangePasswordForm onSubmit={this.handleSubmitPassword.bind(this)} />
         <hr />
         <div>
           <Button bsStyle="danger"
