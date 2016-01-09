@@ -197,8 +197,8 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id
     WHERE b.user_id=$1
-    GROUP BY p.id, p.title, c.title, c.image
-    ORDER BY c.title, p.title
+    GROUP BY p.id, p.title, c.title, c.image, b.id
+    ORDER BY b.id DESC
     OFFSET $2 LIMIT $3`
 
 	err := db.Select(
