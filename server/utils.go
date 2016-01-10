@@ -1,7 +1,6 @@
 package server
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -33,14 +32,14 @@ func init() {
 }
 
 func getInt64(r *http.Request, name string) (int64, error) {
-	badRequest := HTTPError{http.StatusBadRequest, errors.New("Invalid parameter for " + name)}
+
 	value, ok := getVars(r)[name]
 	if !ok {
-		return 0, badRequest
+		return 0, errBadRequest
 	}
 	intval, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
-		return 0, badRequest
+		return 0, errBadRequest
 	}
 	return intval, nil
 }

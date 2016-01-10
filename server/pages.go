@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/justinas/nosurf"
 )
@@ -31,6 +32,7 @@ func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 		"staticURL":         s.Config.StaticURL,
 		"csrfToken":         csrfToken,
 		"user":              user,
+		"timestamp":         time.Now().Unix(),
 	}
 	s.Render.HTML(w, http.StatusOK, "index", ctx)
 }

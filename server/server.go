@@ -10,6 +10,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/config"
 	"github.com/danjac/podbaby/database"
+	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
 	"github.com/danjac/podbaby/models"
@@ -24,7 +25,10 @@ const (
 	cookieTimeout = 24
 )
 
-var errNotLoggedIn = errors.New("You are not logged in")
+var (
+	errNotAuthenticated = errors.New("User not logged in")
+	errBadRequest       = errors.New("Bad request")
+)
 
 type Server struct {
 	DB         *database.DB
@@ -101,26 +105,53 @@ func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
 
 	cookie, err := r.Cookie(cookieUserID)
 	if err != nil {
-		return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
+		return nil, errNotAuthenticated
 	}
 
 	var userID int64
 
 	if err := s.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
-		return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
+		return nil, errNotAuthenticated
 	}
 
 	if userID == 0 {
-		return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
+		return nil, errNotAuthenticated
 	}
 
 	user, err := s.DB.Users.GetByID(userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, HTTPError{http.StatusUnauthorized, errNotLoggedIn}
+			return nil, errNotAuthenticated
 		}
 		return nil, err
 	}
 	return user, nil
 
+}
+
+func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
+	logger := s.Log.WithFields(logrus.Fields{
+		"URL":    r.URL,
+		"Method": r.Method,
+		"Error":  err,
+	})
+
+	if err == sql.ErrNoRows {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	if err == errNotAuthenticated {
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	switch err.(error).(type) {
+
+	case decoders.Errors:
+		s.Render.JSON(w, http.StatusBadRequest, err)
+	default:
+		logger.Error(err)
+		http.Error(w, "Sorry, an error occurred", http.StatusInternalServerError)
+	}
 }
