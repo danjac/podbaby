@@ -28,28 +28,40 @@ const validateRecoverPassword = values => {
 
 export class RecoverPasswordModal extends React.Component {
 
+  handleSubmit(values) {
+
+    const { identifier } = values;
+    const { resetForm, onComplete } = this.props;
+
+    return new Promise((resolve, reject) => {
+
+      return api.recoverPassword(identifier)
+      .then(result => {
+        onComplete();
+        resetForm();
+        resolve();
+      }, error => {
+        reject(error.data);
+      });
+    });
+  }
+
   render() {
 
     const {
       fields: { identifier },
       handleSubmit,
+      resetForm,
       submitting,
       onSubmit,
-      resetForm,
-      error,
       show,
       onClose,
       container,
     } = this.props;
 
-    const handleOnClose = () => {
+    const handleClose = () => {
       resetForm();
       onClose();
-    };
-
-    const handleOnSubmit = () => {
-      handleSubmit();
-      resetForm();
     };
 
     return (
@@ -61,18 +73,16 @@ export class RecoverPasswordModal extends React.Component {
           <Modal.Title id="recover-password-modal-title">Recover password</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {error ? <b>Sorry, we were unable to find your account.</b> : ''}
               <p>We'll send you a new random password so you can log back in again.</p>
-            <form className="form" onSubmit={handleOnSubmit}>
+            <form className="form" onSubmit={handleSubmit(this.handleSubmit.bind(this))}>
               <FormGroup field={identifier}>
                   <input type="text" className="form-control" placeholder="Email address or name" {...identifier} />
               </FormGroup>
               <ButtonGroup>
                 <Button bsStyle="primary"
                         disabled={submitting}
-                        onClick={handleOnSubmit}
                         type="submit"><Icon icon="send" /> Send</Button>
-                <Button bsStyle="default" onClick={handleOnClose}><Icon icon="remove" /> Cancel</Button>
+                <Button bsStyle="default" onClick={handleClose}><Icon icon="remove" /> Cancel</Button>
               </ButtonGroup>
             </form>
         </Modal.Body>
@@ -160,19 +170,6 @@ export class Login extends React.Component {
     });
   }
 
-  handleRecoverPassword(values) {
-    const { identifier } = values;
-    return new Promise((resolve, reject) => {
-      return api.recoverPassword(identifier)
-      .then(result => {
-        this.actions.recoverPasswordComplete();
-        resolve();
-      }, error => {
-        reject(error.data);
-      });
-    });
-  }
-
   handleOpenRecoverPasswordForm(event) {
     event.preventDefault();
     this.actions.openRecoverPasswordForm();
@@ -180,6 +177,10 @@ export class Login extends React.Component {
 
   handleCloseRecoverPasswordForm() {
     this.actions.closeRecoverPasswordForm();
+  }
+
+  handleRecoverPassword() {
+    this.actions.recoverPasswordComplete();
   }
 
   render() {
@@ -197,7 +198,7 @@ export class Login extends React.Component {
         </p>
         <RecoverPasswordModal show={this.props.auth.showRecoverPasswordForm}
                               container={this}
-                              onSubmit={this.handleRecoverPassword.bind(this)}
+                              onComplete={this.handleRecoverPassword.bind(this)}
                               onClose={this.handleCloseRecoverPasswordForm.bind(this)} />
       </div>
     </DocumentTitle>
