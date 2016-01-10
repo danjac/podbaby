@@ -4,7 +4,7 @@ import TestUtils from 'react-addons-test-utils';
 import jsdom from 'mocha-jsdom';
 import { assert } from 'chai';
 
-import { Podcast } from '../components/podcasts';
+import Podcast from '../components/podcast_item';
 
 const makePodcast = attrs => {
   return {

@@ -123,12 +123,12 @@ export class App extends React.Component {
                     isLoggedIn={isLoggedIn}
                     onToggleBookmark={this.handleTogglePlayerBookmark.bind(this)}
                     onTimeUpdate={this.handleUpdatePlayerTime.bind(this)}
-                    onClosePlayer={this.handleClosePlayer.bind(this)}/> : ''}
+                    onClose={this.handleClosePlayer.bind(this)}/> : ''}
 
           {alertList}
           <AddChannelModal {...this.props.addChannel}
                            container={this}
-                           onAdd={this.handleAddChannel.bind(this)}
+                           onComplete={this.handleAddChannel.bind(this)}
                            onClose={this.handleCloseAddChannelForm.bind(this)} />
     </div>
       );

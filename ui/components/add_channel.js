@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import validator from 'validator';
 
-import {
-  Modal,
-  Input,
+import { Modal, Input,
   Button,
   ButtonGroup,
   ProgressBar
@@ -52,7 +50,7 @@ export class AddChannelModal extends React.Component {
     return new Promise((resolve, reject) => {
       api.addChannel(values.url)
       .then(result => {
-        this.props.onAdd(result.data);
+        this.props.onComplete(result.data);
         this.props.resetForm();
         resolve();
       }, error => {
@@ -111,6 +109,17 @@ export class AddChannelModal extends React.Component {
 
 }
 
+
+AddChannelModal.propTypes = {
+  fields: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  resetForm: PropTypes.func.isRequired,
+  onComplete: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  show: PropTypes.bool.isRequired,
+  container: PropTypes.object.isRequired
+};
 
 export default reduxForm({
   form: 'add-channel',

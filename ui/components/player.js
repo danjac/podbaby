@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {  PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -15,7 +15,7 @@ class Player extends React.Component {
 
   handleClose(event) {
     event.preventDefault();
-    this.props.onClosePlayer();
+    this.props.onClose();
   }
 
   handleTimeUpdate(event) {
@@ -54,7 +54,7 @@ class Player extends React.Component {
           <Row>
             <Col xs={6} md={5}>
               <b><Link style={{ color: '#fff' }}
-                       to={`/channel/${podcast.channelId}/`}>{podcast.name}</Link> :
+                       to={`/channel/${podcast.channelId}/`}>{podcast.name}</Link>&nbsp;:&nbsp;
                  <Link style={{ color: '#fff' }}
                        to={`/podcast/${podcast.id}/`}>{podcast.title}</Link></b>
             </Col>
@@ -97,5 +97,13 @@ class Player extends React.Component {
   }
 }
 
+
+Player.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onTimeUpdate: PropTypes.func.isRequired,
+  onToggleBookmark: PropTypes.func.isRequired,
+  player: PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired
+};
 
 export default Player;

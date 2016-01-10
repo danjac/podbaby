@@ -137,6 +137,11 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 		} else {
 			podcast.Guid = *item.Guid
 		}
+
+		if item.Source != nil {
+			podcast.Source = item.Source.Url
+		}
+
 		if podcast.Guid == "" {
 			f.Log.Error("Could not find suitable GUID for " + podcast.Title)
 		}

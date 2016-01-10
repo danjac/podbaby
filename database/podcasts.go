@@ -28,7 +28,7 @@ type defaultPodcastDBImpl struct {
 func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
 
 	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date
+    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id
     WHERE p.id=$1`
@@ -41,7 +41,7 @@ func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
 func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {
 
 	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image
+    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
     FROM podcasts p, plainto_tsquery($1) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id
     ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1)) DESC LIMIT $2`
@@ -54,7 +54,7 @@ func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {
 func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64) ([]models.Podcast, error) {
 
 	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image
+    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
     FROM podcasts p, plainto_tsquery($2) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id AND c.id=$1
     ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
@@ -67,7 +67,7 @@ func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64)
 func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]models.Podcast, error) {
 
 	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image
+    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
     FROM podcasts p, plainto_tsquery($2) as q, channels c, bookmarks b
     WHERE (p.tsv @@ q OR c.tsv @@ q) AND p.channel_id = c.id AND b.podcast_id = p.id AND b.user_id=$1
     ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
@@ -94,7 +94,7 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 	}
 
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image
+    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
     FROM podcasts p
     JOIN plays pl ON pl.podcast_id = p.id
     JOIN channels c ON c.id = p.channel_id
@@ -128,7 +128,7 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 	}
 
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date
+    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id
     ORDER BY p.pub_date DESC
@@ -158,7 +158,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 	}
 
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date
+    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
     FROM podcasts p
     JOIN subscriptions s ON s.channel_id = p.channel_id
     JOIN channels c ON c.id = p.channel_id
@@ -192,7 +192,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 	}
 
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date
+    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id
@@ -224,7 +224,7 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT id, title, enclosure_url, description, pub_date
+	sql = `SELECT id, title, enclosure_url, description, pub_date, source
     FROM podcasts
     WHERE channel_id=$1
     ORDER BY pub_date DESC
@@ -247,6 +247,7 @@ func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
             :title, 
             :description, 
             :enclosure_url, 
+            :source,
             :pub_date)`, pc)
 	if err != nil {
 		return err

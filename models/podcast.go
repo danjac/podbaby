@@ -14,6 +14,7 @@ type Podcast struct {
 	Name         string    `db:"name" json:"name"`
 	Image        string    `db:"image" json:"image"`
 	Title        string    `db:"title" json:"title"`
+	Source       string    `db:"source" json:"source"`
 	Description  string    `db:"description" json:"description"`
 	EnclosureURL string    `db:"enclosure_url" json:"enclosureUrl"`
 	PubDate      time.Time `db:"pub_date" json:"pubDate"`

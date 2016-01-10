@@ -62,7 +62,10 @@ export default function(props) {
             <Row>
               <Col xs={6} md={9}>
               {header}
-              <p><small><time dateTime={podcast.pubDate}>{formatPubDate(podcast.pubDate)}</time></small></p>
+              <p><small>
+                <time dateTime={podcast.pubDate}>{formatPubDate(podcast.pubDate)}</time>&nbsp;
+                {podcast.source ? <a href={podcast.source} target="_blank">Source</a> : '' }
+              </small></p>
               </Col>
               <Col xs={6} md={3}>
                 <ButtonGroup>
