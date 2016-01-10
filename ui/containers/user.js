@@ -25,18 +25,18 @@ export class ChangeEmailForm extends React.Component {
 
   handleSubmit(values) {
     return new Promise((resolve, reject) => {
+      const { email } = values;
       api.changeEmail(values.email)
       .then(result => {
-        this.props.onComplete(values.email);
+        this.props.onComplete(email);
         resolve();
       }, error => {
-        reject({ email: error.data });
+        reject(error.data);
       });
     });
   }
 
   render() {
-
     const {
       handleSubmit,
       submitting,
@@ -47,8 +47,9 @@ export class ChangeEmailForm extends React.Component {
       <form className="form form-vertical"
             onSubmit={handleSubmit(this.handleSubmit.bind(this))}>
             <FormGroup field={email}>
-                <input type="email" className="form-control" placeholder="Your new email address" {...email} />
-            </FormGroup>
+            <input type="email" className="form-control" {...email} />
+          </FormGroup>
+
           <Button bsStyle="primary"
                   className="form-control"
                   disabled={submitting}
