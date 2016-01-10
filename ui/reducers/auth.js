@@ -20,10 +20,6 @@ export default function(state=initialState, action) {
     case Actions.SIGNUP_SUCCESS:
       return Object.assign({}, state, action.payload, { isLoggedIn: true });
 
-    case Actions.LOGIN_FAILURE:
-    case Actions.SIGNUP_FAILURE:
-      return Object.assign({}, state, { name: null, email: null, isLoggedIn: false });
-
     case Actions.CURRENT_USER:
       return Object.assign({}, state, action.payload, { isLoggedIn: !_.isEmpty(action.payload) });
 
