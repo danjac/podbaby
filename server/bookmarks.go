@@ -14,11 +14,8 @@ func (s *Server) getBookmarks(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) addBookmark(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
-	podcastID, err := getInt64(r, "id")
-	if err != nil {
-		s.abort(w, r, err)
-		return
-	}
+	podcastID, _ := getInt64(r, "id")
+
 	if err := s.DB.Bookmarks.Create(podcastID, user.ID); err != nil {
 		s.abort(w, r, err)
 		return
@@ -28,11 +25,8 @@ func (s *Server) addBookmark(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) removeBookmark(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
-	podcastID, err := getInt64(r, "id")
-	if err != nil {
-		s.abort(w, r, err)
-		return
-	}
+	podcastID, _ := getInt64(r, "id")
+
 	if err := s.DB.Bookmarks.Delete(podcastID, user.ID); err != nil {
 		s.abort(w, r, err)
 		return

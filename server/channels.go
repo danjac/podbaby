@@ -9,11 +9,8 @@ import (
 )
 
 func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
-	channelID, err := getInt64(r, "id")
-	if err != nil {
-		s.abort(w, r, err)
-		return
-	}
+	channelID, _ := getInt64(r, "id")
+
 	channel, err := s.DB.Channels.GetByID(channelID)
 	if err != nil {
 		s.abort(w, r, err)

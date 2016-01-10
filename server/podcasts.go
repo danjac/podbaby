@@ -7,11 +7,7 @@ import (
 
 func (s *Server) getPodcast(w http.ResponseWriter, r *http.Request) {
 
-	podcastID, err := getInt64(r, "id")
-	if err != nil {
-		s.abort(w, r, err)
-		return
-	}
+	podcastID, _ := getInt64(r, "id")
 	podcast, err := s.DB.Podcasts.GetByID(podcastID)
 	if err != nil {
 		s.abort(w, r, err)

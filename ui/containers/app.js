@@ -32,14 +32,17 @@ const AlertList = props => {
     <div className="container" style={{
         position: "fixed",
         height: "50px",
-        width: "100%",
-        top: 90,
+        width: "50%",
+        opacity: 0.9,
+        textAlign: "center",
+        marginLeft: -400,
+        left: "50%",
         zIndex: 200
       }}>
       {props.alerts.map(alert => {
         const dismissAlert = () => props.onDismissAlert(alert.id);
         return (<Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
-          <p>{alert.message}</p>
+          <p><b style={{ opacity: 1.0 }}>{alert.message}</b></p>
         </Alert>);
       })}
     </div>
@@ -117,6 +120,7 @@ export class App extends React.Component {
           <NavBar onLogout={this.handleLogout.bind(this)}
                   onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
                    {...this.props} />}
+          {alertList}
           {pageContent}
           {this.props.player.isPlaying ?
             <Player player={this.props.player}
@@ -125,7 +129,6 @@ export class App extends React.Component {
                     onTimeUpdate={this.handleUpdatePlayerTime.bind(this)}
                     onClose={this.handleClosePlayer.bind(this)}/> : ''}
 
-          {alertList}
           <AddChannelModal {...this.props.addChannel}
                            container={this}
                            onComplete={this.handleAddChannel.bind(this)}

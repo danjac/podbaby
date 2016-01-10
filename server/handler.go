@@ -51,7 +51,7 @@ func (s *Server) Handler() http.Handler {
 
 	channels := api.PathPrefix("/channels/").Subrouter()
 
-	channels.HandleFunc("/{id}/", s.getChannelDetail).Methods("GET")
+	channels.HandleFunc("/{id:[0-9]+}/", s.getChannelDetail).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.getChannels)).Methods("GET")
 	channels.Handle("/", s.requireAuth(s.addChannel)).Methods("POST")
 
@@ -60,23 +60,23 @@ func (s *Server) Handler() http.Handler {
 	search := api.PathPrefix("/search/").Subrouter()
 
 	search.HandleFunc("/", s.search).Methods("GET")
-	search.HandleFunc("/channel/{id}/", s.searchChannel).Methods("GET")
+	search.HandleFunc("/channel/{id:[0-9]+}/", s.searchChannel).Methods("GET")
 	search.Handle("/bookmarks/", s.requireAuth(s.searchBookmarks)).Methods("GET")
 
 	// subscriptions
 
 	subs := api.PathPrefix("/subscriptions/").Subrouter()
 
-	subs.Handle("/{id}/", s.requireAuth(s.subscribe)).Methods("POST")
-	subs.Handle("/{id}/", s.requireAuth(s.unsubscribe)).Methods("DELETE")
+	subs.Handle("/{id:[0-9]+}/", s.requireAuth(s.subscribe)).Methods("POST")
+	subs.Handle("/{id:[0-9]+}/", s.requireAuth(s.unsubscribe)).Methods("DELETE")
 
 	// bookmarks
 
 	bookmarks := api.PathPrefix("/bookmarks/").Subrouter()
 
 	bookmarks.Handle("/", s.requireAuth(s.getBookmarks)).Methods("GET")
-	bookmarks.Handle("/{id}/", s.requireAuth(s.addBookmark)).Methods("POST")
-	bookmarks.Handle("/{id}/", s.requireAuth(s.removeBookmark)).Methods("DELETE")
+	bookmarks.Handle("/{id:[0-9]+}/", s.requireAuth(s.addBookmark)).Methods("POST")
+	bookmarks.Handle("/{id:[0-9]+}/", s.requireAuth(s.removeBookmark)).Methods("DELETE")
 
 	// plays
 
@@ -84,13 +84,13 @@ func (s *Server) Handler() http.Handler {
 
 	plays.Handle("/", s.requireAuth(s.getPlays)).Methods("GET")
 	plays.Handle("/", s.requireAuth(s.deleteAllPlays)).Methods("DELETE")
-	plays.Handle("/{id}/", s.requireAuth(s.addPlay)).Methods("POST")
+	plays.Handle("/{id:[0-9]+}/", s.requireAuth(s.addPlay)).Methods("POST")
 
 	// podcasts
 
 	podcasts := api.PathPrefix("/podcasts/").Subrouter()
 
-	podcasts.HandleFunc("/detail/{id}/", s.getPodcast).Methods("GET")
+	podcasts.HandleFunc("/detail/{id:[0-9]+}/", s.getPodcast).Methods("GET")
 	podcasts.HandleFunc("/latest/", s.getLatestPodcasts).Methods("GET")
 
 	return nosurf.NewPure(router)

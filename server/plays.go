@@ -3,11 +3,7 @@ package server
 import "net/http"
 
 func (s *Server) addPlay(w http.ResponseWriter, r *http.Request) {
-	podcastID, err := getInt64(r, "id")
-	if err != nil {
-		s.abort(w, r, err)
-		return
-	}
+	podcastID, _ := getInt64(r, "id")
 	user, _ := getUser(r)
 	if err := s.DB.Plays.Create(podcastID, user.ID); err != nil {
 		s.abort(w, r, err)
