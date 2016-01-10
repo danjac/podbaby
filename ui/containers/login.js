@@ -155,7 +155,7 @@ export class Login extends React.Component {
         resolve();
       }, error => {
         this.alerts.warning("Sorry, you were unable to log in");
-        reject({_error: error.data});
+        reject(error.data);
       });
     });
   }
@@ -168,7 +168,7 @@ export class Login extends React.Component {
         this.actions.recoverPasswordComplete();
         resolve();
       }, error => {
-        reject({_error: error.data});
+        reject(error.data);
       });
     });
   }

@@ -40,7 +40,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 
 		if err == sql.ErrNoRows {
 			errors := decoders.Errors{
-				"identifier": ",o user found matching this email or name",
+				"identifier": "No user found matching this email or name",
 			}
 			s.abort(w, r, errors)
 			return
