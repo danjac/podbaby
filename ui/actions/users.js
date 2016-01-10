@@ -20,28 +20,16 @@ export function deleteAccount() {
   };
 }
 
-export function changeEmail(email) {
+export function changeEmailComplete(email) {
   return dispatch => {
-    api.changeEmail(email)
-    .then(result => {
-      dispatch(createAction(Actions.CHANGE_EMAIL_SUCCESS, email));
-      dispatch(alerts.success('Your email has been updated'));
-    })
-    .catch(error => {
-      dispatch(createAction(Actions.CHANGE_EMAIL_FAILURE, { error }));
-    });
+    dispatch(createAction(Actions.CHANGE_EMAIL_SUCCESS, email));
+    dispatch(alerts.success('Your email has been updated'));
   };
 }
 
-export function changePassword(oldPassword, newPassword) {
+export function changePasswordComplete() {
   return dispatch => {
-    api.changePassword(oldPassword, newPassword)
-      .then(result => {
-        dispatch(createAction(Actions.CHANGE_PASSWORD_SUCCESS));
-        dispatch(alerts.success('Your password has been updated'));
-      })
-      .catch(error => {
-        dispatch(createAction(Actions.CHANGE_PASSWORD_FAILURE, { error }));
-      });
-  }
+    dispatch(createAction(Actions.CHANGE_PASSWORD_SUCCESS));
+    dispatch(alerts.success('Your password has been updated'));
+  };
 }

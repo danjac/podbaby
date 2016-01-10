@@ -52,7 +52,7 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 	decoder := &decoders.NewChannel{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, err)
 		return
 	}
 

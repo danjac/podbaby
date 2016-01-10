@@ -2,7 +2,6 @@ package server
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -32,7 +31,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 	decoder := &decoders.RecoverPassword{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, err)
 		return
 	}
 
@@ -40,7 +39,10 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		if err == sql.ErrNoRows {
-			s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
+			errors := decoders.Errors{
+				"identifier": ",o user found matching this email or name",
+			}
+			s.abort(w, r, errors)
 			return
 		}
 		s.abort(w, r, err)
@@ -152,13 +154,17 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	errors := make(decoders.Errors)
 	if exists, _ := s.DB.Users.IsEmail(decoder.Email, 0); exists {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
-		return
+		errors["email"] = "This email address is taken"
 	}
 
 	if exists, _ := s.DB.Users.IsName(decoder.Name); exists {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Name taken")})
+		errors["name"] = "This name is taken"
+	}
+
+	if len(errors) > 0 {
+		s.abort(w, r, errors)
 		return
 	}
 
@@ -186,7 +192,7 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	decoder := &decoders.Login{}
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, err)
 		return
 	}
 
@@ -194,7 +200,10 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		if err == sql.ErrNoRows {
-			s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("no user found")})
+			errors := decoders.Errors{
+				"identifier": "No user found matching this name or email",
+			}
+			s.abort(w, r, errors)
 			return
 		}
 		s.abort(w, r, err)
@@ -202,7 +211,10 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !user.CheckPassword(decoder.Password) {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
+		errors := decoders.Errors{
+			"password": "Your password is invalid",
+		}
+		s.abort(w, r, errors)
 		return
 	}
 
@@ -233,12 +245,16 @@ func (s *Server) changeEmail(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
 	decoder := &decoders.NewEmail{}
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, err)
 		return
 	}
+
 	// does this email exist?
 	if exists, _ := s.DB.Users.IsEmail(decoder.Email, user.ID); exists {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Email taken")})
+		errors := decoders.Errors{
+			"email": "This email address is taken",
+		}
+		s.abort(w, r, errors)
 		return
 	}
 
@@ -253,15 +269,17 @@ func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
 	user, _ := getUser(r)
 	decoder := &decoders.NewPassword{}
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, err})
+		s.abort(w, r, err)
 		return
 	}
 
-	s.Log.Info("passwords:", decoder.OldPassword)
 	// validate old password first
 
 	if !user.CheckPassword(decoder.OldPassword) {
-		s.abort(w, r, HTTPError{http.StatusBadRequest, errors.New("Invalid password")})
+		errors := decoders.Errors{
+			"oldPassword": "Your old password was not recognized",
+		}
+		s.abort(w, r, errors)
 		return
 	}
 	user.SetPassword(decoder.NewPassword)

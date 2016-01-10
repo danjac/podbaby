@@ -10,6 +10,7 @@ import {
     Button
 } from 'react-bootstrap';
 
+import * as api from '../api';
 import * as actions from '../actions';
 import Icon from '../components/icon';
 import { FormGroup } from '../components/form';
@@ -22,6 +23,18 @@ const validateChangeEmail = values => {
 
 export class ChangeEmailForm extends React.Component {
 
+  handleSubmit(values) {
+    return new Promise((resolve, reject) => {
+      api.changeEmail(values.email)
+      .then(result => {
+        this.props.onComplete(values.email);
+        resolve();
+      }, error => {
+        reject({ email: error.data });
+      });
+    });
+  }
+
   render() {
 
     const {
@@ -32,7 +45,7 @@ export class ChangeEmailForm extends React.Component {
 
     return (
       <form className="form form-vertical"
-            onSubmit={handleSubmit}>
+            onSubmit={handleSubmit(this.handleSubmit.bind(this))}>
             <FormGroup field={email}>
                 <input type="email" className="form-control" placeholder="Your new email address" {...email} />
             </FormGroup>
@@ -49,7 +62,7 @@ export class ChangeEmailForm extends React.Component {
 ChangeEmailForm = reduxForm({
   form: 'change-email',
   fields: ['email'],
-  validate: validateChangeEmail
+  validate: validateChangeEmail,
 }, state => ({
   initialValues: state.auth
 }))(ChangeEmailForm);
@@ -69,21 +82,31 @@ const validateChangePassword = values => {
 
 
 export class ChangePasswordForm extends React.Component {
+
+  handleSubmit(values) {
+
+    const { onComplete, resetForm } = this.props;
+    return new Promise((resolve, reject) => {
+      api.changePassword(values.oldPassword, values.newPassword)
+      .then(() => {
+        onComplete();
+        resetForm();
+        resolve();
+      }, error => {
+        reject(error.data);
+      });
+    });
+  }
+
   render() {
     const {
       handleSubmit,
       fields: { oldPassword, newPassword },
-      submitting,
-      resetForm
+      submitting
     } = this.props;
 
-    const onSubmit = () => {
-      handleSubmit();
-      resetForm();
-    };
-
     return (
-        <form className="form form-vertical" onSubmit={onSubmit}>
+        <form className="form form-vertical" onSubmit={handleSubmit(this.handleSubmit.bind(this))}>
 
           <FormGroup field={oldPassword}>
                 <input type="password" className="form-control" placeholder="Your old password" {...oldPassword} />
@@ -107,6 +130,20 @@ ChangePasswordForm = reduxForm({
   validate: validateChangePassword
 })(ChangePasswordForm);
 
+
+export const DeleteAccountForm = props => {
+  return (
+      <div>
+        <Button bsStyle="danger"
+                className="form-control"
+                onClick={props.onDelete}><Icon icon="trash" /> Delete my account</Button>
+        <p className="text-center">
+          <b>This will completely and irreversibly delete your account, including all your subscriptions and bookmarks.</b>
+        </p>
+      </div>
+  );
+};
+
 export class User extends React.Component {
 
   constructor(props) {
@@ -115,13 +152,12 @@ export class User extends React.Component {
     this.actions = bindActionCreators(actions.users, dispatch);
   }
 
-  handleSubmitEmail(values) {
-    this.actions.changeEmail(values.email);
+  handleChangeEmailComplete(email) {
+    this.actions.changeEmailComplete(email);
   }
 
-  handleSubmitPassword(values) {
-    const { oldPassword, newPassword } = values;
-    this.actions.changePassword(oldPassword, newPassword);
+  handleChangePasswordComplete() {
+    this.actions.changePasswordComplete();
   }
 
   handleDelete(event) {
@@ -136,18 +172,11 @@ export class User extends React.Component {
     <DocumentTitle title={getTitle('My settings')}>
       <div>
         <h3>Change my email address</h3>
-        <ChangeEmailForm onSubmit={this.handleSubmitEmail.bind(this)} />
+        <ChangeEmailForm onComplete={this.handleChangeEmailComplete.bind(this)} />
         <h3>Change my password</h3>
-        <ChangePasswordForm onSubmit={this.handleSubmitPassword.bind(this)} />
+        <ChangePasswordForm onComplete={this.handleChangePasswordComplete.bind(this)} />
         <hr />
-        <div>
-          <Button bsStyle="danger"
-                  className="form-control"
-                  onClick={this.handleDelete.bind(this)}><Icon icon="trash" /> Delete my account</Button>
-          <p className="text-center">
-            <b>This will completely and irreversibly delete your account, including all your subscriptions and bookmarks.</b>
-          </p>
-        </div>
+        <DeleteAccountForm onDelete={this.handleDelete.bind(this)} />
       </div>
     </DocumentTitle>
     );
