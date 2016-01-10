@@ -35,13 +35,13 @@ export class AddChannelModal extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.pending && !this.props.pending) {
+    if (newProps.submitting && !this.props.submitting) {
       this.setState({
         interval: window.setInterval(() => {
           this.setState({ progress: this.state.progress + 1 });
         }, 100)
       });
-    } else if (!newProps.pending && this.props.pending) {
+    } else if (!newProps.submitting && this.props.submitting) {
       window.clearInterval(this.state.interval);
       this.setState(this.getDefaultState());
     }
@@ -56,20 +56,20 @@ export class AddChannelModal extends React.Component {
         this.props.resetForm();
         resolve();
       }, error => {
-        reject({_error: error.data});
+        error = error.data.url ? error : { url: error.data };
+        reject(error);
       });
     });
   }
 
   render() {
-    const { show, onClose, container, pending } = this.props;
+    const { show, onClose, container } = this.props;
 
     const {
       handleSubmit,
       fields: { url },
       submitting,
       resetForm,
-      error
     } = this.props;
 
     const handleClose = event => {
@@ -86,13 +86,12 @@ export class AddChannelModal extends React.Component {
           <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            {pending ? (
+            {submitting ? (
             <div>
               <ProgressBar now={this.state.progress} />
             </div>
             ) : (
             <form className="form" onSubmit={handleSubmit(this.handleAddChannel.bind(this))}>
-              {error ? <b>Sorry, we were unable to add this feed.</b> : ''}
                <FormGroup field={url}>
                 <input type="text" className="form-control"  {...url} />
               </FormGroup>
