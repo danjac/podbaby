@@ -30,14 +30,15 @@ const AlertList = props => {
 
   return (
     <div className="container" style={{
-        position: "fixed",
-        height: "50px",
-        width: "50%",
-        opacity: 0.9,
-        textAlign: "center",
-        marginLeft: -400,
-        left: "50%",
-        zIndex: 200
+         position: "fixed",
+         height: "50px",
+         width: "500px",
+         opacity: 0.9,
+         textAlign: "center",
+         margin: "5% auto",
+         left: 0,
+         right: 0,
+         zIndex: 200
       }}>
       {props.alerts.map(alert => {
         const dismissAlert = () => props.onDismissAlert(alert.id);
