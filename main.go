@@ -39,6 +39,12 @@ func main() {
 					Usage:       "32-bit secure key",
 					Destination: &cfg.SecureCookieKey,
 				},
+				cli.StringFlag{
+					Name:        "google-analytics-id",
+					EnvVar:      "GOOGLE_ANALYTICS_ID",
+					Usage:       "Your Google Analytics ID (optional)",
+					Destination: &cfg.GoogleAnalyticsID,
+				},
 				cli.IntFlag{
 					Name:        "port",
 					Value:       5000,

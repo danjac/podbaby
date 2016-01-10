@@ -30,6 +30,7 @@ func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 	ctx := map[string]interface{}{
 		"dynamicContentURL": dynamicContentURL,
 		"staticURL":         s.Config.StaticURL,
+		"googleAnalyticsID": s.Config.GoogleAnalyticsID,
 		"csrfToken":         csrfToken,
 		"user":              user,
 		"timestamp":         time.Now().Unix(),
