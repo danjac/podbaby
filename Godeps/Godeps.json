@@ -52,6 +52,10 @@
 			"Rev": "76f54ee73233b171ca9ee82ef837a1fc4d3809c0"
 		},
 		{
+			"ImportPath": "github.com/justinas/alice",
+			"Rev": "82db91fe6d1db4c070fed544cb5d0b5cc08fe276"
+		},
+		{
 			"ImportPath": "github.com/justinas/nosurf",
 			"Comment": "0.1-50-g45adcfc",
 			"Rev": "45adcfcaf70610a5934db447ffe0ea9d13462c9e"
