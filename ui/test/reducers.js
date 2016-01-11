@@ -2,6 +2,60 @@ import { assert } from 'chai';
 import { Actions, Alerts } from '../constants';
 import channelsReducer from '../reducers/channels';
 import alertsReducer from '../reducers/alerts';
+import playerReducer from '../reducers/player';
+
+describe("Player", function () {
+
+  const initialState = {
+    podcast: null,
+    isPlaying: false,
+    currentTime: 0
+  };
+
+  it('Sets the currently playing podcast', function() {
+
+    // time should be reset to 0
+    const state = Object.assign({}, initialState, { currentTime: 30 });
+
+    const podcast = {
+      id: 100,
+      title: "A podcast"
+    };
+
+    const action = {
+      type: Actions.CURRENTLY_PLAYING,
+      payload: podcast
+    };
+
+    const newState = playerReducer(state, action);
+
+    assert.equal(newState.podcast.id, 100);
+    assert.equal(newState.currentTime, 0);
+    assert.equal(newState.isPlaying, true);
+
+  });
+
+  it('Bookmarks the podcast', function() {
+  });
+
+  it('Bookmarks the podcast if player empty', function() {
+  });
+
+  it('Removes the bookmark from the podcast', function() {
+  });
+
+  it('Updates the current play time', function() {
+  });
+
+  it('Reloads the player if none currently playing', function() {
+  });
+
+  it('Reloads the player if podcast currently playing', function() {
+  });
+
+  it('Closes the player', function() {
+  });
+});
 
 describe('Channels', function() {
 
@@ -53,7 +107,7 @@ describe('Channels', function() {
 
 });
 
-describe("Add an alert", function() {
+describe("Alerts", function() {
 
   it("Adds a new alert", function() {
       const state = [];
@@ -69,10 +123,6 @@ describe("Add an alert", function() {
       const newState = alertsReducer(state, action);
       assert.equal(newState.length, 1);
   });
-
-});
-
-describe('Dismiss an alert', function() {
 
   it('Removes a messaage if ID found', function() {
     const state =  [
