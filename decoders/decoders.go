@@ -65,7 +65,7 @@ func (s *Signup) Decode() error {
 	if !govalidator.IsEmail(s.Email) {
 		errors["email"] = "Email address is required"
 	}
-	if len(s.Password) < 6 {
+	if len(s.Password) < minPasswordLength {
 		errors["password"] = fmt.Sprintf("Password must be at least %d characters long", minPasswordLength)
 	}
 	if len(errors) > 0 {
