@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -22,34 +23,38 @@ type defaultUserDBImpl struct {
 }
 
 func (db *defaultUserDBImpl) DeleteUser(userID int64) error {
-	_, err := db.Exec("DELETE FROM users WHERE id=$1", userID)
+	q, _ := sql.Queries.Get("delete_user.sql")
+	_, err := db.Exec(q, userID)
 	return err
 }
 
 func (db *defaultUserDBImpl) GetByID(id int64) (*models.User, error) {
+	q, _ := sql.Queries.Get("get_user_by_id.sql")
 	user := &models.User{}
-	err := db.Get(user, "SELECT * FROM users WHERE id=$1", id)
+	err := db.Get(user, q, id)
 	return user, err
 }
 
 func (db *defaultUserDBImpl) GetByNameOrEmail(identifier string) (*models.User, error) {
+	q, _ := sql.Queries.Get("get_user_by_name_or_email.sql")
 	user := &models.User{}
-	err := db.Get(user, "SELECT * FROM users WHERE email=$1 or name=$1", identifier)
+	err := db.Get(user, q, identifier)
 	return user, err
 }
 
 func (db *defaultUserDBImpl) Create(user *models.User) error {
-	query, args, err := sqlx.Named(`INSERT INTO users(name, email, password)
-    VALUES (:name, :email, :password) RETURNING id`, user)
+	q, _ := sql.Queries.Get("insert_user.sql")
+	q, args, err := sqlx.Named(q, user)
 	if err != nil {
 		return err
 	}
-	return db.QueryRow(db.Rebind(query), args...).Scan(&user.ID)
+	return db.QueryRow(db.Rebind(q), args...).Scan(&user.ID)
 }
 
 func (db *defaultUserDBImpl) IsName(name string) (bool, error) {
+	q, _ := sql.Queries.Get("user_name_exists.sql")
 	var count int64
-	if err := db.QueryRow("SELECT COUNT(id) FROM users WHERE name=$1", name).Scan(&count); err != nil {
+	if err := db.QueryRow(q, name).Scan(&count); err != nil {
 		return false, err
 	}
 	return count > 0, nil
@@ -58,28 +63,32 @@ func (db *defaultUserDBImpl) IsName(name string) (bool, error) {
 
 func (db *defaultUserDBImpl) IsEmail(email string, userID int64) (bool, error) {
 
-	sql := "SELECT COUNT(id) FROM users WHERE email ILIKE $1"
+	qname := "user_email_exists.sql"
 	args := []interface{}{email}
 
 	if userID != 0 {
-		sql += " AND id != $2"
+		qname = "user_email_exists_with_id.sql"
 		args = append(args, userID)
 	}
 
+	q, _ := sql.Queries.Get(qname)
+
 	var count int64
 
-	if err := db.QueryRow(sql, args...).Scan(&count); err != nil {
+	if err := db.QueryRow(q, args...).Scan(&count); err != nil {
 		return false, err
 	}
 	return count > 0, nil
 }
 
 func (db *defaultUserDBImpl) UpdateEmail(email string, userID int64) error {
-	_, err := db.Exec("UPDATE users SET email=$1 WHERE id=$2", email, userID)
+	q, _ := sql.Queries.Get("update_user_email.sql")
+	_, err := db.Exec(q, email, userID)
 	return err
 }
 
 func (db *defaultUserDBImpl) UpdatePassword(password string, userID int64) error {
-	_, err := db.Exec("UPDATE users SET password=$1 WHERE id=$2", password, userID)
+	q, _ := sql.Queries.Get("update_user_email.sql")
+	_, err := db.Exec(q, password, userID)
 	return err
 }

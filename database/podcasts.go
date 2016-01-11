@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -27,65 +28,42 @@ type defaultPodcastDBImpl struct {
 
 func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
 
-	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
-    FROM podcasts p
-    JOIN channels c ON c.id = p.channel_id
-    WHERE p.id=$1`
-
+	q, _ := sql.Queries.Get("get_podcast_by_id.sql")
 	podcast := &models.Podcast{}
-	err := db.Get(podcast, sql, id)
+	err := db.Get(podcast, q, id)
 	return podcast, err
 }
 
 func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {
 
-	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
-    FROM podcasts p, plainto_tsquery($1) as q, channels c
-    WHERE (p.tsv @@ q) AND p.channel_id = c.id
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1)) DESC LIMIT $2`
-
+	q, _ := sql.Queries.Get("search_podcasts.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, sql, query, maxSearchRows)
-
+	return podcasts, db.Select(&podcasts, q, maxSearchRows)
 }
 
 func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64) ([]models.Podcast, error) {
 
-	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
-    FROM podcasts p, plainto_tsquery($2) as q, channels c
-    WHERE (p.tsv @@ q) AND p.channel_id = c.id AND c.id=$1
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
-
+	q, _ := sql.Queries.Get("search_podcasts_by_channel_id.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, sql, channelID, query, maxSearchRows)
+	return podcasts, db.Select(&podcasts, q, channelID, query, maxSearchRows)
 
 }
 
 func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]models.Podcast, error) {
 
-	sql := `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
-    FROM podcasts p, plainto_tsquery($2) as q, channels c, bookmarks b
-    WHERE (p.tsv @@ q OR c.tsv @@ q) AND p.channel_id = c.id AND b.podcast_id = p.id AND b.user_id=$1
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
-
+	q, _ := sql.Queries.Get("search_bookmarked_podcasts.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, sql, userID, query, maxSearchRows)
+	return podcasts, db.Select(&podcasts, q, userID, query, maxSearchRows)
 
 }
 
 func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
-    JOIN plays pl ON pl.podcast_id = p.id
-    WHERE pl.user_id=$1`
+	q, _ := sql.Queries.Get("select_played_podcasts_count.sql")
 
 	var numRows int64
 
-	if err := db.QueryRow(sql, userID).Scan(&numRows); err != nil {
+	if err := db.QueryRow(q, userID).Scan(&numRows); err != nil {
 		return nil, err
 	}
 
@@ -93,19 +71,11 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, p.pub_date, c.title AS name, c.image, p.source
-    FROM podcasts p
-    JOIN plays pl ON pl.podcast_id = p.id
-    JOIN channels c ON c.id = p.channel_id
-    WHERE pl.user_id=$1
-    GROUP BY p.id, c.title, c.image, pl.created_at
-    ORDER BY pl.created_at DESC
-    OFFSET $2 LIMIT $3`
+	q, _ = sql.Queries.Get("select_played_podcasts.sql")
 
 	err := db.Select(
 		&result.Podcasts,
-		sql,
+		q,
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
@@ -115,11 +85,11 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 
 func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, error) {
 
-	sql := "SELECT COUNT(id) FROM podcasts"
+	q, _ := sql.Queries.Get("select_all_podcasts_count.sql")
 
 	var numRows int64
 
-	if err := db.QueryRow(sql).Scan(&numRows); err != nil {
+	if err := db.QueryRow(q).Scan(&numRows); err != nil {
 		return nil, err
 	}
 
@@ -127,15 +97,11 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
-    FROM podcasts p
-    JOIN channels c ON c.id = p.channel_id
-    ORDER BY p.pub_date DESC
-    OFFSET $1 LIMIT $2`
+	q, _ = sql.Queries.Get("select_all_podcasts.sql")
+
 	err := db.Select(
 		&result.Podcasts,
-		sql,
+		q,
 		result.Page.Offset,
 		result.Page.PageSize)
 	return result, err
@@ -143,12 +109,11 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 
 func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(DISTINCT(id)) FROM podcasts
-    WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
+	q, _ := sql.Queries.Get("select_subscribed_podcasts_count.sql")
 
 	var numRows int64
 
-	if err := db.QueryRow(sql, userID).Scan(&numRows); err != nil {
+	if err := db.QueryRow(q, userID).Scan(&numRows); err != nil {
 		return nil, err
 	}
 
@@ -156,16 +121,11 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
-    FROM podcasts p
-    JOIN channels c ON c.id = p.channel_id
-    WHERE c.id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)
-    ORDER BY p.pub_date DESC
-    OFFSET $2 LIMIT $3`
+	q, _ = sql.Queries.Get("select_subscribed_podcasts.sql")
+
 	err := db.Select(
 		&result.Podcasts,
-		sql,
+		q,
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
@@ -174,13 +134,11 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 
 func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
-  JOIN bookmarks b ON b.podcast_id = p.id
-  WHERE b.user_id=$1`
+	q, _ := sql.Queries.Get("select_bookmarked_podcasts_count.sql")
 
 	var numRows int64
 
-	if err := db.QueryRow(sql, userID).Scan(&numRows); err != nil {
+	if err := db.QueryRow(q, userID).Scan(&numRows); err != nil {
 		return nil, err
 	}
 
@@ -188,19 +146,11 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
-    p.channel_id, c.title AS name, c.image, p.pub_date, p.source
-    FROM podcasts p
-    JOIN channels c ON c.id = p.channel_id
-    JOIN bookmarks b ON b.podcast_id = p.id
-    WHERE b.user_id=$1
-    GROUP BY p.id, p.title, c.title, c.image, b.id
-    ORDER BY b.id DESC
-    OFFSET $2 LIMIT $3`
+	q, _ = sql.Queries.Get("select_bookmarked_podcasts.sql")
 
 	err := db.Select(
 		&result.Podcasts,
-		sql,
+		q,
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
@@ -209,11 +159,11 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 
 func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(id) FROM podcasts WHERE channel_id=$1`
+	q, _ := sql.Queries.Get("select_podcasts_by_channel_id_count.sql")
 
 	var numRows int64
 
-	if err := db.QueryRow(sql, channelID).Scan(&numRows); err != nil {
+	if err := db.QueryRow(q, channelID).Scan(&numRows); err != nil {
 		return nil, err
 	}
 
@@ -221,15 +171,11 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 		Page: models.NewPage(page, numRows),
 	}
 
-	sql = `SELECT id, title, enclosure_url, description, pub_date, source
-    FROM podcasts
-    WHERE channel_id=$1
-    ORDER BY pub_date DESC
-    OFFSET $2 LIMIT $3`
+	q, _ = sql.Queries.Get("select_podcasts_by_channel_id.sql")
 
 	err := db.Select(
 		&result.Podcasts,
-		sql,
+		q,
 		channelID,
 		result.Page.Offset,
 		result.Page.PageSize)
@@ -237,17 +183,10 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 }
 
 func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
-	query, args, err := sqlx.Named(`
-        SELECT insert_podcast(
-            :channel_id, 
-            :guid,
-            :title, 
-            :description, 
-            :enclosure_url, 
-            :source,
-            :pub_date)`, pc)
+	q, _ := sql.Queries.Get("insert_podcast.sql")
+	q, args, err := sqlx.Named(q, pc)
 	if err != nil {
 		return err
 	}
-	return db.QueryRow(db.Rebind(query), args...).Scan(&pc.ID)
+	return db.QueryRow(db.Rebind(q), args...).Scan(&pc.ID)
 }

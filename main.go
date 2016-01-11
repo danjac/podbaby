@@ -1,3 +1,5 @@
+//go:generate purse -in=./sql/queries -out=./sql -file=queries.go -pack=sql -name=queries
+
 package main
 
 import (
