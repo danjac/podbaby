@@ -65,6 +65,10 @@ func New(db *database.DB,
 	}
 }
 
+func (s *Server) Handler() http.Handler {
+	return s.configureMiddleware(s.configureRoutes())
+}
+
 func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
 
 	if encoded, err := s.Cookie.Encode(cookieUserID, userID); err == nil {

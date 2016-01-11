@@ -1,14 +1,11 @@
 package server
 
 import (
-	"net/http"
-
 	"github.com/gorilla/mux"
-	"github.com/justinas/alice"
-	"github.com/justinas/nosurf"
+	"net/http"
 )
 
-func (s *Server) Handler() http.Handler {
+func (s *Server) configureRoutes() http.Handler {
 
 	router := mux.NewRouter()
 
@@ -19,9 +16,11 @@ func (s *Server) Handler() http.Handler {
 			http.FileServer(http.Dir(s.Config.StaticDir))))
 
 	// front page
+
 	router.HandleFunc("/", s.indexPage)
 
-	// OPML
+	// OPML download
+
 	router.Handle("/{prefix}.opml", s.requireAuth(s.getOPML)).Methods("GET")
 
 	// API
@@ -94,14 +93,5 @@ func (s *Server) Handler() http.Handler {
 	podcasts.HandleFunc("/detail/{id:[0-9]+}/", s.getPodcast).Methods("GET")
 	podcasts.HandleFunc("/latest/", s.getLatestPodcasts).Methods("GET")
 
-	var middleware = []alice.Constructor{
-		nosurf.NewPure,
-	}
-
-	if s.Config.Env == "dev" {
-		middleware = append(middleware, newTimerMiddleware(s.Log))
-	}
-
-	return alice.New(middleware...).Then(router)
-
+	return router
 }

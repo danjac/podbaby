@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/justinas/alice"
+	"github.com/justinas/nosurf"
 	"net/http"
 	"time"
 )
@@ -34,4 +35,17 @@ func (m *timerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 
 	logger.Info()
+}
+
+func (s *Server) configureMiddleware(handler http.Handler) http.Handler {
+	var middleware = []alice.Constructor{
+		nosurf.NewPure,
+	}
+
+	if s.Config.Env == "dev" {
+		middleware = append(middleware, newTimerMiddleware(s.Log))
+	}
+
+	return alice.New(middleware...).Then(handler)
+
 }
