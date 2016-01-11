@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -20,63 +21,47 @@ type defaultChannelDBImpl struct {
 }
 
 func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
-	sql := "SELECT id, title, description, categories, url, image, website FROM channels"
+
+	q, _ := sql.Queries.Get("select_all_channels.sql")
 	var channels []models.Channel
-	return channels, db.Select(&channels, sql)
+	return channels, db.Select(&channels, q)
 }
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.image, c.url, c.website
-    FROM channels c
-    JOIN subscriptions s ON s.channel_id = c.id
-    WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
-    GROUP BY c.id
-    ORDER BY title`
+
+	q, _ := sql.Queries.Get("select_subscribed_channels.sql")
 	var channels []models.Channel
-	return channels, db.Select(&channels, sql, userID)
+	return channels, db.Select(&channels, q, userID)
 }
 
 func (db *defaultChannelDBImpl) Search(query string) ([]models.Channel, error) {
 
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
-    FROM channels c, plainto_tsquery($1) as q
-    WHERE (c.tsv @@ q)
-    ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 20`
+	q, _ := sql.Queries.Get("search_channels.sql")
 
 	var channels []models.Channel
-	return channels, db.Select(&channels, sql, query)
+	return channels, db.Select(&channels, q, query)
 }
 
 func (db *defaultChannelDBImpl) GetByURL(url string) (*models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
-        FROM channels c
-        WHERE url=$1`
+	q, _ := sql.Queries.Get("get_channel_by_url.sql")
 	channel := &models.Channel{}
-	return channel, db.Get(channel, sql, url)
+	return channel, db.Get(channel, q, url)
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64) (*models.Channel, error) {
-	sql := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
-        FROM channels c
-        WHERE id=$1`
+	q, _ := sql.Queries.Get("get_channel_by_id.sql")
 	channel := &models.Channel{}
-	return channel, db.Get(channel, sql, id)
+	return channel, db.Get(channel, q, id)
 }
 
 func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
 
-	query, args, err := sqlx.Named(`
-        SELECT upsert_channel (
-            :url, 
-            :title, 
-            :description, 
-            :image, 
-            :categories, 
-            :website)`, ch)
+	q, _ := sql.Queries.Get("upsert_channel.sql")
 
+	q, args, err := sqlx.Named(q, ch)
 	if err != nil {
 		return err
 	}
 
-	return db.QueryRowx(db.Rebind(query), args...).Scan(&ch.ID)
+	return db.QueryRowx(db.Rebind(q), args...).Scan(&ch.ID)
 }

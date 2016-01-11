@@ -88,7 +88,7 @@ func (db *defaultUserDBImpl) UpdateEmail(email string, userID int64) error {
 }
 
 func (db *defaultUserDBImpl) UpdatePassword(password string, userID int64) error {
-	q, _ := sql.Queries.Get("update_user_email.sql")
+	q, _ := sql.Queries.Get("update_user_password.sql")
 	_, err := db.Exec(q, password, userID)
 	return err
 }

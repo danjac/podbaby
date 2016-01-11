@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -14,11 +15,13 @@ type defaultPlayDBImpl struct {
 }
 
 func (db *defaultPlayDBImpl) Create(podcastID, userID int64) error {
-	_, err := db.Exec("SELECT add_play($1, $2)", podcastID, userID)
+	q, _ := sql.Queries.Get("add_play.sql")
+	_, err := db.Exec(q, podcastID, userID)
 	return err
 }
 
 func (db *defaultPlayDBImpl) DeleteAll(userID int64) error {
-	_, err := db.Exec("DELETE FROM plays WHERE user_id=$1", userID)
+	q, _ := sql.Queries.Get("delete_plays_by_user_id.sql")
+	_, err := db.Exec(q, userID)
 	return err
 }

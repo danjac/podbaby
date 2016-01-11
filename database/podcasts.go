@@ -38,7 +38,7 @@ func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {
 
 	q, _ := sql.Queries.Get("search_podcasts.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, q, maxSearchRows)
+	return podcasts, db.Select(&podcasts, q, query, maxSearchRows)
 }
 
 func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64) ([]models.Podcast, error) {

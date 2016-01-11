@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -15,20 +16,20 @@ type defaultSubscriptionDBImpl struct {
 }
 
 func (db *defaultSubscriptionDBImpl) SelectByUserID(userID int64) ([]int64, error) {
-	sql := "SELECT channel_id FROM subscriptions WHERE user_id=$1"
+	q, _ := sql.Queries.Get("select_subscriptions_by_user_id.sql")
 	var result []int64
-	err := db.Select(&result, sql, userID)
+	err := db.Select(&result, q, userID)
 	return result, err
 }
 
 func (db *defaultSubscriptionDBImpl) Create(channelID, userID int64) error {
-	sql := "INSERT INTO subscriptions(channel_id, user_id) VALUES($1, $2)"
-	_, err := db.Exec(sql, channelID, userID)
+	q, _ := sql.Queries.Get("insert_subscription.sql")
+	_, err := db.Exec(q, channelID, userID)
 	return err
 }
 
 func (db *defaultSubscriptionDBImpl) Delete(channelID, userID int64) error {
-	sql := "DELETE FROM subscriptions WHERE channel_id=$1 AND user_id=$2"
-	_, err := db.Exec(sql, channelID, userID)
+	q, _ := sql.Queries.Get("delete_subscription.sql")
+	_, err := db.Exec(q, channelID, userID)
 	return err
 }

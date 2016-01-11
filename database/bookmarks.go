@@ -1,6 +1,9 @@
 package database
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/danjac/podbaby/sql"
+	"github.com/jmoiron/sqlx"
+)
 
 type BookmarkDB interface {
 	Create(int64, int64) error
@@ -13,20 +16,20 @@ type defaultBookmarkDBImpl struct {
 }
 
 func (db *defaultBookmarkDBImpl) SelectByUserID(userID int64) ([]int64, error) {
-	sql := "SELECT podcast_id FROM bookmarks WHERE user_id=$1"
+	q, _ := sql.Queries.Get("select_bookmarks.sql")
 	var result []int64
-	err := db.Select(&result, sql, userID)
+	err := db.Select(&result, q, userID)
 	return result, err
 }
 
 func (db *defaultBookmarkDBImpl) Create(podcastID, userID int64) error {
-	sql := "INSERT INTO bookmarks(podcast_id, user_id) VALUES($1, $2)"
-	_, err := db.Exec(sql, podcastID, userID)
+	q, _ := sql.Queries.Get("insert_bookmark.sql")
+	_, err := db.Exec(q, podcastID, userID)
 	return err
 }
 
 func (db *defaultBookmarkDBImpl) Delete(podcastID, userID int64) error {
-	sql := "DELETE FROM bookmarks WHERE podcast_id=$1 AND user_id=$2"
-	_, err := db.Exec(sql, podcastID, userID)
+	q, _ := sql.Queries.Get("delete_bookmark.sql")
+	_, err := db.Exec(q, podcastID, userID)
 	return err
 }
