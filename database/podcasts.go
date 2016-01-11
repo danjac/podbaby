@@ -143,9 +143,8 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 
 func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.PodcastList, error) {
 
-	sql := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
-  JOIN subscriptions s ON s.channel_id = p.channel_id
-  WHERE s.user_id=$1`
+	sql := `SELECT COUNT(DISTINCT(id)) FROM podcasts
+    WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
 
 	var numRows int64
 
@@ -160,10 +159,8 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 	sql = `SELECT p.id, p.title, p.enclosure_url, p.description,
     p.channel_id, c.title AS name, c.image, p.pub_date, p.source
     FROM podcasts p
-    JOIN subscriptions s ON s.channel_id = p.channel_id
     JOIN channels c ON c.id = p.channel_id
-    WHERE s.user_id=$1
-    GROUP BY p.id, p.title, c.image, c.title
+    WHERE c.id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)
     ORDER BY p.pub_date DESC
     OFFSET $2 LIMIT $3`
 	err := db.Select(

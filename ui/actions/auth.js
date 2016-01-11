@@ -26,7 +26,7 @@ export function closeRecoverPasswordForm() {
 
 export function recoverPasswordComplete(identifier) {
   return dispatch => {
-    dispatch(createAction(Actions.CLOSE_RECOVER_PASSWORD_FORM));
+    dispatch(closeRecoverPasswordForm());
     dispatch(createAction(Actions.RECOVER_PASSWORD_SUCCESS));
     dispatch(alerts.success("Please check your email inbox to recover your password"));
   };
@@ -45,6 +45,7 @@ export function loginComplete(loginInfo) {
 export function signupComplete(signupInfo) {
   return dispatch =>  {
     dispatch(createAction(Actions.SIGNUP_SUCCESS, signupInfo));
+    dispatch(alerts.success(`Welcome, ${signupInfo.name}`))
     dispatch(pushPath('/new/'));
   };
 }
