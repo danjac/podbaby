@@ -23,7 +23,7 @@ export class Latest extends React.Component {
 
     const ifEmptyMsg = (
       <span>You haven't subscribed to any channels yet.
-        Discover new channels and podcasts <Link to="/podcasts/search/">here</Link>.</span>);
+        Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
 
     return (
       <DocumentTitle title={getTitle('Latest podcasts')}>
