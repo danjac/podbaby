@@ -2,10 +2,42 @@ package server
 
 import (
 	"net/http"
+	"time"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
+	"github.com/justinas/alice"
 	"github.com/justinas/nosurf"
 )
+
+type timerMiddleware struct {
+	log     *logrus.Logger
+	handler http.Handler
+}
+
+func newTimerMiddleware(logger *logrus.Logger) alice.Constructor {
+	return func(handler http.Handler) http.Handler {
+		return &timerMiddleware{
+			logger,
+			handler,
+		}
+	}
+}
+
+func (m *timerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	start := time.Now()
+
+	m.handler.ServeHTTP(w, r)
+
+	logger := m.log.WithFields(logrus.Fields{
+		"URL":    r.URL.Path,
+		"Method": r.Method,
+		"Time":   time.Since(start),
+	})
+
+	logger.Info()
+}
 
 func (s *Server) Handler() http.Handler {
 
@@ -93,5 +125,14 @@ func (s *Server) Handler() http.Handler {
 	podcasts.HandleFunc("/detail/{id:[0-9]+}/", s.getPodcast).Methods("GET")
 	podcasts.HandleFunc("/latest/", s.getLatestPodcasts).Methods("GET")
 
-	return nosurf.NewPure(router)
+	var middleware = []alice.Constructor{
+		nosurf.NewPure,
+	}
+
+	if s.Config.Env == "dev" {
+		middleware = append(middleware, newTimerMiddleware(s.Log))
+	}
+
+	return alice.New(middleware...).Then(router)
+
 }
