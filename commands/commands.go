@@ -43,8 +43,9 @@ func Serve(cfg *config.Config) {
 		),
 	)
 
-	s := server.New(db, mailer, log, cfg)
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), s.Handler()); err != nil {
+	handler := server.New(db, mailer, log, cfg).Handler()
+
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), handler); err != nil {
 		panic(err)
 	}
 
