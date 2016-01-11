@@ -130,12 +130,6 @@ func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
 }
 
 func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
-	logger := s.Log.WithFields(logrus.Fields{
-		"URL":    r.URL,
-		"Method": r.Method,
-		"Error":  err,
-	})
-
 	if err == sql.ErrNoRows {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
@@ -151,6 +145,12 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 	case decoders.Errors:
 		s.Render.JSON(w, http.StatusBadRequest, err)
 	default:
+		logger := s.Log.WithFields(logrus.Fields{
+			"URL":    r.URL,
+			"Method": r.Method,
+			"Error":  err,
+		})
+
 		logger.Error(err)
 		http.Error(w, "Sorry, an error occurred", http.StatusInternalServerError)
 	}
