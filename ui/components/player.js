@@ -32,12 +32,17 @@ class Player extends React.Component {
   }
 
   render() {
+
     const { player, isLoggedIn } = this.props;
     const { podcast } = player;
     const btnStyle = {
       color: "#fff",
       backgroundColor: "#222"
     };
+
+    const fullTitle = podcast.name + " : "  + podcast.title
+    const title = _.trunc(fullTitle, 50)
+
     return (
       <div className="container" style={{
         position:"fixed",
@@ -67,7 +72,8 @@ class Player extends React.Component {
             </Col>
             <Col md={4} className="hidden-xs hidden-sm">
               <b><Link style={{ color: '#fff' }}
-                       to={`/podcast/${podcast.id}/`}>{_.trunc(podcast.title, 60)}</Link></b>
+                       title={fullTitle}
+                       to={`/podcast/${podcast.id}/`}>{title}</Link></b>
             </Col>
             <Col xs={6} sm={6} md={4} mdPush={2} xsPush={1}>
               <ButtonGroup style={{ color: "#fff" }}>
@@ -78,7 +84,7 @@ class Player extends React.Component {
                   <Icon icon="stop" />
                 </Button>
                 <a download
-                   title="Download this podcast"
+                   title={`Download ${fullTitle}`}
                    className="btn btn-default"
                    style={btnStyle}
                    href={podcast.enclosureUrl}><Icon icon="download" /></a>
