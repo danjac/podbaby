@@ -33,7 +33,7 @@ func Serve(cfg *config.Config) {
 	db := mustConnect(cfg.DatabaseURL)
 	defer db.Close()
 
-	mailer := mailer.New(
+	mailer, err := mailer.New(
 		cfg.Mail.Addr,
 		smtp.PlainAuth(
 			cfg.Mail.ID,
@@ -41,7 +41,12 @@ func Serve(cfg *config.Config) {
 			cfg.Mail.Password,
 			cfg.Mail.Host,
 		),
+		"./templates/email",
 	)
+
+	if err != nil {
+		panic(err)
+	}
 
 	handler := server.New(db, mailer, log, cfg).Handler()
 

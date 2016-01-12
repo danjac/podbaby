@@ -52,13 +52,19 @@ func New(db *database.DB,
 		secureCookieKey,
 	)
 
+	renderOptions := render.Options{
+		IsDevelopment: cfg.IsDev(),
+	}
+
+	renderer := render.New(renderOptions)
+
 	f := feedparser.New(db, log)
 
 	return &Server{
 		DB:         db,
 		Config:     cfg,
 		Log:        log,
-		Render:     render.New(),
+		Render:     renderer,
 		Cookie:     cookie,
 		Feedparser: f,
 		Mailer:     mailer,

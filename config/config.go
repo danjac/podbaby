@@ -46,6 +46,14 @@ func (cfg *Config) MustValidate() {
 	}
 }
 
+func (cfg *Config) IsDev() bool {
+	return cfg.Env == "dev"
+}
+
+func (cfg *Config) IsProd() bool {
+	return cfg.Env == "prod"
+}
+
 // MailConfig contains SMTP settings
 
 type MailConfig struct {

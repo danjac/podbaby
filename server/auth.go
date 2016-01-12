@@ -2,7 +2,6 @@ package server
 
 import (
 	"database/sql"
-	"fmt"
 	"math/rand"
 	"net/http"
 	"time"
@@ -57,42 +56,27 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 		s.abort(w, r, err)
 		return
 	}
-	msg := fmt.Sprintf(`Hi %s,
 
-We've reset your password so you can sign back in again!
+	data := map[string]string{
+		"name":         user.Name,
+		"tempPassword": tempPassword,
+		"host":         r.Host,
+	}
 
-Here is your new temporary password:
+	go func(data map[string]string) {
 
-%s
-
-You can login here with this email address or your username:
-
-https://%s/#/login/
-
-Make sure to change your password as soon as possible!
-
-Thanks,
-
-PodBaby
-    `,
-		user.Name,
-		tempPassword,
-		r.Host,
-	)
-
-	go func(msg string) {
-
-		err := s.Mailer.Send(
+		err := s.Mailer.SendFromTemplate(
 			"services@podbaby.me",
 			[]string{user.Email},
 			"Your new password",
-			msg,
+			"recover_password.tmpl",
+			data,
 		)
 		if err != nil {
 			s.Log.Error(err)
 		}
 
-	}(msg)
+	}(data)
 
 	s.Render.Text(w, http.StatusOK, "password sent")
 
