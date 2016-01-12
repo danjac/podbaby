@@ -10,7 +10,7 @@ import (
 func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 
 	var dynamicContentURL string
-	if s.Config.Env == "dev" {
+	if s.Config.IsDev() {
 		dynamicContentURL = s.Config.DynamicContentURL
 	} else {
 		dynamicContentURL = s.Config.StaticURL

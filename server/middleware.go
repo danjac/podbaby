@@ -42,7 +42,7 @@ func (s *Server) configureMiddleware(handler http.Handler) http.Handler {
 		nosurf.NewPure,
 	}
 
-	if s.Config.Env == "dev" {
+	if s.Config.IsDev() {
 		middleware = append(middleware, newTimerMiddleware(s.Log))
 	}
 

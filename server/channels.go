@@ -5,6 +5,7 @@ import (
 
 	"database/sql"
 	"github.com/danjac/podbaby/decoders"
+	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
 )
 
@@ -79,6 +80,11 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 			URL: decoder.URL,
 		}
 		if err := s.Feedparser.FetchChannel(channel); err != nil {
+			if err == feedparser.ErrInvalidFeed {
+				err = decoders.Errors{
+					"url": "Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
+				}
+			}
 			s.abort(w, r, err)
 			return
 		}

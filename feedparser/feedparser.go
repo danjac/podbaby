@@ -190,7 +190,7 @@ func (f *defaultFeedparserImpl) FetchAll() error {
 
 }
 
-var InvalidFeed = errors.New("No channel found")
+var ErrInvalidFeed = errors.New("Invalid feed")
 
 func fetch(url string) (*Result, error) {
 
@@ -203,7 +203,12 @@ func fetch(url string) (*Result, error) {
 	var items []*rss.Item
 
 	itemHandler := func(feed *rss.Feed, ch *rss.Channel, newItems []*rss.Item) {
-		items = append(items, newItems...)
+		for _, item := range newItems {
+			// only include items with enclosures
+			if len(item.Enclosures) > 0 {
+				items = append(items, item)
+			}
+		}
 	}
 
 	feed := rss.New(5, true, chanHandler, itemHandler)
@@ -213,7 +218,11 @@ func fetch(url string) (*Result, error) {
 	}
 
 	if len(channels) == 0 {
-		return nil, InvalidFeed
+		return nil, ErrInvalidFeed
+	}
+
+	if len(items) == 0 {
+		return nil, ErrInvalidFeed
 	}
 
 	result := &Result{channels[0], items}

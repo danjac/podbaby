@@ -54,7 +54,7 @@ export class AddChannelModal extends React.Component {
         this.props.resetForm();
         resolve();
       }, error => {
-        error = error.data.url ? error : { url: error.data };
+        error = error.data.url ? error.data : { url: error.data };
         reject(error);
       });
     });
