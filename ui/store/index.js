@@ -7,12 +7,6 @@ import { pushPath } from 'redux-simple-router';
 import { alerts } from '../actions';
 import reducer from '../reducers';
 
-const loggingMiddleware = createLogger({
-  level: 'info',
-  collapsed: true,
-  logger: console
-});
-
 // should catch any API errors and act accordingly
 const apiErrorMiddleware = store => next => action => {
     let result = next(action);
@@ -49,13 +43,23 @@ const apiErrorMiddleware = store => next => action => {
     return result;
 };
 
-const createStoreWithMiddleware = compose(
-  applyMiddleware(
-    thunkMiddleware,
-    apiErrorMiddleware,
-    loggingMiddleware,
-  ),
-)(createStore);
+const middleware = [
+  thunkMiddleware,
+  apiErrorMiddleware
+];
+
+if (window.__ENV__ === "dev") {
+
+  const loggingMiddleware = createLogger({
+    level: 'info',
+    collapsed: true,
+    logger: console
+  });
+
+  middleware.push(loggingMiddleware);
+}
+
+const createStoreWithMiddleware = compose(applyMiddleware.apply(null, middleware))(createStore);
 
 export default function configureStore(initialState) {
   return createStoreWithMiddleware(reducer, initialState);

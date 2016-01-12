@@ -28,6 +28,7 @@ func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 	}
 	csrfToken := nosurf.Token(r)
 	ctx := map[string]interface{}{
+		"env":               s.Config.Env,
 		"dynamicContentURL": dynamicContentURL,
 		"staticURL":         s.Config.StaticURL,
 		"googleAnalyticsID": s.Config.GoogleAnalyticsID,
