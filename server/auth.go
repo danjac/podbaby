@@ -63,11 +63,11 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 		"host":         r.Host,
 	}
 
-	go func(data map[string]string) {
+	go func(to string, data map[string]string) {
 
 		err := s.Mailer.SendFromTemplate(
 			"services@podbaby.me",
-			[]string{user.Email},
+			[]string{to},
 			"Your new password",
 			"recover_password.tmpl",
 			data,
@@ -76,7 +76,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 			s.Log.Error(err)
 		}
 
-	}(data)
+	}(user.Email, data)
 
 	s.Render.Text(w, http.StatusOK, "password sent")
 
