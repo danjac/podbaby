@@ -281,5 +281,7 @@ func (s *Server) deleteAccount(w http.ResponseWriter, r *http.Request) {
 		s.abort(w, r, err)
 		return
 	}
+	// log user out
+	s.setAuthCookie(w, 0)
 	s.Render.Text(w, http.StatusOK, "account deleted")
 }
