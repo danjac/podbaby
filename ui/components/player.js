@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {  PropTypes } from 'react';
 import { Link } from 'react-router';
 
@@ -38,61 +39,61 @@ class Player extends React.Component {
       backgroundColor: "#222"
     };
     return (
-      <footer style={{
+      <div className="container" style={{
         position:"fixed",
-        padding: "5px",
+        padding: 5,
         opacity: 0.8,
         backgroundColor: "#222",
         color: "#fff",
         fontWeight: "bold",
-        height: "50px",
+        height: 40,
         bottom: 0,
         width: "100%",
+        left: 0,
+        right: 0,
         zIndex: 100
         }}>
         <Grid>
           <Row>
-            <Col xs={6} md={5}>
-              <b><Link style={{ color: '#fff' }}
-                       to={`/channel/${podcast.channelId}/`}>{podcast.name}</Link>&nbsp;:&nbsp;
-                 <Link style={{ color: '#fff' }}
-                       to={`/podcast/${podcast.id}/`}>{podcast.title}</Link></b>
-            </Col>
-            <Col xs={3} md={4}>
+            <Col xs={6} sm={6} md={4}>
               <audio controls
                      autoPlay
                      onPlay={this.handlePlay.bind(this)}
                      onTimeUpdate={this.handleTimeUpdate.bind(this)}
                      src={podcast.enclosureUrl}>
                 <source src={podcast.enclosureUrl} />
-                Download from <a href="#">here</a>.
+                Download from <a download href={podcast.enclosureUrl}>here</a>.
               </audio>
             </Col>
-            <Col xs={3} md={3} mdPush={2}>
+            <Col md={4} className="hidden-xs hidden-sm">
+              <b><Link style={{ color: '#fff' }}
+                       to={`/podcast/${podcast.id}/`}>{_.trunc(podcast.title, 60)}</Link></b>
+            </Col>
+            <Col xs={6} sm={6} md={4} mdPush={2} xsPush={1}>
               <ButtonGroup style={{ color: "#fff" }}>
+                <Button title='Close player'
+                        pullRight
+                        style={btnStyle}
+                        onClick={this.handleClose.bind(this)}>
+                  <Icon icon="stop" />
+                </Button>
                 <a download
                    title="Download this podcast"
-                   className="btn btn-sm btn-default"
+                   className="btn btn-default"
                    style={btnStyle}
                    href={podcast.enclosureUrl}><Icon icon="download" /></a>
                  {isLoggedIn ?
                  <Button title={podcast.isBookmarked ? 'Remove bookmark' : 'Add bookmark '}
-                         bsSize="sm"
+                         pullRight
                          style={btnStyle}
                          onClick={this.handleBookmark.bind(this)}>
                     <Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
                 </Button> : ''}
-                <Button title='Close player'
-                        bsSize="sm"
-                        style={btnStyle}
-                        onClick={this.handleClose.bind(this)}>
-                  <Icon icon="remove" />
-                </Button>
               </ButtonGroup>
             </Col>
           </Row>
         </Grid>
-    </footer>
+    </div>
     );
   }
 }

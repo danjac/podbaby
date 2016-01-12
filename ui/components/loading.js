@@ -5,7 +5,7 @@ export default function(props) {
 
   return (
       <div className="text-center" style={{ marginTop: 50 }}>
-        <h1><Icon icon="refresh" /> Loading...</h1>
+        <h1 style={{ fontFamily: "GoodDog"}}><Icon icon="spinner" spin /> loading...</h1>
       </div>
   );
 
