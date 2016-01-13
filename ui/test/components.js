@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
-import jsdom from 'mocha-jsdom';
 import { assert } from 'chai';
+import jsdom from 'jsdom-global';
 
 import Podcast from '../components/podcast_item';
 
@@ -43,7 +43,13 @@ class Wrapper extends React.Component {
 
 describe('Podcast component', function() {
 
-  jsdom({ skipWindowCheck: true });
+  before(function() {
+    this.jsdom = jsdom();
+  });
+
+  after(function() {
+    this.jsdom();
+  });
 
   it('should show remove bookmark button if is bookmarked', function() {
 
