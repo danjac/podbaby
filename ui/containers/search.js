@@ -114,7 +114,7 @@ export class Search extends React.Component {
       );
 
     return (
-      <DocumentTitle title={getTitle('Search podcasts')}>
+      <DocumentTitle title={getTitle('Search podcasts and channels')}>
         <div>
           <form className="form" onSubmit={this.handleSearch.bind(this)}>
             <Input type="search"

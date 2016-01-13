@@ -10,11 +10,16 @@
     "plugins": [
         //"react"
     ],
+    "builtins: {
+        "window": true
+    },
     "rules": {
         "strict": 0,
         "quotes": 0,
-        "no-unused-vars": 0,
         "camelcase": 0,
-        "no-underscore-dangle": 0
+        "semi": 1,
+        "no-unused-vars": 1,
+        "no-underscore-dangle": 0,
+        "no-comma-dangle": 1
     }
 }

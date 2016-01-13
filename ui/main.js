@@ -1,32 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createHashHistory from 'history/lib/createHashHistory';
-import { Provider } from 'react-redux';
 import { syncReduxAndRouter } from 'redux-simple-router';
-import DocumentTitle from 'react-document-title';
 
+import Root from './containers/root';
 import { auth, player } from './actions';
-import routes from './routes';
 import configureStore from './store';
-import { getTitle } from './containers/utils';
+import configureRoutes from './routes';
 
 const history = createHashHistory();
 const store = configureStore();
+const routes = configureRoutes(store, history);
 
 syncReduxAndRouter(history, store);
-
-const Container = props => {
-
-  return (
-  <DocumentTitle title={getTitle()}>
-    <Provider store={store}>
-      {routes(store, history)}
-    </Provider>
-  </DocumentTitle>
-  );
-};
 
 store.dispatch(auth.setCurrentUser(window.user));
 store.dispatch(player.reloadPlayer());
 
-ReactDOM.render(<Container />, document.getElementById("app"));
+ReactDOM.render(
+  <Root store={store} routes={routes} />,
+  document.getElementById("app"));
