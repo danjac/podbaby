@@ -3,7 +3,6 @@ package server
 import (
 	"net/http"
 
-	"database/sql"
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
@@ -61,7 +60,7 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 	isNewChannel := false
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if isErrNoRows(err) {
 			isNewChannel = true
 		} else {
 			s.abort(w, r, err)

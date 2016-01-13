@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"database/sql"
+	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,6 +31,18 @@ func init() {
 	getContext = func(r *http.Request, key string) (interface{}, bool) {
 		return context.GetOk(r, key)
 	}
+}
+
+func isErrNoRows(err error) bool {
+
+	if err == sql.ErrNoRows {
+		return true
+	}
+
+	if sqlErr, ok := err.(database.SQLError); ok {
+		return sqlErr.Err == sql.ErrNoRows
+	}
+	return false
 }
 
 func getInt64(r *http.Request, name string) (int64, error) {

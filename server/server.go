@@ -130,7 +130,7 @@ func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
 
 	user, err := s.DB.Users.GetByID(userID)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if isErrNoRows(err) {
 			return nil, errNotAuthenticated
 		}
 		return nil, err

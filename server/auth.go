@@ -1,7 +1,6 @@
 package server
 
 import (
-	"database/sql"
 	"math/rand"
 	"net/http"
 	"time"
@@ -37,7 +36,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
 	if err != nil {
 
-		if err == sql.ErrNoRows {
+		if isErrNoRows(err) {
 			errors := decoders.Errors{
 				"identifier": "No user found matching this email or name",
 			}
@@ -183,7 +182,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
 	if err != nil {
 
-		if err == sql.ErrNoRows {
+		if isErrNoRows(err) {
 			errors := decoders.Errors{
 				"identifier": "No user found matching this name or email",
 			}
