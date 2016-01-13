@@ -41,7 +41,7 @@ class Player extends React.Component {
     };
 
     const fullTitle = podcast.name + " : "  + podcast.title
-    const title = _.trunc(fullTitle, 50)
+    const title = _.truncate(fullTitle, 50)
 
     return (
       <div className="container" style={{
