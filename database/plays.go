@@ -18,11 +18,11 @@ type defaultPlayDBImpl struct {
 func (db *defaultPlayDBImpl) Create(podcastID, userID int64) error {
 	q, _ := db.ps.Get("add_play.sql")
 	_, err := db.Exec(q, podcastID, userID)
-	return err
+	return sqlErr(err, q)
 }
 
 func (db *defaultPlayDBImpl) DeleteAll(userID int64) error {
 	q, _ := db.ps.Get("delete_plays_by_user_id.sql")
 	_, err := db.Exec(q, userID)
-	return err
+	return sqlErr(err, q)
 }

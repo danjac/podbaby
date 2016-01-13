@@ -140,21 +140,35 @@ func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
 }
 
 func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
-	if err == sql.ErrNoRows {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	if err == errNotAuthenticated {
-		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-		return
-	}
-
 	switch err.(error).(type) {
 
 	case decoders.Errors:
 		s.Render.JSON(w, http.StatusBadRequest, err)
+
+	case database.SQLError:
+		sqlErr := err.(database.SQLError)
+
+		if sqlErr.Err == sql.ErrNoRows {
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
+
+		logger := s.Log.WithFields(logrus.Fields{
+			"URL":    r.URL,
+			"Method": r.Method,
+			"Error":  sqlErr.Err,
+			"SQL":    sqlErr.SQL,
+		})
+		logger.Error(err)
+
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+
 	default:
+		if err == errNotAuthenticated {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
 		logger := s.Log.WithFields(logrus.Fields{
 			"URL":    r.URL,
 			"Method": r.Method,
@@ -162,6 +176,6 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 		})
 
 		logger.Error(err)
-		http.Error(w, "Sorry, an error occurred", http.StatusInternalServerError)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 }

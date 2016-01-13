@@ -20,17 +20,17 @@ func (db *defaultSubscriptionDBImpl) SelectByUserID(userID int64) ([]int64, erro
 	q, _ := db.ps.Get("select_subscriptions_by_user_id.sql")
 	var result []int64
 	err := db.Select(&result, q, userID)
-	return result, err
+	return result, sqlErr(err, q)
 }
 
 func (db *defaultSubscriptionDBImpl) Create(channelID, userID int64) error {
 	q, _ := db.ps.Get("insert_subscription.sql")
 	_, err := db.Exec(q, channelID, userID)
-	return err
+	return sqlErr(err, q)
 }
 
 func (db *defaultSubscriptionDBImpl) Delete(channelID, userID int64) error {
 	q, _ := db.ps.Get("delete_subscription.sql")
 	_, err := db.Exec(q, channelID, userID)
-	return err
+	return sqlErr(err, q)
 }

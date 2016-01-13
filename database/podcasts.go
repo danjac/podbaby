@@ -32,21 +32,21 @@ func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
 	q, _ := db.ps.Get("get_podcast_by_id.sql")
 	podcast := &models.Podcast{}
 	err := db.Get(podcast, q, id)
-	return podcast, err
+	return podcast, sqlErr(err, q)
 }
 
 func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {
 
 	q, _ := db.ps.Get("search_podcasts.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, q, query, maxSearchRows)
+	return podcasts, sqlErr(db.Select(&podcasts, q, query, maxSearchRows), q)
 }
 
 func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64) ([]models.Podcast, error) {
 
 	q, _ := db.ps.Get("search_podcasts_by_channel_id.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, q, channelID, query, maxSearchRows)
+	return podcasts, sqlErr(db.Select(&podcasts, q, channelID, query, maxSearchRows), q)
 
 }
 
@@ -54,7 +54,7 @@ func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]
 
 	q, _ := db.ps.Get("search_bookmarked_podcasts.sql")
 	var podcasts []models.Podcast
-	return podcasts, db.Select(&podcasts, q, userID, query, maxSearchRows)
+	return podcasts, sqlErr(db.Select(&podcasts, q, userID, query, maxSearchRows), q)
 
 }
 
@@ -65,7 +65,7 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 	var numRows int64
 
 	if err := db.QueryRow(q, userID).Scan(&numRows); err != nil {
-		return nil, err
+		return nil, sqlErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -80,7 +80,7 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, err
+	return result, sqlErr(err, q)
 
 }
 
@@ -91,7 +91,7 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 	var numRows int64
 
 	if err := db.QueryRow(q).Scan(&numRows); err != nil {
-		return nil, err
+		return nil, sqlErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -105,7 +105,7 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 		q,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, err
+	return result, sqlErr(err, q)
 }
 
 func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.PodcastList, error) {
@@ -115,7 +115,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 	var numRows int64
 
 	if err := db.QueryRow(q, userID).Scan(&numRows); err != nil {
-		return nil, err
+		return nil, sqlErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -130,7 +130,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, err
+	return result, sqlErr(err, q)
 }
 
 func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
@@ -140,7 +140,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 	var numRows int64
 
 	if err := db.QueryRow(q, userID).Scan(&numRows); err != nil {
-		return nil, err
+		return nil, sqlErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -155,7 +155,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, err
+	return result, sqlErr(err, q)
 }
 
 func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*models.PodcastList, error) {
@@ -165,7 +165,7 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 	var numRows int64
 
 	if err := db.QueryRow(q, channelID).Scan(&numRows); err != nil {
-		return nil, err
+		return nil, sqlErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -180,14 +180,14 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 		channelID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, err
+	return result, sqlErr(err, q)
 }
 
 func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
 	q, _ := db.ps.Get("insert_podcast.sql")
 	q, args, err := sqlx.Named(q, pc)
 	if err != nil {
-		return err
+		return sqlErr(err, q)
 	}
-	return db.QueryRow(db.Rebind(q), args...).Scan(&pc.ID)
+	return sqlErr(db.QueryRow(db.Rebind(q), args...).Scan(&pc.ID), q)
 }

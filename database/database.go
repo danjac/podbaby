@@ -18,6 +18,22 @@ type DB struct {
 	Plays         PlayDB
 }
 
+type SQLError struct {
+	Err error
+	SQL string
+}
+
+func (e SQLError) Error() string {
+	return e.Err.Error()
+}
+
+func sqlErr(err error, sql string) error {
+	if err == nil {
+		return nil
+	}
+	return SQLError{err, sql}
+}
+
 func MustConnect(cfg *config.Config) *DB {
 	db, err := New(sqlx.MustConnect("postgres", cfg.DatabaseURL), cfg)
 	if err != nil {
