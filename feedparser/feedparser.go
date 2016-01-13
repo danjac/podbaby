@@ -215,7 +215,7 @@ func fetch(url string) (*Result, error) {
 	feed := rss.New(5, true, chanHandler, itemHandler)
 
 	if err := feed.Fetch(url, nil); err != nil {
-		return nil, err
+		return nil, ErrInvalidFeed
 	}
 
 	if len(channels) == 0 {
