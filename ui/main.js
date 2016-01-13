@@ -5,6 +5,7 @@ import { syncReduxAndRouter } from 'redux-simple-router';
 
 import Root from './containers/root';
 import { auth, player } from './actions';
+
 import configureStore from './store';
 import configureRoutes from './routes';
 
