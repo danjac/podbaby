@@ -2,8 +2,8 @@ package database
 
 import (
 	"github.com/danjac/podbaby/models"
-	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
+	"github.com/smotes/purse"
 )
 
 const maxSearchRows = 20
@@ -24,11 +24,12 @@ type PodcastDB interface {
 
 type defaultPodcastDBImpl struct {
 	*sqlx.DB
+	ps purse.Purse
 }
 
 func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
 
-	q, _ := sql.Queries.Get("get_podcast_by_id.sql")
+	q, _ := db.ps.Get("get_podcast_by_id.sql")
 	podcast := &models.Podcast{}
 	err := db.Get(podcast, q, id)
 	return podcast, err
@@ -36,14 +37,14 @@ func (db *defaultPodcastDBImpl) GetByID(id int64) (*models.Podcast, error) {
 
 func (db *defaultPodcastDBImpl) Search(query string) ([]models.Podcast, error) {
 
-	q, _ := sql.Queries.Get("search_podcasts.sql")
+	q, _ := db.ps.Get("search_podcasts.sql")
 	var podcasts []models.Podcast
 	return podcasts, db.Select(&podcasts, q, query, maxSearchRows)
 }
 
 func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64) ([]models.Podcast, error) {
 
-	q, _ := sql.Queries.Get("search_podcasts_by_channel_id.sql")
+	q, _ := db.ps.Get("search_podcasts_by_channel_id.sql")
 	var podcasts []models.Podcast
 	return podcasts, db.Select(&podcasts, q, channelID, query, maxSearchRows)
 
@@ -51,7 +52,7 @@ func (db *defaultPodcastDBImpl) SearchByChannelID(query string, channelID int64)
 
 func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]models.Podcast, error) {
 
-	q, _ := sql.Queries.Get("search_bookmarked_podcasts.sql")
+	q, _ := db.ps.Get("search_bookmarked_podcasts.sql")
 	var podcasts []models.Podcast
 	return podcasts, db.Select(&podcasts, q, userID, query, maxSearchRows)
 
@@ -59,7 +60,7 @@ func (db *defaultPodcastDBImpl) SearchBookmarked(query string, userID int64) ([]
 
 func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.PodcastList, error) {
 
-	q, _ := sql.Queries.Get("select_played_podcasts_count.sql")
+	q, _ := db.ps.Get("select_played_podcasts_count.sql")
 
 	var numRows int64
 
@@ -71,7 +72,7 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 		Page: models.NewPage(page, numRows),
 	}
 
-	q, _ = sql.Queries.Get("select_played_podcasts.sql")
+	q, _ = db.ps.Get("select_played_podcasts.sql")
 
 	err := db.Select(
 		&result.Podcasts,
@@ -85,7 +86,7 @@ func (db *defaultPodcastDBImpl) SelectPlayed(userID, page int64) (*models.Podcas
 
 func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, error) {
 
-	q, _ := sql.Queries.Get("select_all_podcasts_count.sql")
+	q, _ := db.ps.Get("select_all_podcasts_count.sql")
 
 	var numRows int64
 
@@ -97,7 +98,7 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 		Page: models.NewPage(page, numRows),
 	}
 
-	q, _ = sql.Queries.Get("select_all_podcasts.sql")
+	q, _ = db.ps.Get("select_all_podcasts.sql")
 
 	err := db.Select(
 		&result.Podcasts,
@@ -109,7 +110,7 @@ func (db *defaultPodcastDBImpl) SelectAll(page int64) (*models.PodcastList, erro
 
 func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.PodcastList, error) {
 
-	q, _ := sql.Queries.Get("select_subscribed_podcasts_count.sql")
+	q, _ := db.ps.Get("select_subscribed_podcasts_count.sql")
 
 	var numRows int64
 
@@ -121,7 +122,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 		Page: models.NewPage(page, numRows),
 	}
 
-	q, _ = sql.Queries.Get("select_subscribed_podcasts.sql")
+	q, _ = db.ps.Get("select_subscribed_podcasts.sql")
 
 	err := db.Select(
 		&result.Podcasts,
@@ -134,7 +135,7 @@ func (db *defaultPodcastDBImpl) SelectSubscribed(userID, page int64) (*models.Po
 
 func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
 
-	q, _ := sql.Queries.Get("select_bookmarked_podcasts_count.sql")
+	q, _ := db.ps.Get("select_bookmarked_podcasts_count.sql")
 
 	var numRows int64
 
@@ -146,7 +147,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 		Page: models.NewPage(page, numRows),
 	}
 
-	q, _ = sql.Queries.Get("select_bookmarked_podcasts.sql")
+	q, _ = db.ps.Get("select_bookmarked_podcasts.sql")
 
 	err := db.Select(
 		&result.Podcasts,
@@ -159,7 +160,7 @@ func (db *defaultPodcastDBImpl) SelectBookmarked(userID, page int64) (*models.Po
 
 func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*models.PodcastList, error) {
 
-	q, _ := sql.Queries.Get("select_podcasts_by_channel_id_count.sql")
+	q, _ := db.ps.Get("select_podcasts_by_channel_id_count.sql")
 
 	var numRows int64
 
@@ -171,7 +172,7 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 		Page: models.NewPage(page, numRows),
 	}
 
-	q, _ = sql.Queries.Get("select_podcasts_by_channel_id.sql")
+	q, _ = db.ps.Get("select_podcasts_by_channel_id.sql")
 
 	err := db.Select(
 		&result.Podcasts,
@@ -183,7 +184,7 @@ func (db *defaultPodcastDBImpl) SelectByChannelID(channelID, page int64) (*model
 }
 
 func (db *defaultPodcastDBImpl) Create(pc *models.Podcast) error {
-	q, _ := sql.Queries.Get("insert_podcast.sql")
+	q, _ := db.ps.Get("insert_podcast.sql")
 	q, args, err := sqlx.Named(q, pc)
 	if err != nil {
 		return err

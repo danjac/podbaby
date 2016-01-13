@@ -2,8 +2,8 @@ package database
 
 import (
 	"github.com/danjac/podbaby/models"
-	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
+	"github.com/smotes/purse"
 )
 
 // ChannelDB database model
@@ -18,45 +18,46 @@ type ChannelDB interface {
 
 type defaultChannelDBImpl struct {
 	*sqlx.DB
+	ps purse.Purse
 }
 
 func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
 
-	q, _ := sql.Queries.Get("select_all_channels.sql")
+	q, _ := db.ps.Get("select_all_channels.sql")
 	var channels []models.Channel
 	return channels, db.Select(&channels, q)
 }
 
 func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
 
-	q, _ := sql.Queries.Get("select_subscribed_channels.sql")
+	q, _ := db.ps.Get("select_subscribed_channels.sql")
 	var channels []models.Channel
 	return channels, db.Select(&channels, q, userID)
 }
 
 func (db *defaultChannelDBImpl) Search(query string) ([]models.Channel, error) {
 
-	q, _ := sql.Queries.Get("search_channels.sql")
+	q, _ := db.ps.Get("search_channels.sql")
 
 	var channels []models.Channel
 	return channels, db.Select(&channels, q, query)
 }
 
 func (db *defaultChannelDBImpl) GetByURL(url string) (*models.Channel, error) {
-	q, _ := sql.Queries.Get("get_channel_by_url.sql")
+	q, _ := db.ps.Get("get_channel_by_url.sql")
 	channel := &models.Channel{}
 	return channel, db.Get(channel, q, url)
 }
 
 func (db *defaultChannelDBImpl) GetByID(id int64) (*models.Channel, error) {
-	q, _ := sql.Queries.Get("get_channel_by_id.sql")
+	q, _ := db.ps.Get("get_channel_by_id.sql")
 	channel := &models.Channel{}
 	return channel, db.Get(channel, q, id)
 }
 
 func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
 
-	q, _ := sql.Queries.Get("upsert_channel.sql")
+	q, _ := db.ps.Get("upsert_channel.sql")
 
 	q, args, err := sqlx.Named(q, ch)
 	if err != nil {

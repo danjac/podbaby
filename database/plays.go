@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/danjac/podbaby/sql"
 	"github.com/jmoiron/sqlx"
+	"github.com/smotes/purse"
 )
 
 type PlayDB interface {
@@ -12,16 +12,17 @@ type PlayDB interface {
 
 type defaultPlayDBImpl struct {
 	*sqlx.DB
+	ps purse.Purse
 }
 
 func (db *defaultPlayDBImpl) Create(podcastID, userID int64) error {
-	q, _ := sql.Queries.Get("add_play.sql")
+	q, _ := db.ps.Get("add_play.sql")
 	_, err := db.Exec(q, podcastID, userID)
 	return err
 }
 
 func (db *defaultPlayDBImpl) DeleteAll(userID int64) error {
-	q, _ := sql.Queries.Get("delete_plays_by_user_id.sql")
+	q, _ := db.ps.Get("delete_plays_by_user_id.sql")
 	_, err := db.Exec(q, userID)
 	return err
 }

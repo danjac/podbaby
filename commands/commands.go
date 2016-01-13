@@ -11,12 +11,7 @@ import (
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
 	"github.com/danjac/podbaby/server"
-	"github.com/jmoiron/sqlx"
 )
-
-func mustConnect(url string) *database.DB {
-	return database.New(sqlx.MustConnect("postgres", url))
-}
 
 // Serve runs the webserver
 func Serve(cfg *config.Config) {
@@ -30,7 +25,7 @@ func Serve(cfg *config.Config) {
 
 	log.Info("Starting web service...")
 
-	db := mustConnect(cfg.DatabaseURL)
+	db := database.MustConnect(cfg)
 	defer db.Close()
 
 	mailer, err := mailer.New(
@@ -59,7 +54,7 @@ func Serve(cfg *config.Config) {
 // Fetch retrieves latest podcasts
 func Fetch(cfg *config.Config) {
 
-	db := mustConnect(cfg.DatabaseURL)
+	db := database.MustConnect(cfg)
 	defer db.Close()
 
 	log := logrus.New()

@@ -1,6 +1,12 @@
 package database
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/danjac/podbaby/config"
+	"github.com/danjac/podbaby/sql"
+	"github.com/jmoiron/sqlx"
+	"github.com/smotes/purse"
+	"path/filepath"
+)
 
 type DB struct {
 	*sqlx.DB
@@ -12,14 +18,37 @@ type DB struct {
 	Plays         PlayDB
 }
 
-func New(db *sqlx.DB) *DB {
+func MustConnect(cfg *config.Config) *DB {
+	db, err := New(sqlx.MustConnect("postgres", cfg.DatabaseURL), cfg)
+	if err != nil {
+		panic(err)
+	}
+	return db
+}
+
+func New(db *sqlx.DB, cfg *config.Config) (*DB, error) {
+
+	var (
+		ps  purse.Purse
+		err error
+	)
+
+	if cfg.IsDev() {
+		ps, err = purse.New(filepath.Join(".", "sql", "queries"))
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		ps = sql.Queries
+	}
+
 	return &DB{
 		DB:            db,
-		Users:         &defaultUserDBImpl{db},
-		Channels:      &defaultChannelDBImpl{db},
-		Podcasts:      &defaultPodcastDBImpl{db},
-		Subscriptions: &defaultSubscriptionDBImpl{db},
-		Bookmarks:     &defaultBookmarkDBImpl{db},
-		Plays:         &defaultPlayDBImpl{db},
-	}
+		Users:         &defaultUserDBImpl{db, ps},
+		Channels:      &defaultChannelDBImpl{db, ps},
+		Podcasts:      &defaultPodcastDBImpl{db, ps},
+		Subscriptions: &defaultSubscriptionDBImpl{db, ps},
+		Bookmarks:     &defaultBookmarkDBImpl{db, ps},
+		Plays:         &defaultPlayDBImpl{db, ps},
+	}, nil
 }
