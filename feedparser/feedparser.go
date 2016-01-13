@@ -41,18 +41,19 @@ type Result struct {
 	Items   []*rss.Item
 }
 
-func (result *Result) GetWebsiteLink() string {
+func (result *Result) getWebsiteURL() string {
+	// ensure we just get the top non-RSS link
 	for _, link := range result.Channel.Links {
-		found := false
+		isItemLink := false
 		if link.Type == "" && link.Rel == "" {
 			for _, item := range result.Items {
 				for _, itemLink := range item.Links {
 					if itemLink.Href == link.Href {
-						found = true
+						isItemLink = true
 					}
 				}
 			}
-			if !found {
+			if !isItemLink {
 				return link.Href
 			}
 		}
@@ -90,9 +91,9 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	channel.Image = result.Channel.Image.Url
 	channel.Description = result.Channel.Description
 
-	link := result.GetWebsiteLink()
-	if link != "" {
-		channel.Website.String = result.GetWebsiteLink()
+	website := result.getWebsiteURL()
+	if website != "" {
+		channel.Website.String = website
 		channel.Website.Valid = true
 	}
 
