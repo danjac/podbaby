@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils';
 import { assert } from 'chai';
 import jsdom from 'jsdom-global';
 
+import Player from '../components/player';
 import Podcast from '../components/podcast_item';
 
 const makePodcast = attrs => {
@@ -33,6 +34,20 @@ const makePodcastProps = (podcast, props={}) => {
 
 };
 
+const makePlayerProps = (podcast, props={}) => {
+  return {
+    onClose: _.noop,
+    onTimeUpdate: _.noop,
+    onToggleBookmark: _.noop,
+    isLoggedIn: true,
+    player: {
+      podcast,
+      isPlaying: true,
+    },
+    ...props
+  };
+};
+
 class Wrapper extends React.Component {
   render() {
     return (
@@ -40,6 +55,34 @@ class Wrapper extends React.Component {
     );
   }
 }
+
+describe('Player component', function() {
+
+  before(function() {
+    this.jsdom = jsdom();
+  });
+
+  after(function() {
+    this.jsdom();
+  });
+
+  it('should render the truncated podcast title', function() {
+
+    const podcast = makePodcast({ name: 'We do cool podcasts', title: 'Some title' });
+    const props = makePlayerProps(podcast);
+    const component = <Wrapper><Player {...props} /></Wrapper>;
+    const rendered = TestUtils.renderIntoDocument(component, 'div');
+
+    const $title = TestUtils.findRenderedDOMComponentWithTag(rendered, "b");
+    const $link = $title.children[0];
+
+    const title = $link.getAttribute("title");
+    assert.equal(title, "We do cool podcasts : Some title");
+    assert.equal($link.textContent, "We do cool podcasts : Some ...");
+
+  });
+
+});
 
 describe('Podcast component', function() {
 
@@ -57,9 +100,9 @@ describe('Podcast component', function() {
     const props = makePodcastProps(podcast);
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
+    const $buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
 
-    const titles = buttons.map(node => node.getAttribute("title"));
+    const titles = $buttons.map(node => node.getAttribute("title"));
     assert.include(titles, 'Remove bookmark');
   });
 
@@ -69,9 +112,9 @@ describe('Podcast component', function() {
     const props = makePodcastProps(podcast);
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
+    const $buttons = TestUtils.scryRenderedDOMComponentsWithTag(rendered, 'button');
 
-    const titles = buttons.map(node => node.getAttribute("title"));
+    const titles = $buttons.map(node => node.getAttribute("title"));
     assert.include(titles, 'Add to bookmarks');
   });
 
@@ -82,8 +125,8 @@ describe('Podcast component', function() {
     const rendered = TestUtils.renderIntoDocument(component, 'div');
     const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, "media-body")
     assert.equal(tags.length, 1)
-    const h5 = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h5');
-    assert.equal(h5.textContent, podcast.name);
+    const $header = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h5');
+    assert.equal($header.textContent, podcast.name);
 
   });
 
