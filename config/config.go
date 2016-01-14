@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	defaultPort      = 5000
-	defaultStaticURL = "/static/"
-	defaultStaticDir = "./static/"
-	devStaticURL     = "http://localhost:8080/static/"
+	defaultPort            = 5000
+	defaultStaticURL       = "/static/"
+	defaultStaticDir       = "./static/"
+	defaultMailTemplateDir = "./templates/mail"
+	devStaticURL           = "http://localhost:8080/static/"
 )
 
 var (
@@ -20,7 +21,11 @@ var (
 
 func New() *Config {
 	return &Config{
-		Mail:              &MailConfig{},
+		Mail: &MailConfig{
+			Host:        "localhost",
+			ID:          "localhost",
+			TemplateDir: defaultMailTemplateDir,
+		},
 		Env:               "prod",
 		Port:              defaultPort,
 		StaticDir:         defaultStaticDir,
@@ -57,6 +62,7 @@ func (cfg *Config) IsProd() bool {
 // MailConfig contains SMTP settings
 
 type MailConfig struct {
+	TemplateDir,
 	Addr,
 	ID,
 	User,

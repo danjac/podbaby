@@ -36,6 +36,8 @@ func init() {
 	}
 }
 
+var ErrInvalidFeed = errors.New("Invalid feed")
+
 type Result struct {
 	Channel *rss.Channel
 	Items   []*rss.Item
@@ -92,6 +94,7 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	channel.Description = result.Channel.Description
 
 	website := result.getWebsiteURL()
+
 	if website != "" {
 		channel.Website.String = website
 		channel.Website.Valid = true
@@ -191,7 +194,21 @@ func (f *defaultFeedparserImpl) FetchAll() error {
 
 }
 
-var ErrInvalidFeed = errors.New("Invalid feed")
+func isPlayable(mediaType string) bool {
+
+	prefixes := []string{
+		"audio",
+		"video",
+	}
+
+	for _, prefix := range prefixes {
+		if strings.HasPrefix(mediaType, prefix) {
+			return true
+		}
+	}
+
+	return false
+}
 
 func fetch(url string) (*Result, error) {
 
@@ -206,8 +223,10 @@ func fetch(url string) (*Result, error) {
 	itemHandler := func(feed *rss.Feed, ch *rss.Channel, newItems []*rss.Item) {
 		for _, item := range newItems {
 			// only include items with enclosures
-			if len(item.Enclosures) > 0 {
-				items = append(items, item)
+			for _, enclosure := range item.Enclosures {
+				if isPlayable(enclosure.Type) {
+					items = append(items, item)
+				}
 			}
 		}
 	}

@@ -3,7 +3,6 @@ package commands
 import (
 	"fmt"
 	"net/http"
-	"net/smtp"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/config"
@@ -13,31 +12,27 @@ import (
 	"github.com/danjac/podbaby/server"
 )
 
-// Serve runs the webserver
-func Serve(cfg *config.Config) {
+func configureLogger() *logrus.Logger {
+	logger := logrus.New()
 
-	log := logrus.New()
-
-	log.Formatter = &logrus.TextFormatter{
+	logger.Formatter = &logrus.TextFormatter{
 		FullTimestamp: true,
 		ForceColors:   true,
 	}
 
-	log.Info("Starting web service...")
+	return logger
+
+}
+
+// Serve runs the webserver
+func Serve(cfg *config.Config) {
+
+	log := configureLogger()
 
 	db := database.MustConnect(cfg)
 	defer db.Close()
 
-	mailer, err := mailer.New(
-		cfg.Mail.Addr,
-		smtp.PlainAuth(
-			cfg.Mail.ID,
-			cfg.Mail.User,
-			cfg.Mail.Password,
-			cfg.Mail.Host,
-		),
-		"./templates/email",
-	)
+	mailer, err := mailer.New(cfg)
 
 	if err != nil {
 		panic(err)
@@ -57,12 +52,7 @@ func Fetch(cfg *config.Config) {
 	db := database.MustConnect(cfg)
 	defer db.Close()
 
-	log := logrus.New()
-
-	log.Formatter = &logrus.TextFormatter{
-		FullTimestamp: true,
-		ForceColors:   true,
-	}
+	log := configureLogger()
 
 	f := feedparser.New(db, log)
 	if err := f.FetchAll(); err != nil {

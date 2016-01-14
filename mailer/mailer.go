@@ -2,6 +2,7 @@ package mailer
 
 import (
 	"bytes"
+	"github.com/danjac/podbaby/config"
 	"net/smtp"
 	"path/filepath"
 	"strings"
@@ -13,12 +14,20 @@ type Mailer interface {
 	SendFromTemplate(string, []string, string, string, interface{}) error
 }
 
-func New(addr string, auth smtp.Auth, templateDir string) (Mailer, error) {
-	templates, err := template.ParseGlob(filepath.Join(templateDir, "*.tmpl"))
+func New(cfg *config.Config) (Mailer, error) {
+
+	auth := smtp.PlainAuth(
+		cfg.Mail.ID,
+		cfg.Mail.User,
+		cfg.Mail.Password,
+		cfg.Mail.Host,
+	)
+
+	templates, err := template.ParseGlob(filepath.Join(cfg.Mail.TemplateDir, "*.tmpl"))
 	if err != nil {
 		return nil, err
 	}
-	return &defaultMailer{addr, auth, templates}, nil
+	return &defaultMailer{cfg.Mail.Addr, auth, templates}, nil
 }
 
 type defaultMailer struct {
