@@ -10,7 +10,7 @@ const (
 	defaultPort            = 5000
 	defaultStaticURL       = "/static/"
 	defaultStaticDir       = "./static/"
-	defaultMailTemplateDir = "./templates/mail"
+	defaultMailTemplateDir = "./templates/email"
 	devStaticURL           = "http://localhost:8080/static/"
 )
 
