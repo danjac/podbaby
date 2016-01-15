@@ -2,8 +2,6 @@ package feedparser
 
 import (
 	"errors"
-	"github.com/Sirupsen/logrus"
-	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
 	"github.com/jinzhu/now"
 	rss "github.com/jteeuwen/go-pkg-rss"
@@ -38,6 +36,9 @@ func init() {
 
 var ErrInvalidFeed = errors.New("Invalid feed")
 
+type ChannelHandler func(*models.Channel) error
+type PodcastHandler func(*models.Podcast) error
+
 type Result struct {
 	Channel *rss.Channel
 	Items   []*rss.Item
@@ -65,16 +66,16 @@ func (result *Result) getWebsiteURL() string {
 
 type Feedparser interface {
 	FetchChannel(*models.Channel) error
-	FetchAll() error
+	FetchAll([]models.Channel) error
 }
 
 type defaultFeedparserImpl struct {
-	DB  *database.DB
-	Log *logrus.Logger
+	ch ChannelHandler
+	ph PodcastHandler
 }
 
-func New(db *database.DB, log *logrus.Logger) Feedparser {
-	return &defaultFeedparserImpl{db, log}
+func New(ch ChannelHandler, ph PodcastHandler) Feedparser {
+	return &defaultFeedparserImpl{ch, ph}
 }
 
 func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
@@ -84,10 +85,6 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	if err != nil {
 		return err
 	}
-
-	// update channel
-
-	f.Log.Info("Channel:"+channel.Title, " podcasts:", len(result.Items))
 
 	channel.Title = result.Channel.Title
 	channel.Image = result.Channel.Image.Url
@@ -115,25 +112,21 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	channel.Categories.String = strings.Join(categories, " ")
 	channel.Categories.Valid = true
 
-	if err := f.DB.Channels.Create(channel); err != nil {
+	if err := f.ch(channel); err != nil {
 		return err
 	}
 
 	for _, item := range result.Items {
+
 		podcast := &models.Podcast{
 			ChannelID:   channel.ID,
 			Title:       item.Title,
 			Description: item.Description,
 		}
 
-		if len(item.Enclosures) == 0 {
-			continue
-		}
-
 		podcast.EnclosureURL = item.Enclosures[0].Url
 
 		if item.Guid == nil {
-			f.Log.Debug("Podcast ID:" + podcast.Title + " has no GUID, using pub date")
 			// use pub date + URL as standin Guid
 
 			podcast.Guid = item.PubDate + ":" + podcast.EnclosureURL
@@ -146,10 +139,6 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 			podcast.Source = item.Source.Url
 		}
 
-		if podcast.Guid == "" {
-			f.Log.Error("Could not find suitable GUID for " + podcast.Title)
-		}
-
 		var pubDate time.Time
 
 		// try using the builtin RSS parser first
@@ -157,14 +146,10 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 			// try some other parsers
 			pubDate, err = now.Parse(item.PubDate)
 			// pubdate will be "empty", we'll have to live with that
-			// but log anyway to see if we can fix that format
-			if err != nil {
-				f.Log.Error(err)
-			}
 		}
 		podcast.PubDate = pubDate
 
-		if err = f.DB.Podcasts.Create(podcast); err != nil {
+		if err = f.ph(podcast); err != nil {
 			return err
 		}
 	}
@@ -173,19 +158,10 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 
 }
 
-func (f *defaultFeedparserImpl) FetchAll() error {
-
-	f.Log.Info("Starting podcast fetching...")
-
-	channels, err := f.DB.Channels.SelectAll()
-
-	if err != nil {
-		return err
-	}
+func (f *defaultFeedparserImpl) FetchAll(channels []models.Channel) error {
 
 	for _, channel := range channels {
 		if err := f.FetchChannel(&channel); err != nil {
-			f.Log.Error(err)
 			continue
 		}
 	}

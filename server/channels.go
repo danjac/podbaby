@@ -78,7 +78,21 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 		channel = &models.Channel{
 			URL: decoder.URL,
 		}
-		if err := s.Feedparser.FetchChannel(channel); err != nil {
+
+		channelHandler := func(ch *models.Channel) error {
+			return s.DB.Channels.Create(ch)
+		}
+
+		podcastHandler := func(p *models.Podcast) error {
+			return s.DB.Podcasts.Create(p)
+		}
+
+		f := feedparser.New(
+			channelHandler,
+			podcastHandler,
+		)
+
+		if err := f.FetchChannel(channel); err != nil {
 			if err == feedparser.ErrInvalidFeed {
 				err = decoders.Errors{
 					"url": "Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
