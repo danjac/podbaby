@@ -81,7 +81,7 @@ export class AddChannelModal extends React.Component {
              container={container}
              onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title id="add-channel-modal-title">Add a new channel</Modal.Title>
+          <Modal.Title id="add-channel-modal-title">Add a new RSS feed</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             {submitting ? (

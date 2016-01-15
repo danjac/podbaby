@@ -73,7 +73,7 @@ class NavBar extends React.Component {
                      href={createHref("/member/recent/")}
                      onClick={handleSelected}><Icon icon="clock-o" /> Recently played</NavItem>
             <NavItem onClick={this.handleOpenAddChannelForm.bind(this)}
-                     href="#"><Icon icon="plus" /> Add a channel</NavItem>
+                     href="#"><Icon icon="rss" /> Add RSS feed</NavItem>
           </Nav>
           : ''}
 
