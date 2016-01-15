@@ -11,6 +11,7 @@ import (
 	"github.com/danjac/podbaby/config"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/decoders"
+	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
@@ -30,12 +31,13 @@ var (
 )
 
 type Server struct {
-	DB     *database.DB
-	Config *config.Config
-	Log    *logrus.Logger
-	Render *render.Render
-	Cookie *securecookie.SecureCookie
-	Mailer mailer.Mailer
+	DB         *database.DB
+	Config     *config.Config
+	Log        *logrus.Logger
+	Render     *render.Render
+	Cookie     *securecookie.SecureCookie
+	Feedparser feedparser.Feedparser
+	Mailer     mailer.Mailer
 }
 
 func New(db *database.DB,
@@ -56,13 +58,16 @@ func New(db *database.DB,
 
 	renderer := render.New(renderOptions)
 
+	feedparser := feedparser.New()
+
 	return &Server{
-		DB:     db,
-		Config: cfg,
-		Log:    log,
-		Render: renderer,
-		Cookie: cookie,
-		Mailer: mailer,
+		DB:         db,
+		Config:     cfg,
+		Log:        log,
+		Render:     renderer,
+		Cookie:     cookie,
+		Feedparser: feedparser,
+		Mailer:     mailer,
 	}
 }
 

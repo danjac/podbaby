@@ -36,20 +36,17 @@ func init() {
 
 var ErrInvalidFeed = errors.New("Invalid feed")
 
-type ChannelHandler func(*models.Channel) error
-type PodcastHandler func(*models.Podcast) error
-
-type Result struct {
-	Channel *rss.Channel
-	Items   []*rss.Item
+type result struct {
+	channel *rss.Channel
+	items   []*rss.Item
 }
 
-func (result *Result) getWebsiteURL() string {
+func (r *result) getWebsiteURL() string {
 	// ensure we just get the top non-RSS link
-	for _, link := range result.Channel.Links {
+	for _, link := range r.channel.Links {
 		isItemLink := false
 		if link.Type == "" && link.Rel == "" {
-			for _, item := range result.Items {
+			for _, item := range r.items {
 				for _, itemLink := range item.Links {
 					if itemLink.Href == link.Href {
 						isItemLink = true
@@ -65,20 +62,16 @@ func (result *Result) getWebsiteURL() string {
 }
 
 type Feedparser interface {
-	FetchChannel(*models.Channel) error
-	FetchAll([]models.Channel) error
+	Fetch(*models.Channel) error
 }
 
-type defaultFeedparserImpl struct {
-	ch ChannelHandler
-	ph PodcastHandler
+type feedparserImpl struct{}
+
+func New() Feedparser {
+	return &feedparserImpl{}
 }
 
-func New(ch ChannelHandler, ph PodcastHandler) Feedparser {
-	return &defaultFeedparserImpl{ch, ph}
-}
-
-func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
+func (f *feedparserImpl) Fetch(channel *models.Channel) error {
 
 	result, err := fetch(channel.URL)
 
@@ -86,9 +79,9 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 		return err
 	}
 
-	channel.Title = result.Channel.Title
-	channel.Image = result.Channel.Image.Url
-	channel.Description = result.Channel.Description
+	channel.Title = result.channel.Title
+	channel.Image = result.channel.Image.Url
+	channel.Description = result.channel.Description
 
 	website := result.getWebsiteURL()
 
@@ -100,7 +93,7 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	// we just want unique categories
 	categoryMap := make(map[string]string)
 
-	for _, category := range result.Channel.Categories {
+	for _, category := range result.channel.Categories {
 		categoryMap[category.Text] = category.Text
 	}
 
@@ -112,14 +105,11 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 	channel.Categories.String = strings.Join(categories, " ")
 	channel.Categories.Valid = true
 
-	if err := f.ch(channel); err != nil {
-		return err
-	}
+	var podcasts []*models.Podcast
 
-	for _, item := range result.Items {
+	for _, item := range result.items {
 
 		podcast := &models.Podcast{
-			ChannelID:   channel.ID,
 			Title:       item.Title,
 			Description: item.Description,
 		}
@@ -149,23 +139,11 @@ func (f *defaultFeedparserImpl) FetchChannel(channel *models.Channel) error {
 		}
 		podcast.PubDate = pubDate
 
-		if err = f.ph(podcast); err != nil {
-			return err
-		}
+		podcasts = append(podcasts, podcast)
+
 	}
 
-	return nil
-
-}
-
-func (f *defaultFeedparserImpl) FetchAll(channels []models.Channel) error {
-
-	for _, channel := range channels {
-		if err := f.FetchChannel(&channel); err != nil {
-			continue
-		}
-	}
-
+	channel.Podcasts = podcasts
 	return nil
 
 }
@@ -186,7 +164,7 @@ func isPlayable(mediaType string) bool {
 	return false
 }
 
-func fetch(url string) (*Result, error) {
+func fetch(url string) (*result, error) {
 
 	var channels []*rss.Channel
 
@@ -221,6 +199,6 @@ func fetch(url string) (*Result, error) {
 		return nil, ErrInvalidFeed
 	}
 
-	result := &Result{channels[0], items}
+	result := &result{channels[0], items}
 	return result, nil
 }

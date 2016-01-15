@@ -14,6 +14,7 @@ type Channel struct {
 	URL         string         `db:"url" json:"url"`
 	Website     sql.NullString `db:"website" json:"website"`
 	CreatedAt   time.Time      `db:"created_at" json:"createdAt"`
+	Podcasts    []*Podcast     `db:"-" json:"-"`
 }
 
 type ChannelDetail struct {

@@ -9,7 +9,6 @@ import (
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
-	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/server"
 )
 
@@ -54,25 +53,38 @@ func Fetch(cfg *config.Config) {
 	defer db.Close()
 
 	log := configureLogger()
+	log.Info("fetching...")
 
 	channels, err := db.Channels.SelectAll()
+
 	if err != nil {
 		panic(err)
 	}
 
-	channelHandler := func(ch *models.Channel) error {
-		log.Info("Fetching from channel: " + ch.Title)
-		return db.Channels.Create(ch)
-	}
+	f := feedparser.New()
 
-	podcastHandler := func(p *models.Podcast) error {
-		return db.Podcasts.Create(p)
-	}
+	for _, channel := range channels {
 
-	f := feedparser.New(channelHandler, podcastHandler)
+		log.Info("Channel:" + channel.Title)
 
-	if err := f.FetchAll(channels); err != nil {
-		panic(err)
+		if err := f.Fetch(&channel); err != nil {
+			log.Error(err)
+			continue
+		}
+
+		if err := db.Channels.Create(&channel); err != nil {
+			log.Error(err)
+			continue
+		}
+
+		for _, p := range channel.Podcasts {
+			p.ChannelID = channel.ID
+			if err := db.Podcasts.Create(p); err != nil {
+				log.Error(err)
+				continue
+			}
+		}
+
 	}
 
 }
