@@ -10,7 +10,7 @@ export const close = () => createAction(Actions.CLOSE_ADD_CHANNEL_FORM);
 
 export function complete(channel) {
   return dispatch => {
-      dispatch(alerts.success("New channel added"));
+      dispatch(alerts.success(`You are now subscribed to "${channel.title}"`));
       dispatch(createAction(Actions.ADD_CHANNEL_SUCCESS, channel));
       dispatch(pushPath(`/channel/${channel.id}/`));
   };

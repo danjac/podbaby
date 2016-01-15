@@ -97,7 +97,7 @@ export class AddChannelModal extends React.Component {
               <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
             </p>
               <ButtonGroup>
-              <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add channel</Button>
+              <Button bsStyle="primary" type="submit"><Icon icon="plus" /> Add feed</Button>
               <Button bsStyle="default" onClick={handleClose}><Icon icon="remove" /> Cancel</Button>
             </ButtonGroup>
             </form>
