@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import 'bootswatch/paper/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -53,6 +54,15 @@ export class App extends React.Component {
     super(props);
     const { dispatch } = this.props;
     this.actions = bindAllActionCreators(actions, dispatch);
+
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleDismissAlert = this.handleDismissAlert.bind(this);
+    this.handleOpenAddChannelForm = this.handleOpenAddChannelForm.bind(this);
+    this.handleCloseAddChannelForm = this.handleCloseAddChannelForm.bind(this);
+    this.handleAddChannelComplete = this.handleAddChannelComplete.bind(this);
+    this.handleClosePlayer = this.handleClosePlayer.bind(this);
+    this.handleTogglePlayerBookmark = this.handleTogglePlayerBookmark.bind(this);
+    this.handleUpdatePlayerTime = this.handleUpdatePlayerTime.bind(this);
   }
 
   handleLogout(event) {
@@ -70,7 +80,7 @@ export class App extends React.Component {
     this.actions.addChannel.close();
   }
 
-  handleAddChannel(channel) {
+  handleAddChannelComplete(channel) {
     this.actions.addChannel.complete(channel);
   }
 
@@ -98,7 +108,7 @@ export class App extends React.Component {
     const { isActive } = this.props.history;
     const { isLoggedIn } = this.props.auth;
 
-    const hideNavbar = isActive("/front/");
+    const hideNavbar = isActive('/front/');
 
     const pageContent = (
         <div className="container">
@@ -107,30 +117,39 @@ export class App extends React.Component {
     );
 
     const alertList = (
-        <AlertList alerts={this.props.alerts}
-                   onDismissAlert={this.handleDismissAlert.bind(this)} />
+      <AlertList
+        alerts={this.props.alerts}
+        onDismissAlert={this.handleDismissAlert}
+      />
     );
-      return (
-        <div>
-          {hideNavbar ? '' :
-          <NavBar onLogout={this.handleLogout.bind(this)}
-                  onOpenAddChannelForm={this.handleOpenAddChannelForm.bind(this)}
-                   {...this.props} />}
-          {alertList}
-          {pageContent}
-          {this.props.player.isPlaying ?
-            <Player player={this.props.player}
-                    isLoggedIn={isLoggedIn}
-                    onToggleBookmark={this.handleTogglePlayerBookmark.bind(this)}
-                    onTimeUpdate={this.handleUpdatePlayerTime.bind(this)}
-                    onClose={this.handleClosePlayer.bind(this)}/> : ''}
 
-          <AddChannelModal {...this.props.addChannel}
-                           container={this}
-                           onComplete={this.handleAddChannel.bind(this)}
-                           onClose={this.handleCloseAddChannelForm.bind(this)} />
+    return (
+      <div>
+        {hideNavbar ? '' :
+        <NavBar
+          onLogout={this.handleLogout}
+          onOpenAddChannelForm={this.handleOpenAddChannelForm}
+          {...this.props}
+        />}
+        {alertList}
+        {pageContent}
+        {this.props.player.isPlaying ?
+        <Player
+          player={this.props.player}
+          isLoggedIn={isLoggedIn}
+          onToggleBookmark={this.handleTogglePlayerBookmark}
+          onTimeUpdate={this.handleUpdatePlayerTime}
+          onClose={this.handleClosePlayer}
+        /> : ''}
+
+        <AddChannelModal
+          {...this.props.addChannel}
+          container={this}
+          onComplete={this.handleAddChannelComplete}
+          onClose={this.handleCloseAddChannelForm}
+        />
     </div>
-      );
+    );
   }
 }
 
@@ -140,10 +159,10 @@ App.propTypes = {
   routing: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   children: PropTypes.array.isRequired,
-  auth: PropTypes.object,
-  addChannel: PropTypes.object,
-  player: PropTypes.object,
-  alerts: PropTypes.array,
+  auth: PropTypes.object.isRequired,
+  addChannel: PropTypes.object.isRequired,
+  player: PropTypes.object.isRequired,
+  alerts: PropTypes.array.isRequired,
 };
 
 
@@ -154,7 +173,7 @@ const mapStateToProps = state => {
     auth,
     addChannel,
     player,
-    alerts
+    alerts,
   };
 };
 

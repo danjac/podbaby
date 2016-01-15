@@ -18,7 +18,13 @@ export class Bookmarks extends React.Component {
   constructor(props) {
     super(props);
     const { dispatch } = this.props;
+
     this.actions = bindActionCreators(actions.bookmarks, dispatch);
+
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleClearSearch = this.handleClearSearch.bind(this);
+    this.handleSelectSearch = this.handleSelectSearch.bind(this);
+    this.handleSelectPage = this.handleSelectPage.bind(this);
   }
 
   handleSearch(event) {
@@ -33,11 +39,11 @@ export class Bookmarks extends React.Component {
 
   handleClearSearch(event) {
     event.preventDefault();
-    this.refs.query.getInputDOMNode().value = "";
+    this.refs.query.getInputDOMNode().value = '';
     this.actions.getBookmarks();
   }
 
-  handleClickSearch(event) {
+  handleSelectSearch(event) {
     event.preventDefault();
     this.refs.query.getInputDOMNode().select();
   }
@@ -53,29 +59,39 @@ export class Bookmarks extends React.Component {
     return (
       <DocumentTitle title={getTitle('My bookmarks')}>
       <div>
-        <form onSubmit={this.handleSearch.bind(this)}>
-          <Input type="search"
-                 ref="query"
-                 onClick={this.handleClickSearch.bind(this)}
-                 placeholder="Find a podcast in your bookmarks" />
+        <form onSubmit={this.handleSearch}>
+          <Input
+            type="search"
+            ref="query"
+            onClick={this.handleSelectSearch}
+            placeholder="Find a podcast in your bookmarks"
+          />
           <Input>
-            <Button bsStyle="primary"
-                    type="submit"
-                    defaultValue={query}
-                    className="form-control"><Icon icon="search" /> Search</Button>
+            <Button
+              bsStyle="primary"
+              type="submit"
+              defaultValue={query}
+              className="form-control"
+            ><Icon icon="search" /> Search
+            </Button>
           </Input>
           {query ? <Input>
-            <Button bsStyle="default"
-                    onClick={this.handleClearSearch.bind(this)}
-                    className="form-control"><Icon icon="refresh" /> Show all bookmarks</Button>
+            <Button
+              bsStyle="default"
+              onClick={this.handleClearSearch}
+              className="form-control"
+            ><Icon icon="refresh" /> Show all bookmarks
+            </Button>
           </Input> : ''}
         </form>
-        <PodcastList actions={actions}
-                            showChannel={true}
-                            ifEmpty="No bookmarks found"
-                            isLoggedIn={true}
-                            onSelectPage={this.handleSelectPage.bind(this)}
-                            {...this.props} />
+        <PodcastList
+          actions={actions}
+          showChannel
+          isLoggedIn
+          ifEmpty="No bookmarks found"
+          onSelectPage={this.handleSelectPage}
+          {...this.props}
+        />
       </div>
     </DocumentTitle>
     );
@@ -86,7 +102,8 @@ Bookmarks.propTypes = {
   podcasts: PropTypes.array.isRequired,
   page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  query: PropTypes.string,
 };
 
 const mapStateToProps = state => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import { getTitle } from './utils';
@@ -6,7 +6,6 @@ import { getTitle } from './utils';
 export default class Root extends React.Component {
 
   render() {
-
     const { store, routes } = this.props;
 
     return (
@@ -22,4 +21,7 @@ export default class Root extends React.Component {
 
 }
 
-
+Root.propTypes = {
+  store: PropTypes.object.isRequired,
+  routes: PropTypes.object.isRequired,
+};

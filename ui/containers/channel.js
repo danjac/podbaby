@@ -5,13 +5,9 @@ import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
 import {
-  Grid,
-  Row,
-  Col,
   ButtonGroup,
   Button,
-  ButtonInput,
-  Input
+  Input,
 } from 'react-bootstrap';
 
 
@@ -31,8 +27,12 @@ export class Channel extends React.Component {
     const { dispatch } = this.props;
     this.actions = {
       channel: bindActionCreators(actions.channel, dispatch),
-      subscribe: bindActionCreators(actions.subscribe, dispatch)
+      subscribe: bindActionCreators(actions.subscribe, dispatch),
     };
+    this.handleSelectPage = this.handleSelectPage.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleClearSearch = this.handleClearSearch.bind(this);
+    this.handleSubscribe = this.handleSubscribe.bind(this);
   }
 
   handleSearch(event) {
@@ -47,16 +47,16 @@ export class Channel extends React.Component {
     }
   }
 
-  handleClickSearch(event) {
+  handleSelectSearch(event) {
     event.preventDefault();
     this.refs.query.getInputDOMNode().select();
   }
 
   handleClearSearch(event) {
     event.preventDefault();
-    const { channel, dispatch } = this.props;
+    const { channel } = this.props;
     this.actions.channel.getChannel(channel.id);
-    this.refs.query.getInputDOMNode().value = "";
+    this.refs.query.getInputDOMNode().value = '';
   }
 
   handleSubscribe(event) {
@@ -88,7 +88,7 @@ export class Channel extends React.Component {
       return <div>Sorry, could not find this channel.</div>;
     }
 
-    const website = channel.website.Valid ? channel.website.String : "";
+    const website = channel.website.Valid ? channel.website.String : '';
     const { isSubscribed } = channel;
 
     return (
@@ -97,26 +97,43 @@ export class Channel extends React.Component {
         <div className="media">
           <div className="media-left">
             <a href="#">
-              <Image className="media-object"
-                     src={channel.image}
-                     errSrc='/static/podcast.png'
-                     imgProps={{
-                     height:60,
-                     width:60,
-                     alt:channel.title }} />
+              <Image
+                className="media-object"
+                src={channel.image}
+                errSrc="/static/podcast.png"
+                imgProps={{
+                  height: 60,
+                  width: 60,
+                  alt: channel.title,
+                }}
+              />
             </a>
           </div>
           <div className="media-body">
                   <h2 className="media-heading">{channel.title}</h2>
           </div>
         </div>
-        {channel.description ? <p className="lead" style={{ marginTop: 20 }} dangerouslySetInnerHTML={sanitize(channel.description)} /> : ''}
+        {channel.description ?
+        <p
+          className="lead"
+          style={{ marginTop: 20 }}
+          dangerouslySetInnerHTML={sanitize(channel.description)}
+        /> : ''}
         <ButtonGroup>
           {isLoggedIn ?
-          <Button title={isSubscribed ? 'Unsubscribe': 'Subscribe'}
-                  onClick={this.handleSubscribe.bind(this)}>
-            <Icon icon={isSubscribed ? 'unlink': 'link'} /> {isSubscribed ? 'Unsubscribe' : 'Subscribe'}</Button> : ''}
-          <a className="btn btn-default" title="Link to RSS Feed" target="_blank" href={channel.url}>
+          <Button
+            title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+            onClick={this.handleSubscribe}
+          >
+            <Icon icon={isSubscribed ? 'unlink' : 'link'} />
+            {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+          </Button> : ''}
+          <a
+            className="btn btn-default"
+            title="Link to RSS Feed"
+            target="_blank"
+            href={channel.url}
+          >
             <Icon icon="rss" /> Link to RSS feed
           </a>
           {website ? (
@@ -126,26 +143,42 @@ export class Channel extends React.Component {
           ) : ''}
         </ButtonGroup>
         <hr />
-        <form onSubmit={this.handleSearch.bind(this)}>
-          <Input type="search"
-                 ref="query"
-                 defaultValue={query}
-                 onClick={this.handleClickSearch.bind(this)}
-                 placeholder="Find a podcast in this channel" />
+        <form onSubmit={this.handleSearch}>
+          <Input
+            type="search"
+            ref="query"
+            defaultValue={query}
+            onClick={this.handleSelectSearch}
+            placeholder="Find a podcast in this channel"
+          />
           <Input>
-            <Button bsStyle="primary"
-                    type="submit"
-                    className="form-control"><Icon icon="search" /> Search</Button>
+            <Button
+              bsStyle="primary"
+              type="submit"
+              className="form-control"
+            >
+              <Icon icon="search" /> Search
+            </Button>
           </Input>
-          {query ? <Input><Button bsStyle="default"
-                           onClick={this.handleClearSearch.bind(this)}
-                           className="form-control"><Icon icon="refresh" /> Show all podcasts</Button></Input> : ''}
+          {query ?
+          <Input>
+            <Button
+              bsStyle="default"
+              onClick={this.handleClearSearch}
+              className="form-control"
+            >
+              <Icon icon="refresh" /> Show all podcasts
+            </Button>
+          </Input> : ''}
         </form>
         {isPodcastsLoading && !query ? <Loading /> :
-        <PodcastList showChannel={false}
-                     isLoggedIn={isLoggedIn}
-                     onSelectPage={this.handleSelectPage.bind(this)}
-                     actions={actions} {...this.props} /> }
+        <PodcastList
+          showChannel={false}
+          isLoggedIn={isLoggedIn}
+          onSelectPage={this.handleSelectPage}
+          actions={actions}
+          {...this.props}
+        /> }
       </div>
       </DocumentTitle>
     );
@@ -157,11 +190,14 @@ Channel.propTypes = {
   podcasts: PropTypes.array,
   page: PropTypes.object,
   player: PropTypes.object,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  isChannelLoading: PropTypes.bool.isRequired,
+  isPodcastsLoading: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  query: PropTypes.string,
 };
 
 const mapStateToProps = state => {
-
   const { query } = state.channel;
   const { page } = state.podcasts;
   const isChannelLoading = state.channel.isLoading;
@@ -177,7 +213,7 @@ const mapStateToProps = state => {
     page,
     isChannelLoading,
     isPodcastsLoading,
-    isLoggedIn
+    isLoggedIn,
   };
 };
 

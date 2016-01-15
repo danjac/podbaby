@@ -7,12 +7,11 @@ import moment from 'moment';
 import DocumentTitle from 'react-document-title';
 
 import {
-  Panel,
   Input,
-  Pagination
+  Pagination,
 } from 'react-bootstrap';
 
-import * as  actions from '../actions';
+import * as actions from '../actions';
 import { channelsSelector } from '../selectors';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
@@ -25,6 +24,9 @@ export class Subscriptions extends React.Component {
     super(props);
     const { dispatch } = this.props;
     this.actions = bindActionCreators(actions.channels, dispatch);
+    this.handleFilterChannels = this.handleFilterChannels.bind(this);
+    this.handleSelectPage = this.handleSelectPage.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   handleFilterChannels() {
@@ -38,12 +40,12 @@ export class Subscriptions extends React.Component {
     this.actions.selectPage(page);
   }
 
-  handleFocus() {
+  handleSelect() {
     this.refs.filter.getInputDOMNode().select();
   }
 
   render() {
-    const { page, channels, unfilteredChannels, isLoading } = this.props;
+    const { page, unfilteredChannels, isLoading } = this.props;
 
     if (isLoading) {
       return <Loading />;
@@ -56,38 +58,49 @@ export class Subscriptions extends React.Component {
     }
 
     const pagination = (
-      page  && page.numPages > 1 ?
-      <Pagination onSelect={this.handleSelectPage.bind(this)}
-                  first
-                  last
-                  prev
-                  next
-                  maxButtons={6}
-                  items={page.numPages}
-                  activePage={page.page} /> : '');
+      page && page.numPages > 1 ?
+      <Pagination
+        onSelect={this.handleSelectPage}
+        first
+        last
+        prev
+        next
+        maxButtons={6}
+        items={page.numPages}
+        activePage={page.page}
+      /> : '');
 
     return (
       <DocumentTitle title={getTitle('My subscriptions')}>
       <div>
-        <Input className="form-control"
-               type="search"
-               ref="filter"
-               onClick={this.handleFocus.bind(this)}
-               onKeyUp={this.handleFilterChannels.bind(this)}
-               placeholder="Find a subscription" />
+        <Input
+          className="form-control"
+          type="search"
+          ref="filter"
+          onClick={this.handleSelect}
+          onKeyUp={this.handleFilterChannels}
+          placeholder="Find a subscription"
+        />
         <Input>
-          <a className="btn btn-default form-control"
-            href={`/podbaby-${moment().format('YYYY-MM-DD')}.opml`} download><Icon icon="download" /> Download OPML</a>
+          <a
+            className="btn btn-default form-control"
+            href={`/podbaby-${moment().format('YYYY-MM-DD')}.opml`}
+            download
+          ><Icon icon="download" /> Download OPML</a>
         </Input>
         {pagination}
       {this.props.channels.map(channel => {
         const toggleSubscribe = () => {
-            this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
+          this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
         };
-        return <ChannelItem key={channel.id}
-                            channel={channel}
-                            isLoggedIn={true}
-                            subscribe={toggleSubscribe} />;
+        return (
+          <ChannelItem
+            key={channel.id}
+            channel={channel}
+            isLoggedIn
+            subscribe={toggleSubscribe}
+          />
+        );
       })}
       </div>
     </DocumentTitle>
@@ -96,14 +109,15 @@ export class Subscriptions extends React.Component {
 }
 
 Subscriptions.propTypes = {
-    channels: PropTypes.array.isRequired
+  channels: PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  page: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  unfilteredChannels: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => {
-  return {
-    isLoading: state.channels.isLoading,
-    ...channelsSelector(state)
-  };
+  return Object.assign({}, channelsSelector(state), { isLoading: state.channels.isLoading });
 };
 
 export default connect(mapStateToProps)(Subscriptions);

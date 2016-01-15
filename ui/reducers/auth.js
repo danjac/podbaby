@@ -7,11 +7,11 @@ const initialState = {
   email: null,
   redirectTo: null,
   showRecoverPasswordForm: false,
-  isLoaded: true
+  isLoaded: true,
 };
 
-export default function(state=initialState, action) {
-  switch(action.type) {
+export default function (state = initialState, action) {
+  switch (action.type) {
 
     case Actions.LOGIN_REQUIRED:
       return Object.assign({}, state, { redirectTo: action.payload });
@@ -28,11 +28,13 @@ export default function(state=initialState, action) {
 
     case Actions.OPEN_RECOVER_PASSWORD_FORM:
     case Actions.CLOSE_RECOVER_PASSWORD_FORM:
-      return Object.assign({}, state, { showRecoverPasswordForm: action.type === Actions.OPEN_RECOVER_PASSWORD_FORM });
+      return Object.assign({}, state,
+      { showRecoverPasswordForm: action.type === Actions.OPEN_RECOVER_PASSWORD_FORM });
 
     case Actions.DELETE_ACCOUNT_SUCCESS:
     case Actions.LOGOUT:
       return initialState;
+    default:
+      return state;
   }
-  return state;
 }

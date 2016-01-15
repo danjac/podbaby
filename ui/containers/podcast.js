@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
@@ -15,6 +15,9 @@ class PodcastDetail extends React.Component {
     super(props);
     const { dispatch } = this.props;
     this.actions = bindAllActionCreators(actions, dispatch);
+    this.handleToggleDetail = this.handleToggleDetail.bind(this);
+    this.handleToggleBookmark = this.handleToggleBookmark.bind(this);
+    this.handleTogglePlayer = this.handleTogglePlayer.bind(this);
   }
 
   handleTogglePlayer(event) {
@@ -24,19 +27,19 @@ class PodcastDetail extends React.Component {
 
   handleToggleBookmark(event) {
     event.preventDefault();
-    this.actions.bookmarks.toggleBookmark(this.props.podcast)
+    this.actions.bookmarks.toggleBookmark(this.props.podcast);
   }
 
   handleToggleDetail(event) {
     event.preventDefault();
-    this.actions.showDetail.toggleDetail(this.props.podcast)
+    this.actions.showDetail.toggleDetail(this.props.podcast);
   }
 
   render() {
     const {
       podcast,
       isLoading,
-      isLoggedIn
+      isLoggedIn,
     } = this.props;
 
     if (isLoading) {
@@ -49,30 +52,37 @@ class PodcastDetail extends React.Component {
 
     return (
       <DocumentTitle title={getTitle(podcast.name, podcast.title)}>
-      <Podcast podcast={podcast}
-               showChannel={true}
-               showExpanded={true}
-               toggleBookmark={this.handleToggleBookmark.bind(this)}
-               toggleDetail={this.handleToggleDetail.bind(this)}
-               togglePlayer={this.handleTogglePlayer.bind(this)}
-               isLoggedIn={isLoggedIn} />
+      <Podcast
+        podcast={podcast}
+        showChannel
+        showExpanded
+        toggleBookmark={this.handleToggleBookmark}
+        toggleDetail={this.handleToggleDetail}
+        togglePlayer={this.handleTogglePlayer}
+        isLoggedIn={isLoggedIn}
+      />
       </DocumentTitle>
     );
   }
 }
 
-const mapStateToProps = state => {
+PodcastDetail.propTypes = {
+  dispatch: PropTypes.object.isRequired,
+  podcast: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+};
 
+const mapStateToProps = state => {
   const podcast = podcastSelector(state);
 
   const { isLoading } = state.podcast;
   const { isLoggedIn } = state.auth;
-  const { bookmarks } = state.bookmarks;
 
   return {
     podcast,
     isLoading,
-    isLoggedIn
+    isLoggedIn,
   };
 };
 

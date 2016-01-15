@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DocumentTitle from 'react-document-title';
@@ -12,6 +11,11 @@ import { getTitle } from './utils';
 
 export class Latest extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.handleSelectPage = this.handleSelectPage.bind(this);
+  }
+
   handleSelectPage(event, selectedEvent) {
     event.preventDefault();
     const { dispatch } = this.props;
@@ -20,17 +24,18 @@ export class Latest extends React.Component {
   }
 
   render() {
-
     const ifEmptyMsg = (
       <span>You haven't subscribed to any channels yet.
         Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
 
     return (
       <DocumentTitle title={getTitle('Latest podcasts')}>
-        <PodcastList actions={actions}
-                     ifEmpty={ifEmptyMsg}
-                     onSelectPage={this.handleSelectPage.bind(this)}
-                     showChannel={true} {...this.props} />
+        <PodcastList
+          actions={actions}
+          ifEmpty={ifEmptyMsg}
+          onSelectPage={this.handleSelectPage}
+          showChannel {...this.props}
+        />
       </DocumentTitle>
     );
   }
@@ -40,7 +45,9 @@ Latest.propTypes = {
   podcasts: PropTypes.array.isRequired,
   page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -51,7 +58,6 @@ const mapStateToProps = state => {
     isLoading,
     page,
     isLoggedIn,
-    player: state.player
   };
 };
 
