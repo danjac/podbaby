@@ -4,7 +4,7 @@ import * as api from '../api';
 import { requestPodcasts } from './podcasts';
 import { createAction } from './utils';
 
-export function getLatestPodcasts(page=1) {
+export function getLatestPodcasts(page = 1) {
   return dispatch => {
     dispatch(requestPodcasts());
     api.getLatestPodcasts(page)
@@ -12,8 +12,7 @@ export function getLatestPodcasts(page=1) {
       dispatch(createAction(Actions.LATEST_PODCASTS_SUCCESS, result.data));
     })
     .catch(error => {
-      console.log(error)
-        dispatch(createAction(Actions.LATEST_PODCASTS_FAILURE, { error }));
+      dispatch(createAction(Actions.LATEST_PODCASTS_FAILURE, { error }));
     });
   };
 }

@@ -4,7 +4,7 @@ import { createAction } from './utils';
 
 export const requestPodcasts = () => createAction(Actions.PODCASTS_REQUEST);
 
-export function getPodcast (id) {
+export function getPodcast(id) {
   return dispatch => {
     dispatch(createAction(Actions.GET_PODCAST_REQUEST));
     api.getPodcast(id)
@@ -15,4 +15,4 @@ export function getPodcast (id) {
       dispatch(createAction(Actions.GET_PODCAST_FAILURE, { error }));
     });
   };
-};
+}

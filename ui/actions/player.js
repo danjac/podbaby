@@ -3,11 +3,11 @@ import { Actions, Storage } from '../constants';
 import { createAction } from './utils';
 
 const removePlayerFromSession = () => {
-    window.sessionStorage.removeItem(Storage.CURRENT_PODCAST);
+  window.sessionStorage.removeItem(Storage.CURRENT_PODCAST);
 };
 
 const savePlayerToSession = player => {
-    window.sessionStorage.setItem(Storage.CURRENT_PODCAST, JSON.stringify(player));
+  window.sessionStorage.setItem(Storage.CURRENT_PODCAST, JSON.stringify(player));
 };
 
 export function updateTime(currentTime) {
@@ -18,8 +18,12 @@ export function updateTime(currentTime) {
   };
 }
 
-export function togglePlayer(podcast) {
+export function close() {
+  removePlayerFromSession();
+  return createAction(Actions.CLOSE_PLAYER);
+}
 
+export function togglePlayer(podcast) {
   if (podcast.isPlaying) {
     return close();
   }
@@ -34,15 +38,9 @@ export function togglePlayer(podcast) {
   };
 }
 
-export function close() {
-  removePlayerFromSession();
-  return createAction(Actions.CLOSE_PLAYER);
-}
-
 // reload player from session
 export function reloadPlayer() {
   const data = window.sessionStorage.getItem(Storage.CURRENT_PODCAST);
   const player = data ? JSON.parse(data) : null;
   return createAction(Actions.RELOAD_PLAYER, player);
 }
-

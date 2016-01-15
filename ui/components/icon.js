@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 
-export default function(props) {
-  const classes = classnames('fa', 'fa-' + props.icon, {'fa-spin': props.spin});
-  return <i className={classes} />
+function Icon(props) {
+  const classes = classnames('fa', 'fa-' + props.icon, { 'fa-spin': props.spin });
+  return <i className={classes} />;
 }
+
+
+Icon.propTypes = {
+  icon: PropTypes.string.isRequired,
+  spin: PropTypes.bool,
+};
+
+export default Icon;

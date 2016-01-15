@@ -85,7 +85,7 @@ export class Search extends React.Component {
             <Tab eventKey={1} title="Podcasts" style={tabStyle}>
               {podcastItems}
             </Tab>
-            <Tab eventKey={2} title="Channels" style={tabStyle}>
+            <Tab eventKey={2} title="Feeds" style={tabStyle}>
               {channelItems}
             </Tab>
           </Tabs>
@@ -109,19 +109,19 @@ export class Search extends React.Component {
     const help = (
       searchQuery ? '' :
         <span>
-          <b>Hint:</b> Try a general category e.g. <em>history</em> or <em>movies</em>, the title of a podcast, or the name of a channel e. g. <em>RadioLab</em>.
+          <b>Hint:</b> Try a general category e.g. <em>history</em> or <em>movies</em>, the title of a podcast, or the name of a feed e. g. <em>RadioLab</em>.
         </span>
       );
 
     return (
-      <DocumentTitle title={getTitle('Search podcasts and channels')}>
+      <DocumentTitle title={getTitle('Search podcasts and feeds')}>
         <div>
           <form className="form" onSubmit={this.handleSearch.bind(this)}>
             <Input type="search"
                    ref="query"
                    help={help}
                    onClick={this.handleFocus.bind(this)}
-                   placeholder="Find a channel or podcast" />
+                   placeholder="Find a feed or podcast" />
             <Button type="submit" bsStyle="primary" className="form-control">
               <Icon icon="search" /> Search
             </Button>

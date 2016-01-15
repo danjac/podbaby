@@ -11,14 +11,14 @@ export function selectPage(page) {
 }
 
 export function getChannels() {
-    return dispatch => {
-        dispatch(createAction(Actions.GET_CHANNELS_REQUEST));
-        api.getChannels()
-        .then(result => {
-            dispatch(createAction(Actions.GET_CHANNELS_SUCCESS, result.data));
-        })
-        .catch(error => {
-            dispatch(createAction(Actions.GET_CHANNELS_FAILURE, { error }));
-        });
-    };
+  return dispatch => {
+    dispatch(createAction(Actions.GET_CHANNELS_REQUEST));
+    api.getChannels()
+    .then(result => {
+      dispatch(createAction(Actions.GET_CHANNELS_SUCCESS, result.data));
+    })
+    .catch(error => {
+      dispatch(createAction(Actions.GET_CHANNELS_FAILURE, { error }));
+    });
+  };
 }

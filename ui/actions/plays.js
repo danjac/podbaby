@@ -7,12 +7,12 @@ import * as alerts from './alerts';
 export function clearAll() {
   api.clearAllPlayed();
   return dispatch => {
-    dispatch(alerts.success("All podcasts have been removed from your recently played list"));
+    dispatch(alerts.success('All podcasts have been removed from your recently played list'));
     dispatch(createAction(Actions.CLEAR_RECENT_PLAYS));
   };
 }
 
-export function getRecentlyPlayed(page=1) {
+export function getRecentlyPlayed(page = 1) {
   return dispatch => {
     dispatch(createAction(Actions.PODCASTS_REQUEST));
     api.getRecentlyPlayed(page)

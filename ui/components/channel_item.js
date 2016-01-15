@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -7,15 +7,13 @@ import {
   Col,
   ButtonGroup,
   Button,
-  Panel
+  Panel,
 } from 'react-bootstrap';
 
 import Image from './image';
 import Icon from './icon';
-import { sanitize } from './utils';
 
-export default function ChannelItem (props) {
-
+function ChannelItem(props) {
   const { channel, subscribe, isLoggedIn } = props;
   const url = `/channel/${channel.id}/`;
 
@@ -25,12 +23,13 @@ export default function ChannelItem (props) {
       <div className="media-left">
         <Link to={url}>
         <Image className="media-object"
-               src={channel.image}
-               errSrc='/static/podcast.png'
-               imgProps={{
-               height:60,
-               width:60,
-               alt:channel.title }} />
+          src={channel.image}
+          errSrc="/static/podcast.png"
+          imgProps={{
+            height: 60,
+            width: 60,
+            alt: channel.title }}
+        />
         </Link>
       </div>
       <div className="media-body">
@@ -42,8 +41,12 @@ export default function ChannelItem (props) {
             <Col xs={6} md={3}>
               {isLoggedIn ?
               <ButtonGroup>
-                <Button title={channel.isSubscribed ? "Unsubscribe" : "Subscribe"} onClick={subscribe}>
-                  <Icon icon={channel.isSubscribed ? "unlink" : "link"} /> {channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+                <Button title={channel.isSubscribed ?
+                  'Unsubscribe' : 'Subscribe'} onClick={subscribe}
+                >
+                  <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
+                  channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
+                  }
                 </Button>
               </ButtonGroup>
               : ''}
@@ -54,6 +57,12 @@ export default function ChannelItem (props) {
     </div>
   </Panel>
   );
+}
+
+ChannelItem.propTypes = {
+  channel: PropTypes.object.isRequired,
+  subscribe: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
 };
 
-
+export default ChannelItem;

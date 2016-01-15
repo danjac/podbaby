@@ -18,33 +18,34 @@ export class PodcastList extends React.Component {
       onSelectPage,
       isLoading,
       ifEmpty,
-      showChannel
+      showChannel,
     } = this.props;
 
     if (isLoading) {
       return <Loading />;
     }
 
-    const emptyMsg = typeof ifEmpty === "undefined" ? 'No podcasts found' : ifEmpty;
+    const emptyMsg = typeof ifEmpty === 'undefined' ? 'No podcasts found' : ifEmpty;
     if (_.isEmpty(podcasts)) {
-      return <div>{emptyMsg}</div>
+      return <div>{emptyMsg}</div>;
     }
 
     const pagination = (
       page && onSelectPage && page.numPages > 1 ?
-      <Pagination onSelect={onSelectPage}
-                  first
-                  last
-                  prev
-                  next
-                  maxButtons={6}
-                  items={page.numPages}
-                  activePage={page.page} /> : '');
+      <Pagination
+        onSelect={onSelectPage}
+        first
+        last
+        prev
+        next
+        maxButtons={6}
+        items={page.numPages}
+        activePage={page.page}
+      /> : '');
     return (
       <div>
         {pagination}
         {podcasts.map(podcast => {
-
           const togglePlayer = event => {
             event.preventDefault();
             dispatch(actions.player.togglePlayer(podcast));
@@ -60,19 +61,34 @@ export class PodcastList extends React.Component {
             dispatch(actions.showDetail.toggleDetail(podcast));
           };
 
-          return <Podcast key={podcast.id}
-                          isLoggedIn={isLoggedIn}
-                          podcast={podcast}
-                          showChannel={showChannel}
-                          showExpanded={false}
-                          toggleBookmark={toggleBookmark}
-                          toggleDetail={toggleDetail}
-                          togglePlayer={togglePlayer} />
+          return (
+            <Podcast
+              key={podcast.id}
+              isLoggedIn={isLoggedIn}
+              podcast={podcast}
+              showChannel={showChannel}
+              showExpanded={false}
+              toggleBookmark={toggleBookmark}
+              toggleDetail={toggleDetail}
+              togglePlayer={togglePlayer}
+            />);
         })}
         {pagination}
         </div>
       );
-    }
+  }
 }
+
+PodcastList.propTypes = {
+  actions: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  podcasts: PropTypes.array.isRequired,
+  page: PropTypes.object.isRequired,
+  onSelectPage: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  ifEmpty: PropTypes.bool,
+  showChannel: PropTypes.bool,
+};
 
 export default PodcastList;

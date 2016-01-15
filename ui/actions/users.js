@@ -9,10 +9,10 @@ import { createAction } from './utils';
 export function deleteAccount() {
   return dispatch => {
     api.deleteAccount()
-    .then(result => {
+    .then(() => {
       dispatch(createAction(Actions.DELETE_ACCOUNT_SUCCESS));
-      dispatch(alerts.info("Your account has been deleted"));
-      dispatch(pushPath("/"));
+      dispatch(alerts.info('Your account has been deleted'));
+      dispatch(pushPath('/'));
     })
     .catch(error => {
       dispatch(createAction(Actions.DELETE_ACCOUNT_FAILURE, { error }));

@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import validator from 'validator';
 
-import { Modal, Input,
+import {
+  Modal,
   Button,
   ButtonGroup,
-  ProgressBar
+  ProgressBar,
 } from 'react-bootstrap';
 
 import * as api from '../api';
@@ -14,9 +15,9 @@ import { FormGroup } from './form';
 
 const validate = values => {
   return values.url && validator.isURL(values.url) ? {} : {
-    url: "You must provide a valid URL"
+    url: 'You must provide a valid URL',
   };
-}
+};
 
 export class AddChannelModal extends React.Component {
 
@@ -25,25 +26,25 @@ export class AddChannelModal extends React.Component {
     this.state = this.getDefaultState();
   }
 
-  getDefaultState() {
-    return {
-      progress: 0,
-      interval: null
-    }
-  }
-
   componentWillReceiveProps(newProps) {
     if (newProps.submitting && !this.props.submitting) {
       this.setState({
         interval: window.setInterval(() => {
           this.setState({ progress: this.state.progress + 1 });
-        }, 100)
+        }, 100),
       });
     } else if (!newProps.submitting && this.props.submitting) {
       window.clearInterval(this.state.interval);
       this.setState(this.getDefaultState());
     }
     return this.props !== newProps;
+  }
+
+  getDefaultState() {
+    return {
+      progress: 0,
+      interval: null,
+    };
   }
 
   handleAddChannel(values) {
@@ -54,8 +55,7 @@ export class AddChannelModal extends React.Component {
         this.props.resetForm();
         resolve();
       }, error => {
-        error = error.data.url ? error.data : { url: error.data };
-        reject(error);
+        reject(error.data.url ? error.data : { url: error.data });
       });
     });
   }
@@ -77,9 +77,10 @@ export class AddChannelModal extends React.Component {
 
     return (
       <Modal show={show}
-             aria-labelledby="add-channel-modal-title"
-             container={container}
-             onHide={handleClose}>
+        aria-labelledby="add-channel-modal-title"
+        container={container}
+        onHide={handleClose}
+      >
         <Modal.Header closeButton>
           <Modal.Title id="add-channel-modal-title">Add a new RSS feed</Modal.Title>
         </Modal.Header>
@@ -91,7 +92,7 @@ export class AddChannelModal extends React.Component {
             ) : (
             <form className="form" onSubmit={handleSubmit(this.handleAddChannel.bind(this))}>
                <FormGroup field={url}>
-                <input type="text" className="form-control"  {...url} />
+                <input type="text" className="form-control" {...url} />
               </FormGroup>
             <p>Enter the URL of the RSS feed you want to subscribe to, for example:
               <br /><em>http://joeroganexp.joerogan.libsynpro.com/rss</em>
@@ -118,11 +119,11 @@ AddChannelModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
   show: PropTypes.bool.isRequired,
-  container: PropTypes.object.isRequired
+  container: PropTypes.object.isRequired,
 };
 
 export default reduxForm({
   form: 'add-channel',
   fields: ['url'],
-  validate
+  validate,
 })(AddChannelModal);

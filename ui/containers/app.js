@@ -1,20 +1,9 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
 
 import 'bootswatch/paper/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
-import {
-  Badge,
-  Alert,
-  Grid,
-  Row,
-  Col
-} from 'react-bootstrap';
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { pushPath } from 'redux-simple-router';
+import { Alert } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import { bindAllActionCreators } from '../actions/utils';
@@ -25,29 +14,36 @@ import AddChannelModal from '../components/add_channel';
 
 
 const AlertList = props => {
-
   if (props.alerts.length === 0) return <div></div>;
 
   return (
-    <div className="container" style={{
-         position: "fixed",
-         height: "50px",
-         width: "500px",
-         opacity: 0.9,
-         textAlign: "center",
-         margin: "5% auto",
-         left: 0,
-         right: 0,
-         zIndex: 200
-      }}>
-      {props.alerts.map(alert => {
-        const dismissAlert = () => props.onDismissAlert(alert.id);
-        return (<Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
-          <p><b style={{ opacity: 1.0 }}>{alert.message}</b></p>
-        </Alert>);
-      })}
+    <div
+      className="container"
+      style={{
+        position: 'fixed',
+        height: '50px',
+        width: '500px',
+        opacity: 0.9,
+        textAlign: 'center',
+        margin: '5% auto',
+        left: 0,
+        right: 0,
+        zIndex: 200,
+      }}
+    >
+    {props.alerts.map(alert => {
+      const dismissAlert = () => props.onDismissAlert(alert.id);
+      return (
+      <Alert key={alert.id} bsStyle={alert.status} onDismiss={dismissAlert} dismissAfter={3000}>
+        <p><b style={{ opacity: 1.0 }}>{alert.message}</b></p>
+      </Alert>);
+    })}
     </div>
   );
+};
+
+AlertList.propTypes = {
+  alerts: PropTypes.array.isRequired,
 };
 
 
@@ -99,8 +95,7 @@ export class App extends React.Component {
   }
 
   render() {
-
-    const { createHref, isActive } = this.props.history;
+    const { isActive } = this.props.history;
     const { isLoggedIn } = this.props.auth;
 
     const hideNavbar = isActive("/front/");
@@ -143,10 +138,12 @@ export class App extends React.Component {
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   routing: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  children: PropTypes.array.isRequired,
   auth: PropTypes.object,
   addChannel: PropTypes.object,
   player: PropTypes.object,
-  alerts: PropTypes.array
+  alerts: PropTypes.array,
 };
 
 

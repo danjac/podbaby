@@ -1,31 +1,31 @@
 import axios from 'axios';
 
 axios.interceptors.request.use(config => {
-    config.headers['X-CSRF-Token'] =  window.csrfToken;
-    return config;
+  const headers = Object.assign({}, config.headers, { 'X-CSRF-Token': window.csrfToken });
+  return Object.assign({}, config, { headers });
 }, error => Promise.reject(error));
 
 export function logout() {
-  return axios.delete("/api/auth/logout/");
+  return axios.delete('/api/auth/logout/');
 }
 
 export function login(identifier, password) {
-  return axios.post("/api/auth/login/", {
+  return axios.post('/api/auth/login/', {
     identifier,
-    password
+    password,
   });
 }
 
 export function signup(name, email, password) {
-  return axios.post("/api/auth/signup/", {
+  return axios.post('/api/auth/signup/', {
     name,
     email,
-    password
+    password,
   });
 }
 
 export function search(query) {
-  return axios.get("/api/search/", { params: { q: query } });
+  return axios.get('/api/search/', { params: { q: query } });
 }
 
 export function searchChannel(query, id) {
@@ -33,24 +33,24 @@ export function searchChannel(query, id) {
 }
 
 export function searchBookmarks(query) {
-  return axios.get("/api/search/bookmarks/", { params: { q: query } });
+  return axios.get('/api/search/bookmarks/', { params: { q: query } });
 }
 
 
 export function addChannel(url) {
-  return axios.post("/api/channels/", { url });
+  return axios.post('/api/channels/', { url });
 }
 
 export function getChannels() {
-  return axios.get("/api/channels/");
+  return axios.get('/api/channels/');
 }
 
-export function getChannel(id, page=1) {
+export function getChannel(id, page = 1) {
   return axios.get(`/api/channels/${id}/`, { params: { page } });
 }
 
-export function getLatestPodcasts(page=1) {
-  return axios.get("/api/podcasts/latest/", { params: { page } });
+export function getLatestPodcasts(page = 1) {
+  return axios.get('/api/podcasts/latest/', { params: { page } });
 }
 
 export function getPodcast(id) {
@@ -62,12 +62,12 @@ export function nowPlaying(id) {
   return axios.post(`/api/plays/${id}/`);
 }
 
-export function getRecentlyPlayed(page=1) {
-  return axios.get("/api/plays/", { params: { page } });
+export function getRecentlyPlayed(page = 1) {
+  return axios.get('/api/plays/', { params: { page } });
 }
 
 export function clearAllPlayed() {
-  return axios.delete("/api/plays/");
+  return axios.delete('/api/plays/');
 }
 
 export function subscribe(id) {
@@ -78,8 +78,8 @@ export function unsubscribe(id) {
   return axios.delete(`/api/subscriptions/${id}/`);
 }
 
-export function getBookmarks(page=1) {
-  return axios.get("/api/bookmarks/", { params: { page } });
+export function getBookmarks(page = 1) {
+  return axios.get('/api/bookmarks/', { params: { page } });
 }
 
 export function addBookmark(id) {
@@ -112,5 +112,5 @@ export function recoverPassword(identifier) {
 }
 
 export function deleteAccount() {
-  return axios.delete("/api/user/");
+  return axios.delete('/api/user/');
 }

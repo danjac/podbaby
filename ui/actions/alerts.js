@@ -7,7 +7,7 @@ export function addAlert(status, message) {
   return createAction(Actions.ADD_ALERT, {
     message,
     status,
-    id: _.uniqueId()
+    id: _.uniqueId(),
   });
 }
 
