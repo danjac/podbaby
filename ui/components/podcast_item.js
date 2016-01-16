@@ -27,6 +27,7 @@ export default function PodcastItem(props) {
 
   const channelUrl = `/channel/${podcast.channelId}/`;
   const podcastUrl = `/podcast/${podcast.id}/`;
+  const image = podcast.image || '/static/podcast.png';
 
   let header;
 
@@ -48,7 +49,7 @@ export default function PodcastItem(props) {
           <Link to={channelUrl}>
             <Image
               className="media-object"
-              src={podcast.image}
+              src={image}
               errSrc="/static/podcast.png"
               imgProps={{
                 height: 60,

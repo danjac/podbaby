@@ -13,6 +13,7 @@ const makePodcast = (attrs = {}) => {
     title: 'test',
     channelId: 1000,
     name: 'My Channel',
+    image: 'test.jpg',
   }, attrs);
 };
 

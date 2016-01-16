@@ -18,6 +18,7 @@ class Player extends React.Component {
     super(props);
     this.handleClose = this.handleClose.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
+    this.handleBookmark = this.handleBookmark.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
   }
 
