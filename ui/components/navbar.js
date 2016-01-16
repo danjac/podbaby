@@ -70,7 +70,7 @@ class NavBar extends React.Component {
               active={isActive('/member/subscriptions/')}
               href={createHref('/member/subscriptions/')}
               onClick={this.handleSelected}
-            ><Icon icon="list" /> Subscriptions
+            ><Icon icon="folder" /> Subscriptions
             </NavItem>
             <NavItem
               active={isActive('/member/bookmarks/')}
@@ -82,7 +82,7 @@ class NavBar extends React.Component {
               active={isActive('/member/recent/')}
               href={createHref('/member/recent/')}
               onClick={this.handleSelected}
-            ><Icon icon="clock-o" /> Recently played
+            ><Icon icon="history" /> Recently played
             </NavItem>
             <NavItem
               onClick={this.handleOpenAddChannelForm}
