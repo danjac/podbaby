@@ -24,25 +24,25 @@ const assign = (podcast, bookmarks, showDetail, player) => {
   return Object.assign({}, podcast, {
     isBookmarked: isBookmarked(bookmarks, podcast),
     isShowDetail: isShowDetail(showDetail, podcast),
-    isPlaying: isPlaying(player, podcast)
+    isPlaying: isPlaying(player, podcast),
   });
 };
 
 export const podcastSelector = createSelector(
-  [ podcastPreSelector,
-    detailSelector,
-    bookmarksSelector,
-    playerSelector ],
+  [podcastPreSelector,
+   detailSelector,
+   bookmarksSelector,
+   playerSelector],
   (podcast, showDetail, bookmarks, player) => {
     return assign(podcast, bookmarks, showDetail, player);
   }
 );
 
 export const podcastsSelector = createSelector(
-  [ podcastsPreSelector,
-    detailSelector,
-    bookmarksSelector,
-    playerSelector ],
+  [podcastsPreSelector,
+   detailSelector,
+   bookmarksSelector,
+   playerSelector],
   (podcasts, showDetail, bookmarks, player) => {
     return podcasts.map(podcast => {
       return assign(podcast, bookmarks, showDetail, player);

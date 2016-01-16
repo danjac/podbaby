@@ -2,16 +2,15 @@ import { Actions } from '../constants';
 
 const initialState = {
   channels: [],
-  filter: "",
+  filter: '',
   isLoading: false,
-  page: 1
+  page: 1,
 };
 
-export default function(state=initialState, action) {
-
+export default function (state = initialState, action) {
   let channels;
 
-  switch(action.type) {
+  switch (action.type) {
 
     case Actions.FILTER_CHANNELS:
       return Object.assign({}, state, { filter: action.payload, page: 1 });
@@ -26,18 +25,19 @@ export default function(state=initialState, action) {
 
       channels = action.payload.channels || [];
       return Object.assign({}, state, {
-        channels: channels,
+        channels,
         isLoading: false,
-        filter: ""
+        filter: '',
       });
 
     case Actions.GET_CHANNELS_SUCCESS:
       channels = action.payload || [];
+
       return Object.assign({}, state, {
-        channels: channels,
+        channels,
         isLoading: false,
-        filter: "",
-        page: 1
+        filter: '',
+        page: 1,
       });
 
     case Actions.CLEAR_SEARCH:
@@ -46,11 +46,10 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, {
         channels: [],
         isLoading: false,
-        filter: "",
-        page: 1
+        filter: '',
+        page: 1,
       });
-
-}
-
-  return state;
+    default:
+      return state;
+  }
 }

@@ -27,5 +27,5 @@ export default combineReducers({
   bookmarks: bookmarksReducer,
   subscriptions: subscriptionsReducer,
   podcasts: podcastsReducer,
-  podcast: podcastReducer
+  podcast: podcastReducer,
 });

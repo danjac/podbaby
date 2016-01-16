@@ -4,7 +4,7 @@ import {
   Router,
   Route,
   IndexRoute,
-  IndexRedirect
+  IndexRedirect,
 } from 'react-router';
 
 import App from '../containers/app';
@@ -24,27 +24,33 @@ import PageNotFound from '../containers/not_found';
 import * as actionCreators from '../actions';
 import { bindAllActionCreators } from '../actions/utils';
 
-export default function(store, history) {
-
+export default function (store, history) {
   const actions = bindAllActionCreators(actionCreators, store.dispatch);
 
   const requireAuth = (nextState, replaceState) => {
     const { auth } = store.getState();
     if (!auth.isLoggedIn) {
-      actions.alerts.warning("You have to be signed in first");
+      actions.alerts.warning('You have to be signed in first');
       actions.auth.loginRequired(nextState.location.pathname);
-      replaceState(null, "/login/");
+      replaceState(null, '/login/');
     }
   };
 
   const redirectIfLoggedIn = (nextState, replaceState) => {
     const { auth } = store.getState();
     if (auth.isLoggedIn) {
-      replaceState(null, "/new/");
+      replaceState(null, '/new/');
     } else {
-      replaceState(null, "/front/");
+      replaceState(null, '/front/');
     }
   };
+
+  const getChannels = () => actions.channels.getChannels();
+  const getBookmarks = () => actions.bookmarks.getBookmarks();
+  const getRecentlyPlayed = () => actions.plays.getRecentlyPlayed();
+  const getLatestPodcasts = () => actions.podcasts.getLatestPodcasts();
+  const getChannel = (_, nextState) => actions.channel.getChannel(nextState.params.id);
+  const getPodcast = (_, nextState) => actions.podcasts.getPodcast(nextState.params.id);
 
   return (
     <Router history={history}>
@@ -56,36 +62,48 @@ export default function(store, history) {
 
           <IndexRedirect to="/member/subscriptions/" />
 
-          <Route path="/member/subscriptions/"
-                 component={Subscriptions}
-                 onEnter={() => actions.channels.getChannels()} />
+          <Route
+            path="/member/subscriptions/"
+            component={Subscriptions}
+            onEnter={getChannels}
+          />
 
-          <Route path="/member/bookmarks/"
-                 component={Bookmarks}
-                 onEnter={() => actions.bookmarks.getBookmarks()} />
+          <Route
+            path="/member/bookmarks/"
+            component={Bookmarks}
+            onEnter={getBookmarks}
+          />
 
-          <Route path="/member/recent/"
-                 component={Recent}
-                 onEnter={() => actions.plays.getRecentlyPlayed()} />
-        </Route>
+         <Route
+           path="/member/recent/"
+           component={Recent}
+           onEnter={getRecentlyPlayed}
+         />
+       </Route>
 
-        <Route path="/new/"
-               component={Latest}
-               onEnter={() => actions.latest.getLatestPodcasts()} />
+      <Route
+        path="/new/"
+        component={Latest}
+        onEnter={getLatestPodcasts}
+      />
 
-        <Route path="/search/" component={Search} />
+      <Route path="/search/" component={Search} />
 
-        <Route path="/channel/:id/"
-               component={Channel}
-               onEnter={nextState => actions.channel.getChannel(nextState.params.id)} />
+      <Route
+        path="/channel/:id/"
+        component={Channel}
+        onEnter={getChannel}
+      />
 
-        <Route path="/podcast/:id/"
-               component={Podcast}
-               onEnter={nextState => actions.podcasts.getPodcast(nextState.params.id)} />
+      <Route
+        path="/podcast/:id/"
+        component={Podcast}
+        onEnter={getPodcast}
+      />
 
-        <Route path="/login/" component={Login} />
-        <Route path="/signup/" component={Signup} />
-        <Route path="/user/" component={User} onEnter={requireAuth} />
+      <Route path="/login/" component={Login} />
+      <Route path="/signup/" component={Signup} />
+      <Route path="/user/" component={User} onEnter={requireAuth} />
         <Route path="*" component={PageNotFound} />
       </Route>
     </Router>

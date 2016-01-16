@@ -1,14 +1,14 @@
 import { Actions } from '../constants';
 
 const initialState = {
-  query: "",
-  bookmarks: []
+  query: '',
+  bookmarks: [],
 };
 
-export default function(state=initialState, action) {
+export default function (state = initialState, action) {
   let bookmarks;
 
-  switch(action.type) {
+  switch (action.type) {
 
     case Actions.BOOKMARKS_SEARCH_REQUEST:
       return Object.assign({}, state, { query: action.payload });
@@ -30,7 +30,9 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, { bookmarks });
 
     case Actions.CLEAR_BOOKMARKS_SEARCH:
-      return Object.assign({}, state, { query: "" });
+      return Object.assign({}, state, { query: '' });
+
+    default:
+      return state;
   }
-  return state;
-};
+}

@@ -2,9 +2,8 @@ import { Actions } from '../constants';
 
 const initialState = [];
 
-export default function(state=initialState, action) {
-
-  switch(action.type) {
+export default function (state = initialState, action) {
+  switch (action.type) {
 
     case Actions.LOGIN_SUCCESS:
     case Actions.CURRENT_USER:
@@ -21,9 +20,7 @@ export default function(state=initialState, action) {
 
     case Actions.UNSUBSCRIBE:
       return state.filter(id => id !== action.payload);
+    default:
+      return state;
   }
-
-  return state;
-
 }
-

@@ -11,27 +11,25 @@ const isSubscribed = (channel, subscriptions) => {
 };
 
 export const channelSelector = createSelector(
-  [ channelPreSelector, subscriptionsSelector ],
+  [channelPreSelector, subscriptionsSelector],
   (channel, subscriptions) => {
     if (!channel) {
       return null;
     }
     return Object.assign({}, channel, {
-      isSubscribed: isSubscribed(channel, subscriptions)
+      isSubscribed: isSubscribed(channel, subscriptions),
     });
   }
 );
 
 export const channelsSelector = createSelector(
-  [ channelsPreSelector,
-    filterSelector,
-    subscriptionsSelector,
-    currentPageSelector],
+  [channelsPreSelector,
+   filterSelector,
+   subscriptionsSelector,
+   currentPageSelector],
   (channels, filter, subscriptions, currentPage) => {
-
     const unfilteredChannels = channels.map(channel => {
-      channel.isSubscribed = isSubscribed(channel, subscriptions);
-      return channel;
+      return Object.assign({}, channel, { isSubscribed: isSubscribed(channel, subscriptions) });
     });
 
     const filteredChannels = unfilteredChannels.filter(channel => {
@@ -46,8 +44,8 @@ export const channelsSelector = createSelector(
 
     const page = {
       page: currentPage,
-      numPages: numPages
-    }
+      numPages,
+    };
 
     const paginatedChannels = filteredChannels.slice(start, end);
 
@@ -55,7 +53,7 @@ export const channelsSelector = createSelector(
       channels: paginatedChannels,
       unfilteredChannels,
       filter,
-      page
+      page,
     };
   }
 

@@ -20,4 +20,4 @@ store.dispatch(player.reloadPlayer());
 
 ReactDOM.render(
   <Root store={store} routes={routes} />,
-  document.getElementById("app"));
+  document.getElementById('app'));
