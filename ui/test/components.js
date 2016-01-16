@@ -7,17 +7,17 @@ import jsdom from 'jsdom-global';
 import Player from '../components/player';
 import Podcast from '../components/podcast_item';
 
-const makePodcast = attrs => {
-  return Object.assign({}, attrs, {
+const makePodcast = (attrs = {}) => {
+  return Object.assign({}, {
     id: 1000,
     title: 'test',
     channelId: 1000,
     name: 'My Channel',
-  });
+  }, attrs);
 };
 
 const makePodcastProps = (podcast, props = {}) => {
-  return Object.assign({}, props, {
+  return Object.assign({}, {
     podcast,
     togglePlayer: _.noop,
     toggleSubscribe: _.noop,
@@ -28,11 +28,11 @@ const makePodcastProps = (podcast, props = {}) => {
     isLoggedIn: true,
     isPlaying: false,
     channelUrl: '/channel/11/',
-  });
+  }, props);
 };
 
 const makePlayerProps = (podcast, props = {}) => {
-  return Object.assign({}, props, {
+  return Object.assign({}, {
     onClose: _.noop,
     onTimeUpdate: _.noop,
     onToggleBookmark: _.noop,
@@ -41,7 +41,7 @@ const makePlayerProps = (podcast, props = {}) => {
       podcast,
       isPlaying: true,
     },
-  });
+  }, props);
 };
 
 class Wrapper extends React.Component {
@@ -53,7 +53,7 @@ class Wrapper extends React.Component {
 }
 
 Wrapper.propTypes = {
-  children: PropTypes.array.isRequired,
+  children: PropTypes.object.isRequired,
 };
 
 describe('Player component', function () {

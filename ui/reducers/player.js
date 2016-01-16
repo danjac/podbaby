@@ -21,7 +21,7 @@ export default function (state = initialState, action) {
         const podcast = Object.assign({}, state.podcast, { isBookmarked });
         return Object.assign({}, state, { podcast });
       }
-      break;
+      return state;
     case Actions.PLAYER_TIME_UPDATE:
       return Object.assign({}, state, { currentTime: action.payload });
     case Actions.CLOSE_PLAYER:
