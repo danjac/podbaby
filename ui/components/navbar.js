@@ -87,7 +87,7 @@ class NavBar extends React.Component {
             <NavItem
               onClick={this.handleOpenAddChannelForm}
               href="#"
-            ><Icon icon="rss" /> Add RSS feed
+            ><Icon icon="rss" /> Add new feed
             </NavItem>
           </Nav>
           : ''}
