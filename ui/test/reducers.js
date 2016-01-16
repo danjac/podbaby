@@ -4,27 +4,25 @@ import channelsReducer from '../reducers/channels';
 import alertsReducer from '../reducers/alerts';
 import playerReducer from '../reducers/player';
 
-describe("Player", function () {
-
+describe('Player', function () {
   const initialState = {
     podcast: null,
     isPlaying: false,
-    currentTime: 0
+    currentTime: 0,
   };
 
-  it('Sets the currently playing podcast', function() {
-
+  it('Sets the currently playing podcast', function () {
     // time should be reset to 0
     const state = Object.assign({}, initialState, { currentTime: 30 });
 
     const podcast = {
       id: 100,
-      title: "A podcast"
+      title: 'A podcast',
     };
 
     const action = {
       type: Actions.CURRENTLY_PLAYING,
-      payload: podcast
+      payload: podcast,
     };
 
     const newState = playerReducer(state, action);
@@ -32,147 +30,131 @@ describe("Player", function () {
     assert.equal(newState.podcast.id, 100);
     assert.equal(newState.currentTime, 0);
     assert.equal(newState.isPlaying, true);
-
   });
 
-  it('Bookmarks the podcast', function() {
-
+  it('Bookmarks the podcast', function () {
     const podcast = {
       id: 100,
-      title: "A podcast"
+      title: 'A podcast',
     };
 
-    const state = Object.assign({}, initialState, { podcast: podcast });
+    const state = Object.assign({}, initialState, { podcast });
 
     const action = {
       type: Actions.ADD_BOOKMARK,
-      payload: 100
+      payload: 100,
     };
 
     const newState = playerReducer(state, action);
 
-    assert.ok(newState.podcast.isBookmarked)
-
+    assert.ok(newState.podcast.isBookmarked);
   });
 
-  it('Does not bookmark the podcast if not the player podcast', function() {
-
+  it('Does not bookmark the podcast if not the player podcast', function () {
     const podcast = {
       id: 100,
-      title: "A podcast"
+      title: 'A podcast',
     };
 
-    const state = Object.assign({}, initialState, { podcast: podcast });
+    const state = Object.assign({}, initialState, { podcast });
 
     const action = {
       type: Actions.ADD_BOOKMARK,
-      payload: 200
+      payload: 200,
     };
 
     const newState = playerReducer(state, action);
 
-    assert.notOk(newState.podcast.isBookmarked)
-
+    assert.notOk(newState.podcast.isBookmarked);
   });
 
-  it('Does not bookmark the podcast if player empty', function() {
-
+  it('Does not bookmark the podcast if player empty', function () {
     const action = {
       type: Actions.ADD_BOOKMARK,
-      payload: 200
+      payload: 200,
     };
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast, null)
-
+    assert.equal(newState.podcast, null);
   });
 
-  it('Removes the bookmark from the podcast', function() {
-
+  it('Removes the bookmark from the podcast', function () {
     const podcast = {
       id: 100,
-      title: "A podcast",
-      isBookmarked: true
-
+      title: 'A podcast',
+      isBookmarked: true,
     };
 
-    const state = Object.assign({}, initialState, { podcast: podcast });
+    const state = Object.assign({}, initialState, { podcast });
 
     const action = {
       type: Actions.DELETE_BOOKMARK,
-      payload: 100
+      payload: 100,
     };
 
     const newState = playerReducer(state, action);
 
-    assert.notOk(newState.podcast.isBookmarked)
-
+    assert.notOk(newState.podcast.isBookmarked);
   });
 
-  it('Does not remove the bookmark from the podcast if not player', function() {
+  it('Does not remove the bookmark from the podcast if not player', function () {
     const podcast = {
       id: 100,
-      title: "A podcast",
-      isBookmarked: true
+      title: 'A podcast',
+      isBookmarked: true,
     };
 
-    const state = Object.assign({}, initialState, { podcast: podcast });
+    const state = Object.assign({}, initialState, { podcast });
 
     const action = {
       type: Actions.DELETE_BOOKMARK,
-      payload: 200
+      payload: 200,
     };
 
     const newState = playerReducer(state, action);
 
-    assert.ok(newState.podcast.isBookmarked)
-
+    assert.ok(newState.podcast.isBookmarked);
   });
 
-  it('Does not remove the bookmark from the podcast if player empty', function() {
+  it('Does not remove the bookmark from the podcast if player empty', function () {
     const action = {
       type: Actions.DELETE_BOOKMARK,
-      payload: 200
+      payload: 200,
     };
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast, null)
-
+    assert.equal(newState.podcast, null);
   });
 
-  it('Updates the current play time', function() {
+  it('Updates the current play time', function () {
     const action = {
       type: Actions.PLAYER_TIME_UPDATE,
-      payload: 30
+      payload: 30,
     };
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.currentTime, 30)
-
+    assert.equal(newState.currentTime, 30);
   });
 
-  it('Reloads the player if none currently playing', function() {
-
+  it('Reloads the player if none currently playing', function () {
     const action = {
       type: Actions.RELOAD_PLAYER,
-      payload: null
+      payload: null,
     };
 
     const newState = playerReducer(initialState, action);
 
     assert.equal(newState.podcast, null);
     assert.equal(newState.currentTime, 0);
-
   });
 
-  it('Reloads the player if podcast currently playing', function() {
-
+  it('Reloads the player if podcast currently playing', function () {
     const podcast = {
       id: 100,
-      title: "A podcast"
+      title: 'A podcast',
     };
 
     const action = {
@@ -180,29 +162,19 @@ describe("Player", function () {
       payload: {
         podcast,
         currentTime: 100,
-        isPlaying: true
-      }
+        isPlaying: true,
+      },
     };
 
     const newState = playerReducer(initialState, action);
 
     assert.equal(newState.podcast.id, podcast.id);
     assert.equal(newState.currentTime, 100);
-
   });
 
-  it('Closes the player', function() {
-    const podcast = {
-      id: 100,
-      title: "A podcast"
-    };
-
-    const state = Object.assign({}, initialState, {
-      podcast: podcast
-    });
-
+  it('Closes the player', function () {
     const action = {
-      type: Actions.CLOSE_PLAYER
+      type: Actions.CLOSE_PLAYER,
     };
 
     const newState = playerReducer(initialState, action);
@@ -210,108 +182,98 @@ describe("Player", function () {
     assert.equal(newState.podcast, null);
     assert.equal(newState.currentTime, 0);
     assert.notOk(newState.isPlaying);
-
   });
 });
 
-describe('Channels', function() {
-
-  it('Shows filtered channels', function() {
-
+describe('Channels', function () {
+  it('Shows filtered channels', function () {
     const state = {
       channels: [
         {
           id: 100,
-          title: 'test1'
-        }
+          title: 'test1',
+        },
       ],
-      filter: ""
+      filter: '',
     };
 
     const action = {
       type: Actions.FILTER_CHANNELS,
-      payload: 'foo'
+      payload: 'foo',
     };
 
     const newState = channelsReducer(state, action);
 
-    assert.equal(newState.filter, "foo");
-
+    assert.equal(newState.filter, 'foo');
   });
 
-  it('Shows all channels if filter is empty', function() {
-
+  it('Shows all channels if filter is empty', function () {
     const state = {
       channels: [
         {
           id: 100,
-          title: 'test1'
-        }
+          title: 'test1',
+        },
       ],
-      filter: null
+      filter: null,
     };
 
     const action = {
       type: Actions.FILTER_CHANNELS,
-      payload: ''
+      payload: '',
     };
 
     const newState = channelsReducer(state, action);
 
-    assert.equal(newState.filter, "");
-
+    assert.equal(newState.filter, '');
   });
-
 });
 
-describe("Alerts", function() {
+describe('Alerts', function () {
+  it('Adds a new alert', function () {
+    const state = [];
 
-  it("Adds a new alert", function() {
-      const state = [];
+    const action = {
+      type: Actions.ADD_ALERT,
+      payload: {
+        status: Alerts.SUCCESS,
+        message: 'it worked!',
+      },
+    };
 
-      const action = {
-        type: Actions.ADD_ALERT,
-        payload: {
-          status: Alerts.SUCCESS,
-          message: "it worked!"
-        }
-      };
-
-      const newState = alertsReducer(state, action);
-      assert.equal(newState.length, 1);
+    const newState = alertsReducer(state, action);
+    assert.equal(newState.length, 1);
   });
 
-  it('Removes a messaage if ID found', function() {
-    const state =  [
+  it('Removes a message if ID found', function () {
+    const state = [
       {
         id: 1000,
-        status: "info",
-        message: "testing"
-      }
+        status: 'info',
+        message: 'testing',
+      },
     ];
     const action = {
       type: Actions.DISMISS_ALERT,
-      payload: 1000
-    }
+      payload: 1000,
+    };
     const newState = alertsReducer(state, action);
-    assert.equal(newState.length, 0)
-
+    assert.equal(newState.length, 0);
   });
 
-  it('Does nothing if no matching ID', function() {
-    const state =  [
+  it('Does nothing if no matching ID', function () {
+    const state = [
       {
         id: 1000,
-        status: "info",
-        message: "testing"
-      }
+        status: 'info',
+        message: 'testing',
+      },
     ];
     const action = {
       type: Actions.DISMISS_ALERT,
-      payload: 1001
-    }
+      payload: 1001,
+    };
     const newState = alertsReducer(state, action);
-    assert.equal(newState.length, 1)
-
+    assert.equal(newState.length, 1);
   });
 });
