@@ -13,7 +13,7 @@ const validateChangeEmail = values => {
     { email: 'Please provide a valid email address' };
 };
 
-export default class ChangeEmailForm extends React.Component {
+class ChangeEmailForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -21,6 +21,7 @@ export default class ChangeEmailForm extends React.Component {
   }
 
   handleSubmit(values) {
+    console.log("HOWDY")
     return new Promise((resolve, reject) => {
       const { email } = values;
       api.changeEmail(values.email)
@@ -65,7 +66,7 @@ ChangeEmailForm.propTypes = {
   fields: PropTypes.object.isRequired,
 };
 
-ChangeEmailForm = reduxForm({
+export default reduxForm({
   form: 'change-email',
   fields: ['email'],
   validate: validateChangeEmail,

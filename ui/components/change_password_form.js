@@ -22,7 +22,7 @@ const validateChangePassword = values => {
 };
 
 
-export class ChangePasswordForm extends React.Component {
+class ChangePasswordForm extends React.Component {
 
   handleSubmit(values) {
     const { onComplete, resetForm } = this.props;
@@ -85,7 +85,7 @@ ChangePasswordForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
 };
 
-ChangePasswordForm = reduxForm({
+export default reduxForm({
   form: 'change-password',
   fields: ['oldPassword', 'newPassword'],
   validate: validateChangePassword,
