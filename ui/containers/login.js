@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import * as actions from '../actions';
-import * as api from '../api';
 import LoginForm from '../components/login_form';
 import RecoverPasswordModal from '../components/recover_password';
 import { getTitle } from './utils';
@@ -20,24 +19,14 @@ export class Login extends React.Component {
     this.actions = bindActionCreators(actions.auth, dispatch);
     this.alerts = bindActionCreators(actions.alerts, dispatch);
 
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLoginComplete = this.handleLoginComplete.bind(this);
     this.handleOpenRecoverPasswordForm = this.handleOpenRecoverPasswordForm.bind(this);
     this.handleCloseRecoverPasswordForm = this.handleCloseRecoverPasswordForm.bind(this);
     this.handleRecoverPasswordComplete = this.handleRecoverPasswordComplete.bind(this);
   }
 
-  handleLogin(values) {
-    const { identifier, password } = values;
-    return new Promise((resolve, reject) => {
-      return api.login(identifier, password)
-      .then(result => {
-        this.actions.loginComplete(result.data);
-        resolve();
-      }, error => {
-        this.alerts.warning('Sorry, you were unable to log in');
-        reject(error.data);
-      });
-    });
+  handleLoginComplete(result) {
+    this.actions.loginComplete(result);
   }
 
   handleOpenRecoverPasswordForm(event) {
@@ -59,7 +48,7 @@ export class Login extends React.Component {
       <div>
         <h2>Sign into your PodBaby account.</h2>
         <hr />
-        <LoginForm onSubmit={this.handleLogin} />
+        <LoginForm onComplete={this.handleLoginComplete} />
         <p>
           <a href="#" onClick={this.handleOpenRecoverPasswordForm}>Forgot your password?</a>
         </p><p>

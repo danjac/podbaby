@@ -101,7 +101,7 @@ RecoverPasswordModal.propTypes = {
   container: PropTypes.object.isRequired,
 };
 
-RecoverPasswordModal = reduxForm({
+export default reduxForm({
   form: 'recover-password',
   fields: ['identifier'],
   validate: validateRecoverPassword,
