@@ -15,15 +15,47 @@ import {
 import Icon from './icon';
 import Image from './image';
 
+
+const Buttons = props => {
+  const { podcast } = props;
+  return (
+    <ButtonGroup vertical={props.vertical}>
+     <Button
+       title={ podcast.isPlaying ? 'Stop' : 'Play' }
+       onClick={props.togglePlayer}
+     ><Icon icon={ podcast.isPlaying ? 'stop' : 'play' } />
+     </Button>
+     <a
+       download
+       title="Download this podcast"
+       className="btn btn-default"
+       href={podcast.enclosureUrl}
+     ><Icon icon="download" /></a>
+    {props.isLoggedIn ?
+    <Button
+      onClick={props.toggleBookmark}
+      title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}
+    ><Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
+    </Button> : ''}
+    </ButtonGroup>
+  );
+};
+
+Buttons.propTypes = {
+  vertical: PropTypes.bool,
+  isLoggedIn: PropTypes.bool.isRequired,
+  podcast: PropTypes.object.isRequired,
+  toggleBookmark: PropTypes.func.isRequired,
+  togglePlayer: PropTypes.func.isRequired,
+};
+
 export default function PodcastItem(props) {
   const {
     podcast,
     showChannel,
     showExpanded,
-    isLoggedIn,
-    togglePlayer,
     toggleDetail,
-    toggleBookmark } = props;
+  } = props;
 
   const channelUrl = `/channel/${podcast.channelId}/`;
   const podcastUrl = `/podcast/${podcast.id}/`;
@@ -41,6 +73,7 @@ export default function PodcastItem(props) {
   } else {
     header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
   }
+
   return (
     <Panel>
       <div className="media">
@@ -70,27 +103,11 @@ export default function PodcastItem(props) {
                 {podcast.source ? <a href={podcast.source} target="_blank">Source</a> : '' }
               </small></p>
               </Col>
-              <Col xs={6} md={3}>
-                <ButtonGroup>
-                  <Button
-                    title={ podcast.isPlaying ? 'Stop' : 'Play' }
-                    onClick={togglePlayer}
-                  ><Icon icon={ podcast.isPlaying ? 'stop' : 'play' } />
-                  </Button>
-                  <a
-                    download
-                    title="Download this podcast"
-                    className="btn btn-default"
-                    href={podcast.enclosureUrl}
-                  ><Icon icon="download" /></a>
-                  {isLoggedIn ?
-                  <Button
-                    onClick={toggleBookmark}
-                    title={podcast.isBookmarked ? 'Remove bookmark' : 'Add to bookmarks'}
-                  >
-                    <Icon icon={podcast.isBookmarked ? 'bookmark' : 'bookmark-o'} />
-                  </Button> : ''}
-                </ButtonGroup>
+              <Col className="hidden-xs hidden-sm" md={3}>
+                <Buttons {...props} />
+              </Col>
+              <Col className="hidden-md hidden-lg" xs={3} sm={3}>
+                <Buttons {...props} vertical />
               </Col>
             </Row>
           </Grid>
