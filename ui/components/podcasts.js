@@ -84,10 +84,10 @@ PodcastList.propTypes = {
   dispatch: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   podcasts: PropTypes.array.isRequired,
-  page: PropTypes.object.isRequired,
-  onSelectPage: PropTypes.func.isRequired,
+  page: PropTypes.object,
+  onSelectPage: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
-  ifEmpty: PropTypes.bool,
+  ifEmpty: PropTypes.any,
   showChannel: PropTypes.bool,
 };
 

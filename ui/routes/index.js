@@ -48,9 +48,9 @@ export default function (store, history) {
   const getChannels = () => actions.channels.getChannels();
   const getBookmarks = () => actions.bookmarks.getBookmarks();
   const getRecentlyPlayed = () => actions.plays.getRecentlyPlayed();
-  const getLatestPodcasts = () => actions.podcasts.getLatestPodcasts();
-  const getChannel = (_, nextState) => actions.channel.getChannel(nextState.params.id);
-  const getPodcast = (_, nextState) => actions.podcasts.getPodcast(nextState.params.id);
+  const getLatestPodcasts = () => actions.latest.getLatestPodcasts();
+  const getChannel = nextState => actions.channel.getChannel(nextState.params.id);
+  const getPodcast = nextState => actions.podcasts.getPodcast(nextState.params.id);
 
   return (
     <Router history={history}>

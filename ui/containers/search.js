@@ -135,7 +135,7 @@ export class Search extends React.Component {
 }
 
 Search.propTypes = {
-  dispatch: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   channels: PropTypes.array.isRequired,
   podcasts: PropTypes.array.isRequired,

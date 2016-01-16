@@ -32,6 +32,7 @@ export class Channel extends React.Component {
     this.handleSelectPage = this.handleSelectPage.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleClearSearch = this.handleClearSearch.bind(this);
+    this.handleSelectSearch = this.handleSelectSearch.bind(this);
     this.handleSubscribe = this.handleSubscribe.bind(this);
   }
 
@@ -175,6 +176,7 @@ export class Channel extends React.Component {
         <PodcastList
           showChannel={false}
           isLoggedIn={isLoggedIn}
+          isLoading={isPodcastsLoading}
           onSelectPage={this.handleSelectPage}
           actions={actions}
           {...this.props}

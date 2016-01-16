@@ -20,5 +20,5 @@ export const FormGroup = props => {
 
 FormGroup.propTypes = {
   field: PropTypes.object.isRequired,
-  children: PropTypes.array.isRequired,
+  children: PropTypes.object.isRequired,
 };

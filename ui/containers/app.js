@@ -158,7 +158,7 @@ App.propTypes = {
   dispatch: PropTypes.func.isRequired,
   routing: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  children: PropTypes.array.isRequired,
+  children: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addChannel: PropTypes.object.isRequired,
   player: PropTypes.object.isRequired,

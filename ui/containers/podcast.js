@@ -67,7 +67,7 @@ class PodcastDetail extends React.Component {
 }
 
 PodcastDetail.propTypes = {
-  dispatch: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
   podcast: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
