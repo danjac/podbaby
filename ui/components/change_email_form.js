@@ -17,11 +17,10 @@ class ChangeEmailForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleSubmit = this.props.handleSubmit(this.handleSubmit.bind(this));
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(values) {
-    console.log("HOWDY")
     return new Promise((resolve, reject) => {
       const { email } = values;
       api.changeEmail(values.email)
@@ -36,24 +35,24 @@ class ChangeEmailForm extends React.Component {
 
   render() {
     const {
+      handleSubmit,
       submitting,
       fields: { email },
     } = this.props;
 
     return (
-      <form className="form form-vertical" onSubmit={this.handleSubmit}>
-            <FormGroup field={email}>
-            <input type="email" className="form-control" {...email} />
-          </FormGroup>
-
-          <Button
-            bsStyle="primary"
-            className="form-control"
-            disabled={submitting}
-            type="submit"
-          >
-            <Icon icon="save"/> Save new email address
-          </Button>
+      <form className="form form-vertical" onSubmit={handleSubmit(this.handleSubmit)}>
+        <FormGroup field={email}>
+          <input type="email" className="form-control" {...email} />
+        </FormGroup>
+        <Button
+          bsStyle="primary"
+          className="form-control"
+          disabled={submitting}
+          type="submit"
+        >
+          <Icon icon="save"/> Save new email address
+        </Button>
       </form>
     );
   }
