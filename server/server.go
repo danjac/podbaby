@@ -32,8 +32,8 @@ const (
 )
 
 var (
-	errNotAuthenticated = errors.New("User not logged in")
-	errBadRequest       = errors.New("Bad request")
+	errUnauthorized = errors.New(http.StatusText(http.StatusUnauthorized))
+	errBadRequest   = errors.New(http.StatusText(http.StatusBadRequest))
 )
 
 type Server struct {
@@ -105,57 +105,54 @@ func (s *Server) authRequiredHandler(fn handlerFunc) http.Handler {
 	return s.handler(authLevelRequired, fn)
 }
 
-func (h handler) authorize(w http.ResponseWriter, r *http.Request) error {
+func (h handler) authorize(w http.ResponseWriter, r *http.Request) (bool, error) {
 
 	if h.authLevel == authLevelIgnore {
-		return nil
-	}
-
-	var errNotAuthenticated error
-	if h.authLevel == authLevelOptional {
-		errNotAuthenticated = nil
-	} else {
-		errNotAuthenticated = httpError{
-			errors.New("You must be logged in"),
-			http.StatusUnauthorized,
-		}
+		return false, nil
 	}
 
 	// get user from cookie
 	cookie, err := r.Cookie(cookieUserID)
 	if err != nil {
-		return errNotAuthenticated
+		return false, nil
 	}
 
 	var userID int64
 
 	if err := h.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
-		return errNotAuthenticated
+		return false, nil
 	}
 
 	if userID == 0 {
-		return errNotAuthenticated
+		return false, nil
 	}
 
 	user, err := h.DB.Users.GetByID(userID)
 	if err != nil {
 		if isErrNoRows(err) {
-			return errNotAuthenticated
+			return false, nil
 		}
-		return err
+		return false, err
 	}
 
 	// all ok...
 	context.Set(r, userKey, user)
-	return nil
+	return true, nil
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var err error
-	if err = h.authorize(w, r); err == nil {
-		err = h.H(h.Server, w, r)
+
+	if ok, err := h.authorize(w, r); !ok {
+		if err != nil {
+			h.abort(w, r, err)
+			return
+		}
+		if !ok && h.authLevel == authLevelRequired {
+			h.abort(w, r, errUnauthorized)
+			return
+		}
 	}
-	if err != nil {
+	if err := h.H(h.Server, w, r); err != nil {
 		h.abort(w, r, err)
 	}
 }
@@ -200,8 +197,12 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 
 	default:
-		if err == errNotAuthenticated {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		if err == errUnauthorized {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if err == errBadRequest {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
