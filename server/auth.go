@@ -108,7 +108,7 @@ func isEmail(s *Server, w http.ResponseWriter, r *http.Request) error {
 		return s.Render.Text(w, http.StatusBadRequest, "email param required")
 	}
 
-	if user, err := s.getUserFromCookie(r); err == nil {
+	if user, ok := getUser(r); ok {
 		userID = user.ID
 	}
 

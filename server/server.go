@@ -12,7 +12,6 @@ import (
 	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
-	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/securecookie"
 	"gopkg.in/unrolled/render.v1"
@@ -78,7 +77,7 @@ func New(db *database.DB,
 	}
 }
 
-func (s *Server) Handler() http.Handler {
+func (s *Server) Configure() http.Handler {
 	return s.configureMiddleware(s.configureRoutes())
 }
 
@@ -89,20 +88,6 @@ type handler struct {
 	authLevel authLevel
 	H         handlerFunc
 }
-
-/*
-
-TBD: HTTPError & DBError interfaces
-func (s *Server) Handler (authLevel authLevel, fn handlerFunc) http.Handler {
-    return handler{s, authLevel, fn}
-}
-
-func (s *Server) AuthIgnoreHandler (fn handlerFunc) {
-    return s.Handler(authIgnore, fn)
-}
-func (s *Server) AuthIgnoreHandler (fn handlerFunc) {
-    return s.Handler(authIgnore, fn)
-}*/
 
 func (s *Server) handler(authLevel authLevel, fn handlerFunc) http.Handler {
 	return handler{s, authLevel, fn}
@@ -188,55 +173,6 @@ func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
 		}
 		http.SetCookie(w, cookie)
 	}
-}
-
-func (s *Server) requireAuth(fn http.HandlerFunc) http.Handler {
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// check if user already set elsewhere
-		if _, ok := getUser(r); ok {
-			fn(w, r)
-			return
-		}
-		// get user from cookie
-		user, err := s.getUserFromCookie(r)
-		if err != nil {
-			s.abort(w, r, err)
-			return
-		}
-		// all ok...
-		context.Set(r, userKey, user)
-		fn(w, r)
-	})
-
-}
-
-func (s *Server) getUserFromCookie(r *http.Request) (*models.User, error) {
-
-	cookie, err := r.Cookie(cookieUserID)
-	if err != nil {
-		return nil, errNotAuthenticated
-	}
-
-	var userID int64
-
-	if err := s.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
-		return nil, errNotAuthenticated
-	}
-
-	if userID == 0 {
-		return nil, errNotAuthenticated
-	}
-
-	user, err := s.DB.Users.GetByID(userID)
-	if err != nil {
-		if isErrNoRows(err) {
-			return nil, errNotAuthenticated
-		}
-		return nil, err
-	}
-	return user, nil
-
 }
 
 func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
