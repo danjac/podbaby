@@ -90,7 +90,7 @@ func TestGetPageIfNotInt(t *testing.T) {
 	}
 }
 
-func TestGetInt64IfOk(t *testing.T) {
+func TestGetIDIfOk(t *testing.T) {
 
 	vars := map[string]string{
 		"id": "11",
@@ -103,7 +103,7 @@ func TestGetInt64IfOk(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	result, err := getInt64(req, "id")
+	result, err := getID(req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -114,7 +114,7 @@ func TestGetInt64IfOk(t *testing.T) {
 
 }
 
-func TestGetInt64IfEmpty(t *testing.T) {
+func TestGetIDIfEmpty(t *testing.T) {
 
 	vars := make(map[string]string)
 	getVars = mockGetVars(vars)
@@ -125,14 +125,14 @@ func TestGetInt64IfEmpty(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = getInt64(req, "id")
+	_, err = getID(req)
 	if err == nil {
 		t.Fail()
 	}
 
 }
 
-func TestGetInt64IfNotInt(t *testing.T) {
+func TestGetIDIfNotInt(t *testing.T) {
 	vars := map[string]string{
 		"id": "foo",
 	}
@@ -145,7 +145,7 @@ func TestGetInt64IfNotInt(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = getInt64(req, "id")
+	_, err = getID(req)
 	if err == nil {
 		t.Fail()
 	}

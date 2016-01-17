@@ -7,7 +7,7 @@ import (
 	"github.com/danjac/podbaby/models"
 )
 
-func (s *Server) search(w http.ResponseWriter, r *http.Request) {
+func searchAll(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	query := strings.Trim(r.FormValue("q"), " ")
 
@@ -16,19 +16,17 @@ func (s *Server) search(w http.ResponseWriter, r *http.Request) {
 	if query != "" {
 		var err error
 		if result.Channels, err = s.DB.Channels.Search(query); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 		if result.Podcasts, err = s.DB.Podcasts.Search(query); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 	}
 
-	s.Render.JSON(w, http.StatusOK, result)
+	return s.Render.JSON(w, http.StatusOK, result)
 }
 
-func (s *Server) searchBookmarks(w http.ResponseWriter, r *http.Request) {
+func searchBookmarks(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	user, _ := getUser(r)
 	query := strings.Trim(r.FormValue("q"), " ")
@@ -38,32 +36,29 @@ func (s *Server) searchBookmarks(w http.ResponseWriter, r *http.Request) {
 
 	if query != "" {
 		if podcasts, err = s.DB.Podcasts.SearchBookmarked(query, user.ID); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 	}
 
-	s.Render.JSON(w, http.StatusOK, podcasts)
+	return s.Render.JSON(w, http.StatusOK, podcasts)
 }
 
-func (s *Server) searchChannel(w http.ResponseWriter, r *http.Request) {
+func searchChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	query := strings.Trim(r.FormValue("q"), " ")
 
-	channelID, err := getInt64(r, "id")
+	channelID, err := getID(r)
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	var podcasts []models.Podcast
 
 	if query != "" {
 		if podcasts, err = s.DB.Podcasts.SearchByChannelID(query, channelID); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 	}
 
-	s.Render.JSON(w, http.StatusOK, podcasts)
+	return s.Render.JSON(w, http.StatusOK, podcasts)
 }

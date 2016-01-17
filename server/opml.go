@@ -6,12 +6,11 @@ import (
 	"net/http"
 )
 
-func (s *Server) getOPML(w http.ResponseWriter, r *http.Request) {
+func getOPML(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
 	channels, err := s.DB.Channels.SelectSubscribed(user.ID)
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 	opml := &models.OPML{
 		Version: "1.0",
@@ -31,5 +30,5 @@ func (s *Server) getOPML(w http.ResponseWriter, r *http.Request) {
 		},
 		)
 	}
-	s.Render.XML(w, http.StatusOK, opml)
+	return s.Render.XML(w, http.StatusOK, opml)
 }

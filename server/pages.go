@@ -7,23 +7,25 @@ import (
 	"github.com/justinas/nosurf"
 )
 
-func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
+func indexPage(s *Server, w http.ResponseWriter, r *http.Request) error {
 
-	var dynamicContentURL string
+	var (
+		dynamicContentURL string
+		err               error
+	)
+
 	if s.Config.IsDev() {
 		dynamicContentURL = s.Config.DynamicContentURL
 	} else {
 		dynamicContentURL = s.Config.StaticURL
 	}
-	user, err := s.getUserFromCookie(r)
-	if err == nil {
+	user, ok := getUser(r)
+	if ok {
 		if user.Bookmarks, err = s.DB.Bookmarks.SelectByUserID(user.ID); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 		if user.Subscriptions, err = s.DB.Subscriptions.SelectByUserID(user.ID); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 	}
 	csrfToken := nosurf.Token(r)
@@ -36,5 +38,5 @@ func (s *Server) indexPage(w http.ResponseWriter, r *http.Request) {
 		"user":              user,
 		"timestamp":         time.Now().Unix(),
 	}
-	s.Render.HTML(w, http.StatusOK, "index", ctx)
+	return s.Render.HTML(w, http.StatusOK, "index", ctx)
 }

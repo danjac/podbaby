@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"database/sql"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
@@ -34,20 +33,15 @@ func init() {
 }
 
 func isErrNoRows(err error) bool {
-
-	if err == sql.ErrNoRows {
-		return true
-	}
-
-	if sqlErr, ok := err.(database.SQLError); ok {
-		return sqlErr.Err == sql.ErrNoRows
+	if dbErr, ok := err.(database.DBError); ok {
+		return dbErr.IsNoRows()
 	}
 	return false
 }
 
-func getInt64(r *http.Request, name string) (int64, error) {
+func getID(r *http.Request) (int64, error) {
 
-	value, ok := getVars(r)[name]
+	value, ok := getVars(r)["id"]
 	if !ok {
 		return 0, errBadRequest
 	}

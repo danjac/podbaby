@@ -24,13 +24,12 @@ func generateRandomPassword(length int) string {
 	return string(b)
 }
 
-func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
+func recoverPassword(s *Server, w http.ResponseWriter, r *http.Request) error {
 	// generate a temp password
 	decoder := &decoders.RecoverPassword{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
@@ -40,11 +39,9 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 			errors := decoders.Errors{
 				"identifier": "No user found matching this email or name",
 			}
-			s.abort(w, r, errors)
-			return
+			return errors
 		}
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	tempPassword := generateRandomPassword(6)
@@ -52,8 +49,7 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 	user.SetPassword(tempPassword)
 
 	if err := s.DB.Users.UpdatePassword(user.Password, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	data := map[string]string{
@@ -77,11 +73,11 @@ func (s *Server) recoverPassword(w http.ResponseWriter, r *http.Request) {
 
 	}(user.Email, data)
 
-	s.Render.Text(w, http.StatusOK, "password sent")
+	return s.Render.Text(w, http.StatusOK, "password sent")
 
 }
 
-func (s *Server) isName(w http.ResponseWriter, r *http.Request) {
+func isName(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	var (
 		err    error
@@ -90,19 +86,17 @@ func (s *Server) isName(w http.ResponseWriter, r *http.Request) {
 
 	name := r.FormValue("name")
 	if name == "" {
-		s.Render.Text(w, http.StatusBadRequest, "name param required")
-		return
+		return s.Render.Text(w, http.StatusBadRequest, "name param required")
 	}
 
 	if exists, err = s.DB.Users.IsName(name); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
-	s.Render.JSON(w, http.StatusOK, exists)
+	return s.Render.JSON(w, http.StatusOK, exists)
 }
 
-func (s *Server) isEmail(w http.ResponseWriter, r *http.Request) {
+func isEmail(s *Server, w http.ResponseWriter, r *http.Request) error {
 	var (
 		err    error
 		exists bool
@@ -111,8 +105,7 @@ func (s *Server) isEmail(w http.ResponseWriter, r *http.Request) {
 
 	email := r.FormValue("email")
 	if email == "" {
-		s.Render.Text(w, http.StatusBadRequest, "email param required")
-		return
+		return s.Render.Text(w, http.StatusBadRequest, "email param required")
 	}
 
 	if user, err := s.getUserFromCookie(r); err == nil {
@@ -120,21 +113,19 @@ func (s *Server) isEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if exists, err = s.DB.Users.IsEmail(email, userID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
-	s.Render.JSON(w, http.StatusOK, exists)
+	return s.Render.JSON(w, http.StatusOK, exists)
 
 }
 
-func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
+func signup(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	decoder := &decoders.Signup{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	errors := make(decoders.Errors)
@@ -147,8 +138,7 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(errors) > 0 {
-		s.abort(w, r, errors)
-		return
+		return errors
 	}
 
 	// make new user
@@ -159,77 +149,67 @@ func (s *Server) signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := user.SetPassword(decoder.Password); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	if err := s.DB.Users.Create(user); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 	s.setAuthCookie(w, user.ID)
 	// tbd: no need to return user!
-	s.Render.JSON(w, http.StatusCreated, user)
+	return s.Render.JSON(w, http.StatusCreated, user)
 }
 
-func (s *Server) login(w http.ResponseWriter, r *http.Request) {
+func login(s *Server, w http.ResponseWriter, r *http.Request) error {
 	decoder := &decoders.Login{}
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	user, err := s.DB.Users.GetByNameOrEmail(decoder.Identifier)
 	if err != nil {
-
 		if isErrNoRows(err) {
 			errors := decoders.Errors{
 				"identifier": "No user found matching this name or email",
 			}
-			s.abort(w, r, errors)
-			return
+			return errors
 		}
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	if !user.CheckPassword(decoder.Password) {
 		errors := decoders.Errors{
 			"password": "Your password is invalid",
 		}
-		s.abort(w, r, errors)
-		return
+		return errors
 	}
 
 	// get bookmarks & subscriptions
 	if user.Bookmarks, err = s.DB.Bookmarks.SelectByUserID(user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 	if user.Subscriptions, err = s.DB.Subscriptions.SelectByUserID(user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	// login user
 	s.setAuthCookie(w, user.ID)
 
 	// tbd: no need to return user!
-	s.Render.JSON(w, http.StatusOK, user)
+	return s.Render.JSON(w, http.StatusOK, user)
 
 }
 
-func (s *Server) logout(w http.ResponseWriter, r *http.Request) {
+func logout(s *Server, w http.ResponseWriter, r *http.Request) error {
 	s.setAuthCookie(w, 0)
-	s.Render.Text(w, http.StatusOK, "Logged out")
+	return s.Render.Text(w, http.StatusOK, "Logged out")
 }
 
-func (s *Server) changeEmail(w http.ResponseWriter, r *http.Request) {
+func changeEmail(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
 	decoder := &decoders.NewEmail{}
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	// does this email exist?
@@ -237,23 +217,20 @@ func (s *Server) changeEmail(w http.ResponseWriter, r *http.Request) {
 		errors := decoders.Errors{
 			"email": "This email address is taken",
 		}
-		s.abort(w, r, errors)
-		return
+		return errors
 	}
 
 	if err := s.DB.Users.UpdateEmail(decoder.Email, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.Text(w, http.StatusOK, "email updated")
+	return s.Render.Text(w, http.StatusOK, "email updated")
 }
 
-func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
+func changePassword(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
 	decoder := &decoders.NewPassword{}
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	// validate old password first
@@ -262,25 +239,22 @@ func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) {
 		errors := decoders.Errors{
 			"oldPassword": "Your old password was not recognized",
 		}
-		s.abort(w, r, errors)
-		return
+		return errors
 	}
 	user.SetPassword(decoder.NewPassword)
 
 	if err := s.DB.Users.UpdatePassword(user.Password, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.Text(w, http.StatusOK, "password updated")
+	return s.Render.Text(w, http.StatusOK, "password updated")
 }
 
-func (s *Server) deleteAccount(w http.ResponseWriter, r *http.Request) {
+func deleteAccount(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
 	if err := s.DB.Users.DeleteUser(user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 	// log user out
 	s.setAuthCookie(w, 0)
-	s.Render.Text(w, http.StatusOK, "account deleted")
+	return s.Render.Text(w, http.StatusOK, "account deleted")
 }

@@ -2,24 +2,22 @@ package server
 
 import "net/http"
 
-func (s *Server) subscribe(w http.ResponseWriter, r *http.Request) {
+func subscribe(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
-	channelID, _ := getInt64(r, "id")
+	channelID, _ := getID(r)
 
 	if err := s.DB.Subscriptions.Create(channelID, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.Text(w, http.StatusOK, "subscribed")
+	return s.Render.Text(w, http.StatusOK, "subscribed")
 }
 
-func (s *Server) unsubscribe(w http.ResponseWriter, r *http.Request) {
+func unsubscribe(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
-	channelID, _ := getInt64(r, "id")
+	channelID, _ := getID(r)
 
 	if err := s.DB.Subscriptions.Delete(channelID, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.Text(w, http.StatusOK, "unsubscribed")
+	return s.Render.Text(w, http.StatusOK, "unsubscribed")
 }

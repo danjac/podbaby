@@ -1,4 +1,4 @@
-//go:generate purse -in=./sql/queries -out=./sql -file=queries.go -pack=sql -name=queries
+//go:generate purse -in=./database/queries -out=./database -file=queries.go -pack=database -name=queries
 
 package main
 

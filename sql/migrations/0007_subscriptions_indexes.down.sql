@@ -1,2 +1,0 @@
-DROP INDEX subscriptions_channel_id_idx;
-DROP INDEX subscriptions_user_id_idx;

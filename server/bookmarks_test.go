@@ -5,7 +5,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
-	"github.com/unrolled/render"
+	"gopkg.in/unrolled/render.v1"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -83,11 +83,10 @@ func TestGetBookmarksIfNotOk(t *testing.T) {
 		Log:    logrus.New(),
 		Render: render.New(),
 	}
-	s.getBookmarks(w, req)
-
-	if w.Code == http.StatusOK {
-		t.Fail()
+	if err := getBookmarks(s, w, req); err == nil {
+		t.Fatal("Should return an error")
 	}
+
 }
 
 func TestGetBookmarksIfOk(t *testing.T) {
@@ -106,10 +105,8 @@ func TestGetBookmarksIfOk(t *testing.T) {
 		},
 		Render: render.New(),
 	}
-	s.getBookmarks(w, req)
-
-	if w.Code != http.StatusOK {
-		t.Fail()
+	if err := getBookmarks(s, w, req); err != nil {
+		t.Fatal("Should not return an error")
 	}
 
 }

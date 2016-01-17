@@ -8,21 +8,19 @@ import (
 	"github.com/danjac/podbaby/models"
 )
 
-func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
-	channelID, _ := getInt64(r, "id")
+func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
+	channelID, _ := getID(r)
 
 	channel, err := s.DB.Channels.GetByID(channelID)
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 	detail := &models.ChannelDetail{
 		Channel: channel,
 	}
 	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, getPage(r))
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 	for _, pc := range podcasts.Podcasts {
 		pc.Name = channel.Title
@@ -31,47 +29,41 @@ func (s *Server) getChannelDetail(w http.ResponseWriter, r *http.Request) {
 		detail.Podcasts = append(detail.Podcasts, pc)
 	}
 	detail.Page = podcasts.Page
-	s.Render.JSON(w, http.StatusOK, detail)
+	return s.Render.JSON(w, http.StatusOK, detail)
 }
 
-func (s *Server) getChannels(w http.ResponseWriter, r *http.Request) {
+func getChannels(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
 	channels, err := s.DB.Channels.SelectSubscribed(user.ID)
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.JSON(w, http.StatusOK, channels)
+	return s.Render.JSON(w, http.StatusOK, channels)
 }
 
-func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
+func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	decoder := &decoders.NewChannel{}
 
 	if err := decoders.Decode(r, decoder); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	user, _ := getUser(r)
-
 	channel, err := s.DB.Channels.GetByURL(decoder.URL)
-
 	isNewChannel := false
 
 	if err != nil {
 		if isErrNoRows(err) {
 			isNewChannel = true
 		} else {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 	}
 
 	tx, err := s.DB.Begin()
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	if isNewChannel {
@@ -86,33 +78,28 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 					"url": "Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
 				}
 			}
-			s.abort(w, r, err)
-			return
+			return err
 		}
 
 		if err := s.DB.Channels.Create(channel); err != nil {
-			s.abort(w, r, err)
-			return
+			return err
 		}
 
 		for _, p := range channel.Podcasts {
 			p.ChannelID = channel.ID
 			if err := s.DB.Podcasts.Create(p); err != nil {
-				s.abort(w, r, err)
-				return
+				return err
 			}
 		}
 
 	}
 
 	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
 
 	var status int
@@ -122,5 +109,5 @@ func (s *Server) addChannel(w http.ResponseWriter, r *http.Request) {
 		status = http.StatusOK
 	}
 
-	s.Render.JSON(w, status, channel)
+	return s.Render.JSON(w, status, channel)
 }

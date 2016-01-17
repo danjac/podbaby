@@ -2,34 +2,31 @@ package server
 
 import "net/http"
 
-func (s *Server) getBookmarks(w http.ResponseWriter, r *http.Request) {
+func getBookmarks(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
 	result, err := s.DB.Podcasts.SelectBookmarked(user.ID, getPage(r))
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.JSON(w, http.StatusOK, result)
+	return s.Render.JSON(w, http.StatusOK, result)
 }
 
-func (s *Server) addBookmark(w http.ResponseWriter, r *http.Request) {
+func addBookmark(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
-	podcastID, _ := getInt64(r, "id")
+	podcastID, _ := getID(r)
 
 	if err := s.DB.Bookmarks.Create(podcastID, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.Text(w, http.StatusOK, "bookmarked")
+	return s.Render.Text(w, http.StatusOK, "bookmarked")
 }
 
-func (s *Server) removeBookmark(w http.ResponseWriter, r *http.Request) {
+func removeBookmark(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, _ := getUser(r)
-	podcastID, _ := getInt64(r, "id")
+	podcastID, _ := getID(r)
 
 	if err := s.DB.Bookmarks.Delete(podcastID, user.ID); err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.Text(w, http.StatusOK, "bookmark removed")
+	return s.Render.Text(w, http.StatusOK, "bookmark removed")
 }

@@ -1,7 +1,6 @@
 package server
 
 import (
-	"database/sql"
 	"encoding/base64"
 	"errors"
 	"net/http"
@@ -16,13 +15,21 @@ import (
 	"github.com/danjac/podbaby/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/securecookie"
-	"github.com/unrolled/render"
+	"gopkg.in/unrolled/render.v1"
 )
 
 const (
 	cookieUserID  = "userid"
 	userKey       = "user"
 	cookieTimeout = 24
+)
+
+type authLevel int
+
+const (
+	authLevelIgnore authLevel = iota
+	authLevelOptional
+	authLevelRequired
 )
 
 var (
@@ -73,6 +80,99 @@ func New(db *database.DB,
 
 func (s *Server) Handler() http.Handler {
 	return s.configureMiddleware(s.configureRoutes())
+}
+
+type handlerFunc func(*Server, http.ResponseWriter, *http.Request) error
+
+type handler struct {
+	*Server
+	authLevel authLevel
+	H         handlerFunc
+}
+
+/*
+
+TBD: HTTPError & DBError interfaces
+func (s *Server) Handler (authLevel authLevel, fn handlerFunc) http.Handler {
+    return handler{s, authLevel, fn}
+}
+
+func (s *Server) AuthIgnoreHandler (fn handlerFunc) {
+    return s.Handler(authIgnore, fn)
+}
+func (s *Server) AuthIgnoreHandler (fn handlerFunc) {
+    return s.Handler(authIgnore, fn)
+}*/
+
+func (s *Server) handler(authLevel authLevel, fn handlerFunc) http.Handler {
+	return handler{s, authLevel, fn}
+}
+
+func (s *Server) authIgnoreHandler(fn handlerFunc) http.Handler {
+	return s.handler(authLevelIgnore, fn)
+}
+
+func (s *Server) authOptionalHandler(fn handlerFunc) http.Handler {
+	return s.handler(authLevelIgnore, fn)
+}
+
+func (s *Server) authRequiredHandler(fn handlerFunc) http.Handler {
+	return s.handler(authLevelRequired, fn)
+}
+
+func (h handler) authorize(w http.ResponseWriter, r *http.Request) error {
+
+	if h.authLevel == authLevelIgnore {
+		return nil
+	}
+
+	var errNotAuthenticated error
+	if h.authLevel == authLevelOptional {
+		errNotAuthenticated = nil
+	} else {
+		errNotAuthenticated = httpError{
+			errors.New("You must be logged in"),
+			http.StatusUnauthorized,
+		}
+	}
+
+	// get user from cookie
+	cookie, err := r.Cookie(cookieUserID)
+	if err != nil {
+		return errNotAuthenticated
+	}
+
+	var userID int64
+
+	if err := h.Cookie.Decode(cookieUserID, cookie.Value, &userID); err != nil {
+		return errNotAuthenticated
+	}
+
+	if userID == 0 {
+		return errNotAuthenticated
+	}
+
+	user, err := h.DB.Users.GetByID(userID)
+	if err != nil {
+		if isErrNoRows(err) {
+			return errNotAuthenticated
+		}
+		return err
+	}
+
+	// all ok...
+	context.Set(r, userKey, user)
+	return nil
+}
+
+func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var err error
+	if err = h.authorize(w, r); err == nil {
+		err = h.H(h.Server, w, r)
+	}
+	if err != nil {
+		h.abort(w, r, err)
+	}
 }
 
 func (s *Server) setAuthCookie(w http.ResponseWriter, userID int64) {
@@ -145,10 +245,10 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 	case decoders.Errors:
 		s.Render.JSON(w, http.StatusBadRequest, err)
 
-	case database.SQLError:
-		sqlErr := err.(database.SQLError)
+	case database.DBError:
+		dbErr := err.(database.DBError)
 
-		if sqlErr.Err == sql.ErrNoRows {
+		if dbErr.IsNoRows() {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
@@ -156,8 +256,8 @@ func (s *Server) abort(w http.ResponseWriter, r *http.Request, err error) {
 		logger := s.Log.WithFields(logrus.Fields{
 			"URL":    r.URL,
 			"Method": r.Method,
-			"Error":  sqlErr.Err,
-			"SQL":    sqlErr.SQL,
+			"Error":  dbErr,
+			"SQL":    dbErr.Query(),
 		})
 		logger.Error(err)
 

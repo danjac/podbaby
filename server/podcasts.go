@@ -5,33 +5,32 @@ import (
 	"net/http"
 )
 
-func (s *Server) getPodcast(w http.ResponseWriter, r *http.Request) {
+func getPodcast(s *Server, w http.ResponseWriter, r *http.Request) error {
 
-	podcastID, _ := getInt64(r, "id")
+	podcastID, _ := getID(r)
 	podcast, err := s.DB.Podcasts.GetByID(podcastID)
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.JSON(w, http.StatusOK, podcast)
+	return s.Render.JSON(w, http.StatusOK, podcast)
 }
 
-func (s *Server) getLatestPodcasts(w http.ResponseWriter, r *http.Request) {
-	user, err := s.getUserFromCookie(r)
+func getLatestPodcasts(s *Server, w http.ResponseWriter, r *http.Request) error {
+	user, ok := getUser(r)
 
 	var (
 		result *models.PodcastList
+		err    error
 	)
 
-	if err == nil { // user authenticated
+	if ok { // user authenticated
 		result, err = s.DB.Podcasts.SelectSubscribed(user.ID, getPage(r))
 	} else {
 		result, err = s.DB.Podcasts.SelectAll(getPage(r))
 	}
 
 	if err != nil {
-		s.abort(w, r, err)
-		return
+		return err
 	}
-	s.Render.JSON(w, http.StatusOK, result)
+	return s.Render.JSON(w, http.StatusOK, result)
 }

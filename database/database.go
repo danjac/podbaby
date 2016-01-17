@@ -1,70 +1,21 @@
 package database
 
 import (
-	"github.com/danjac/podbaby/config"
-	"github.com/danjac/podbaby/sql"
-	"github.com/jmoiron/sqlx"
-	"github.com/smotes/purse"
-	"path/filepath"
+	"sync"
 )
 
-type DB struct {
-	*sqlx.DB
-	Users         UserDB
-	Channels      ChannelDB
-	Podcasts      PodcastDB
-	Bookmarks     BookmarkDB
-	Subscriptions SubscriptionDB
-	Plays         PlayDB
+// GenPurse is a literal implementation of a Purse that is programmatically
+// generated from SQL file contents within a directory via go generate.
+type GenPurse struct {
+	mu sync.RWMutex
+	files map[string]string
 }
 
-type SQLError struct {
-	Err error
-	SQL string
-}
-
-func (e SQLError) Error() string {
-	return e.Err.Error()
-}
-
-func sqlErr(err error, sql string) error {
-	if err == nil {
-		return nil
-	}
-	return SQLError{err, sql}
-}
-
-func MustConnect(cfg *config.Config) *DB {
-	db, err := New(sqlx.MustConnect("postgres", cfg.DatabaseURL), cfg)
-	if err != nil {
-		panic(err)
-	}
-	return db
-}
-
-func New(db *sqlx.DB, cfg *config.Config) (*DB, error) {
-
-	var (
-		ps  purse.Purse
-		err error
-	)
-
-	if cfg.IsDev() {
-		ps, err = purse.New(filepath.Join(".", "sql", "queries"))
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		ps = sql.Queries
-	}
-
-	return &DB{
-		DB:            db,
-		Users:         &defaultUserDBImpl{db, ps},
-		Channels:      &defaultChannelDBImpl{db, ps},
-		Podcasts:      &defaultPodcastDBImpl{db, ps},
-		Subscriptions: &defaultSubscriptionDBImpl{db, ps},
-		Bookmarks:     &defaultBookmarkDBImpl{db, ps},
-		Plays:         &defaultPlayDBImpl{db, ps},
-	}, nil
+// Get takes a filename and returns a query if it is found within the relevant
+// map.  If filename is not found, ok will return false.
+func (p *GenPurse) Get(filename string) (v string, ok bool) {
+	p.mu.RLock()
+	v, ok = p.files[filename]
+	p.mu.RUnlock()
+	return
 }
