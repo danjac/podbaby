@@ -1,0 +1,52 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE channels (
+    id SERIAL PRIMARY KEY,
+    title TEXT NULL,
+    url TEXT UNIQUE NOT NULL,
+    image TEXT NULL,
+    description TEXT NULL,
+    website TEXT NULL,
+    pub_date TIMESTAMP WITH TIME ZONE NULL,
+    copyright TEXT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE podcasts (
+    id SERIAL PRIMARY KEY,
+    title TEXT NULL,
+    channel_id INTEGER NOT NULL REFERENCES channels(id),
+    enclosure_url TEXT,
+    url TEXT,
+    description TEXT NULL,
+    pub_date TIMESTAMP WITH TIME ZONE NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE subscriptions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    channel_id INTEGER NOT NULL REFERENCES channels(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE bookmarks (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    podcast_id INTEGER NOT NULL REFERENCES podcasts(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE plays (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    podcast_id INTEGER NOT NULL REFERENCES podcasts(id),
+    played_to INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
