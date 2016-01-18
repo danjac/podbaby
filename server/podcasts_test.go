@@ -40,6 +40,40 @@ func (db *mockGetLatestPodcasts) SelectAll(_ int64) (*models.PodcastList, error)
 	}, nil
 }
 
+func TestLatestPodcastsIfLoggedIn(t *testing.T) {
+
+	user := &models.User{
+		ID: 1,
+	}
+
+	getContext = mockGetContextWithUser(user)
+	getVars = mockGetVars(make(map[string]string))
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	w := httptest.NewRecorder()
+	s := &Server{
+		DB: &database.DB{
+			Podcasts: &database.PodcastDB{
+				PodcastReader: &mockGetLatestPodcasts{},
+			},
+		},
+		Render: render.New(),
+	}
+
+	if err := getLatestPodcasts(s, w, req); err != nil {
+		t.Fatal(err)
+	}
+
+	if w.Code != http.StatusOK {
+		t.Fatal("Should return a 200 OK")
+	}
+	content := w.Body.String()
+
+	if strings.Count(content, "\"id\"") != 1 {
+		t.Fatal("Should contain only own subscriptions: ", content)
+	}
+
+}
 func TestLatestPodcastsIfNotLoggedIn(t *testing.T) {
 
 	getContext = mockGetContext(make(map[string]interface{}))
