@@ -98,7 +98,7 @@ func (s *Server) authIgnoreHandler(fn handlerFunc) http.Handler {
 }
 
 func (s *Server) authOptionalHandler(fn handlerFunc) http.Handler {
-	return s.handler(authLevelIgnore, fn)
+	return s.handler(authLevelOptional, fn)
 }
 
 func (s *Server) authRequiredHandler(fn handlerFunc) http.Handler {
