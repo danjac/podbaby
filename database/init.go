@@ -9,12 +9,12 @@ import (
 
 type DB struct {
 	*sqlx.DB
-	Users         UserDB
-	Channels      ChannelDB
-	Podcasts      PodcastDB
-	Bookmarks     BookmarkDB
-	Subscriptions SubscriptionDB
-	Plays         PlayDB
+	Users         *UserDB
+	Channels      *ChannelDB
+	Podcasts      *PodcastDB
+	Bookmarks     *BookmarkDB
+	Subscriptions *SubscriptionDB
+	Plays         *PlayDB
 }
 
 func MustConnect(cfg *config.Config) *DB {
@@ -26,7 +26,6 @@ func MustConnect(cfg *config.Config) *DB {
 }
 
 func New(db *sqlx.DB, cfg *config.Config) (*DB, error) {
-
 	var (
 		ps  purse.Purse
 		err error
@@ -43,11 +42,11 @@ func New(db *sqlx.DB, cfg *config.Config) (*DB, error) {
 
 	return &DB{
 		DB:            db,
-		Users:         &defaultUserDBImpl{db, ps},
-		Channels:      &defaultChannelDBImpl{db, ps},
-		Podcasts:      &defaultPodcastDBImpl{db, ps},
-		Subscriptions: &defaultSubscriptionDBImpl{db, ps},
-		Bookmarks:     &defaultBookmarkDBImpl{db, ps},
-		Plays:         &defaultPlayDBImpl{db, ps},
+		Users:         newUserDB(db, ps),
+		Channels:      newChannelDB(db, ps),
+		Podcasts:      newPodcastDB(db, ps),
+		Subscriptions: newSubscriptionDB(db, ps),
+		Bookmarks:     newBookmarkDB(db, ps),
+		Plays:         newPlayDB(db, ps),
 	}, nil
 }

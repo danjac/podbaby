@@ -19,7 +19,7 @@ const Front = () => {
       <div className="text-center">
         <h1 style={{ fontFamily: 'GoodDog' }}>Podcast lover happiness.</h1>
       <p>
-        PodBaby makes it easy to find and listen to your favorite podcasts, and to disover
+        PodBaby makes it easy to find and listen to your favorite podcasts, and to discover
         new sources of podcasting nirvana.
       </p>
       <p><Link className="btn btn-lg btn-primary" to="/new/">Browse podcasts</Link></p>

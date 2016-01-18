@@ -6,56 +6,74 @@ import (
 	"github.com/smotes/purse"
 )
 
-// ChannelDB database model
-type ChannelDB interface {
+type ChannelReader interface {
 	SelectAll() ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
 	Search(string) ([]models.Channel, error)
 	GetByID(int64) (*models.Channel, error)
 	GetByURL(string) (*models.Channel, error)
+}
+
+type ChannelWriter interface {
 	Create(*models.Channel) error
 }
 
-type defaultChannelDBImpl struct {
-	*sqlx.DB
+type ChannelDB struct {
+	ChannelReader
+	ChannelWriter
+}
+
+func newChannelDB(db sqlx.Ext, ps purse.Purse) *ChannelDB {
+	return &ChannelDB{
+		ChannelReader: &ChannelDBReader{db, ps},
+		ChannelWriter: &ChannelDBWriter{db, ps},
+	}
+}
+
+type ChannelDBReader struct {
+	sqlx.Ext
 	ps purse.Purse
 }
 
-func (db *defaultChannelDBImpl) SelectAll() ([]models.Channel, error) {
-
+func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
 	q, _ := db.ps.Get("select_all_channels.sql")
 	var channels []models.Channel
-	return channels, sqlErr(db.Select(&channels, q), q)
+	return channels, sqlErr(sqlx.Select(db, &channels, q), q)
 }
 
-func (db *defaultChannelDBImpl) SelectSubscribed(userID int64) ([]models.Channel, error) {
+func (db *ChannelDBReader) SelectSubscribed(userID int64) ([]models.Channel, error) {
 
 	q, _ := db.ps.Get("select_subscribed_channels.sql")
 	var channels []models.Channel
-	return channels, sqlErr(db.Select(&channels, q, userID), q)
+	return channels, sqlErr(sqlx.Select(db, &channels, q, userID), q)
 }
 
-func (db *defaultChannelDBImpl) Search(query string) ([]models.Channel, error) {
+func (db *ChannelDBReader) Search(query string) ([]models.Channel, error) {
 
 	q, _ := db.ps.Get("search_channels.sql")
 
 	var channels []models.Channel
-	return channels, sqlErr(db.Select(&channels, q, query), q)
+	return channels, sqlErr(sqlx.Select(db, &channels, q, query), q)
 }
 
-func (db *defaultChannelDBImpl) GetByURL(url string) (*models.Channel, error) {
+func (db *ChannelDBReader) GetByURL(url string) (*models.Channel, error) {
 	q, _ := db.ps.Get("get_channel_by_url.sql")
 	channel := &models.Channel{}
-	return channel, sqlErr(db.Get(channel, q, url), q)
+	return channel, sqlErr(sqlx.Get(db, channel, q, url), q)
 }
 
-func (db *defaultChannelDBImpl) GetByID(id int64) (*models.Channel, error) {
+func (db *ChannelDBReader) GetByID(id int64) (*models.Channel, error) {
 	q, _ := db.ps.Get("get_channel_by_id.sql")
 	channel := &models.Channel{}
-	return channel, sqlErr(db.Get(channel, q, id), q)
+	return channel, sqlErr(sqlx.Get(db, channel, q, id), q)
 }
 
-func (db *defaultChannelDBImpl) Create(ch *models.Channel) error {
+type ChannelDBWriter struct {
+	sqlx.Ext
+	ps purse.Purse
+}
+
+func (db *ChannelDBWriter) Create(ch *models.Channel) error {
 
 	q, _ := db.ps.Get("upsert_channel.sql")
 
