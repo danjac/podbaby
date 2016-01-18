@@ -15,6 +15,7 @@ type TransactionManager interface {
 }
 
 type DB struct {
+	*sqlx.DB
 	T             TransactionManager
 	Users         *UserDB
 	Channels      *ChannelDB
@@ -30,6 +31,7 @@ func MustConnect(cfg *config.Config) *DB {
 
 func New(db *sqlx.DB, cfg *config.Config) *DB {
 	return &DB{
+		DB:            db,
 		T:             &DBTransactionManager{db},
 		Users:         newUserDB(db),
 		Channels:      newChannelDB(db),
