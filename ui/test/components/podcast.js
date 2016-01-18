@@ -1,85 +1,12 @@
-import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import { assert } from 'chai';
 import jsdom from 'jsdom-global';
 
-import Player from '../components/player';
-import Podcast from '../components/podcast_item';
+import Podcast from '../../components/podcast_item';
+import { Wrapper } from './utils';
+import { makePodcast, makePodcastProps } from './fixtures';
 
-const makePodcast = (attrs = {}) => {
-  return Object.assign({}, {
-    id: 1000,
-    title: 'test',
-    channelId: 1000,
-    name: 'My Channel',
-    image: 'test.jpg',
-  }, attrs);
-};
-
-const makePodcastProps = (podcast, props = {}) => {
-  return Object.assign({}, {
-    podcast,
-    togglePlayer: _.noop,
-    toggleSubscribe: _.noop,
-    toggleDetail: _.noop,
-    toggleBookmark: _.noop,
-    showChannel: true,
-    showExpanded: false,
-    isLoggedIn: true,
-    isPlaying: false,
-    channelUrl: '/channel/11/',
-  }, props);
-};
-
-const makePlayerProps = (podcast, props = {}) => {
-  return Object.assign({}, {
-    onClose: _.noop,
-    onTimeUpdate: _.noop,
-    onToggleBookmark: _.noop,
-    isLoggedIn: true,
-    player: {
-      podcast,
-      isPlaying: true,
-    },
-  }, props);
-};
-
-class Wrapper extends React.Component {
-  render() {
-    return (
-      <div>{this.props.children}</div>
-    );
-  }
-}
-
-Wrapper.propTypes = {
-  children: PropTypes.object.isRequired,
-};
-
-describe('Player component', function () {
-  before(function () {
-    this.jsdom = jsdom();
-  });
-
-  after(function () {
-    this.jsdom();
-  });
-
-  it('should render the truncated podcast title', function () {
-    const podcast = makePodcast({ name: 'We do cool podcasts', title: 'Some title' });
-    const props = makePlayerProps(podcast);
-    const component = <Wrapper><Player {...props} /></Wrapper>;
-    const rendered = TestUtils.renderIntoDocument(component, 'div');
-
-    const $title = TestUtils.findRenderedDOMComponentWithTag(rendered, 'b');
-    const $link = $title.children[0];
-
-    const title = $link.getAttribute('title');
-    assert.equal(title, 'We do cool podcasts : Some title');
-    assert.equal($link.textContent, 'We do cool podcasts : Some ...');
-  });
-});
 
 describe('Podcast component', function () {
   before(function () {
