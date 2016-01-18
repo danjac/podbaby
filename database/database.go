@@ -5,6 +5,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+type Transaction interface {
+	Rollback() error
+	Commit() error
+}
+
 type DB struct {
 	*sqlx.DB
 	Users         *UserDB
@@ -29,4 +34,24 @@ func New(db *sqlx.DB, cfg *config.Config) *DB {
 		Bookmarks:     newBookmarkDB(db),
 		Plays:         newPlayDB(db),
 	}
+}
+
+func (db DB) Begin() (Transaction, error) {
+	tx, err := db.Beginx()
+	if err != nil {
+		return nil, err
+	}
+	return &DBTransaction{tx}, nil
+}
+
+type DBTransaction struct {
+	*sqlx.Tx
+}
+
+func (t *DBTransaction) Commit() error {
+	return t.Tx.Commit()
+}
+
+func (t *DBTransaction) Rollback() error {
+	return t.Tx.Rollback()
 }

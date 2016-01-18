@@ -61,7 +61,7 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
-	tx, err := s.DB.Beginx()
+	tx, err := s.DB.Begin()
 	if err != nil {
 		return err
 	}
