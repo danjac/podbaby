@@ -28,7 +28,6 @@ func newUserDB(db sqlx.Ext) *UserDB {
 
 // UserDB handles all user queries
 type UserDB struct {
-	sqlx.Ext
 	UserReader
 	UserWriter
 }
