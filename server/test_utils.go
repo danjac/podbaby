@@ -1,9 +1,12 @@
 package server
 
 import (
+	"errors"
 	"github.com/danjac/podbaby/models"
 	"net/http"
 )
+
+var errMockDBError = errors.New("Fake DB error")
 
 func mockGetVars(vars map[string]string) varsGetter {
 	return func(r *http.Request) map[string]string {

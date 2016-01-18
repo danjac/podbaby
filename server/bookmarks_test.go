@@ -1,7 +1,6 @@
 package server
 
 import (
-	"errors"
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
 	"gopkg.in/unrolled/render.v1"
@@ -9,8 +8,6 @@ import (
 	"net/http/httptest"
 	"testing"
 )
-
-var errMockDBError = errors.New("Fake DB error")
 
 type mockFailPodcastReader struct {
 	*database.PodcastDBReader

@@ -16,17 +16,19 @@ func getPodcast(s *Server, w http.ResponseWriter, r *http.Request) error {
 }
 
 func getLatestPodcasts(s *Server, w http.ResponseWriter, r *http.Request) error {
-	user, ok := getUser(r)
 
 	var (
 		result *models.PodcastList
 		err    error
 	)
 
+	user, ok := getUser(r)
+	page := getPage(r)
+
 	if ok { // user authenticated
-		result, err = s.DB.Podcasts.SelectSubscribed(user.ID, getPage(r))
+		result, err = s.DB.Podcasts.SelectSubscribed(user.ID, page)
 	} else {
-		result, err = s.DB.Podcasts.SelectAll(getPage(r))
+		result, err = s.DB.Podcasts.SelectAll(page)
 	}
 
 	if err != nil {
