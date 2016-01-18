@@ -126,8 +126,9 @@ export class Channel extends React.Component {
             title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
             onClick={this.handleSubscribe}
           >
-            <Icon icon={isSubscribed ? 'unlink' : 'link'} />
-            {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+          <Icon icon={isSubscribed ? 'unlink' : 'link'} /> {
+          isSubscribed ? 'Unsubscribe' : 'Subscribe'
+          }
           </Button> : ''}
           <a
             className="btn btn-default"
