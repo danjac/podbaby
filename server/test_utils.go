@@ -8,6 +8,20 @@ import (
 
 var errMockDBError = errors.New("Fake DB error")
 
+type mockDBErrNoRows struct{}
+
+func (e *mockDBErrNoRows) Error() string {
+	return "no rows"
+}
+
+func (e *mockDBErrNoRows) Query() string {
+	return ""
+}
+
+func (e *mockDBErrNoRows) IsNoRows() bool {
+	return true
+}
+
 func mockGetEmptyVars() varsGetter {
 	return mockGetVars(make(map[string]string))
 }
