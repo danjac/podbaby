@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/danjac/podbaby",
-	"GoVersion": "go1.5.2",
+	"GoVersion": "go1.5.3",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
@@ -66,16 +66,16 @@
 			"Rev": "11fc39a580a008f1f39bb3d11d984fb34ed778d9"
 		},
 		{
-			"ImportPath": "github.com/unrolled/render",
-			"Rev": "c442bc30e10d9a5ad49f2837d5e175de0bd0a52a"
-		},
-		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
 			"Rev": "173ce04bfaf66c7bb0fa9d5c0bfd93e773909dbd"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
 			"Rev": "173ce04bfaf66c7bb0fa9d5c0bfd93e773909dbd"
+		},
+		{
+			"ImportPath": "gopkg.in/unrolled/render.v1",
+			"Rev": "40a2dfa24398d37b4a14938442a0f4fe4307b929"
 		}
 	]
 }

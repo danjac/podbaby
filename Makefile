@@ -5,7 +5,6 @@ build: build-backend build-frontend
 
 build-backend:
 	# godep restore
-	go generate
 	go build -o ./bin/runapp -i main.go
 
 build-frontend:

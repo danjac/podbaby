@@ -3,7 +3,6 @@ package database
 import (
 	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
-	"github.com/smotes/purse"
 )
 
 type ChannelReader interface {
@@ -23,59 +22,77 @@ type ChannelDB struct {
 	ChannelWriter
 }
 
-func newChannelDB(db sqlx.Ext, ps purse.Purse) *ChannelDB {
+func newChannelDB(db sqlx.Ext) *ChannelDB {
 	return &ChannelDB{
-		ChannelReader: &ChannelDBReader{db, ps},
-		ChannelWriter: &ChannelDBWriter{db, ps},
+		ChannelReader: &ChannelDBReader{db},
+		ChannelWriter: &ChannelDBWriter{db},
 	}
 }
 
 type ChannelDBReader struct {
 	sqlx.Ext
-	ps purse.Purse
 }
 
 func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
-	q, _ := db.ps.Get("select_all_channels.sql")
+	q := `SELECT id, title, description, categories, url, image, website 
+FROM channels`
 	var channels []models.Channel
 	return channels, sqlErr(sqlx.Select(db, &channels, q), q)
 }
 
 func (db *ChannelDBReader) SelectSubscribed(userID int64) ([]models.Channel, error) {
 
-	q, _ := db.ps.Get("select_subscribed_channels.sql")
+	q := `SELECT c.id, c.title, c.description, c.image, c.url, c.website
+FROM channels c
+JOIN subscriptions s ON s.channel_id = c.id
+WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
+GROUP BY c.id
+ORDER BY title
+`
 	var channels []models.Channel
 	return channels, sqlErr(sqlx.Select(db, &channels, q, userID), q)
 }
 
 func (db *ChannelDBReader) Search(query string) ([]models.Channel, error) {
 
-	q, _ := db.ps.Get("search_channels.sql")
-
+	q := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
+FROM channels c, plainto_tsquery($1) as q
+WHERE (c.tsv @@ q)
+ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 20`
 	var channels []models.Channel
 	return channels, sqlErr(sqlx.Select(db, &channels, q, query), q)
 }
 
 func (db *ChannelDBReader) GetByURL(url string) (*models.Channel, error) {
-	q, _ := db.ps.Get("get_channel_by_url.sql")
+	q := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
+FROM channels c
+WHERE url=$1`
 	channel := &models.Channel{}
 	return channel, sqlErr(sqlx.Get(db, channel, q, url), q)
 }
 
 func (db *ChannelDBReader) GetByID(id int64) (*models.Channel, error) {
-	q, _ := db.ps.Get("get_channel_by_id.sql")
+	q := `SELECT c.id, c.title, c.description, c.url, c.image, c.website
+FROM channels c
+WHERE id=$1`
 	channel := &models.Channel{}
 	return channel, sqlErr(sqlx.Get(db, channel, q, id), q)
 }
 
 type ChannelDBWriter struct {
 	sqlx.Ext
-	ps purse.Purse
 }
 
 func (db *ChannelDBWriter) Create(ch *models.Channel) error {
 
-	q, _ := db.ps.Get("upsert_channel.sql")
+	q := `SELECT upsert_channel (
+:url, 
+:title, 
+:description, 
+:image, 
+:categories, 
+:website
+)`
 
 	q, args, err := sqlx.Named(q, ch)
 	if err != nil {

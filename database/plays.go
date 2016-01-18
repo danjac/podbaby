@@ -2,7 +2,6 @@ package database
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/smotes/purse"
 )
 
 type PlayWriter interface {
@@ -14,25 +13,24 @@ type PlayDB struct {
 	PlayWriter
 }
 
-func newPlayDB(db sqlx.Ext, ps purse.Purse) *PlayDB {
+func newPlayDB(db sqlx.Ext) *PlayDB {
 	return &PlayDB{
-		PlayWriter: &PlayDBWriter{db, ps},
+		PlayWriter: &PlayDBWriter{db},
 	}
 }
 
 type PlayDBWriter struct {
 	sqlx.Ext
-	ps purse.Purse
 }
 
 func (db *PlayDBWriter) Create(podcastID, userID int64) error {
-	q, _ := db.ps.Get("add_play.sql")
+	q := "SELECT add_play($1, $2)"
 	_, err := db.Exec(q, podcastID, userID)
 	return sqlErr(err, q)
 }
 
 func (db *PlayDBWriter) DeleteAll(userID int64) error {
-	q, _ := db.ps.Get("delete_plays_by_user_id.sql")
+	q := "DELETE FROM plays WHERE user_id=$1"
 	_, err := db.Exec(q, userID)
 	return sqlErr(err, q)
 }

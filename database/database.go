@@ -1,21 +1,32 @@
 package database
 
 import (
-	"sync"
+	"github.com/danjac/podbaby/config"
+	"github.com/jmoiron/sqlx"
 )
 
-// GenPurse is a literal implementation of a Purse that is programmatically
-// generated from SQL file contents within a directory via go generate.
-type GenPurse struct {
-	mu sync.RWMutex
-	files map[string]string
+type DB struct {
+	*sqlx.DB
+	Users         *UserDB
+	Channels      *ChannelDB
+	Podcasts      *PodcastDB
+	Bookmarks     *BookmarkDB
+	Subscriptions *SubscriptionDB
+	Plays         *PlayDB
 }
 
-// Get takes a filename and returns a query if it is found within the relevant
-// map.  If filename is not found, ok will return false.
-func (p *GenPurse) Get(filename string) (v string, ok bool) {
-	p.mu.RLock()
-	v, ok = p.files[filename]
-	p.mu.RUnlock()
-	return
+func MustConnect(cfg *config.Config) *DB {
+	return New(sqlx.MustConnect("postgres", cfg.DatabaseURL), cfg)
+}
+
+func New(db *sqlx.DB, cfg *config.Config) *DB {
+	return &DB{
+		DB:            db,
+		Users:         newUserDB(db),
+		Channels:      newChannelDB(db),
+		Podcasts:      newPodcastDB(db),
+		Subscriptions: newSubscriptionDB(db),
+		Bookmarks:     newBookmarkDB(db),
+		Plays:         newPlayDB(db),
+	}
 }
