@@ -33,7 +33,7 @@ func (db *BookmarkDBReader) SelectByUserID(userID int64) ([]int64, error) {
 	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1"
 	var result []int64
 	err := sqlx.Select(db, &result, q, userID)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 }
 
 type BookmarkDBWriter struct {
@@ -43,11 +43,11 @@ type BookmarkDBWriter struct {
 func (db *BookmarkDBWriter) Create(podcastID, userID int64) error {
 	q := "INSERT INTO bookmarks(podcast_id, user_id) VALUES($1, $2)"
 	_, err := db.Exec(q, podcastID, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
 
 func (db *BookmarkDBWriter) Delete(podcastID, userID int64) error {
 	q := "DELETE FROM bookmarks WHERE podcast_id=$1 AND user_id=$2"
 	_, err := db.Exec(q, podcastID, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }

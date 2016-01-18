@@ -40,28 +40,28 @@ type UserDBWriter struct {
 func (db *UserDBWriter) UpdateEmail(email string, userID int64) error {
 	q := "UPDATE users SET email=$1 WHERE id=$2"
 	_, err := db.Exec(q, email, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
 
 func (db *UserDBWriter) UpdatePassword(password string, userID int64) error {
 	q := "UPDATE users SET password=$1 WHERE id=$2"
 	_, err := db.Exec(q, password, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
 func (db *UserDBWriter) Create(user *models.User) error {
 	q := `INSERT INTO users(name, email, password)
 VALUES (:name, :email, :password) RETURNING id`
 	q, args, err := sqlx.Named(q, user)
 	if err != nil {
-		return sqlErr(err, q)
+		return dbErr(err, q)
 	}
-	return sqlErr(db.QueryRowx(db.Rebind(q), args...).Scan(&user.ID), q)
+	return dbErr(db.QueryRowx(db.Rebind(q), args...).Scan(&user.ID), q)
 }
 
 func (db *UserDBWriter) DeleteUser(userID int64) error {
 	q := "DELETE FROM users WHERE id=$1"
 	_, err := db.Exec(q, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
 
 type UserDBReader struct {
@@ -72,21 +72,21 @@ func (db *UserDBReader) GetByID(id int64) (*models.User, error) {
 	q := "SELECT * FROM users WHERE id=$1"
 	user := &models.User{}
 	err := sqlx.Get(db, user, q, id)
-	return user, sqlErr(err, q)
+	return user, dbErr(err, q)
 }
 
 func (db *UserDBReader) GetByNameOrEmail(identifier string) (*models.User, error) {
 	q := "SELECT * FROM users WHERE email=$1 or name=$1"
 	user := &models.User{}
 	err := sqlx.Get(db, user, q, identifier)
-	return user, sqlErr(err, q)
+	return user, dbErr(err, q)
 }
 
 func (db *UserDBReader) IsName(name string) (bool, error) {
 	q := "SELECT COUNT(id) FROM users WHERE name=$1"
 	var count int64
 	if err := db.QueryRowx(q, name).Scan(&count); err != nil {
-		return false, sqlErr(err, q)
+		return false, dbErr(err, q)
 	}
 	return count > 0, nil
 
@@ -105,7 +105,7 @@ func (db *UserDBReader) IsEmail(email string, userID int64) (bool, error) {
 	var count int64
 
 	if err := db.QueryRowx(q, args...).Scan(&count); err != nil {
-		return false, sqlErr(err, q)
+		return false, dbErr(err, q)
 	}
 	return count > 0, nil
 }

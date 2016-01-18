@@ -53,9 +53,9 @@ func (db *PodcastDBWriter) Create(pc *models.Podcast) error {
 )`
 	q, args, err := sqlx.Named(q, pc)
 	if err != nil {
-		return sqlErr(err, q)
+		return dbErr(err, q)
 	}
-	return sqlErr(db.QueryRowx(db.Rebind(q), args...).Scan(&pc.ID), q)
+	return dbErr(db.QueryRowx(db.Rebind(q), args...).Scan(&pc.ID), q)
 }
 
 type PodcastDBReader struct {
@@ -71,7 +71,7 @@ JOIN channels c ON c.id = p.channel_id
 WHERE p.id=$1`
 	podcast := &models.Podcast{}
 	err := sqlx.Get(db, podcast, q, id)
-	return podcast, sqlErr(err, q)
+	return podcast, dbErr(err, q)
 }
 
 func (db *PodcastDBReader) Search(query string) ([]models.Podcast, error) {
@@ -81,7 +81,7 @@ FROM podcasts p, plainto_tsquery($1) as q, channels c
 WHERE (p.tsv @@ q) AND p.channel_id = c.id
 ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1)) DESC LIMIT $2`
 	var podcasts []models.Podcast
-	return podcasts, sqlErr(sqlx.Select(db, &podcasts, q, query, maxSearchRows), q)
+	return podcasts, dbErr(sqlx.Select(db, &podcasts, q, query, maxSearchRows), q)
 }
 
 func (db *PodcastDBReader) SearchByChannelID(query string, channelID int64) ([]models.Podcast, error) {
@@ -92,7 +92,7 @@ FROM podcasts p, plainto_tsquery($2) as q, channels c
 WHERE (p.tsv @@ q) AND p.channel_id = c.id AND c.id=$1
 ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
 	var podcasts []models.Podcast
-	return podcasts, sqlErr(sqlx.Select(db, &podcasts, q, channelID, query, maxSearchRows), q)
+	return podcasts, dbErr(sqlx.Select(db, &podcasts, q, channelID, query, maxSearchRows), q)
 
 }
 
@@ -106,7 +106,7 @@ WHERE (p.tsv @@ q OR c.tsv @@ q)
     AND b.user_id=$1
 ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
 	var podcasts []models.Podcast
-	return podcasts, sqlErr(sqlx.Select(db, &podcasts, q, userID, query, maxSearchRows), q)
+	return podcasts, dbErr(sqlx.Select(db, &podcasts, q, userID, query, maxSearchRows), q)
 
 }
 
@@ -119,7 +119,7 @@ WHERE pl.user_id=$1`
 	var numRows int64
 
 	if err := db.QueryRowx(q, userID).Scan(&numRows); err != nil {
-		return nil, sqlErr(err, q)
+		return nil, dbErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -143,7 +143,7 @@ OFFSET $2 LIMIT $3`
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 
 }
 
@@ -153,7 +153,7 @@ func (db *PodcastDBReader) SelectAll(page int64) (*models.PodcastList, error) {
 	q := "SELECT COUNT(id) FROM podcasts"
 
 	if err := db.QueryRowx(q).Scan(&numRows); err != nil {
-		return nil, sqlErr(err, q)
+		return nil, dbErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -173,7 +173,7 @@ OFFSET $1 LIMIT $2`
 		q,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 }
 
 func (db *PodcastDBReader) SelectSubscribed(userID, page int64) (*models.PodcastList, error) {
@@ -184,7 +184,7 @@ WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
 	var numRows int64
 
 	if err := db.QueryRowx(q, userID).Scan(&numRows); err != nil {
-		return nil, sqlErr(err, q)
+		return nil, dbErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -206,7 +206,7 @@ OFFSET $2 LIMIT $3`
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 }
 
 func (db *PodcastDBReader) SelectBookmarked(userID, page int64) (*models.PodcastList, error) {
@@ -218,7 +218,7 @@ WHERE b.user_id=$1`
 	var numRows int64
 
 	if err := db.QueryRowx(q, userID).Scan(&numRows); err != nil {
-		return nil, sqlErr(err, q)
+		return nil, dbErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -242,7 +242,7 @@ OFFSET $2 LIMIT $3`
 		userID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 }
 
 func (db *PodcastDBReader) SelectByChannelID(channelID, page int64) (*models.PodcastList, error) {
@@ -252,7 +252,7 @@ func (db *PodcastDBReader) SelectByChannelID(channelID, page int64) (*models.Pod
 	var numRows int64
 
 	if err := db.QueryRowx(q, channelID).Scan(&numRows); err != nil {
-		return nil, sqlErr(err, q)
+		return nil, dbErr(err, q)
 	}
 
 	result := &models.PodcastList{
@@ -272,5 +272,5 @@ OFFSET $2 LIMIT $3`
 		channelID,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 }

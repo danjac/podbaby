@@ -37,7 +37,7 @@ func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
 	q := `SELECT id, title, description, categories, url, image, website 
 FROM channels`
 	var channels []models.Channel
-	return channels, sqlErr(sqlx.Select(db, &channels, q), q)
+	return channels, dbErr(sqlx.Select(db, &channels, q), q)
 }
 
 func (db *ChannelDBReader) SelectSubscribed(userID int64) ([]models.Channel, error) {
@@ -50,7 +50,7 @@ GROUP BY c.id
 ORDER BY title
 `
 	var channels []models.Channel
-	return channels, sqlErr(sqlx.Select(db, &channels, q, userID), q)
+	return channels, dbErr(sqlx.Select(db, &channels, q, userID), q)
 }
 
 func (db *ChannelDBReader) Search(query string) ([]models.Channel, error) {
@@ -60,7 +60,7 @@ FROM channels c, plainto_tsquery($1) as q
 WHERE (c.tsv @@ q)
 ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 20`
 	var channels []models.Channel
-	return channels, sqlErr(sqlx.Select(db, &channels, q, query), q)
+	return channels, dbErr(sqlx.Select(db, &channels, q, query), q)
 }
 
 func (db *ChannelDBReader) GetByURL(url string) (*models.Channel, error) {
@@ -68,7 +68,7 @@ func (db *ChannelDBReader) GetByURL(url string) (*models.Channel, error) {
 FROM channels c
 WHERE url=$1`
 	channel := &models.Channel{}
-	return channel, sqlErr(sqlx.Get(db, channel, q, url), q)
+	return channel, dbErr(sqlx.Get(db, channel, q, url), q)
 }
 
 func (db *ChannelDBReader) GetByID(id int64) (*models.Channel, error) {
@@ -76,7 +76,7 @@ func (db *ChannelDBReader) GetByID(id int64) (*models.Channel, error) {
 FROM channels c
 WHERE id=$1`
 	channel := &models.Channel{}
-	return channel, sqlErr(sqlx.Get(db, channel, q, id), q)
+	return channel, dbErr(sqlx.Get(db, channel, q, id), q)
 }
 
 type ChannelDBWriter struct {
@@ -96,8 +96,8 @@ func (db *ChannelDBWriter) Create(ch *models.Channel) error {
 
 	q, args, err := sqlx.Named(q, ch)
 	if err != nil {
-		return sqlErr(err, q)
+		return dbErr(err, q)
 	}
 
-	return sqlErr(db.QueryRowx(db.Rebind(q), args...).Scan(&ch.ID), q)
+	return dbErr(db.QueryRowx(db.Rebind(q), args...).Scan(&ch.ID), q)
 }

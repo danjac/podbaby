@@ -25,7 +25,7 @@ func (e sqlError) IsNoRows() bool {
 	return e.err == sql.ErrNoRows
 }
 
-func sqlErr(err error, sql string) error {
+func dbErr(err error, sql string) error {
 	if err == nil {
 		return nil
 	}

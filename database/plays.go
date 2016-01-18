@@ -26,11 +26,11 @@ type PlayDBWriter struct {
 func (db *PlayDBWriter) Create(podcastID, userID int64) error {
 	q := "SELECT add_play($1, $2)"
 	_, err := db.Exec(q, podcastID, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
 
 func (db *PlayDBWriter) DeleteAll(userID int64) error {
 	q := "DELETE FROM plays WHERE user_id=$1"
 	_, err := db.Exec(q, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }

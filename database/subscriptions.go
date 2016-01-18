@@ -33,7 +33,7 @@ func (db *SubscriptionDBReader) SelectByUserID(userID int64) ([]int64, error) {
 	q := "SELECT channel_id FROM subscriptions WHERE user_id=$1"
 	var result []int64
 	err := sqlx.Select(db, &result, q, userID)
-	return result, sqlErr(err, q)
+	return result, dbErr(err, q)
 }
 
 type SubscriptionDBWriter struct {
@@ -43,11 +43,11 @@ type SubscriptionDBWriter struct {
 func (db *SubscriptionDBWriter) Create(channelID, userID int64) error {
 	q := "INSERT INTO subscriptions(channel_id, user_id) VALUES($1, $2)"
 	_, err := db.Exec(q, channelID, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
 
 func (db *SubscriptionDBWriter) Delete(channelID, userID int64) error {
 	q := "DELETE FROM subscriptions WHERE channel_id=$1 AND user_id=$2"
 	_, err := db.Exec(q, channelID, userID)
-	return sqlErr(err, q)
+	return dbErr(err, q)
 }
