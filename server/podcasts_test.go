@@ -47,7 +47,7 @@ func TestLatestPodcastsIfLoggedIn(t *testing.T) {
 	}
 
 	getContext = mockGetContextWithUser(user)
-	getVars = mockGetVars(make(map[string]string))
+	getVars = mockGetEmptyVars()
 
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
@@ -76,8 +76,8 @@ func TestLatestPodcastsIfLoggedIn(t *testing.T) {
 }
 func TestLatestPodcastsIfNotLoggedIn(t *testing.T) {
 
-	getContext = mockGetContext(make(map[string]interface{}))
-	getVars = mockGetVars(make(map[string]string))
+	getContext = mockGetEmptyContext()
+	getVars = mockGetEmptyVars()
 
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()

@@ -8,10 +8,18 @@ import (
 
 var errMockDBError = errors.New("Fake DB error")
 
+func mockGetEmptyVars() varsGetter {
+	return mockGetVars(make(map[string]string))
+}
+
 func mockGetVars(vars map[string]string) varsGetter {
 	return func(r *http.Request) map[string]string {
 		return vars
 	}
+}
+
+func mockGetEmptyContext() contextGetter {
+	return mockGetContext(make(map[string]interface{}))
 }
 
 func mockGetContext(ctx map[string]interface{}) contextGetter {
