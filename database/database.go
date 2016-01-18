@@ -10,8 +10,12 @@ type Transaction interface {
 	Commit() error
 }
 
+type TransactionManager interface {
+	Begin() (Transaction, error)
+}
+
 type DB struct {
-	*sqlx.DB
+	T             TransactionManager
 	Users         *UserDB
 	Channels      *ChannelDB
 	Podcasts      *PodcastDB
@@ -26,7 +30,7 @@ func MustConnect(cfg *config.Config) *DB {
 
 func New(db *sqlx.DB, cfg *config.Config) *DB {
 	return &DB{
-		DB:            db,
+		T:             &DBTransactionManager{db},
 		Users:         newUserDB(db),
 		Channels:      newChannelDB(db),
 		Podcasts:      newPodcastDB(db),
@@ -37,7 +41,15 @@ func New(db *sqlx.DB, cfg *config.Config) *DB {
 }
 
 func (db DB) Begin() (Transaction, error) {
-	tx, err := db.Beginx()
+	return db.T.Begin()
+}
+
+type DBTransactionManager struct {
+	*sqlx.DB
+}
+
+func (tm *DBTransactionManager) Begin() (Transaction, error) {
+	tx, err := tm.Beginx()
 	if err != nil {
 		return nil, err
 	}
