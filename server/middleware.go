@@ -5,6 +5,7 @@ import (
 	"github.com/justinas/alice"
 	"github.com/justinas/nosurf"
 	"net/http"
+	"net/http/httptest"
 	"time"
 )
 
@@ -26,15 +27,39 @@ func (m *timerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	start := time.Now()
 
-	m.handler.ServeHTTP(w, r)
+	// we need to record the original content
+	// otherwise headers are sent before we can add our own
+	rec := httptest.NewRecorder()
 
-	logger := m.log.WithFields(logrus.Fields{
-		"URL":    r.URL.Path,
-		"Method": r.Method,
-		"Time":   time.Since(start),
-	})
+	// save the original content
+	m.handler.ServeHTTP(rec, r)
 
-	logger.Info()
+	// copy response headers
+	for k, v := range rec.Header() {
+		w.Header()[k] = v
+	}
+
+	timeTaken := time.Since(start)
+
+	if m.log != nil {
+
+		logger := m.log.WithFields(logrus.Fields{
+			"URL":    r.URL.Path,
+			"Method": r.Method,
+			"Time":   timeTaken,
+		})
+
+		logger.Info()
+	}
+
+	w.Header().Set("X-Response-Time", timeTaken.String())
+
+	// set the correct status code
+	w.WriteHeader(rec.Code)
+
+	// write the original content
+	w.Write(rec.Body.Bytes())
+
 }
 
 func (s *Server) configureMiddleware(handler http.Handler) http.Handler {
@@ -42,9 +67,12 @@ func (s *Server) configureMiddleware(handler http.Handler) http.Handler {
 		nosurf.NewPure,
 	}
 
+	// just log requests in development
+	var log *logrus.Logger
 	if s.Config.IsDev() {
-		middleware = append(middleware, newTimerMiddleware(s.Log))
+		log = s.Log
 	}
+	middleware = append(middleware, newTimerMiddleware(log))
 
 	return alice.New(middleware...).Then(handler)
 
