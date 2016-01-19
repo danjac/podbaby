@@ -11,6 +11,10 @@ class Image extends React.Component {
     this.handleError = this.handleError.bind(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    this.state.src = newProps.src || newProps.errSrc;
+  }
+
   handleError(event) {
     event.preventDefault();
     if (this.state.isError) {
