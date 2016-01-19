@@ -3,16 +3,23 @@ import React, { PropTypes } from 'react';
 class Image extends React.Component {
   constructor(props) {
     super(props);
-    const src = this.props.src || this.props.errSrc;
-    this.state = {
-      src,
-      isError: false,
-    };
+    this.stateFromProps(props);
     this.handleError = this.handleError.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
-    this.state.src = newProps.src || newProps.errSrc;
+    if (newProps.src !== this.props.src) {
+      this.stateFromProps(newProps);
+    }
+    return newProps === this.props;
+  }
+
+  stateFromProps(props) {
+    const src = props.src || props.errSrc;
+    this.state = {
+      src,
+      isError: false,
+    };
   }
 
   handleError(event) {
