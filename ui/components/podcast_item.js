@@ -3,9 +3,6 @@ import { Link } from 'react-router';
 import { sanitize, formatPubDate } from './utils';
 
 import {
-  Grid,
-  Row,
-  Col,
   ButtonGroup,
   Button,
   Panel,
@@ -19,18 +16,18 @@ import Image from './image';
 const Buttons = props => {
   const { podcast } = props;
   return (
-    <ButtonGroup vertical={props.vertical}>
+    <ButtonGroup vertical={props.vertical} style={{ float: 'right' }}>
      <Button
        title={ podcast.isPlaying ? 'Stop' : 'Play' }
        onClick={props.togglePlayer}
      ><Icon icon={ podcast.isPlaying ? 'stop' : 'play' } />
      </Button>
-     <a
+     <Button
        download
        title="Download this podcast"
        className="btn btn-default"
        href={podcast.enclosureUrl}
-     ><Icon icon="download" /></a>
+     ><Icon icon="download" /></Button>
     {props.isLoggedIn ?
     <Button
       onClick={props.toggleBookmark}
@@ -65,19 +62,7 @@ export default function PodcastItem(props) {
 
   if (showChannel) {
     header = (
-      <div>
-        <h4>{showExpanded ? podcast.title : <Link to={podcastUrl}>{podcast.title}</Link>}</h4>
-        <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
-      </div>
-    );
-  } else {
-    header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
-  }
-
-  return (
-    <Panel>
       <div className="media">
-        {showChannel ? (
         <div className="media-left media-middle">
           <Link to={channelUrl}>
             <Image
@@ -91,26 +76,26 @@ export default function PodcastItem(props) {
               }}
             />
           </Link>
-          </div>
-          ) : '' }
+        </div>
         <div className="media-body">
-          <Grid>
-            <Row>
-              <Col xs={6} md={9}>
-              {header}
-              <p><small>
-                <time dateTime={podcast.pubDate}>{formatPubDate(podcast.pubDate)}</time>&nbsp;
-                {podcast.source ? <a href={podcast.source} target="_blank">Source</a> : '' }
-              </small></p>
-              </Col>
-              <Col className="hidden-xs hidden-sm" md={3}>
-                <Buttons {...props} />
-              </Col>
-              <Col className="hidden-md hidden-lg" xs={3} sm={3}>
-                <Buttons {...props} vertical />
-              </Col>
-            </Row>
-          </Grid>
+          <h4>{showExpanded ? podcast.title : <Link to={podcastUrl}>{podcast.title}</Link>}</h4>
+          <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
+        </div>
+      </div>
+    );
+  } else {
+    header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
+  }
+
+  return (
+    <Panel>
+      {header}
+      <div style={{ padding: 10 }}>
+        <small>
+          <time dateTime={podcast.pubDate}>{formatPubDate(podcast.pubDate)}</time>&nbsp;
+          {podcast.source ? <a href={podcast.source} target="_blank">Source</a> : '' }
+        </small>
+        <Buttons {...props} />
       </div>
       {podcast.description && !showExpanded ?
       <Button
@@ -119,7 +104,6 @@ export default function PodcastItem(props) {
         onClick={toggleDetail}
       ><Icon icon={podcast.isShowDetail ? 'chevron-up' : 'chevron-down'} />
       </Button> : ''}
-    </div>
     {podcast.description && (podcast.isShowDetail || showExpanded) ?
     <p
       className={showExpanded ? 'lead' : ''}
