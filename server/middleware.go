@@ -41,16 +41,13 @@ func (m *timerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	timeTaken := time.Since(start)
 
-	if m.log != nil {
+	logger := m.log.WithFields(logrus.Fields{
+		"URL":    r.URL.Path,
+		"Method": r.Method,
+		"Time":   timeTaken,
+	})
 
-		logger := m.log.WithFields(logrus.Fields{
-			"URL":    r.URL.Path,
-			"Method": r.Method,
-			"Time":   timeTaken,
-		})
-
-		logger.Info()
-	}
+	logger.Info()
 
 	w.Header().Set("X-Response-Time", timeTaken.String())
 
@@ -67,12 +64,9 @@ func (s *Server) configureMiddleware(handler http.Handler) http.Handler {
 		nosurf.NewPure,
 	}
 
-	// just log requests in development
-	var log *logrus.Logger
 	if s.Config.IsDev() {
-		log = s.Log
+		middleware = append(middleware, newTimerMiddleware(s.Log))
 	}
-	middleware = append(middleware, newTimerMiddleware(log))
 
 	return alice.New(middleware...).Then(handler)
 
