@@ -1,36 +1,35 @@
+import immutable from 'immutable';
 import { Actions } from '../constants';
 
-const initialState = {
+const initialState = immutable.Map({
   query: '',
-  bookmarks: [],
-};
+  bookmarks: immutable.Set(),
+});
 
 export default function (state = initialState, action) {
-  let bookmarks;
-
   switch (action.type) {
 
     case Actions.BOOKMARKS_SEARCH_REQUEST:
-      return Object.assign({}, state, { query: action.payload });
+      return state.set('query', action.payload);
 
     case Actions.LOGIN_SUCCESS:
     case Actions.CURRENT_USER:
-      bookmarks = (action.payload && action.payload.bookmarks) || [];
-      return Object.assign({}, state, { bookmarks });
+
+      return state.set('bookmarks', immutable.Set(
+        action.payload && action.payload.bookmarks ? action.payload.bookmarks : []
+      ));
 
     case Actions.LOGOUT:
-      return Object.assign({}, state, { bookmarks: [] });
+      return initialState;
 
     case Actions.ADD_BOOKMARK:
-      bookmarks = state.bookmarks.concat(action.payload);
-      return Object.assign({}, state, { bookmarks });
+      return state.updateIn(['bookmarks'], v => v.add(action.payload));
 
     case Actions.DELETE_BOOKMARK:
-      bookmarks = state.bookmarks.filter(id => id !== action.payload);
-      return Object.assign({}, state, { bookmarks });
+      return state.updateIn(['bookmarks'], v => v.delete(action.payload));
 
     case Actions.CLEAR_BOOKMARKS_SEARCH:
-      return Object.assign({}, state, { query: '' });
+      return state.set('query', '');
 
     default:
       return state;

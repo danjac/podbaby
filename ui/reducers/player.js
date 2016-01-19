@@ -1,33 +1,41 @@
+import immutable from 'immutable';
+import { Podcast } from '../records';
 import { Actions } from '../constants';
 
-const initialState = {
+const initialState = immutable.Map({
   podcast: null,
   isPlaying: false,
   currentTime: 0,
-};
+});
 
 export default function (state = initialState, action) {
   switch (action.type) {
+
     case Actions.CURRENTLY_PLAYING:
-      return Object.assign({}, state, {
-        podcast: action.payload,
-        isPlaying: !!action.payload,
-        currentTime: 0,
-      });
+      return state
+        .set('podcast', new Podcast(action.payload))
+        .set('isPlaying', true)
+        .set('currentTime', 0);
+
     case Actions.ADD_BOOKMARK:
     case Actions.DELETE_BOOKMARK:
-      if (state.podcast && state.podcast.id === action.payload) {
-        const isBookmarked = action.type === Actions.ADD_BOOKMARK;
-        const podcast = Object.assign({}, state.podcast, { isBookmarked });
-        return Object.assign({}, state, { podcast });
-      }
-      return state;
+
+      return state.updateIn(['podcast'], podcast => {
+        if (podcast && podcast.get('id') === action.payload) {
+          return podcast.set('isBookmarked', action.type === Actions.ADD_BOOKMARK);
+        }
+        return podcast;
+      });
+
     case Actions.PLAYER_TIME_UPDATE:
-      return Object.assign({}, state, { currentTime: action.payload });
+      return state.set('currentTime', action.payload);
+
     case Actions.CLOSE_PLAYER:
       return initialState;
+
     case Actions.RELOAD_PLAYER:
-      return action.payload || initialState;
+      return action.payload ? immutable.Map(action.payload) : initialState;
+
     default:
       return state;
   }

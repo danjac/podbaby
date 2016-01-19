@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Pagination } from 'react-bootstrap';
@@ -26,12 +25,12 @@ export class PodcastList extends React.Component {
     }
 
     const emptyMsg = typeof ifEmpty === 'undefined' ? 'No podcasts found' : ifEmpty;
-    if (_.isEmpty(podcasts)) {
+    if (podcasts.size === 0) {
       return <div>{emptyMsg}</div>;
     }
 
     const pagination = (
-      page && onSelectPage && page.numPages > 1 ?
+      page && onSelectPage && page.get('numPages') > 1 ?
       <Pagination
         onSelect={onSelectPage}
         first
@@ -39,8 +38,8 @@ export class PodcastList extends React.Component {
         prev
         next
         maxButtons={6}
-        items={page.numPages}
-        activePage={page.page}
+        items={page.get('numPages')}
+        activePage={page.get('page')}
       /> : '');
     return (
       <div>
@@ -83,7 +82,7 @@ PodcastList.propTypes = {
   actions: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  podcasts: PropTypes.array.isRequired,
+  podcasts: PropTypes.object.isRequired,
   page: PropTypes.object,
   onSelectPage: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,

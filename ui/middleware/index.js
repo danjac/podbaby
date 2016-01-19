@@ -34,6 +34,7 @@ const apiErrorMiddleware = store => next => action => {
       default:
 
         store.dispatch(alerts.warning('Sorry, an error has occurred'));
+        console.error(error);
         break;
     }
   }

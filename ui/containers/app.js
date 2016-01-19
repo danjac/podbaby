@@ -15,7 +15,7 @@ import AddChannelModal from '../components/add_channel';
 
 
 const AlertList = props => {
-  if (props.alerts.length === 0) return <div></div>;
+  if (props.alerts.size === 0) return <div></div>;
 
   return (
     <div
@@ -44,7 +44,7 @@ const AlertList = props => {
 };
 
 AlertList.propTypes = {
-  alerts: PropTypes.array.isRequired,
+  alerts: PropTypes.object.isRequired,
 };
 
 
@@ -143,8 +143,8 @@ export class App extends React.Component {
         /> : ''}
 
         <AddChannelModal
-          {...this.props.addChannel}
           container={this}
+          show={this.props.addChannel.get('show')}
           onComplete={this.handleAddChannelComplete}
           onClose={this.handleCloseAddChannelForm}
         />
@@ -162,12 +162,18 @@ App.propTypes = {
   auth: PropTypes.object.isRequired,
   addChannel: PropTypes.object.isRequired,
   player: PropTypes.object.isRequired,
-  alerts: PropTypes.array.isRequired,
+  alerts: PropTypes.object.isRequired,
 };
 
 
 const mapStateToProps = state => {
-  const { routing, auth, addChannel, player, alerts } = state;
+  const {
+    routing,
+    auth,
+    addChannel,
+    player,
+    alerts } = state;
+
   return {
     routing,
     auth,

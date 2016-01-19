@@ -1,8 +1,9 @@
+import immutable from 'immutable';
 import { Actions } from '../constants';
 
-const initialState = {
+const initialState = immutable.Map({
   query: '',
-};
+});
 
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -10,7 +11,7 @@ export default function (state = initialState, action) {
       return initialState;
 
     case Actions.SEARCH_REQUEST:
-      return Object.assign({}, state, { query: action.payload });
+      return state.set('query', action.payload);
 
     default:
       return state;

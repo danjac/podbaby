@@ -1,24 +1,24 @@
 import { createSelector } from 'reselect';
 
-const subscriptionsSelector = state => state.subscriptions || [];
-const channelsPreSelector = state => state.channels.channels;
-const channelPreSelector = state => state.channel.channel;
-const filterSelector = state => state.channels.filter;
-const currentPageSelector = state => state.channels.page;
+const subscriptionsSelector = state => state.subscriptions;
+const channelsPreSelector = state => state.channels.get('channels');
+const channelPreSelector = state => state.channel.get('channel');
+const filterSelector = state => state.channels.get('filter');
+const currentPageSelector = state => state.channels.get('page');
 
 const isSubscribed = (channel, subscriptions) => {
-  return subscriptions.includes(channel.id);
+  return subscriptions.includes(channel.get('id'));
 };
 
 export const channelSelector = createSelector(
-  [channelPreSelector, subscriptionsSelector],
+  [channelPreSelector,
+   subscriptionsSelector],
   (channel, subscriptions) => {
     if (!channel) {
       return null;
     }
-    return Object.assign({}, channel, {
-      isSubscribed: isSubscribed(channel, subscriptions),
-    });
+console.log("Channel", channel)
+    return channel.set('isSubscribed', isSubscribed(channel, subscriptions));
   }
 );
 
@@ -29,7 +29,7 @@ export const channelsSelector = createSelector(
    currentPageSelector],
   (channels, filter, subscriptions, currentPage) => {
     const unfilteredChannels = channels.map(channel => {
-      return Object.assign({}, channel, { isSubscribed: isSubscribed(channel, subscriptions) });
+      return channel.set('isSubscribed', isSubscribed(channel, subscriptions));
     });
 
     const filteredChannels = unfilteredChannels.filter(channel => {
@@ -38,7 +38,7 @@ export const channelsSelector = createSelector(
 
     const pageSize = 10;
 
-    const numPages = Math.ceil(filteredChannels.length / (pageSize * 1.0));
+    const numPages = Math.ceil(filteredChannels.size / (pageSize * 1.0));
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
 

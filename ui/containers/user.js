@@ -84,7 +84,7 @@ User.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth,
+    auth: state.auth.toJS(),
   };
 };
 

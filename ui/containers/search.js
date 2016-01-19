@@ -50,11 +50,11 @@ export class Search extends React.Component {
       return '';
     }
 
-    if (channels.length === 0 &&
-        podcasts.length === 0 &&
+    if (channels.size === 0 &&
+        podcasts.size === 0 &&
         searchQuery) return <div>Sorry, no results found for your search.</div>;
 
-    const channelItems = channels.length > 0 && channels.map(channel => {
+    const channelItems = channels.size > 0 && channels.map(channel => {
       const subscribe = event => {
         event.preventDefault();
         dispatch(actions.subscribe.toggleSubscribe(channel));
@@ -70,7 +70,7 @@ export class Search extends React.Component {
       );
     });
 
-    const podcastItems = podcasts.length > 0 ?
+    const podcastItems = podcasts.size > 0 ?
 
       <PodcastList
         actions={actions}
@@ -137,26 +137,22 @@ export class Search extends React.Component {
 Search.propTypes = {
   dispatch: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
-  channels: PropTypes.array.isRequired,
-  podcasts: PropTypes.array.isRequired,
+  channels: PropTypes.object.isRequired,
+  podcasts: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   searchQuery: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => {
-  const { isLoading } = state.podcasts;
-  const { query } = state.search;
-  const { isLoggedIn } = state.auth;
-
   const podcasts = podcastsSelector(state);
   const { channels } = channelsSelector(state);
 
   return {
-    searchQuery: query,
     podcasts,
     channels,
-    isLoading,
-    isLoggedIn,
+    searchQuery: state.search.get('query'),
+    isLoading: state.podcasts.get('isLoading'),
+    isLoggedIn: state.auth.get('isLoggedIn'),
   };
 };
 

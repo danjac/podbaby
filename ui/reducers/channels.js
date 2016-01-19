@@ -1,54 +1,52 @@
+import immutable from 'immutable';
+import { Channel } from '../records';
 import { Actions } from '../constants';
 
-const initialState = {
-  channels: [],
+const initialState = immutable.Map({
+  channels: immutable.List(),
   filter: '',
   isLoading: false,
   page: 1,
+});
+
+const channelsFromJS = payload => {
+  return immutable.List((payload || []).map(v => new Channel(v)));
 };
 
 export default function (state = initialState, action) {
-  let channels;
-
   switch (action.type) {
 
     case Actions.FILTER_CHANNELS:
-      return Object.assign({}, state, { filter: action.payload, page: 1 });
+      return state
+        .set('filter', action.payload)
+        .set('page', 1);
 
     case Actions.SELECT_CHANNELS_PAGE:
-      return Object.assign({}, state, { page: action.payload });
+      return state.set('page', action.payload);
 
     case Actions.GET_CHANNELS_REQUEST:
-      return Object.assign({}, state, { isLoading: true });
+      return state.set('isLoading', true);
 
     case Actions.SEARCH_SUCCESS:
 
-      channels = action.payload.channels || [];
-      return Object.assign({}, state, {
-        channels,
-        isLoading: false,
-        filter: '',
-      });
+      return state
+        .set('channels', channelsFromJS(action.payload.channels))
+        .set('isLoading', false)
+        .set('filter', '');
 
     case Actions.GET_CHANNELS_SUCCESS:
-      channels = action.payload || [];
 
-      return Object.assign({}, state, {
-        channels,
-        isLoading: false,
-        filter: '',
-        page: 1,
-      });
+      return state
+        .set('channels', channelsFromJS(action.payload))
+        .set('page', 1)
+        .set('isLoading', false)
+        .set('filter', '');
 
     case Actions.CLEAR_SEARCH:
     case Actions.SEARCH_FAILURE:
     case Actions.GET_CHANNELS_FAILURE:
-      return Object.assign({}, state, {
-        channels: [],
-        isLoading: false,
-        filter: '',
-        page: 1,
-      });
+      return initialState;
+
     default:
       return state;
   }

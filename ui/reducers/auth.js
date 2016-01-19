@@ -1,35 +1,47 @@
-import _ from 'lodash';
+import immutable from 'immutable';
 import { Actions } from '../constants';
 
-const initialState = {
-  isLoggedIn: false,
+const Auth = immutable.Record({
   name: null,
   email: null,
   redirectTo: null,
   showRecoverPasswordForm: false,
   isLoaded: true,
-};
+  isLoggedIn: false,
+});
+
+const initialState = new Auth();
 
 export default function (state = initialState, action) {
   switch (action.type) {
 
     case Actions.LOGIN_REQUIRED:
-      return Object.assign({}, state, { redirectTo: action.payload });
+      return state.set('redirectTo', action.payload);
 
     case Actions.LOGIN_SUCCESS:
     case Actions.SIGNUP_SUCCESS:
-      return Object.assign({}, state, action.payload, { isLoggedIn: true });
+      return state
+        .set('name', action.payload.name)
+        .set('email', action.payload.email)
+        .set('isLoggedIn', true);
 
     case Actions.CURRENT_USER:
-      return Object.assign({}, state, action.payload, { isLoggedIn: !_.isEmpty(action.payload) });
+
+      const { name, email } = action.payload ? action.payload : [null, null];
+      const isLoggedIn = Boolean(name && email);
+      return state
+        .set('name', name)
+        .set('email', email)
+        .set('isLoggedIn', isLoggedIn);
 
     case Actions.CHANGE_EMAIL_SUCCESS:
-      return Object.assign({}, state, { email: action.payload });
+      return state.set('email', action.payload);
 
     case Actions.OPEN_RECOVER_PASSWORD_FORM:
     case Actions.CLOSE_RECOVER_PASSWORD_FORM:
-      return Object.assign({}, state,
-      { showRecoverPasswordForm: action.type === Actions.OPEN_RECOVER_PASSWORD_FORM });
+
+      return state
+        .set('showRecoverPasswordForm', action.type === Actions.OPEN_RECOVER_PASSWORD_FORM);
 
     case Actions.DELETE_ACCOUNT_SUCCESS:
     case Actions.LOGOUT:

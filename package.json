@@ -59,6 +59,7 @@
     "classnames": "^2.2.1",
     "font-awesome": "^4.5.0",
     "history": "^1.13.1",
+    "immutable": "^3.7.6",
     "lodash": "^4.0.0",
     "moment": "^2.10.6",
     "react": "^0.14.3",

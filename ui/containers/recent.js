@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import _ from 'lodash';
 import DocumentTitle from 'react-document-title';
 
 import * as actions from '../actions';
@@ -48,7 +47,7 @@ export class Recent extends React.Component {
             showChannel
             {...this.props}
           />
-          {!_.isEmpty(this.props.podcasts) && !this.props.isLoading ?
+          {this.props.podcasts.size > 0 && !this.props.isLoading ?
           <Button
             className="form-control"
             bsStyle="primary"
@@ -63,7 +62,7 @@ export class Recent extends React.Component {
 }
 
 Recent.propTypes = {
-  podcasts: PropTypes.array.isRequired,
+  podcasts: PropTypes.object.isRequired,
   page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
   dispatch: PropTypes.func.isRequired,
@@ -71,11 +70,10 @@ Recent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { page, isLoading } = state.podcasts;
   return {
     podcasts: podcastsSelector(state),
-    isLoading,
-    page,
+    isLoading: state.podcasts.get('isLoading'),
+    page: state.podcasts.get('page'),
   };
 };
 

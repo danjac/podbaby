@@ -99,7 +99,7 @@ export class Bookmarks extends React.Component {
 }
 
 Bookmarks.propTypes = {
-  podcasts: PropTypes.array.isRequired,
+  podcasts: PropTypes.object.isRequired,
   page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
   dispatch: PropTypes.func.isRequired,
@@ -107,13 +107,11 @@ Bookmarks.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { query } = state.bookmarks;
-  const { page, isLoading } = state.podcasts;
   return {
     podcasts: podcastsSelector(state),
-    page,
-    isLoading,
-    query,
+    page: state.podcasts.get('page'),
+    isLoading: state.podcasts.get('isLoading'),
+    query: state.bookmarks.get('query'),
   };
 };
 

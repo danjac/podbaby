@@ -190,7 +190,7 @@ export class Channel extends React.Component {
 
 Channel.propTypes = {
   channel: PropTypes.object,
-  podcasts: PropTypes.array,
+  podcasts: PropTypes.object,
   page: PropTypes.object,
   player: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
@@ -201,11 +201,11 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { query } = state.channel;
-  const { page } = state.podcasts;
-  const isChannelLoading = state.channel.isLoading;
-  const isPodcastsLoading = state.podcasts.isLoading;
-  const { isLoggedIn } = state.auth;
+  const query = state.channel.get('query');
+  const page = state.podcasts.get('page');
+  const isLoggedIn = state.auth.get('isLoggedIn');
+  const isChannelLoading = state.channel.get('isLoading');
+  const isPodcastsLoading = state.podcasts.get('isLoading');
   const podcasts = podcastsSelector(state);
   const channel = channelSelector(state);
 

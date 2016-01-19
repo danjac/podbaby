@@ -42,7 +42,7 @@ export class Latest extends React.Component {
 }
 
 Latest.propTypes = {
-  podcasts: PropTypes.array.isRequired,
+  podcasts: PropTypes.object.isRequired,
   page: PropTypes.object.isRequired,
   currentlyPlaying: PropTypes.number,
   dispatch: PropTypes.func.isRequired,
@@ -51,13 +51,11 @@ Latest.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { page, isLoading } = state.podcasts;
-  const { isLoggedIn } = state.auth;
   return {
     podcasts: podcastsSelector(state),
-    isLoading,
-    page,
-    isLoggedIn,
+    page: state.podcasts.get('page'),
+    isLoading: state.podcasts.get('isLoading'),
+    isLoggedIn: state.auth.get('isLoggedIn'),
   };
 };
 

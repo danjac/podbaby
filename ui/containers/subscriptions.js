@@ -51,7 +51,7 @@ export class Subscriptions extends React.Component {
       return <Loading />;
     }
 
-    if (_.isEmpty(unfilteredChannels) && !isLoading) {
+    if (unfilteredChannels.size === 0 && !isLoading) {
       return (
         <span>You haven't subscribed to any channels yet.
           Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
@@ -109,15 +109,28 @@ export class Subscriptions extends React.Component {
 }
 
 Subscriptions.propTypes = {
-  channels: PropTypes.array.isRequired,
+  channels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   page: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  unfilteredChannels: PropTypes.array.isRequired,
+  unfilteredChannels: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
-  return Object.assign({}, channelsSelector(state), { isLoading: state.channels.isLoading });
+  const {
+    channels,
+    unfilteredChannels,
+    filter,
+    page,
+  } = channelsSelector(state);
+
+  return {
+    isLoading: state.channels.get('isLoading'),
+    channels,
+    unfilteredChannels,
+    filter,
+    page,
+  };
 };
 
 export default connect(mapStateToProps)(Subscriptions);

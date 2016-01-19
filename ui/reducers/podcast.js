@@ -1,18 +1,29 @@
+import immutable from 'immutable';
+import { Podcast } from '../records';
 import { Actions } from '../constants';
 
-const initialState = {
+
+const initialState = immutable.Map({
   podcast: null,
   isLoading: false,
-};
+});
 
 export default function (state = initialState, action) {
   switch (action.type) {
+
     case Actions.GET_PODCAST_REQUEST:
-      return Object.assign({}, state, { isLoading: true });
+      return state.set('isLoading', true);
+
     case Actions.GET_PODCAST_SUCCESS:
-      return Object.assign({}, state, { isLoading: false, podcast: action.payload });
+      return state
+        .set('isLoading', false)
+        .set('podcast', new Podcast(action.payload));
+
     case Actions.GET_PODCAST_FAILURE:
-      return Object.assign({}, state, { isLoading: false, podcast: null });
+      return state
+        .set('isLoading', false)
+        .set('podcast', null);
+
     default:
       return state;
   }
