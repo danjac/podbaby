@@ -13,6 +13,7 @@ import (
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"gopkg.in/unrolled/render.v1"
 )
@@ -22,6 +23,31 @@ const (
 	userKey       = "user"
 	cookieTimeout = 24
 )
+
+type contextGetter func(*http.Request, string) (interface{}, bool)
+type contextSetter func(*http.Request, string, interface{})
+
+type varsGetter func(*http.Request) map[string]string
+
+// authentication methods
+
+func init() {
+	// wraps mux.Vars for easier testing
+
+	getVars = func(r *http.Request) map[string]string {
+		return mux.Vars(r)
+	}
+
+	// wraps context
+
+	getContext = func(r *http.Request, key string) (interface{}, bool) {
+		return context.GetOk(r, key)
+	}
+
+	setContext = func(r *http.Request, key string, value interface{}) {
+		context.Set(r, key, value)
+	}
+}
 
 type authLevel int
 
@@ -34,6 +60,12 @@ const (
 var (
 	errUnauthorized = errors.New(http.StatusText(http.StatusUnauthorized))
 	errBadRequest   = errors.New(http.StatusText(http.StatusBadRequest))
+)
+
+var (
+	getVars    varsGetter
+	getContext contextGetter
+	setContext contextSetter
 )
 
 type Server struct {
@@ -136,7 +168,7 @@ func (h handler) authorize(w http.ResponseWriter, r *http.Request) (bool, error)
 	}
 
 	// all ok...
-	context.Set(r, userKey, user)
+	setContext(r, userKey, user)
 	return true, nil
 }
 

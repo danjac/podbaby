@@ -6,31 +6,7 @@ import (
 
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
-	"github.com/gorilla/context"
-	"github.com/gorilla/mux"
 )
-
-type contextGetter func(*http.Request, string) (interface{}, bool)
-type varsGetter func(*http.Request) map[string]string
-
-var getVars varsGetter
-var getContext contextGetter
-
-// authentication methods
-
-func init() {
-	// wraps mux.Vars for easier testing
-
-	getVars = func(r *http.Request) map[string]string {
-		return mux.Vars(r)
-	}
-
-	// wraps context
-
-	getContext = func(r *http.Request, key string) (interface{}, bool) {
-		return context.GetOk(r, key)
-	}
-}
 
 func isErrNoRows(err error) bool {
 	if dbErr, ok := err.(database.DBError); ok {
