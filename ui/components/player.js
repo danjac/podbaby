@@ -126,6 +126,10 @@ class Player extends React.Component {
               onPlay={this.handlePlay}
               onTimeUpdate={this.handleTimeUpdate}
               src={podcast.enclosureUrl}
+              style={{
+                backgroundColor: '#222',
+                color: '#fff',
+              }}
             >
               <source src={podcast.enclosureUrl} />
               Download from <a download href={podcast.enclosureUrl}>here</a>.
