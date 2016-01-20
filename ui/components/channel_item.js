@@ -2,16 +2,13 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import {
-  Grid,
-  Row,
-  Col,
-  ButtonGroup,
   Button,
   Panel,
 } from 'react-bootstrap';
 
 import Image from './image';
 import Icon from './icon';
+import { sanitize } from './utils';
 
 function ChannelItem(props) {
   const { channel, subscribe, isLoggedIn } = props;
@@ -33,26 +30,22 @@ function ChannelItem(props) {
         </Link>
       </div>
       <div className="media-body">
-        <Grid>
-          <Row>
-            <Col xs={6} md={9}>
-              <h4 className="media-heading"><Link to={url}>{channel.title}</Link></h4>
-            </Col>
-            <Col xs={6} md={3}>
-              {isLoggedIn ?
-              <ButtonGroup>
-                <Button title={channel.isSubscribed ?
-                  'Unsubscribe' : 'Subscribe'} onClick={subscribe}
-                >
-                  <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
-                  channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
-                  }
-                </Button>
-              </ButtonGroup>
-              : ''}
-            </Col>
-          </Row>
-        </Grid>
+        <h4 className="media-heading">
+          <Link to={url}>{channel.title}</Link>
+        {isLoggedIn ?
+          <Button style={{ float: 'right' }} title={channel.isSubscribed ?
+            'Unsubscribe' : 'Subscribe'} onClick={subscribe}
+          >
+            <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
+            channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
+            }
+          </Button>
+        : ''}
+        </h4>
+        <p
+          style={{ marginTop: 20 }}
+          dangerouslySetInnerHTML={sanitize(channel.description)}
+        />
       </div>
     </div>
   </Panel>

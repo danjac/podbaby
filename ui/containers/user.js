@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 
 import * as actions from '../actions';
+import PageHeader from '../components/header';
 import Icon from '../components/icon';
 import ChangeEmailForm from '../components/change_email_form';
 import ChangePasswordForm from '../components/change_password_form';
@@ -64,6 +65,7 @@ export class User extends React.Component {
     return (
     <DocumentTitle title={getTitle('My settings')}>
       <div>
+        <PageHeader header="Settings" />
         <h3>Change my email address</h3>
         <ChangeEmailForm onComplete={this.handleChangeEmailComplete} />
         <h3>Change my password</h3>

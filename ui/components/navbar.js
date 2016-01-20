@@ -5,8 +5,11 @@ import {
   Nav,
   NavItem,
   Navbar,
+  NavDropdown,
+  MenuItem,
 } from 'react-bootstrap';
 
+import Gravatar from './gravatar';
 import Icon from './icon';
 
 class NavBar extends React.Component {
@@ -34,8 +37,10 @@ class NavBar extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, name } = this.props.auth;
+    const { isLoggedIn, name, email } = this.props.auth;
     const { createHref, isActive } = this.props.history;
+
+    const dropdownTitle = isLoggedIn ? <span><Gravatar email={email} /> {name}</span> : '';
 
     return (
       <Navbar fixedTop
@@ -73,24 +78,6 @@ class NavBar extends React.Component {
           {isLoggedIn ?
           <Nav pullLeft>
             <NavItem
-              active={isActive('/member/subscriptions/')}
-              href={createHref('/member/subscriptions/')}
-              onClick={this.handleSelected}
-            ><Icon icon="folder" /> Subscriptions
-            </NavItem>
-            <NavItem
-              active={isActive('/member/bookmarks/')}
-              href={createHref('/member/bookmarks/')}
-              onClick={this.handleSelected}
-            ><Icon icon="bookmark" /> Bookmarks
-            </NavItem>
-            <NavItem
-              active={isActive('/member/recent/')}
-              href={createHref('/member/recent/')}
-              onClick={this.handleSelected}
-            ><Icon icon="history" /> Recently played
-            </NavItem>
-            <NavItem
               onClick={this.handleOpenAddChannelForm}
               href="#"
             ><Icon icon="rss" /> Add new feed
@@ -100,15 +87,32 @@ class NavBar extends React.Component {
 
           {isLoggedIn ?
           <Nav pullRight>
-            <NavItem
-              active={isActive('/user/')}
-              href={createHref('/user/')}
-              onClick={this.handleSelected}
-            ><Icon icon="cog" /> {name}
-            </NavItem>
-            <NavItem href="#" onClick={this.props.onLogout}>
-              <Icon icon="sign-out" /> Logout
-            </NavItem>
+            <NavDropdown title={dropdownTitle} id="user-dropdown">
+              <MenuItem
+                href={createHref('/member/subscriptions/')}
+                onClick={this.handleSelected}
+              ><Icon icon="folder" /> Subscriptions
+            </MenuItem>
+              <MenuItem
+                active={isActive('/member/bookmarks/')}
+                href={createHref('/member/bookmarks/')}
+                onClick={this.handleSelected}
+              ><Icon icon="bookmark" /> Bookmarks
+              </MenuItem>
+              <MenuItem
+                href={createHref('/member/recent/')}
+                onClick={this.handleSelected}
+              ><Icon icon="history" /> Recently played
+              </MenuItem>
+              <MenuItem
+                href={createHref('/user/')}
+                onClick={this.handleSelected}
+              ><Icon icon="cog" /> Settings
+              </MenuItem>
+              <MenuItem href="#" onClick={this.props.onLogout}>
+                <Icon icon="sign-out" /> Logout
+              </MenuItem>
+            </NavDropdown>
           </Nav> :
           <Nav pullRight>
             <NavItem

@@ -60,6 +60,7 @@
     "font-awesome": "^4.5.0",
     "history": "^1.13.1",
     "lodash": "^4.0.0",
+    "md5": "^2.0.0",
     "moment": "^2.10.6",
     "react": "^0.14.3",
     "react-bootstrap": "^0.28.1",

@@ -13,6 +13,7 @@ import {
 
 import * as actions from '../actions';
 import { channelsSelector } from '../selectors';
+import PageHeader from '../components/header';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
@@ -73,6 +74,7 @@ export class Subscriptions extends React.Component {
     return (
       <DocumentTitle title={getTitle('My subscriptions')}>
       <div>
+        <PageHeader header="My subscriptions" />
         <Input
           className="form-control"
           type="search"

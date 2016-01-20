@@ -8,6 +8,7 @@ import DocumentTitle from 'react-document-title';
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 
+import PageHeader from '../components/header';
 import Icon from '../components/icon';
 import PodcastList from '../components/podcasts';
 import { getTitle } from './utils';
@@ -40,6 +41,7 @@ export class Recent extends React.Component {
     return (
       <DocumentTitle title={getTitle('My recently played podcasts')}>
         <div>
+          <PageHeader header="Recently played podcasts" />
           <PodcastList
             actions={actions}
             ifEmpty="No recently played podcasts"

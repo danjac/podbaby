@@ -9,6 +9,7 @@ import { Button, Input } from 'react-bootstrap';
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
 import PodcastList from '../components/podcasts';
+import PageHeader from '../components/header';
 import Icon from '../components/icon';
 import { getTitle } from './utils';
 
@@ -59,6 +60,7 @@ export class Bookmarks extends React.Component {
     return (
       <DocumentTitle title={getTitle('My bookmarks')}>
       <div>
+        <PageHeader header="My bookmarks" />
         <form onSubmit={this.handleSearch}>
           <Input
             type="search"
