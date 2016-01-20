@@ -60,7 +60,7 @@ class ChangePasswordForm extends React.Component {
             <input
               type="password"
               className="form-control"
-              placeholder="Your old password"
+              placeholder="Your new password"
               {...newPassword}
             />
           </FormGroup>
