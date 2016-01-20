@@ -93,8 +93,9 @@ export class App extends React.Component {
   }
 
   handleTogglePlayerBookmark() {
-    if (this.props.player.podcast) {
-      this.actions.bookmarks.toggleBookmark(this.props.player.podcast);
+    const podcast = this.props.player.get('podcast');
+    if (podcast) {
+      this.actions.bookmarks.toggleBookmark(podcast);
     }
   }
 

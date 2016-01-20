@@ -1,13 +1,8 @@
 import immutable from 'immutable';
+import { Alert } from '../records';
 import { Actions } from '../constants';
 
 const initialState = immutable.List();
-
-const Alert = new immutable.Record({
-  id: -1,
-  status: '',
-  message: '',
-});
 
 export default function (state = initialState, action) {
   switch (action.type) {

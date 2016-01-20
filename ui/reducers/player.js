@@ -34,7 +34,10 @@ export default function (state = initialState, action) {
       return initialState;
 
     case Actions.RELOAD_PLAYER:
-      return action.payload ? immutable.Map(action.payload) : initialState;
+      // reload properly
+      return action.payload ? immutable.Map(immutable.fromJS(action.payload, (k, v) => {
+        return k === 'podcast' ? new Podcast(v) : v;
+      })) : initialState;
 
     default:
       return state;

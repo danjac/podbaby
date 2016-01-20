@@ -31,7 +31,7 @@ class Player extends React.Component {
 
   handlePlay(event) {
     const { currentTarget } = event;
-    currentTarget.currentTime = this.props.player.currentTime;
+    currentTarget.currentTime = this.props.player.get('currentTime');
   }
 
   handleBookmark() {
@@ -44,7 +44,7 @@ class Player extends React.Component {
       backgroundColor: '#222',
     };
 
-    const { podcast } = this.props.player;
+    const podcast = this.props.player.get('podcast');
 
     return (
         <ButtonGroup style={{ color: '#fff', float: 'right' }}>
