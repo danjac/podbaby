@@ -53,13 +53,14 @@ export default function PodcastItem(props) {
     showChannel,
     showExpanded,
     toggleDetail,
+    isLoggedIn,
   } = props;
 
   const channelUrl = `/channel/${podcast.channelId}/`;
   const podcastUrl = `/podcast/${podcast.id}/`;
   const image = podcast.image || '/static/podcast.png';
 
-  const playedAt = podcast.lastPlayedAt ?
+  const playedAt = isLoggedIn && podcast.lastPlayedAt ?
     <Badge>Listened {formatListenDate(podcast.lastPlayedAt)}</Badge> : '';
 
   let header;
@@ -82,7 +83,7 @@ export default function PodcastItem(props) {
           </Link>
         </div>
         <div className="media-body">
-          <h4>{showExpanded ? <span>{podcast.title} {playedAt}</span> :
+          <h4>{showExpanded ? podcast.title :
             <Link to={podcastUrl}>{podcast.title}</Link>} {playedAt}</h4>
           <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
         </div>
