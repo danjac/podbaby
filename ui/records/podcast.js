@@ -6,6 +6,7 @@ export default immutable.Record({
   title: '',
   name: '',
   channelId: null,
+  enclosureUrl: '',
   isPlaying: false,
   isBookmarked: false,
   isShowDetail: false,

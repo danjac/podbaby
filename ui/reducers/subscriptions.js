@@ -17,7 +17,7 @@ export default function (state = initialState, action) {
       return initialState;
 
     case Actions.ADD_CHANNEL_SUCCESS:
-      return state.add(action.paylaod.id);
+      return state.add(action.payload.id);
 
     case Actions.SUBSCRIBE:
       return state.add(action.payload);

@@ -28,11 +28,13 @@ export function togglePlayer(podcast) {
     return close();
   }
 
+  const payload = podcast.toJS();
+
   return (dispatch, getState) => {
-    dispatch(createAction(Actions.CURRENTLY_PLAYING, podcast));
+    dispatch(createAction(Actions.CURRENTLY_PLAYING, payload));
     const { player, auth } = getState();
     if (auth.isLoggedIn) {
-      api.nowPlaying(podcast.id);
+      api.nowPlaying(payload.id);
     }
     savePlayerToSession(player);
   };

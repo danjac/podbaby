@@ -77,7 +77,7 @@ class Player extends React.Component {
 
   render() {
     const { player } = this.props;
-    const { podcast } = player;
+    const podcast = player.get('podcast');
     const fullTitle = podcast.name + ' : ' + podcast.title;
     const title = _.truncate(fullTitle, 50);
 

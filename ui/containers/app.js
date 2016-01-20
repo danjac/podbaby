@@ -133,7 +133,7 @@ export class App extends React.Component {
         />}
         {alertList}
         {pageContent}
-        {this.props.player.isPlaying ?
+        {this.props.player.get('isPlaying') ?
         <Player
           player={this.props.player}
           isLoggedIn={isLoggedIn}
