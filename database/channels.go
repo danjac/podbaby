@@ -50,7 +50,7 @@ func (db *ChannelDBReader) SelectRecommended() ([]models.Channel, error) {
 FROM channels c
 JOIN subscriptions s ON s.channel_id = c.id
 GROUP BY c.id
-ORDER BY COUNT(DISTINCT(s.id)) DESC, c.title LIMIT $1
+ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $1
     `
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q, maxRecommendations), q)
@@ -74,7 +74,7 @@ AND (
     )
 )
 GROUP BY c.id
-ORDER BY COUNT(DISTINCT(s.id)) DESC, c.title LIMIT $2
+ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $2
     `
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q, userID, maxRecommendations), q)
