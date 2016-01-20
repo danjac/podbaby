@@ -17,7 +17,7 @@ import Image from './image';
 const Buttons = props => {
   const { podcast } = props;
   return (
-    <ButtonGroup vertical={props.vertical} style={{ float: 'right' }}>
+    <ButtonGroup style={{ float: 'right' }}>
      <Button
        title={ podcast.isPlaying ? 'Stop' : 'Play' }
        onClick={props.togglePlayer}
@@ -40,7 +40,6 @@ const Buttons = props => {
 };
 
 Buttons.propTypes = {
-  vertical: PropTypes.bool,
   isLoggedIn: PropTypes.bool.isRequired,
   podcast: PropTypes.object.isRequired,
   toggleBookmark: PropTypes.func.isRequired,

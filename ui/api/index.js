@@ -41,8 +41,12 @@ export function addChannel(url) {
   return axios.post('/api/channels/', { url });
 }
 
-export function getChannels() {
+export function getSubscriptions() {
   return axios.get('/api/channels/');
+}
+
+export function getRecommendations() {
+  return axios.get('/api/channels/recommended/');
 }
 
 export function getChannel(id, page = 1) {

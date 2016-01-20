@@ -5,9 +5,13 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const maxRecommendations = 20
+
 type ChannelReader interface {
 	SelectAll() ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
+	SelectRecommended() ([]models.Channel, error)
+	SelectRecommendedByUserID(int64) ([]models.Channel, error)
 	Search(string) ([]models.Channel, error)
 	GetByID(int64) (*models.Channel, error)
 	GetByURL(string) (*models.Channel, error)
@@ -38,6 +42,42 @@ func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
 FROM channels`
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q), q)
+}
+
+func (db *ChannelDBReader) SelectRecommended() ([]models.Channel, error) {
+	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url,
+    COUNT(DISTINCT(s.id)) AS num_subs
+FROM channels c
+JOIN subscriptions s ON s.channel_id = c.id
+GROUP BY c.id
+ORDER BY COUNT(DISTINCT(s.id)) DESC, c.title LIMIT $1
+    `
+	var channels []models.Channel
+	return channels, dbErr(sqlx.Select(db, &channels, q, maxRecommendations), q)
+}
+
+func (db *ChannelDBReader) SelectRecommendedByUserID(userID int64) ([]models.Channel, error) {
+	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url, 
+        COUNT(DISTINCT(s.id)) AS num_subs
+FROM channels c
+JOIN subscriptions s ON s.channel_id = c.id
+WHERE s.user_id != $1
+AND (
+ (SELECT COUNT(id) FROM subscriptions WHERE user_id=$1) = 0) OR (
+    s.user_id IN (
+        SELECT user_id FROM subscriptions
+        WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)
+    )
+
+    AND s.channel_id NOT IN (
+	    SELECT channel_id FROM subscriptions WHERE user_id=$1
+    )
+)
+GROUP BY c.id
+ORDER BY COUNT(DISTINCT(s.id)) DESC, c.title LIMIT $2
+    `
+	var channels []models.Channel
+	return channels, dbErr(sqlx.Select(db, &channels, q, userID, maxRecommendations), q)
 }
 
 func (db *ChannelDBReader) SelectSubscribed(userID int64) ([]models.Channel, error) {

@@ -8,6 +8,25 @@ import (
 	"github.com/danjac/podbaby/models"
 )
 
+func getRecommendations(s *Server, w http.ResponseWriter, r *http.Request) error {
+	user, ok := getUser(r)
+	var (
+		channels []models.Channel
+		err      error
+	)
+	if ok {
+		channels, err = s.DB.Channels.SelectRecommendedByUserID(user.ID)
+	} else {
+		channels, err = s.DB.Channels.SelectRecommended()
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return s.Render.JSON(w, http.StatusOK, channels)
+}
+
 func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 	channelID, _ := getID(r)
 

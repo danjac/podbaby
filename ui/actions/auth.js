@@ -46,6 +46,6 @@ export function signupComplete(signupInfo) {
   return dispatch => {
     dispatch(createAction(Actions.SIGNUP_SUCCESS, signupInfo));
     dispatch(alerts.success(`Welcome, ${signupInfo.name}`));
-    dispatch(pushPath('/new/'));
+    dispatch(pushPath('/recommendations/'));
   };
 }

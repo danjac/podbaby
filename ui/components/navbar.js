@@ -58,6 +58,12 @@ class NavBar extends React.Component {
             ><Icon icon="flash" /> New episodes
             </NavItem>
             <NavItem
+              active={isActive('/recommendations/')}
+              href={createHref('/recommendations/')}
+              onClick={this.handleSelected}
+            ><Icon icon="thumbs-up" /> Recommended
+            </NavItem>
+            <NavItem
               active={isActive('/search/')}
               href={createHref('/search/')}
               onClick={this.handleSelected}

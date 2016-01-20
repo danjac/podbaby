@@ -55,6 +55,7 @@ func (s *Server) configureRoutes() http.Handler {
 	channels.Handle("/{id:[0-9]+}/", s.authIgnoreHandler(getChannelDetail)).Methods("GET")
 	channels.Handle("/", s.authRequiredHandler(getChannels)).Methods("GET")
 	channels.Handle("/", s.authRequiredHandler(addChannel)).Methods("POST")
+	channels.Handle("/recommended/", s.authOptionalHandler(getRecommendations)).Methods("GET")
 
 	// search
 
