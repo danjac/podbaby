@@ -1,3 +1,4 @@
+import immutable from 'immutable';
 import { assert } from 'chai';
 import { Actions } from '../../constants';
 import channelsReducer from '../../reducers/channels';
@@ -5,7 +6,7 @@ import channelsReducer from '../../reducers/channels';
 
 describe('Channels', function () {
   it('Shows filtered channels', function () {
-    const state = {
+    const state = immutable.fromJS({
       channels: [
         {
           id: 100,
@@ -13,7 +14,7 @@ describe('Channels', function () {
         },
       ],
       filter: '',
-    };
+    });
 
     const action = {
       type: Actions.FILTER_CHANNELS,
@@ -22,11 +23,11 @@ describe('Channels', function () {
 
     const newState = channelsReducer(state, action);
 
-    assert.equal(newState.filter, 'foo');
+    assert.equal(newState.get('filter'), 'foo');
   });
 
   it('Shows all channels if filter is empty', function () {
-    const state = {
+    const state = immutable.fromJS({
       channels: [
         {
           id: 100,
@@ -34,7 +35,7 @@ describe('Channels', function () {
         },
       ],
       filter: null,
-    };
+    });
 
     const action = {
       type: Actions.FILTER_CHANNELS,
@@ -43,6 +44,6 @@ describe('Channels', function () {
 
     const newState = channelsReducer(state, action);
 
-    assert.equal(newState.filter, '');
+    assert.equal(newState.get('filter'), '');
   });
 });

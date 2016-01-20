@@ -1,22 +1,24 @@
+import immutable from 'immutable';
 import { assert } from 'chai';
 import { Actions } from '../../constants';
+import { Podcast } from '../../records';
 import playerReducer from '../../reducers/player';
 
 describe('Player', function () {
-  const initialState = {
+  const initialState = immutable.Map({
     podcast: null,
     isPlaying: false,
     currentTime: 0,
-  };
+  });
 
   it('Sets the currently playing podcast', function () {
     // time should be reset to 0
-    const state = Object.assign({}, initialState, { currentTime: 30 });
+    const state = initialState.set('currentTime', 30);
 
-    const podcast = {
+    const podcast = Podcast({
       id: 100,
       title: 'A podcast',
-    };
+    });
 
     const action = {
       type: Actions.CURRENTLY_PLAYING,
@@ -25,18 +27,18 @@ describe('Player', function () {
 
     const newState = playerReducer(state, action);
 
-    assert.equal(newState.podcast.id, 100);
-    assert.equal(newState.currentTime, 0);
-    assert.equal(newState.isPlaying, true);
+    assert.equal(newState.get('podcast').id, 100);
+    assert.equal(newState.get('currentTime'), 0);
+    assert.equal(newState.get('isPlaying'), true);
   });
 
   it('Bookmarks the podcast', function () {
-    const podcast = {
+    const podcast = Podcast({
       id: 100,
       title: 'A podcast',
-    };
+    });
 
-    const state = Object.assign({}, initialState, { podcast });
+    const state = initialState.set('podcast', podcast);
 
     const action = {
       type: Actions.ADD_BOOKMARK,
@@ -44,17 +46,16 @@ describe('Player', function () {
     };
 
     const newState = playerReducer(state, action);
-
-    assert.ok(newState.podcast.isBookmarked);
+    assert.ok(newState.get('podcast').isBookmarked);
   });
 
   it('Does not bookmark the podcast if not the player podcast', function () {
-    const podcast = {
+    const podcast = Podcast({
       id: 100,
       title: 'A podcast',
-    };
+    });
 
-    const state = Object.assign({}, initialState, { podcast });
+    const state = initialState.set('podcast', podcast);
 
     const action = {
       type: Actions.ADD_BOOKMARK,
@@ -63,7 +64,7 @@ describe('Player', function () {
 
     const newState = playerReducer(state, action);
 
-    assert.notOk(newState.podcast.isBookmarked);
+    assert.notOk(newState.get('podcast').isBookmarked);
   });
 
   it('Does not bookmark the podcast if player empty', function () {
@@ -74,17 +75,17 @@ describe('Player', function () {
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast, null);
+    assert.equal(newState.get('podcast'), null);
   });
 
   it('Removes the bookmark from the podcast', function () {
-    const podcast = {
+    const podcast = Podcast({
       id: 100,
       title: 'A podcast',
       isBookmarked: true,
-    };
+    });
 
-    const state = Object.assign({}, initialState, { podcast });
+    const state = initialState.set('podcast', podcast);
 
     const action = {
       type: Actions.DELETE_BOOKMARK,
@@ -93,17 +94,17 @@ describe('Player', function () {
 
     const newState = playerReducer(state, action);
 
-    assert.notOk(newState.podcast.isBookmarked);
+    assert.notOk(newState.get('podcast').isBookmarked);
   });
 
   it('Does not remove the bookmark from the podcast if not player', function () {
-    const podcast = {
+    const podcast = Podcast({
       id: 100,
       title: 'A podcast',
       isBookmarked: true,
-    };
+    });
 
-    const state = Object.assign({}, initialState, { podcast });
+    const state = initialState.set('podcast', podcast);
 
     const action = {
       type: Actions.DELETE_BOOKMARK,
@@ -112,7 +113,7 @@ describe('Player', function () {
 
     const newState = playerReducer(state, action);
 
-    assert.ok(newState.podcast.isBookmarked);
+    assert.ok(newState.get('podcast').isBookmarked);
   });
 
   it('Does not remove the bookmark from the podcast if player empty', function () {
@@ -123,7 +124,7 @@ describe('Player', function () {
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast, null);
+    assert.equal(newState.get('podcast'), null);
   });
 
   it('Updates the current play time', function () {
@@ -134,7 +135,7 @@ describe('Player', function () {
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.currentTime, 30);
+    assert.equal(newState.get('currentTime'), 30);
   });
 
   it('Reloads the player if none currently playing', function () {
@@ -145,15 +146,15 @@ describe('Player', function () {
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast, null);
-    assert.equal(newState.currentTime, 0);
+    assert.equal(newState.get('podcast'), null);
+    assert.equal(newState.get('currentTime'), 0);
   });
 
   it('Reloads the player if podcast currently playing', function () {
-    const podcast = {
+    const podcast = Podcast({
       id: 100,
       title: 'A podcast',
-    };
+    });
 
     const action = {
       type: Actions.RELOAD_PLAYER,
@@ -166,8 +167,8 @@ describe('Player', function () {
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast.id, podcast.id);
-    assert.equal(newState.currentTime, 100);
+    assert.equal(newState.get('podcast').id, podcast.id);
+    assert.equal(newState.get('currentTime'), 100);
   });
 
   it('Closes the player', function () {
@@ -177,8 +178,8 @@ describe('Player', function () {
 
     const newState = playerReducer(initialState, action);
 
-    assert.equal(newState.podcast, null);
-    assert.equal(newState.currentTime, 0);
-    assert.notOk(newState.isPlaying);
+    assert.equal(newState.get('podcast'), null);
+    assert.equal(newState.get('currentTime'), 0);
+    assert.notOk(newState.get('isPlaying'));
   });
 });

@@ -17,7 +17,6 @@ export const channelSelector = createSelector(
     if (!channel) {
       return null;
     }
-console.log("Channel", channel)
     return channel.set('isSubscribed', isSubscribed(channel, subscriptions));
   }
 );

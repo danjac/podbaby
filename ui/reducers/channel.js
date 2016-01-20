@@ -1,4 +1,5 @@
 import immutable from 'immutable';
+import { Channel } from '../records';
 import { Actions } from '../constants';
 
 const initialState = immutable.Map({
@@ -21,7 +22,7 @@ export default function (state = initialState, action) {
     case Actions.GET_CHANNEL_SUCCESS:
       return state
         .set('query', '')
-        .set('channel', action.payload)
+        .set('channel', new Channel(action.payload.channel))
         .set('isLoading', false);
 
     case Actions.GET_CHANNEL_FAILURE:

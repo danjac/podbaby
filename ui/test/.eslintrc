@@ -7,7 +7,7 @@
     "browser": true
   },
   "rules": {
-    "func-names": 0
+    "func-names": 0,
+    "new-cap": 0
   }
-  
 }
