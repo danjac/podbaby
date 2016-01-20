@@ -17,3 +17,12 @@ export const sanitize = dirty => {
 };
 
 export const formatPubDate = pubDate => moment(pubDate).format('MMMM Do YYYY');
+
+export const formatListenDate = listenedAt => {
+  let format = 'MMM D';
+  const m = moment(listenedAt);
+  if (!m.isSame(new Date(), 'year')) {
+    format += ' YYYY';
+  }
+  return m.format(format);
+};

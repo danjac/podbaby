@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { sanitize, formatPubDate } from './utils';
+import { sanitize, formatPubDate, formatListenDate } from './utils';
 
 import {
   ButtonGroup,
   Button,
   Panel,
+  Badge,
 } from 'react-bootstrap';
 
 
@@ -58,6 +59,9 @@ export default function PodcastItem(props) {
   const podcastUrl = `/podcast/${podcast.id}/`;
   const image = podcast.image || '/static/podcast.png';
 
+  const playedAt = podcast.lastPlayedAt ?
+    <Badge>Listened {formatListenDate(podcast.lastPlayedAt)}</Badge> : '';
+
   let header;
 
   if (showChannel) {
@@ -78,13 +82,14 @@ export default function PodcastItem(props) {
           </Link>
         </div>
         <div className="media-body">
-          <h4>{showExpanded ? podcast.title : <Link to={podcastUrl}>{podcast.title}</Link>}</h4>
+          <h4>{showExpanded ? <span>{podcast.title} {playedAt}</span> :
+            <Link to={podcastUrl}>{podcast.title}</Link>} {playedAt}</h4>
           <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
         </div>
       </div>
     );
   } else {
-    header = <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>;
+    header = <h4><Link to={podcastUrl}>{podcast.title} {playedAt}</Link></h4>;
   }
 
   return (

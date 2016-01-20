@@ -13,6 +13,7 @@ import podcastsReducer from './podcasts';
 import podcastReducer from './podcast';
 import bookmarksReducer from './bookmarks';
 import subscriptionsReducer from './subscriptions';
+import playsReducer from './plays';
 
 export default combineReducers({
   routing: routeReducer,
@@ -28,4 +29,5 @@ export default combineReducers({
   subscriptions: subscriptionsReducer,
   podcasts: podcastsReducer,
   podcast: podcastReducer,
+  plays: playsReducer,
 });

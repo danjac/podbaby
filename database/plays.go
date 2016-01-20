@@ -1,8 +1,13 @@
 package database
 
 import (
+	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
 )
+
+type PlayReader interface {
+	SelectByUserID(int64) ([]models.Play, error)
+}
 
 type PlayWriter interface {
 	Create(int64, int64) error
@@ -10,13 +15,26 @@ type PlayWriter interface {
 }
 
 type PlayDB struct {
+	PlayReader
 	PlayWriter
 }
 
 func newPlayDB(db sqlx.Ext) *PlayDB {
 	return &PlayDB{
+		PlayReader: &PlayDBReader{db},
 		PlayWriter: &PlayDBWriter{db},
 	}
+}
+
+type PlayDBReader struct {
+	sqlx.Ext
+}
+
+func (db *PlayDBReader) SelectByUserID(userID int64) ([]models.Play, error) {
+	q := "SELECT podcast_id, created_at FROM plays WHERE user_id=$1"
+	var plays []models.Play
+	err := sqlx.Select(db, &plays, q, userID)
+	return plays, dbErr(err, q)
 }
 
 type PlayDBWriter struct {

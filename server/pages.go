@@ -27,6 +27,9 @@ func indexPage(s *Server, w http.ResponseWriter, r *http.Request) error {
 		if user.Subscriptions, err = s.DB.Subscriptions.SelectByUserID(user.ID); err != nil {
 			return err
 		}
+		if user.Plays, err = s.DB.Plays.SelectByUserID(user.ID); err != nil {
+			return err
+		}
 	}
 	csrfToken := nosurf.Token(r)
 	ctx := map[string]interface{}{

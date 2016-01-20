@@ -13,6 +13,7 @@ type User struct {
 	CreatedAt     time.Time `db:"created_at" json:"-"`
 	Bookmarks     []int64   `db:"-" json:"bookmarks"`
 	Subscriptions []int64   `db:"-" json:"subscriptions"`
+	Plays         []Play    `db:"-" json:"plays"`
 }
 
 func (user *User) SetPassword(password string) error {
