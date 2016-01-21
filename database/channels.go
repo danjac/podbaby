@@ -71,24 +71,26 @@ ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $1
 }
 
 func (db *ChannelDBReader) SelectRecommendedByUserID(userID int64) ([]models.Channel, error) {
-	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url 
+	q := `WITH user_subs AS (
+   SELECT channel_id FROM subscriptions WHERE user_id=$1
+)
+SELECT c.id, c.title, c.image, c.description, c.website, c.url 
 FROM channels c
 JOIN subscriptions s ON s.channel_id = c.id
 WHERE s.user_id != $1
 AND (
- (SELECT COUNT(id) FROM subscriptions WHERE user_id=$1) = 0) OR (
+ (SELECT COUNT(channel_id) FROM user_subs) = 0) OR (
     s.user_id IN (
         SELECT user_id FROM subscriptions
-        WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)
+        WHERE channel_id IN (SELECT channel_id FROM user_subs)
     )
-
     AND s.channel_id NOT IN (
-	    SELECT channel_id FROM subscriptions WHERE user_id=$1
+	    SELECT channel_id FROM user_subs
     )
 )
 GROUP BY c.id
-ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $2
-    `
+ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $2`
+
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q, userID, maxRecommendations), q)
 }
