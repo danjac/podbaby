@@ -2,12 +2,15 @@ package feedparser
 
 import (
 	"errors"
+	"fmt"
 	"github.com/danjac/podbaby/models"
 	"github.com/jinzhu/now"
 	rss "github.com/jteeuwen/go-pkg-rss"
 	"strings"
 	"time"
 )
+
+const iTunesDTD = "http://www.itunes.com/dtds/podcast-1.0.dtd"
 
 func init() {
 	// support for additional pub date formats we've found
@@ -164,11 +167,29 @@ func isPlayable(mediaType string) bool {
 	return false
 }
 
+func getCategory(ext *rss.Extension) []string {
+	categories := make([]string, 0)
+	if ext.Name != "category" {
+		return categories
+	}
+	categories = append(categories, ext.Attrs["text"])
+	return categories
+}
+
 func fetch(url string) (*result, error) {
 
 	var channels []*rss.Channel
 
 	chanHandler := func(feed *rss.Feed, newChannels []*rss.Channel) {
+		for _, ch := range newChannels {
+			for _, ext := range ch.Extensions {
+				for _, exts := range ext {
+					for _, item := range exts {
+						fmt.Println(getCategory(&item))
+					}
+				}
+			}
+		}
 		channels = append(channels, newChannels...)
 	}
 

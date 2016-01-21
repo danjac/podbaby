@@ -56,6 +56,25 @@ class NavBar extends React.Component {
 
         <Navbar.Collapse>
           <Nav pullLeft>
+          <NavDropdown title="Browse">
+            <MenuItem
+              href='#'
+              onClick={this.handleSelected}
+            >Games &amp; Hobbies
+            </MenuItem>
+            <MenuItem
+              href='#'
+              onClick={this.handleSelected}
+            >Arts
+            </MenuItem>
+            <MenuItem
+              href='#'
+              onClick={this.handleSelected}
+            >Society &amp; Culture
+            </MenuItem>
+          </NavDropdown>
+        </Nav>
+          <Nav pullLeft>
             <NavItem
               active={isActive('/new/')}
               href={createHref('/new/')}
@@ -94,7 +113,6 @@ class NavBar extends React.Component {
               ><Icon icon="folder" /> Subscriptions
             </MenuItem>
               <MenuItem
-                active={isActive('/member/bookmarks/')}
                 href={createHref('/member/bookmarks/')}
                 onClick={this.handleSelected}
               ><Icon icon="bookmark" /> Bookmarks
