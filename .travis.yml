@@ -3,6 +3,6 @@ language: go
 go:
     - 1.5.3
 
-install: go get github.com/tools/godep && godep restore
+install: go get github.com/tools/godep && godep restore && npm install
 
-script: make test-backend
+script: make test
