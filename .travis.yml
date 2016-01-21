@@ -3,7 +3,6 @@ language: go
 go:
     - 1.5.3
 
-install:
-    npm install
+install: npm install
 
 script: make test
