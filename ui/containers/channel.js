@@ -37,10 +37,10 @@ const RelatedChannel = props => {
   return (
       <div className="thumbnail">
         <div className="caption text-center">
-        <Link to={`/channel/${channel.id}/`}>
-          <h5>{channel.title}</h5>
-        </Link>
-       </div>
+          <Link to={`/channel/${channel.id}/`}>
+            <h5>{channel.title}</h5>
+          </Link>
+        </div>
         <Image
           src={channel.image}
           errSrc="/static/podcast.png"

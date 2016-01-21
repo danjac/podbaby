@@ -53,7 +53,7 @@ WHERE s.user_id in (
   SELECT user_id FROM subscriptions WHERE channel_id=$1
 ) AND s.channel_id != $1
 GROUP BY c.id
-ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT 3`
+ORDER BY RANDOM() DESC LIMIT 3`
 
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q, channelID), q)
