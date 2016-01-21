@@ -2,6 +2,8 @@ language: go
 
 go:
     - 1.5.3
+env:
+    - TRAVIS_NODE_VERSION="5"
 
 install: go get github.com/tools/godep && godep restore && npm cache clean && npm install
 
