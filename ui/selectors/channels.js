@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 const subscriptionsSelector = state => state.subscriptions || [];
+const relatedChannelsPreSelector = state => state.channel.relatedChannels;
 const channelsPreSelector = state => state.channels.channels;
 const channelPreSelector = state => state.channel.channel;
 const filterSelector = state => state.channels.filter;
@@ -21,6 +22,15 @@ export const channelSelector = createSelector(
     });
   }
 );
+
+export const relatedChannelsSelector = createSelector(
+  [relatedChannelsPreSelector,
+   subscriptionsSelector],
+  (channels, subscriptions) => {
+    return channels.map(channel => {
+      return Object.assign({}, channel, { isSubscribed: isSubscribed(channel, subscriptions) });
+    });
+  });
 
 export const channelsSelector = createSelector(
   [channelsPreSelector,

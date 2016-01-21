@@ -1,8 +1,12 @@
 import { podcastsSelector, podcastSelector } from './podcasts';
-import { channelsSelector, channelSelector } from './channels';
+import {
+  channelsSelector,
+  relatedChannelsSelector,
+  channelSelector } from './channels';
 
 export {
   podcastsSelector,
   podcastSelector,
   channelsSelector,
+  relatedChannelsSelector,
   channelSelector };

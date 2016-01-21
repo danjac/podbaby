@@ -16,13 +16,60 @@ import {
 
 
 import * as actions from '../actions';
-import { podcastsSelector, channelSelector } from '../selectors';
+import {
+  podcastsSelector,
+  channelSelector,
+  relatedChannelsSelector,
+  } from '../selectors';
 import PodcastList from '../components/podcasts';
 import Image from '../components/image';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
 import { sanitize } from '../components/utils';
 import { getTitle } from './utils';
+
+const RelatedChannel = props => {
+  const {
+    channel,
+    handleSubscribe,
+    isLoggedIn } = props;
+
+  return (
+      <div className="thumbnail">
+        <div className="caption text-center">
+        <Link to={`/channel/${channel.id}/`}>
+          <h5>{channel.title}</h5>
+        </Link>
+       </div>
+        <Image
+          src={channel.image}
+          errSrc="/static/podcast.png"
+          imgProps={{
+            alt: channel.title,
+            height: 120,
+            width: 120,
+          }}
+        />
+        {isLoggedIn ?
+          <div className="caption text-center">
+            <Button
+              title={channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+              onClick={handleSubscribe}
+            >
+            <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
+            channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
+            }
+            </Button>
+          </div> : ''}
+     </div>
+  );
+};
+
+RelatedChannel.propTypes = {
+  channel: PropTypes.object.isRequired,
+  handleSubscribe: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+};
 
 export class Channel extends React.Component {
 
@@ -103,25 +150,15 @@ export class Channel extends React.Component {
         <Grid>
           <Row>
           {this.props.relatedChannels.map(related => {
+            const handleSubscribe = () => this.actions.subscribe.toggleSubscribe(related);
             return (
-            <Col key={related.id} xs={6} md={4}>
-              <div className="thumbnail">
-              <div className="caption">
-              <Link to={`/channel/${related.id}/`}>
-                <h5 className="text-center">{related.title}</h5>
-              </Link>
-              </div>
-              <Image
-                src={related.image}
-                errSrc="/static/podcast.png"
-                imgProps={{
-                  alt: related.title,
-                  height: 120,
-                  width: 120,
-                }}
+            <Col key={related.id} xs={12} md={4}>
+              <RelatedChannel
+                channel={related}
+                handleSubscribe={handleSubscribe}
+                isLoggedIn={isLoggedIn}
               />
-            </div>
-          </Col>
+            </Col>
           );
           })}
           </Row>
@@ -147,7 +184,7 @@ export class Channel extends React.Component {
             </a>
           </div>
           <div className="media-body">
-                  <h2 className="media-heading">{channel.title}</h2>
+            <h2 className="media-heading">{channel.title}</h2>
           </div>
         </div>
         {channel.description ?
@@ -241,12 +278,13 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { query, relatedChannels } = state.channel;
+  const { query } = state.channel;
   const { page } = state.podcasts;
   const isChannelLoading = state.channel.isLoading;
   const isPodcastsLoading = state.podcasts.isLoading;
   const { isLoggedIn } = state.auth;
   const podcasts = podcastsSelector(state);
+  const relatedChannels = relatedChannelsSelector(state);
   const channel = channelSelector(state);
 
   return {

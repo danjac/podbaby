@@ -141,12 +141,12 @@ type ChannelDBWriter struct {
 func (db *ChannelDBWriter) Create(ch *models.Channel) error {
 
 	q := `SELECT upsert_channel (
-:url, 
-:title, 
-:description, 
-:image, 
-:categories, 
-:website
+    :url, 
+    :title, 
+    :description, 
+    :image, 
+    :categories, 
+    :website
 )`
 
 	q, args, err := sqlx.Named(q, ch)
