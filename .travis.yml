@@ -4,6 +4,8 @@ go:
     - 1.5.3
 
 install:
+    nvm install 3.5.3
+    nvm use 3.5.3
     npm install
 
 script: make test
