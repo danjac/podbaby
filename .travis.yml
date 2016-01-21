@@ -5,6 +5,6 @@ go:
 
 install: 
     godep restore
-    npm install
+    # npm install
 
-script: make test
+script: make test-backend
