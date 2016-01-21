@@ -3,6 +3,6 @@ language: go
 go:
     - 1.5.3
 
-install: go get github.com/tools/godep && godep restore && nvm use 4.0 && npm cache clean && npm install
+install: go get github.com/tools/godep && godep restore && nvm install 5.4.1 && nvm use 5.4.1 && npm cache clean && npm install
 
 script: make test
