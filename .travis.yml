@@ -3,6 +3,8 @@ language: go
 go:
     - 1.5.3
 
-install: npm install
+install: 
+    godep restore
+    npm install
 
 script: make test
