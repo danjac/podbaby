@@ -57,16 +57,16 @@ class NavBar extends React.Component {
         <Navbar.Collapse>
           <Nav pullLeft>
             <NavItem
-              active={isActive('/search/')}
-              href={createHref('/search/')}
-              onClick={this.handleSelected}
-            ><Icon icon="search" /> Search
-            </NavItem>
-            <NavItem
               active={isActive('/new/')}
               href={createHref('/new/')}
               onClick={this.handleSelected}
             ><Icon icon="flash" /> New episodes
+            </NavItem>
+            <NavItem
+              active={isActive('/search/')}
+              href={createHref('/search/')}
+              onClick={this.handleSelected}
+            ><Icon icon="search" /> Search
             </NavItem>
             <NavItem
               active={isActive('/recommendations/')}
