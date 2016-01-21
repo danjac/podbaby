@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "webpack -p --config=webpack.config.prod.js",
-    "dev": "webpack-dev-server --config=webpack.config.dev.js --inline --colors --progress",
+    "dev": "node react-dev-server.js",
     "test": "mocha --opts ./ui/test/mocha.opts"
   },
   "keywords": [
