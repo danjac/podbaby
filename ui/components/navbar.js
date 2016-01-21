@@ -102,7 +102,7 @@ class NavBar extends React.Component {
               <MenuItem
                 href={createHref('/member/recent/')}
                 onClick={this.handleSelected}
-              ><Icon icon="history" /> Recently played
+              ><Icon icon="history" /> Recent
               </MenuItem>
               <MenuItem
                 href={createHref('/user/')}

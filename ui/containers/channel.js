@@ -226,7 +226,7 @@ export class Channel extends React.Component {
             ref="query"
             defaultValue={query}
             onClick={this.handleSelectSearch}
-            placeholder="Find a podcast in this channel"
+            placeholder="Find a podcast from this feed"
           />
           <Input>
             <Button
