@@ -1,0 +1,10 @@
+language: go
+
+go:
+    - 1.5.3
+
+install:
+    make
+
+script:
+    make test
