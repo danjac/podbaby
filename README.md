@@ -15,6 +15,7 @@ Install
 ```
 go get github.com/danjac/podbaby
 cd GOPATH/src/github.com/danjac/podbaby
+cp .env.sample .env // edit as required
 make
 make test
 ./bin/runapp serve -env=dev 
