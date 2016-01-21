@@ -3,11 +3,15 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
+import { Link } from 'react-router';
 
 import {
   ButtonGroup,
   Button,
   Input,
+  Grid,
+  Row,
+  Col,
 } from 'react-bootstrap';
 
 
@@ -78,6 +82,7 @@ export class Channel extends React.Component {
       channel,
       isChannelLoading,
       isPodcastsLoading,
+      relatedChannels,
       query,
       isLoggedIn } = this.props;
 
@@ -92,6 +97,37 @@ export class Channel extends React.Component {
     const website = channel.website.Valid ? channel.website.String : '';
     const { isSubscribed } = channel;
 
+    const recommendations = relatedChannels.length > 0 ?
+    <div className="container">
+        <h4 className="text-center">People who subscribed to this feed also subscribed to</h4>
+        <Grid>
+          <Row>
+          {this.props.relatedChannels.map(related => {
+            return (
+            <Col key={related.id} xs={6} md={4}>
+              <div className="thumbnail">
+              <div className="caption">
+              <Link to={`/channel/${related.id}/`}>
+                <h5 className="text-center">{related.title}</h5>
+              </Link>
+              </div>
+              <Image
+                src={related.image}
+                errSrc="/static/podcast.png"
+                imgProps={{
+                  alt: related.title,
+                  height: 120,
+                  width: 120,
+                }}
+              />
+            </div>
+          </Col>
+          );
+          })}
+          </Row>
+        </Grid>
+    </div> : '';
+
     return (
       <DocumentTitle title={getTitle(channel.title)}>
         <div>
@@ -103,8 +139,8 @@ export class Channel extends React.Component {
                 src={channel.image}
                 errSrc="/static/podcast.png"
                 imgProps={{
-                  height: 60,
-                  width: 60,
+                  height: 120,
+                  width: 120,
                   alt: channel.title,
                 }}
               />
@@ -144,6 +180,8 @@ export class Channel extends React.Component {
           </a>
           ) : ''}
         </ButtonGroup>
+
+
         <hr />
         <form onSubmit={this.handleSearch}>
           <Input
@@ -182,6 +220,7 @@ export class Channel extends React.Component {
           actions={actions}
           {...this.props}
         /> }
+        {recommendations}
       </div>
       </DocumentTitle>
     );
@@ -190,6 +229,7 @@ export class Channel extends React.Component {
 
 Channel.propTypes = {
   channel: PropTypes.object,
+  relatedChannels: PropTypes.array,
   podcasts: PropTypes.array,
   page: PropTypes.object,
   player: PropTypes.object,
@@ -201,7 +241,7 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { query } = state.channel;
+  const { query, relatedChannels } = state.channel;
   const { page } = state.podcasts;
   const isChannelLoading = state.channel.isLoading;
   const isPodcastsLoading = state.podcasts.isLoading;
@@ -212,6 +252,7 @@ const mapStateToProps = state => {
   return {
     podcasts,
     channel,
+    relatedChannels,
     query,
     page,
     isChannelLoading,

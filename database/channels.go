@@ -10,6 +10,7 @@ const maxRecommendations = 20
 type ChannelReader interface {
 	SelectAll() ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
+	SelectRelated(int64) ([]models.Channel, error)
 	SelectRecommended() ([]models.Channel, error)
 	SelectRecommendedByUserID(int64) ([]models.Channel, error)
 	Search(string) ([]models.Channel, error)
@@ -44,9 +45,22 @@ FROM channels`
 	return channels, dbErr(sqlx.Select(db, &channels, q), q)
 }
 
+func (db *ChannelDBReader) SelectRelated(channelID int64) ([]models.Channel, error) {
+	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url
+FROM channels c
+JOIN subscriptions s ON s.channel_id=c.id
+WHERE s.user_id in (
+  SELECT user_id FROM subscriptions WHERE channel_id=$1
+) AND s.channel_id != $1
+GROUP BY c.id
+ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT 3`
+
+	var channels []models.Channel
+	return channels, dbErr(sqlx.Select(db, &channels, q, channelID), q)
+}
+
 func (db *ChannelDBReader) SelectRecommended() ([]models.Channel, error) {
-	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url,
-    COUNT(DISTINCT(s.id)) AS num_subs
+	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url
 FROM channels c
 JOIN subscriptions s ON s.channel_id = c.id
 GROUP BY c.id
@@ -57,8 +71,7 @@ ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $1
 }
 
 func (db *ChannelDBReader) SelectRecommendedByUserID(userID int64) ([]models.Channel, error) {
-	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url, 
-        COUNT(DISTINCT(s.id)) AS num_subs
+	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url 
 FROM channels c
 JOIN subscriptions s ON s.channel_id = c.id
 WHERE s.user_id != $1

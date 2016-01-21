@@ -34,9 +34,18 @@ func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
+
 	detail := &models.ChannelDetail{
 		Channel: channel,
 	}
+
+	related, err := s.DB.Channels.SelectRelated(channelID)
+	if err != nil {
+		return err
+	}
+
+	detail.Related = related
+
 	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, getPage(r))
 	if err != nil {
 		return err
