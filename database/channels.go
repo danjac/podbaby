@@ -9,6 +9,7 @@ const maxRecommendations = 20
 
 type ChannelReader interface {
 	SelectAll() ([]models.Channel, error)
+	SelectByCategoryID(int64) ([]models.Channel, error)
 	SelectSubscribed(int64) ([]models.Channel, error)
 	SelectRelated(int64) ([]models.Channel, error)
 	SelectRecommended() ([]models.Channel, error)
@@ -43,6 +44,19 @@ func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
 FROM channels`
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q), q)
+}
+
+func (db *ChannelDBReader) SelectByCategoryID(categoryID int64) ([]models.Channel, error) {
+	q := `SELECT c.id, c.title, c.image, c.description, c.website, c.url
+FROM channels c
+JOIN channels_categories cc 
+ON cc.channel_id = c.id
+WHERE cc.category_id=$1
+GROUP BY c.id
+ORDER BY c.title`
+
+	var channels []models.Channel
+	return channels, dbErr(sqlx.Select(db, &channels, q, categoryID), q)
 }
 
 func (db *ChannelDBReader) SelectRelated(channelID int64) ([]models.Channel, error) {

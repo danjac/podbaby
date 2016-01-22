@@ -14,6 +14,7 @@ import Signup from '../containers/signup';
 import Search from '../containers/search';
 import Latest from '../containers/latest';
 import Recent from '../containers/recent';
+import Category from '../containers/category';
 import Subscriptions from '../containers/subscriptions';
 import Recommendations from '../containers/recommendations';
 import Bookmarks from '../containers/bookmarks';
@@ -51,6 +52,7 @@ export default function (store, history) {
   const getBookmarks = () => actions.bookmarks.getBookmarks();
   const getRecentlyPlayed = () => actions.plays.getRecentlyPlayed();
   const getLatestPodcasts = () => actions.latest.getLatestPodcasts();
+  const getCategory = nextState => actions.categories.getCategory(nextState.params.id);
   const getChannel = nextState => actions.channel.getChannel(nextState.params.id);
   const getPodcast = nextState => actions.podcasts.getPodcast(nextState.params.id);
 
@@ -96,6 +98,12 @@ export default function (store, history) {
       />
 
       <Route path="/search/" component={Search} />
+
+      <Route
+        path="/categories/:id/"
+        component={Category}
+        onEnter={getCategory}
+      />
 
       <Route
         path="/channel/:id/"

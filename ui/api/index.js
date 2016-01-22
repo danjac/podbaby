@@ -36,6 +36,9 @@ export function searchBookmarks(query) {
   return axios.get('/api/search/bookmarks/', { params: { q: query } });
 }
 
+export function getCategory(id) {
+  return axios.get(`/api/channels/category/${id}/`);
+}
 
 export function addChannel(url) {
   return axios.post('/api/channels/', { url });

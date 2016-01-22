@@ -175,7 +175,7 @@ const mapStateToProps = state => {
     addChannel,
     player,
     alerts,
-    categories,
+    categories: categories.categories,
   };
 };
 

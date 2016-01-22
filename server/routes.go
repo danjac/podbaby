@@ -53,6 +53,7 @@ func (s *Server) configureRoutes() http.Handler {
 	channels := api.PathPrefix("/channels/").Subrouter()
 
 	channels.Handle("/{id:[0-9]+}/", s.authIgnoreHandler(getChannelDetail)).Methods("GET")
+	channels.Handle("/category/{id:[0-9]+}/", s.authIgnoreHandler(getChannelsByCategory)).Methods("GET")
 	channels.Handle("/", s.authRequiredHandler(getChannels)).Methods("GET")
 	channels.Handle("/", s.authRequiredHandler(addChannel)).Methods("POST")
 	channels.Handle("/recommended/", s.authOptionalHandler(getRecommendations)).Methods("GET")

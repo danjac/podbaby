@@ -3,6 +3,7 @@ import { Actions } from '../constants';
 const initialState = {
   channel: null,
   query: '',
+  categories: [],
   relatedChannels: [],
   isLoading: false,
 };
@@ -20,6 +21,7 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         channel: action.payload.channel,
         isLoading: false,
+        categories: action.payload.categories || [],
         relatedChannels: action.payload.relatedChannels || [],
         query: '',
       });

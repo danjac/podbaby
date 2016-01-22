@@ -58,11 +58,12 @@ class NavBar extends React.Component {
 
         <Navbar.Collapse>
           <Nav pullLeft>
-          <NavDropdown title="Browse">
+          <NavDropdown title="Browse" id="categories-dropdown">
             {categories.map(category => {
               return (
                 <MenuItem
-                  href="#"
+                  key={category.id}
+                  href={createHref(`/categories/${category.id}/`)}
                   onClick={this.handleSelected}
                 >{_.capitalize(category.name)}
                 </MenuItem>

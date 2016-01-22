@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Button,
   Input,
+  Label,
   Grid,
   Row,
   Col,
@@ -127,6 +128,7 @@ export class Channel extends React.Component {
   render() {
     const {
       channel,
+      categories,
       isChannelLoading,
       isPodcastsLoading,
       relatedChannels,
@@ -193,6 +195,20 @@ export class Channel extends React.Component {
           style={{ marginTop: 20 }}
           dangerouslySetInnerHTML={sanitize(channel.description)}
         /> : ''}
+        <h5>
+        {categories.map(category => {
+          return (
+          <span>
+            <Label bsStyle="info">
+                <Link to={`/categories/${category.id}/`} style={{ color: '#fff' }}>
+                  {_.capitalize(category.name)}
+                </Link>
+            </Label>
+            &nbsp;
+          </span>
+          );
+        })}
+        </h5>
         <ButtonGroup>
           {isLoggedIn ?
           <Button
@@ -217,8 +233,6 @@ export class Channel extends React.Component {
           </a>
           ) : ''}
         </ButtonGroup>
-
-
         <hr />
         <form onSubmit={this.handleSearch}>
           <Input
@@ -266,6 +280,7 @@ export class Channel extends React.Component {
 
 Channel.propTypes = {
   channel: PropTypes.object,
+  categories: PropTypes.array,
   relatedChannels: PropTypes.array,
   podcasts: PropTypes.array,
   page: PropTypes.object,
@@ -278,7 +293,7 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { query } = state.channel;
+  const { query, categories } = state.channel;
   const { page } = state.podcasts;
   const isChannelLoading = state.channel.isLoading;
   const isPodcastsLoading = state.podcasts.isLoading;
@@ -290,6 +305,7 @@ const mapStateToProps = state => {
   return {
     podcasts,
     channel,
+    categories,
     relatedChannels,
     query,
     page,

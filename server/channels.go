@@ -8,6 +8,16 @@ import (
 	"github.com/danjac/podbaby/models"
 )
 
+func getChannelsByCategory(s *Server, w http.ResponseWriter, r *http.Request) error {
+
+	categoryID, _ := getID(r)
+	channels, err := s.DB.Channels.SelectByCategoryID(categoryID)
+	if err != nil {
+		return err
+	}
+	return s.Render.JSON(w, http.StatusOK, channels)
+}
+
 func getRecommendations(s *Server, w http.ResponseWriter, r *http.Request) error {
 	user, ok := getUser(r)
 	var (
@@ -38,6 +48,13 @@ func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 	detail := &models.ChannelDetail{
 		Channel: channel,
 	}
+
+	categories, err := s.DB.Categories.SelectByChannelID(channelID)
+	if err != nil {
+		return err
+	}
+
+	detail.Categories = categories
 
 	related, err := s.DB.Channels.SelectRelated(channelID)
 	if err != nil {
