@@ -53,6 +53,16 @@ func (db *mockCreateSubscription) Create(_, _ int64) error {
 	return nil
 }
 
+type mockAddCategories struct {
+	*database.CategoryDBWriter
+	isCalled bool
+}
+
+func (db *mockAddCategories) Create(_ *models.Channel) error {
+	db.isCalled = true
+	return nil
+}
+
 type mockCreatePodcast struct {
 	*database.PodcastDBWriter
 	isCalled bool
@@ -96,6 +106,9 @@ func TestAddChannelIfNew(t *testing.T) {
 			T: &mockTransactionManager{},
 			Podcasts: &database.PodcastDB{
 				PodcastWriter: &mockCreatePodcast{},
+			},
+			Categories: &database.CategoryDB{
+				CategoryWriter: &mockAddCategories{},
 			},
 			Channels: &database.ChannelDB{
 				ChannelReader: &mockGetChannelWithNone{},
