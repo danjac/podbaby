@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'redux-form';
 import { routeReducer } from 'redux-simple-router';
 
 import authReducer from './auth';
+import categoriesReducer from './categories';
 import searchReducer from './search';
 import addChannelReducer from './add_channel';
 import playerReducer from './player';
@@ -23,6 +24,7 @@ export default combineReducers({
   addChannel: addChannelReducer,
   player: playerReducer,
   alerts: alertsReducer,
+  categories: categoriesReducer,
   channels: channelsReducer,
   channel: channelReducer,
   bookmarks: bookmarksReducer,

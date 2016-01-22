@@ -31,6 +31,12 @@ func indexPage(s *Server, w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	}
+
+	categories, err := s.DB.Categories.SelectAll()
+	if err != nil {
+		return err
+	}
+
 	csrfToken := nosurf.Token(r)
 	ctx := map[string]interface{}{
 		"env":               s.Config.Env,
@@ -38,6 +44,7 @@ func indexPage(s *Server, w http.ResponseWriter, r *http.Request) error {
 		"staticURL":         s.Config.StaticURL,
 		"googleAnalyticsID": s.Config.GoogleAnalyticsID,
 		"csrfToken":         csrfToken,
+		"categories":        categories,
 		"user":              user,
 		"timestamp":         time.Now().Unix(),
 	}

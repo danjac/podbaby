@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 axios.interceptors.request.use(config => {
-  const headers = Object.assign({}, config.headers, { 'X-CSRF-Token': window.csrfToken });
+  const headers = Object.assign({}, config.headers, { 'X-CSRF-Token': window.__DATA__.csrfToken });
   return Object.assign({}, config, { headers });
 }, error => Promise.reject(error));
 

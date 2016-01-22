@@ -162,18 +162,20 @@ App.propTypes = {
   auth: PropTypes.object.isRequired,
   addChannel: PropTypes.object.isRequired,
   player: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
   alerts: PropTypes.array.isRequired,
 };
 
 
 const mapStateToProps = state => {
-  const { routing, auth, addChannel, player, alerts } = state;
+  const { routing, auth, addChannel, player, alerts, categories } = state;
   return {
     routing,
     auth,
     addChannel,
     player,
     alerts,
+    categories,
   };
 };
 

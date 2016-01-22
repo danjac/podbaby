@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
@@ -37,6 +38,7 @@ class NavBar extends React.Component {
   }
 
   render() {
+    const { categories } = this.props;
     const { isLoggedIn, name, email } = this.props.auth;
     const { createHref, isActive } = this.props.history;
 
@@ -57,21 +59,15 @@ class NavBar extends React.Component {
         <Navbar.Collapse>
           <Nav pullLeft>
           <NavDropdown title="Browse">
-            <MenuItem
-              href='#'
-              onClick={this.handleSelected}
-            >Games &amp; Hobbies
-            </MenuItem>
-            <MenuItem
-              href='#'
-              onClick={this.handleSelected}
-            >Arts
-            </MenuItem>
-            <MenuItem
-              href='#'
-              onClick={this.handleSelected}
-            >Society &amp; Culture
-            </MenuItem>
+            {categories.map(category => {
+              return (
+                <MenuItem
+                  href="#"
+                  onClick={this.handleSelected}
+                >{_.capitalize(category.name)}
+                </MenuItem>
+              );
+            })}
           </NavDropdown>
         </Nav>
           <Nav pullLeft>
@@ -157,6 +153,7 @@ NavBar.propTypes = {
   onOpenAddChannelForm: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired,
 };
 

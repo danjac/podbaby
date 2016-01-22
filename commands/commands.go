@@ -77,6 +77,11 @@ func Fetch(cfg *config.Config) {
 			continue
 		}
 
+		if err := db.Categories.Create(&channel); err != nil {
+			log.Error(err)
+			continue
+		}
+
 		for _, p := range channel.Podcasts {
 			p.ChannelID = channel.ID
 			if err := db.Podcasts.Create(p); err != nil {

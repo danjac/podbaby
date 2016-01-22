@@ -39,7 +39,7 @@ type ChannelDBReader struct {
 }
 
 func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
-	q := `SELECT id, title, description, categories, url, image, website 
+	q := `SELECT id, title, description, url, image, website 
 FROM channels`
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q), q)
@@ -145,7 +145,7 @@ func (db *ChannelDBWriter) Create(ch *models.Channel) error {
     :title, 
     :description, 
     :image, 
-    :categories, 
+    :keywords, 
     :website
 )`
 

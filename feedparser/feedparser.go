@@ -2,7 +2,6 @@ package feedparser
 
 import (
 	"errors"
-	"fmt"
 	"github.com/danjac/podbaby/models"
 	"github.com/jinzhu/now"
 	rss "github.com/jteeuwen/go-pkg-rss"
@@ -64,6 +63,21 @@ func (r *result) getWebsiteURL() string {
 	return ""
 }
 
+func (r *result) getCategories() []string {
+	categories := make([]string, 0)
+	for _, ext := range r.channel.Extensions {
+		for _, exts := range ext {
+			for _, item := range exts {
+				category := getCategory(&item)
+				if category != "" {
+					categories = append(categories, category)
+				}
+			}
+		}
+	}
+	return categories
+}
+
 type Feedparser interface {
 	Fetch(*models.Channel) error
 }
@@ -93,20 +107,22 @@ func (f *feedparserImpl) Fetch(channel *models.Channel) error {
 		channel.Website.Valid = true
 	}
 
+	channel.Categories = result.getCategories()
+
 	// we just want unique categories
-	categoryMap := make(map[string]string)
+	keywordMap := make(map[string]string)
 
-	for _, category := range result.channel.Categories {
-		categoryMap[category.Text] = category.Text
+	for _, c := range result.channel.Categories {
+		keywordMap[c.Text] = c.Text
 	}
 
-	var categories []string
-	for _, category := range categoryMap {
-		categories = append(categories, category)
+	var keywords []string
+	for _, kw := range keywordMap {
+		keywords = append(keywords, kw)
 	}
 
-	channel.Categories.String = strings.Join(categories, " ")
-	channel.Categories.Valid = true
+	channel.Keywords.String = strings.Join(keywords, " ")
+	channel.Keywords.Valid = true
 
 	var podcasts []*models.Podcast
 
@@ -167,13 +183,11 @@ func isPlayable(mediaType string) bool {
 	return false
 }
 
-func getCategory(ext *rss.Extension) []string {
-	categories := make([]string, 0)
+func getCategory(ext *rss.Extension) string {
 	if ext.Name != "category" {
-		return categories
+		return ""
 	}
-	categories = append(categories, ext.Attrs["text"])
-	return categories
+	return strings.Trim(ext.Attrs["text"], " ")
 }
 
 func fetch(url string) (*result, error) {
@@ -181,15 +195,6 @@ func fetch(url string) (*result, error) {
 	var channels []*rss.Channel
 
 	chanHandler := func(feed *rss.Feed, newChannels []*rss.Channel) {
-		for _, ch := range newChannels {
-			for _, ext := range ch.Extensions {
-				for _, exts := range ext {
-					for _, item := range exts {
-						fmt.Println(getCategory(&item))
-					}
-				}
-			}
-		}
 		channels = append(channels, newChannels...)
 	}
 

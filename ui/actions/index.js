@@ -3,6 +3,7 @@ import * as users from './users';
 import * as search from './search';
 import * as latest from './latest';
 import * as player from './player';
+import * as categories from './categories';
 import * as alerts from './alerts';
 import * as addChannel from './add_channel';
 import * as channels from './channels';
@@ -19,6 +20,7 @@ export {
   search,
   addChannel,
   latest,
+  categories,
   podcasts,
   player,
   channels,

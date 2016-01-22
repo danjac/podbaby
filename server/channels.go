@@ -122,6 +122,10 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	}
 
+	if err := s.DB.Categories.Create(channel); err != nil {
+		return err
+	}
+
 	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
 		return err
 	}

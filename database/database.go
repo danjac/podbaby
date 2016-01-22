@@ -19,6 +19,7 @@ type DB struct {
 	T             TransactionManager
 	Users         *UserDB
 	Channels      *ChannelDB
+	Categories    *CategoryDB
 	Podcasts      *PodcastDB
 	Bookmarks     *BookmarkDB
 	Subscriptions *SubscriptionDB
@@ -35,6 +36,7 @@ func New(db *sqlx.DB, cfg *config.Config) *DB {
 		T:             &DBTransactionManager{db},
 		Users:         newUserDB(db),
 		Channels:      newChannelDB(db),
+		Categories:    newCategoryDB(db),
 		Podcasts:      newPodcastDB(db),
 		Subscriptions: newSubscriptionDB(db),
 		Bookmarks:     newBookmarkDB(db),

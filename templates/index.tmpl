@@ -32,9 +32,11 @@
       </footer>
     </body>
     <script>
-    window.__ENV__ = "{{ .env }}";
-    window.csrfToken = "{{ .csrfToken }}";
-    window.user = {{ .user }};
+    window.__DATA__ = {
+        user: {{ .user }},
+        csrfToken: "{{ .csrfToken }}",
+        categories: {{ .categories }}
+    };
     </script>
     <script src="{{ .dynamicContentURL }}main.js?{{ .timestamp }}"></script>
     {{ if ne .googleAnalyticsID "" }}
