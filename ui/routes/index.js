@@ -14,6 +14,7 @@ import Signup from '../containers/signup';
 import Search from '../containers/search';
 import Latest from '../containers/latest';
 import Recent from '../containers/recent';
+import Categories from '../containers/categories';
 import Category from '../containers/category';
 import Subscriptions from '../containers/subscriptions';
 import Recommendations from '../containers/recommendations';
@@ -89,6 +90,11 @@ export default function (store, history) {
         path="/new/"
         component={Latest}
         onEnter={getLatestPodcasts}
+      />
+
+      <Route
+        path="/browse/"
+        component={Categories}
       />
 
       <Route

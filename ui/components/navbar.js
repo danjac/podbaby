@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
@@ -38,7 +37,6 @@ class NavBar extends React.Component {
   }
 
   render() {
-    const { categories } = this.props;
     const { isLoggedIn, name, email } = this.props.auth;
     const { createHref, isActive } = this.props.history;
 
@@ -58,25 +56,17 @@ class NavBar extends React.Component {
 
         <Navbar.Collapse>
           <Nav pullLeft>
-          <NavDropdown title="Browse" id="categories-dropdown">
-            {categories.map(category => {
-              return (
-                <MenuItem
-                  key={category.id}
-                  href={createHref(`/categories/${category.id}/`)}
-                  onClick={this.handleSelected}
-                >{_.capitalize(category.name)}
-                </MenuItem>
-              );
-            })}
-          </NavDropdown>
-        </Nav>
-          <Nav pullLeft>
             <NavItem
               active={isActive('/new/')}
               href={createHref('/new/')}
               onClick={this.handleSelected}
             ><Icon icon="flash" /> New episodes
+            </NavItem>
+            <NavItem
+              active={isActive('/browse/')}
+              href={createHref('/browse/')}
+              onClick={this.handleSelected}
+            ><Icon icon="list" /> Browse
             </NavItem>
             <NavItem
               active={isActive('/search/')}
@@ -154,7 +144,6 @@ NavBar.propTypes = {
   onOpenAddChannelForm: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  categories: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired,
 };
 
