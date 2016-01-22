@@ -196,43 +196,52 @@ export class Channel extends React.Component {
           style={{ marginTop: 20 }}
           dangerouslySetInnerHTML={sanitize(channel.description)}
         /> : ''}
-        <div className="container">
-        <ButtonGroup className="pull-left" vertical={mobile}>
-        {categories.map(category => {
-          return (
-          <Link
-            key={category.id}
-            className="btn btn-info"
-            to={`/categories/${category.id}/`}
-          >{category.name}</Link>
-          );
-        })}
-        </ButtonGroup>
-        <ButtonGroup className="pull-right" vertical={mobile}>
-          {isLoggedIn ?
-          <Button
-            title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-            onClick={this.handleSubscribe}
-          >
-          <Icon icon={isSubscribed ? 'unlink' : 'link'} /> {
-          isSubscribed ? 'Unsubscribe' : 'Subscribe'
-          }
-          </Button> : ''}
-          <a
-            className="btn btn-default"
-            title="Link to RSS Feed"
-            target="_blank"
-            href={channel.url}
-          >
-            <Icon icon="rss" /> RSS feed
-          </a>
-          {website ? (
-          <a className="btn btn-default" title="Link to home page" target="_blank" href={website}>
-            <Icon icon="globe" /> Website
-          </a>
-          ) : ''}
-        </ButtonGroup>
-      </div>
+        <Grid>
+          <Row>
+            <Col xs={6} md={6}>
+              <ButtonGroup className="pull-left" vertical={mobile}>
+              {categories.map(category => {
+                return (
+                <Link
+                  key={category.id}
+                  className="btn btn-info"
+                  to={`/categories/${category.id}/`}
+                >{category.name}</Link>
+                );
+              })}
+              </ButtonGroup>
+            </Col>
+            <Col xs={6} md={6}>
+            <ButtonGroup className="pull-right" vertical={mobile}>
+              {isLoggedIn ?
+              <Button
+                title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+                onClick={this.handleSubscribe}
+              >
+              <Icon icon={isSubscribed ? 'unlink' : 'link'} /> {
+              isSubscribed ? 'Unsubscribe' : 'Subscribe'
+              }
+              </Button> : ''}
+              <a
+                className="btn btn-default"
+                title="Link to RSS Feed"
+                target="_blank"
+                href={channel.url}
+              >
+                <Icon icon="rss" /> RSS feed
+              </a>
+              {website ? (
+              <a className="btn btn-default"
+                title="Link to home page"
+                target="_blank" href={website}
+              >
+                <Icon icon="globe" /> Website
+              </a>
+              ) : ''}
+            </ButtonGroup>
+          </Col>
+        </Row>
+        </Grid>
         <hr />
         <form onSubmit={this.handleSearch}>
           <Input
