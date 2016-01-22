@@ -28,8 +28,8 @@ export const formatListenDate = listenedAt => {
   return m.format(format);
 };
 
-export const mobileDetect = new MobileDetect(window.navigator.userAgent);
-
 export const isMobile = () => {
-  return mobileDetect.mobile() !== null;
+  const ua = window && window.navigator && window.navigator.userAgent;
+  const md = ua ? new MobileDetect(ua) : null;
+  return md && md.mobile() !== null;
 };
