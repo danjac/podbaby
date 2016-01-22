@@ -1,5 +1,6 @@
 import moment from 'moment';
 import sanitizeHtml from 'sanitize-html';
+import MobileDetect from 'mobile-detect';
 
 const sanitizeOptions = {
   allowedTags: ['a', 'code', 'em', 'strong', 'b', 'br', 'span', 'img'],
@@ -25,4 +26,10 @@ export const formatListenDate = listenedAt => {
     format += ' YYYY';
   }
   return m.format(format);
+};
+
+export const mobileDetect = new MobileDetect(window.navigator.userAgent);
+
+export const isMobile = () => {
+  return mobileDetect.mobile() !== null;
 };

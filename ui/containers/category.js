@@ -8,13 +8,14 @@ import DocumentTitle from 'react-document-title';
 import {
   Input,
   Pagination,
+  ButtonGroup,
   Breadcrumb,
   BreadcrumbItem,
-  Label,
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import { channelsSelector, categorySelector } from '../selectors';
+import { isMobile } from '../components/utils';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
 import { getTitle } from './utils';
@@ -49,31 +50,33 @@ export class Category extends React.Component {
     const { createHref } = this.props.history;
     const { category } = this.props;
 
-    const items = [<BreadcrumbItem href={createHref('/browse/')}>Browse</BreadcrumbItem>];
+    const items = [<BreadcrumbItem key="all" href={createHref('/browse/')}>Browse</BreadcrumbItem>];
     let parent = category.parent;
     while (parent) {
       items.push(
-      <BreadcrumbItem href={createHref(`/categories/${parent.id}/`)}>
+      <BreadcrumbItem key={parent.id} href={createHref(`/categories/${parent.id}/`)}>
       {parent.name}
       </BreadcrumbItem>);
       parent = parent.parent;
     }
-    items.push(<BreadcrumbItem active>{category.name}</BreadcrumbItem>);
+    items.push(<BreadcrumbItem key="active" active>{category.name}</BreadcrumbItem>);
     return <Breadcrumb>{items}</Breadcrumb>;
   }
 
   renderChildren() {
     const { category } = this.props;
     return (
-      <h4>
+      <ButtonGroup vertical={isMobile()}>
         {category.children.map(child => {
           return (
-            <Label bsStyle="info" style={{ marginRight: 20 }}>
-              <Link style={{ color: '#fff' }} to={`/categories/${child.id}/`}>{child.name}</Link>
-            </Label>
+          <Link
+            key={child.id}
+            className="btn btn-info"
+            to={`/categories/${child.id}/`}
+          >{child.name}</Link>
           );
         })}
-      </h4>
+      </ButtonGroup>
     );
   }
 

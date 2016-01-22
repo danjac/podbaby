@@ -9,7 +9,6 @@ import {
   ButtonGroup,
   Button,
   Input,
-  Label,
   Grid,
   Row,
   Col,
@@ -26,7 +25,7 @@ import PodcastList from '../components/podcasts';
 import Image from '../components/image';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
-import { sanitize } from '../components/utils';
+import { sanitize, isMobile } from '../components/utils';
 import { getTitle } from './utils';
 
 const RelatedChannel = props => {
@@ -167,6 +166,8 @@ export class Channel extends React.Component {
         </Grid>
     </div> : '';
 
+    const mobile = isMobile();
+
     return (
       <DocumentTitle title={getTitle(channel.title)}>
         <div>
@@ -195,21 +196,19 @@ export class Channel extends React.Component {
           style={{ marginTop: 20 }}
           dangerouslySetInnerHTML={sanitize(channel.description)}
         /> : ''}
-        <h5>
+        <div className="container">
+        <ButtonGroup className="pull-left" vertical={mobile}>
         {categories.map(category => {
           return (
-          <span>
-            <Label bsStyle="info">
-                <Link to={`/categories/${category.id}/`} style={{ color: '#fff' }}>
-                  {category.name}
-                </Link>
-            </Label>
-            &nbsp;
-          </span>
+          <Link
+            key={category.id}
+            className="btn btn-info"
+            to={`/categories/${category.id}/`}
+          >{category.name}</Link>
           );
         })}
-        </h5>
-        <ButtonGroup>
+        </ButtonGroup>
+        <ButtonGroup className="pull-right" vertical={mobile}>
           {isLoggedIn ?
           <Button
             title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
@@ -225,14 +224,15 @@ export class Channel extends React.Component {
             target="_blank"
             href={channel.url}
           >
-            <Icon icon="rss" /> Link to RSS feed
+            <Icon icon="rss" /> RSS feed
           </a>
           {website ? (
           <a className="btn btn-default" title="Link to home page" target="_blank" href={website}>
-            <Icon icon="globe" /> Link to website
+            <Icon icon="globe" /> Website
           </a>
           ) : ''}
         </ButtonGroup>
+      </div>
         <hr />
         <form onSubmit={this.handleSearch}>
           <Input
