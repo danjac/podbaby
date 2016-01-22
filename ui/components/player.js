@@ -99,16 +99,18 @@ class Player extends React.Component {
       >
       <div className="media">
         <div className="media-left media-middle">
-          <Image
-            className="media-object"
-            src={podcast.image}
-            errSrc="/static/podcast.png"
-            imgProps={{
-              height: 40,
-              width: 40,
-              alt: podcast.name,
-            }}
-          />
+          <Link to={`/channel/${podcast.channelId}/`}>
+            <Image
+              className="media-object"
+              src={podcast.image}
+              errSrc="/static/podcast.png"
+              imgProps={{
+                height: 40,
+                width: 40,
+                alt: podcast.name,
+              }}
+            />
+         </Link>
         </div>
         <div className="media-body">
           <div>
