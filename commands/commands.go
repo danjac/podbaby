@@ -67,6 +67,12 @@ func Fetch(cfg *config.Config) {
 
 		log.Info("Channel:" + channel.Title)
 
+		tx, err := db.Begin()
+		if err != nil {
+			log.Error(err)
+			continue
+		}
+
 		if err := f.Fetch(&channel); err != nil {
 			log.Error(err)
 			continue
@@ -88,6 +94,9 @@ func Fetch(cfg *config.Config) {
 				log.Error(err)
 				continue
 			}
+		}
+		if err := tx.Commit(); err != nil {
+			log.Error(err)
 		}
 
 	}

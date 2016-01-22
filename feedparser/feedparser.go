@@ -68,10 +68,7 @@ func (r *result) getCategories() []string {
 	for _, ext := range r.channel.Extensions {
 		for _, exts := range ext {
 			for _, item := range exts {
-				category := getCategory(&item)
-				if category != "" {
-					categories = append(categories, category)
-				}
+				categories = append(categories, getCategories(&item)...)
 			}
 		}
 	}
@@ -183,11 +180,21 @@ func isPlayable(mediaType string) bool {
 	return false
 }
 
-func getCategory(ext *rss.Extension) string {
+func getCategories(ext *rss.Extension) []string {
+	categories := make([]string, 0)
 	if ext.Name != "category" {
-		return ""
+		return categories
 	}
-	return strings.Trim(ext.Attrs["text"], " ")
+	s := strings.Trim(ext.Attrs["text"], " ")
+	if s != "" {
+		categories = append(categories, s)
+	}
+	for _, child := range ext.Childrens {
+		for _, item := range child {
+			categories = append(categories, getCategories(&item)...)
+		}
+	}
+	return categories
 }
 
 func fetch(url string) (*result, error) {

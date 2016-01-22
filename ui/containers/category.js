@@ -8,11 +8,13 @@ import DocumentTitle from 'react-document-title';
 import {
   Input,
   Pagination,
+  Breadcrumb,
+  BreadcrumbItem,
+  Label,
 } from 'react-bootstrap';
 
 import * as actions from '../actions';
-import { channelsSelector } from '../selectors';
-import PageHeader from '../components/header';
+import { channelsSelector, categorySelector } from '../selectors';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
 import { getTitle } from './utils';
@@ -43,6 +45,38 @@ export class Category extends React.Component {
     this.refs.filter.getInputDOMNode().select();
   }
 
+  renderBreadcrumbs() {
+    const { createHref } = this.props.history;
+    const { category } = this.props;
+
+    const items = [<BreadcrumbItem href={createHref('/browse/')}>Browse</BreadcrumbItem>];
+    let parent = category.parent;
+    while (parent) {
+      items.push(
+      <BreadcrumbItem href={createHref(`/categories/${parent.id}/`)}>
+      {parent.name}
+      </BreadcrumbItem>);
+      parent = parent.parent;
+    }
+    items.push(<BreadcrumbItem active>{category.name}</BreadcrumbItem>);
+    return <Breadcrumb>{items}</Breadcrumb>;
+  }
+
+  renderChildren() {
+    const { category } = this.props;
+    return (
+      <h4>
+        {category.children.map(child => {
+          return (
+            <Label bsStyle="info" style={{ marginRight: 20 }}>
+              <Link style={{ color: '#fff' }} to={`/categories/${child.id}/`}>{child.name}</Link>
+            </Label>
+          );
+        })}
+      </h4>
+    );
+  }
+
   render() {
     const { page, unfilteredChannels, isLoading, category } = this.props;
 
@@ -69,12 +103,11 @@ export class Category extends React.Component {
         activePage={page.page}
       /> : '');
 
-    const title = `Category: ${_.capitalize(category.name)}`;
-
     return (
-      <DocumentTitle title={getTitle(title)}>
+      <DocumentTitle title={getTitle(`Category: ${category.name}`)}>
       <div>
-        <PageHeader header={title} />
+        {this.renderBreadcrumbs()}
+        {this.renderChildren()}
         <Input
           className="form-control"
           type="search"
@@ -104,6 +137,7 @@ export class Category extends React.Component {
 }
 
 Category.propTypes = {
+  history: PropTypes.object.isRequired,
   channels: PropTypes.array.isRequired,
   category: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -116,7 +150,7 @@ const mapStateToProps = state => {
   return Object.assign({},
     channelsSelector(state), {
       isLoading: state.channels.isLoading,
-      category: state.categories.category,
+      category: categorySelector(state),
     });
 };
 

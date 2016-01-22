@@ -1,9 +1,10 @@
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
+
+import { parentCategoriesSelector } from '../selectors';
 import { getTitle } from './utils';
 
 export class Categories extends React.Component {
@@ -16,11 +17,11 @@ export class Categories extends React.Component {
           {categories.map(category => {
             return (
             <ListGroupItem
-                key={category.id}
-                href={createHref(`/categories/${category.id}/`)}
-              >
-                {_.capitalize(category.name)}
-              </ListGroupItem>
+              key={category.id}
+              href={createHref(`/categories/${category.id}/`)}
+            >
+              {category.name}
+            </ListGroupItem>
             );
           })}
         </ListGroup>
@@ -35,8 +36,8 @@ Categories.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { categories } = state.categories;
-  return { categories };
+  const parentCategories = parentCategoriesSelector(state);
+  return { categories: parentCategories };
 };
 
 export default connect(mapStateToProps)(Categories);

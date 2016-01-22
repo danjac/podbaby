@@ -201,7 +201,7 @@ export class Channel extends React.Component {
           <span>
             <Label bsStyle="info">
                 <Link to={`/categories/${category.id}/`} style={{ color: '#fff' }}>
-                  {_.capitalize(category.name)}
+                  {category.name}
                 </Link>
             </Label>
             &nbsp;
