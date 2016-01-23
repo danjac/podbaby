@@ -171,12 +171,13 @@ App.contextTypes = {
 
 
 const mapStateToProps = state => {
-  const { auth, addChannel, player, alerts } = state;
+  const { routing, auth, addChannel, player, alerts } = state;
   return {
     auth,
     addChannel,
     player,
     alerts,
+    routing,
   };
 };
 

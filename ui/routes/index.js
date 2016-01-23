@@ -8,8 +8,6 @@ import {
   IndexRedirect,
 } from 'react-router';
 
-import { routeActions } from 'redux-simple-router';
-
 import App from '../containers/app';
 import Front from '../containers/front';
 import Login from '../containers/login';
@@ -33,21 +31,19 @@ import { bindAllActionCreators } from '../actions/utils';
 export default function (store) {
   const actions = bindAllActionCreators(actionCreators, store.dispatch);
 
-  const requireAuth = (nextState) => {
+  const requireAuth = (nextState, replace) => {
     const { auth } = store.getState();
     if (!auth.isLoggedIn) {
       actions.alerts.warning('You have to be signed in first');
       actions.auth.loginRequired(nextState.location.pathname);
-      routeActions.replace('/login/');
+      replace('/login/');
     }
   };
 
-  const redirectIfLoggedIn = (nextState, replaceState) => {
+  const redirectIfLoggedIn = (_, replace) => {
     const { auth } = store.getState();
     if (auth.isLoggedIn) {
-      replaceState(null, '/new/');
-    } else {
-      replaceState(null, '/front/');
+      replace('/new/');
     }
   };
 
@@ -64,9 +60,12 @@ export default function (store) {
   return (
     <Router history={hashHistory}>
       <Route path="/" component={App}>
-        <IndexRoute onEnter={redirectIfLoggedIn} />
 
-        <Route component={Front} path="/front/" />
+        <IndexRoute
+          component={Front}
+          onEnter={redirectIfLoggedIn}
+        />
+
         <Route path="/member/" onEnter={requireAuth}>
 
           <IndexRedirect to="/member/subscriptions/" />
@@ -134,7 +133,7 @@ export default function (store) {
       <Route path="/login/" component={Login} />
       <Route path="/signup/" component={Signup} />
       <Route path="/user/" component={User} onEnter={requireAuth} />
-        <Route path="*" component={PageNotFound} />
+      <Route path="*" component={PageNotFound} />
       </Route>
     </Router>
   );

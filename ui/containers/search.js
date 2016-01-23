@@ -3,9 +3,11 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Button, Input, Tabs, Tab } from 'react-bootstrap';
+import { routeActions } from 'redux-simple-router';
 import DocumentTitle from 'react-document-title';
 
 import * as actions from '../actions';
+import { bindAllActionCreators } from '../actions/utils';
 import { podcastsSelector, channelsSelector } from '../selectors';
 import ChannelItem from '../components/channel_item';
 import PodcastList from '../components/podcasts';
@@ -16,14 +18,21 @@ export class Search extends React.Component {
 
   constructor(props) {
     super(props);
+    this.actions = bindAllActionCreators(actions, this.props.dispatch);
+    this.route = bindActionCreators(routeActions, this.props.dispatch);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   handleSearch(event) {
     event.preventDefault();
-    const value = this.refs.query.getValue();
-    this.search(_.trim(value));
+    const value = _.trim(this.refs.query.getValue());
+    if (value && value !== this.props.searchQuery) {
+      this.route.replace(`/search/?q=${value}`);
+      this.actions.search.search(value);
+    } else {
+      this.actions.search.clearSearch();
+    }
   }
 
   handleSelect() {
