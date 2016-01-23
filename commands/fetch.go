@@ -9,7 +9,7 @@ import (
 
 func fetchChannel(channel *models.Channel, db *database.DB, f feedparser.Feedparser) error {
 
-	tx, err := db.Begin()
+	tx, err := db.Channels.Begin()
 	if err != nil {
 		return err
 	}
@@ -18,19 +18,12 @@ func fetchChannel(channel *models.Channel, db *database.DB, f feedparser.Feedpar
 		return err
 	}
 
-	if err := db.Channels.Create(channel); err != nil {
+	if err := tx.AddCategories(channel); err != nil {
 		return err
 	}
 
-	if err := db.Categories.Create(channel); err != nil {
+	if err := tx.AddPodcasts(channel); err != nil {
 		return err
-	}
-
-	for _, p := range channel.Podcasts {
-		p.ChannelID = channel.ID
-		if err := db.Podcasts.Create(p); err != nil {
-			return err
-		}
 	}
 	if err := tx.Commit(); err != nil {
 		return err

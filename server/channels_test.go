@@ -25,52 +25,12 @@ func (f *mockFeedparser) Fetch(ch *models.Channel) error {
 	return nil
 }
 
-type mockCreateChannel struct {
-	*database.ChannelDBWriter
-	isCalled bool
-}
-
-func (db *mockCreateChannel) Create(_ *models.Channel) error {
-	db.isCalled = true
-	return nil
-}
-
 type mockGetChannelWithNone struct {
 	*database.ChannelDBReader
 }
 
 func (db *mockGetChannelWithNone) GetByURL(_ string) (*models.Channel, error) {
 	return nil, &mockDBErrNoRows{}
-}
-
-type mockCreateSubscription struct {
-	*database.SubscriptionDBWriter
-	isCalled bool
-}
-
-func (db *mockCreateSubscription) Create(_, _ int64) error {
-	db.isCalled = true
-	return nil
-}
-
-type mockAddCategories struct {
-	*database.CategoryDBWriter
-	isCalled bool
-}
-
-func (db *mockAddCategories) Create(_ *models.Channel) error {
-	db.isCalled = true
-	return nil
-}
-
-type mockCreatePodcast struct {
-	*database.PodcastDBWriter
-	isCalled bool
-}
-
-func (db *mockCreatePodcast) Create(_ *models.Podcast) error {
-	db.isCalled = true
-	return nil
 }
 
 type mockTransaction struct{}
@@ -83,10 +43,30 @@ func (t *mockTransaction) Rollback() error {
 	return nil
 }
 
-type mockTransactionManager struct{}
+type mockChannelTransaction struct {
+	*mockTransaction
+}
 
-func (tm *mockTransactionManager) Begin() (database.Transaction, error) {
-	return &mockTransaction{}, nil
+func (t *mockChannelTransaction) Create(_ *models.Channel) error {
+	return nil
+}
+
+func (t *mockChannelTransaction) AddCategories(_ *models.Channel) error {
+	return nil
+}
+
+func (t *mockChannelTransaction) AddPodcasts(_ *models.Channel) error {
+	return nil
+}
+
+func (t *mockChannelTransaction) AddSubscription(_, _ int64) error {
+	return nil
+}
+
+type mockChannelWriter struct{}
+
+func (tm *mockChannelWriter) Begin() (database.ChannelTransaction, error) {
+	return &mockChannelTransaction{}, nil
 }
 
 func TestAddChannelIfNew(t *testing.T) {
@@ -103,19 +83,9 @@ func TestAddChannelIfNew(t *testing.T) {
 	w := httptest.NewRecorder()
 	s := &Server{
 		DB: &database.DB{
-			T: &mockTransactionManager{},
-			Podcasts: &database.PodcastDB{
-				PodcastWriter: &mockCreatePodcast{},
-			},
-			Categories: &database.CategoryDB{
-				CategoryWriter: &mockAddCategories{},
-			},
 			Channels: &database.ChannelDB{
 				ChannelReader: &mockGetChannelWithNone{},
-				ChannelWriter: &mockCreateChannel{},
-			},
-			Subscriptions: &database.SubscriptionDB{
-				SubscriptionWriter: &mockCreateSubscription{},
+				ChannelWriter: &mockChannelWriter{},
 			},
 		},
 		Feedparser: &mockFeedparser{},

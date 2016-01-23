@@ -1,8 +1,10 @@
 package database
 
 import (
+	"fmt"
 	"github.com/danjac/podbaby/models"
 	"github.com/jmoiron/sqlx"
+	"strings"
 )
 
 const maxRecommendations = 20
@@ -20,7 +22,15 @@ type ChannelReader interface {
 }
 
 type ChannelWriter interface {
+	Begin() (ChannelTransaction, error)
+}
+
+type ChannelTransaction interface {
+	Transaction
 	Create(*models.Channel) error
+	AddSubscription(int64, int64) error
+	AddCategories(*models.Channel) error
+	AddPodcasts(*models.Channel) error
 }
 
 type ChannelDB struct {
@@ -28,7 +38,7 @@ type ChannelDB struct {
 	ChannelWriter
 }
 
-func newChannelDB(db sqlx.Ext) *ChannelDB {
+func newChannelDB(db *sqlx.DB) *ChannelDB {
 	return &ChannelDB{
 		ChannelReader: &ChannelDBReader{db},
 		ChannelWriter: &ChannelDBWriter{db},
@@ -36,7 +46,7 @@ func newChannelDB(db sqlx.Ext) *ChannelDB {
 }
 
 type ChannelDBReader struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *ChannelDBReader) SelectAll() ([]models.Channel, error) {
@@ -142,10 +152,22 @@ WHERE id=$1`
 }
 
 type ChannelDBWriter struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
-func (db *ChannelDBWriter) Create(ch *models.Channel) error {
+func (db *ChannelDBWriter) Begin() (ChannelTransaction, error) {
+	tx, err := db.DB.Beginx()
+	if err != nil {
+		return nil, err
+	}
+	return &ChannelDBTransaction{tx}, nil
+}
+
+type ChannelDBTransaction struct {
+	*sqlx.Tx
+}
+
+func (tx *ChannelDBTransaction) Create(ch *models.Channel) error {
 
 	q := `SELECT upsert_channel (
     :url, 
@@ -161,5 +183,58 @@ func (db *ChannelDBWriter) Create(ch *models.Channel) error {
 		return dbErr(err, q)
 	}
 
-	return dbErr(db.QueryRowx(db.Rebind(q), args...).Scan(&ch.ID), q)
+	return dbErr(tx.QueryRowx(tx.Rebind(q), args...).Scan(&ch.ID), q)
+}
+
+func (tx *ChannelDBTransaction) AddCategories(channel *models.Channel) error {
+	if len(channel.Categories) == 0 {
+		return nil
+	}
+	args := []interface{}{
+		channel.ID,
+	}
+
+	params := make([]string, 0, len(channel.Categories))
+	for i, category := range channel.Categories {
+		params = append(params, fmt.Sprintf("$%v", i+2))
+		args = append(args, category)
+	}
+
+	q := fmt.Sprintf("SELECT add_categories($1, ARRAY[%s])", strings.Join(params, ", "))
+	_, err := tx.Exec(q, args...)
+	return dbErr(err, q)
+}
+
+func (tx *ChannelDBTransaction) AddSubscription(channelID int64, userID int64) error {
+
+	q := "INSERT INTO subscriptions(channel_id, user_id) VALUES($1, $2)"
+	_, err := tx.Exec(q, channelID, userID)
+	return dbErr(err, q)
+}
+
+func (tx *ChannelDBTransaction) AddPodcasts(channel *models.Channel) error {
+
+	for _, pc := range channel.Podcasts {
+		pc.ChannelID = channel.ID
+
+		q := `SELECT insert_podcast(
+        :channel_id, 
+        :guid,
+        :title, 
+        :description, 
+        :enclosure_url, 
+        :source,
+        :pub_date)`
+
+		q, args, err := sqlx.Named(q, pc)
+		if err != nil {
+			return dbErr(err, q)
+		}
+		err = dbErr(tx.QueryRowx(tx.Rebind(q), args...).Scan(&pc.ID), q)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+
 }

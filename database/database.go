@@ -33,7 +33,6 @@ func MustConnect(cfg *config.Config) *DB {
 func New(db *sqlx.DB, cfg *config.Config) *DB {
 	return &DB{
 		DB:            db,
-		T:             &DBTransactionManager{db},
 		Users:         newUserDB(db),
 		Channels:      newChannelDB(db),
 		Categories:    newCategoryDB(db),
@@ -42,32 +41,4 @@ func New(db *sqlx.DB, cfg *config.Config) *DB {
 		Bookmarks:     newBookmarkDB(db),
 		Plays:         newPlayDB(db),
 	}
-}
-
-func (db DB) Begin() (Transaction, error) {
-	return db.T.Begin()
-}
-
-type DBTransactionManager struct {
-	*sqlx.DB
-}
-
-func (tm *DBTransactionManager) Begin() (Transaction, error) {
-	tx, err := tm.Beginx()
-	if err != nil {
-		return nil, err
-	}
-	return &DBTransaction{tx}, nil
-}
-
-type DBTransaction struct {
-	*sqlx.Tx
-}
-
-func (t *DBTransaction) Commit() error {
-	return t.Tx.Commit()
-}
-
-func (t *DBTransaction) Rollback() error {
-	return t.Tx.Rollback()
 }

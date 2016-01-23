@@ -105,8 +105,7 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	}
-
-	tx, err := s.DB.Begin()
+	tx, err := s.DB.Channels.Begin()
 	if err != nil {
 		return err
 	}
@@ -126,24 +125,21 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
-		if err := s.DB.Channels.Create(channel); err != nil {
+		if err := tx.Create(channel); err != nil {
 			return err
 		}
 
-		for _, p := range channel.Podcasts {
-			p.ChannelID = channel.ID
-			if err := s.DB.Podcasts.Create(p); err != nil {
-				return err
-			}
+		if err := tx.AddPodcasts(channel); err != nil {
+			return err
+		}
+
+		if err := tx.AddCategories(channel); err != nil {
+			return err
 		}
 
 	}
 
-	if err := s.DB.Categories.Create(channel); err != nil {
-		return err
-	}
-
-	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
+	if err := tx.AddSubscription(channel.ID, user.ID); err != nil {
 		return err
 	}
 
