@@ -96,6 +96,7 @@ WHERE cc.category_id IN (
 )
 AND c.id NOT IN (SELECT channel_id FROM user_subs)
 GROUP BY c.id
+ORDER BY RANDOM()
 LIMIT $2`
 	var channels []models.Channel
 	return channels, dbErr(sqlx.Select(db, &channels, q, userID, maxRecommendations), q)
