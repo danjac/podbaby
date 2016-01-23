@@ -19,7 +19,7 @@ type UserReader interface {
 	IsEmail(string, int64) (bool, error)
 }
 
-func newUserDB(db sqlx.Ext) *UserDB {
+func newUserDB(db *sqlx.DB) *UserDB {
 	return &UserDB{
 		UserWriter: &UserDBWriter{db},
 		UserReader: &UserDBReader{db},
@@ -33,7 +33,7 @@ type UserDB struct {
 }
 
 type UserDBWriter struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *UserDBWriter) UpdateEmail(email string, userID int64) error {
@@ -64,7 +64,7 @@ func (db *UserDBWriter) DeleteUser(userID int64) error {
 }
 
 type UserDBReader struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *UserDBReader) GetByID(id int64) (*models.User, error) {

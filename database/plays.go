@@ -19,7 +19,7 @@ type PlayDB struct {
 	PlayWriter
 }
 
-func newPlayDB(db sqlx.Ext) *PlayDB {
+func newPlayDB(db *sqlx.DB) *PlayDB {
 	return &PlayDB{
 		PlayReader: &PlayDBReader{db},
 		PlayWriter: &PlayDBWriter{db},
@@ -27,7 +27,7 @@ func newPlayDB(db sqlx.Ext) *PlayDB {
 }
 
 type PlayDBReader struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *PlayDBReader) SelectByUserID(userID int64) ([]models.Play, error) {
@@ -38,7 +38,7 @@ func (db *PlayDBReader) SelectByUserID(userID int64) ([]models.Play, error) {
 }
 
 type PlayDBWriter struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *PlayDBWriter) Create(podcastID, userID int64) error {

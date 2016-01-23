@@ -18,7 +18,7 @@ type BookmarkDB struct {
 	BookmarkWriter
 }
 
-func newBookmarkDB(db sqlx.Ext) *BookmarkDB {
+func newBookmarkDB(db *sqlx.DB) *BookmarkDB {
 	return &BookmarkDB{
 		BookmarkReader: &BookmarkDBReader{db},
 		BookmarkWriter: &BookmarkDBWriter{db},
@@ -26,7 +26,7 @@ func newBookmarkDB(db sqlx.Ext) *BookmarkDB {
 }
 
 type BookmarkDBReader struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *BookmarkDBReader) SelectByUserID(userID int64) ([]int64, error) {
@@ -37,7 +37,7 @@ func (db *BookmarkDBReader) SelectByUserID(userID int64) ([]int64, error) {
 }
 
 type BookmarkDBWriter struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *BookmarkDBWriter) Create(podcastID, userID int64) error {

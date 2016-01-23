@@ -18,7 +18,7 @@ type SubscriptionDB struct {
 	SubscriptionWriter
 }
 
-func newSubscriptionDB(db sqlx.Ext) *SubscriptionDB {
+func newSubscriptionDB(db *sqlx.DB) *SubscriptionDB {
 	return &SubscriptionDB{
 		SubscriptionWriter: &SubscriptionDBWriter{db},
 		SubscriptionReader: &SubscriptionDBReader{db},
@@ -26,7 +26,7 @@ func newSubscriptionDB(db sqlx.Ext) *SubscriptionDB {
 }
 
 type SubscriptionDBReader struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *SubscriptionDBReader) SelectByUserID(userID int64) ([]int64, error) {
@@ -37,7 +37,7 @@ func (db *SubscriptionDBReader) SelectByUserID(userID int64) ([]int64, error) {
 }
 
 type SubscriptionDBWriter struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *SubscriptionDBWriter) Create(channelID, userID int64) error {

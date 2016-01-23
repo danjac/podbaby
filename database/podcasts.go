@@ -7,10 +7,6 @@ import (
 
 const maxSearchRows = 20
 
-type PodcastWriter interface {
-	Create(*models.Podcast) error
-}
-
 type PodcastReader interface {
 	GetByID(int64) (*models.Podcast, error)
 	SelectAll(int64) (*models.PodcastList, error)
@@ -25,41 +21,18 @@ type PodcastReader interface {
 
 type PodcastDB struct {
 	PodcastReader
-	PodcastWriter
 }
 
-func newPodcastDB(db sqlx.Ext) *PodcastDB {
+func newPodcastDB(db *sqlx.DB) *PodcastDB {
 
 	return &PodcastDB{
-		PodcastWriter: &PodcastDBWriter{db},
 		PodcastReader: &PodcastDBReader{db},
 	}
 
 }
 
-type PodcastDBWriter struct {
-	sqlx.Ext
-}
-
-func (db *PodcastDBWriter) Create(pc *models.Podcast) error {
-	q := `SELECT insert_podcast(
-    :channel_id, 
-    :guid,
-    :title, 
-    :description, 
-    :enclosure_url, 
-    :source,
-    :pub_date
-)`
-	q, args, err := sqlx.Named(q, pc)
-	if err != nil {
-		return dbErr(err, q)
-	}
-	return dbErr(db.QueryRowx(db.Rebind(q), args...).Scan(&pc.ID), q)
-}
-
 type PodcastDBReader struct {
-	sqlx.Ext
+	*sqlx.DB
 }
 
 func (db *PodcastDBReader) GetByID(id int64) (*models.Podcast, error) {
