@@ -129,14 +129,6 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
-		if err := tx.AddPodcasts(channel); err != nil {
-			return err
-		}
-
-		if err := tx.AddCategories(channel); err != nil {
-			return err
-		}
-
 	}
 
 	if err := tx.AddSubscription(channel.ID, user.ID); err != nil {
@@ -145,6 +137,33 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	if err := tx.Commit(); err != nil {
 		return err
+	}
+
+	if isNewChannel {
+		go func(channel *models.Channel) {
+
+			tx, err := s.DB.Channels.Begin()
+			if err != nil {
+				s.Log.Error(err)
+				return
+			}
+
+			if err := tx.AddPodcasts(channel); err != nil {
+				s.Log.Error(err)
+				return
+			}
+
+			if err := tx.AddCategories(channel); err != nil {
+				s.Log.Error(err)
+				return
+			}
+
+			if err := tx.Commit(); err != nil {
+				s.Log.Error(err)
+			}
+
+		}(channel)
+
 	}
 
 	var status int
