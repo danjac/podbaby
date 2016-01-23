@@ -3,9 +3,13 @@ import { Actions } from '../constants';
 import { createAction } from './utils';
 import { requestPodcasts } from './podcasts';
 
+export function clearSearch() {
+  return createAction(Actions.CLEAR_SEARCH);
+}
+
 export function search(query) {
   if (!query) {
-    return createAction(Actions.CLEAR_SEARCH);
+    return clearSearch();
   }
 
   return dispatch => {

@@ -38,7 +38,7 @@ class NavBar extends React.Component {
 
   render() {
     const { isLoggedIn, name, email } = this.props.auth;
-    const { createHref, isActive } = this.props.history;
+    const { createHref, isActive } = this.props.router;
 
     const dropdownTitle = isLoggedIn ? <span><Gravatar email={email} /> {name}</span> : '';
 
@@ -144,7 +144,7 @@ NavBar.propTypes = {
   onOpenAddChannelForm: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
 };
 
 export default NavBar;

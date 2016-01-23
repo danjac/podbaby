@@ -1,4 +1,4 @@
-import { pushPath } from 'redux-simple-router';
+import { routeActions } from 'redux-simple-router';
 
 import * as api from '../api';
 import { Actions } from '../constants';
@@ -12,7 +12,7 @@ export function logout() {
   return dispatch => {
     api.logout();
     dispatch(createAction(Actions.LOGOUT));
-    dispatch(pushPath('/'));
+    dispatch(routeActions.push('/'));
   };
 }
 
@@ -37,7 +37,7 @@ export function loginComplete(loginInfo) {
     const { auth } = getState();
     const nextPath = auth.redirectTo || '/new/';
     dispatch(createAction(Actions.LOGIN_SUCCESS, loginInfo));
-    dispatch(pushPath(nextPath));
+    dispatch(routeActions.push(nextPath));
     dispatch(alerts.success(`Welcome back, ${loginInfo.name}`));
   };
 }
@@ -46,6 +46,6 @@ export function signupComplete(signupInfo) {
   return dispatch => {
     dispatch(createAction(Actions.SIGNUP_SUCCESS, signupInfo));
     dispatch(alerts.success(`Welcome, ${signupInfo.name}`));
-    dispatch(pushPath('/recommendations/'));
+    dispatch(routeActions.push('/recommendations/'));
   };
 }

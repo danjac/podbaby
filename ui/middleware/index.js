@@ -1,7 +1,9 @@
 import { applyMiddleware } from 'redux';
+import { syncHistory } from 'redux-simple-router';
+import { hashHistory } from 'react-router';
 import thunkMiddleware from 'redux-thunk';
 
-import { pushPath } from 'redux-simple-router';
+import { routeActions } from 'redux-simple-router';
 
 import { alerts } from '../actions';
 
@@ -22,7 +24,7 @@ const apiErrorMiddleware = store => next => action => {
       case 401:
 
         store.dispatch(alerts.warning('You must be logged in to continue'));
-        store.dispatch(pushPath('/login/'));
+        store.dispatch(routeActions.push('/login/'));
         break;
 
       case 404:
@@ -40,7 +42,10 @@ const apiErrorMiddleware = store => next => action => {
   return result;
 };
 
+export const reduxRouterMiddleware = syncHistory(hashHistory);
+
 export default applyMiddleware(
+  reduxRouterMiddleware,
   thunkMiddleware,
   apiErrorMiddleware
 );

@@ -1,7 +1,7 @@
 import { createStore, compose } from 'redux';
 
 import DevTools from '../containers/devtools';
-import middleware from '../middleware';
+import middleware, { reduxRouterMiddleware } from '../middleware';
 import reducer from '../reducers';
 
 
@@ -17,5 +17,6 @@ export default function configureStore(initialState) {
       store.replaceReducer(require('../reducers'))
     );
   }
+  reduxRouterMiddleware.listenForReplays(store);
   return store;
 }

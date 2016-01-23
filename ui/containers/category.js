@@ -47,7 +47,7 @@ export class Category extends React.Component {
   }
 
   renderBreadcrumbs() {
-    const { createHref } = this.props.history;
+    const { createHref } = this.context.router;
     const { category } = this.props;
 
     const items = [<BreadcrumbItem key="all" href={createHref('/browse/')}>Browse</BreadcrumbItem>];
@@ -140,13 +140,16 @@ export class Category extends React.Component {
 }
 
 Category.propTypes = {
-  history: PropTypes.object.isRequired,
   channels: PropTypes.array.isRequired,
   category: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   page: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   unfilteredChannels: PropTypes.array.isRequired,
+};
+
+Category.contextTypes = {
+  router: PropTypes.object,
 };
 
 const mapStateToProps = state => {

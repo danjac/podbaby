@@ -16,16 +16,8 @@ export class Search extends React.Component {
 
   constructor(props) {
     super(props);
-    const { search } = bindActionCreators(actions.search, this.props.dispatch);
-    this.search = search;
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-  }
-
-  componentDidMount() {
-    const query = this.props.location.query.q || '';
-    this.search(query);
-    this.refs.query.getInputDOMNode().focus();
   }
 
   handleSearch(event) {
@@ -118,6 +110,7 @@ export class Search extends React.Component {
             <Input
               type="search"
               ref="query"
+              defaultValue={searchQuery}
               help={help}
               onClick={this.handleSelect}
               placeholder="Find a feed or podcast"

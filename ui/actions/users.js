@@ -1,4 +1,4 @@
-import { pushPath } from 'redux-simple-router';
+import { routeActions } from 'redux-simple-router';
 
 import * as api from '../api';
 import { Actions } from '../constants';
@@ -12,7 +12,7 @@ export function deleteAccount() {
     .then(() => {
       dispatch(createAction(Actions.DELETE_ACCOUNT_SUCCESS));
       dispatch(alerts.info('Your account has been deleted'));
-      dispatch(pushPath('/'));
+      dispatch(routeActions.push('/'));
     })
     .catch(error => {
       dispatch(createAction(Actions.DELETE_ACCOUNT_FAILURE, { error }));

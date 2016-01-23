@@ -10,7 +10,7 @@ import { getTitle } from './utils';
 export class Categories extends React.Component {
   render() {
     const { categories } = this.props;
-    const { createHref } = this.props.history;
+    const { createHref } = this.context.router;
     return (
       <DocumentTitle title={getTitle('Browse categories')}>
         <ListGroup>
@@ -32,7 +32,10 @@ export class Categories extends React.Component {
 
 Categories.propTypes = {
   categories: PropTypes.array.isRequired,
-  history: PropTypes.object.isRequired,
+};
+
+Categories.contextTypes = {
+  router: PropTypes.object,
 };
 
 const mapStateToProps = state => {

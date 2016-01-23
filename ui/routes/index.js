@@ -1,11 +1,14 @@
 import React from 'react';
 
 import {
+  hashHistory,
   Router,
   Route,
   IndexRoute,
   IndexRedirect,
 } from 'react-router';
+
+import { routeActions } from 'redux-simple-router';
 
 import App from '../containers/app';
 import Front from '../containers/front';
@@ -27,15 +30,15 @@ import PageNotFound from '../containers/not_found';
 import * as actionCreators from '../actions';
 import { bindAllActionCreators } from '../actions/utils';
 
-export default function (store, history) {
+export default function (store) {
   const actions = bindAllActionCreators(actionCreators, store.dispatch);
 
-  const requireAuth = (nextState, replaceState) => {
+  const requireAuth = (nextState) => {
     const { auth } = store.getState();
     if (!auth.isLoggedIn) {
       actions.alerts.warning('You have to be signed in first');
       actions.auth.loginRequired(nextState.location.pathname);
-      replaceState(null, '/login/');
+      routeActions.replace('/login/');
     }
   };
 
@@ -56,9 +59,10 @@ export default function (store, history) {
   const getCategory = nextState => actions.categories.getCategory(nextState.params.id);
   const getChannel = nextState => actions.channel.getChannel(nextState.params.id);
   const getPodcast = nextState => actions.podcasts.getPodcast(nextState.params.id);
+  const getSearch = nextState => actions.search.search(nextState.location.query.q);
 
   return (
-    <Router history={history}>
+    <Router history={hashHistory}>
       <Route path="/" component={App}>
         <IndexRoute onEnter={redirectIfLoggedIn} />
 
@@ -103,7 +107,11 @@ export default function (store, history) {
         onEnter={getRecommendations}
       />
 
-      <Route path="/search/" component={Search} />
+      <Route
+        path="/search/"
+        component={Search}
+        onEnter={getSearch}
+      />
 
       <Route
         path="/categories/:id/"

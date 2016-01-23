@@ -105,7 +105,7 @@ export class App extends React.Component {
   }
 
   render() {
-    const { isActive } = this.props.history;
+    const { isActive } = this.context.router;
     const { isLoggedIn } = this.props.auth;
 
     const hideNavbar = isActive('/front/');
@@ -127,6 +127,7 @@ export class App extends React.Component {
       <div>
         {hideNavbar ? '' :
         <NavBar
+          router={this.context.router}
           onLogout={this.handleLogout}
           onOpenAddChannelForm={this.handleOpenAddChannelForm}
           {...this.props}
@@ -156,7 +157,6 @@ export class App extends React.Component {
 
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  routing: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   children: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -165,11 +165,14 @@ App.propTypes = {
   alerts: PropTypes.array.isRequired,
 };
 
+App.contextTypes = {
+  router: PropTypes.object,
+};
+
 
 const mapStateToProps = state => {
-  const { routing, auth, addChannel, player, alerts } = state;
+  const { auth, addChannel, player, alerts } = state;
   return {
-    routing,
     auth,
     addChannel,
     player,
