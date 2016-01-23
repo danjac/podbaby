@@ -105,10 +105,6 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	}
-	tx, err := s.DB.Channels.Begin()
-	if err != nil {
-		return err
-	}
 
 	if isNewChannel {
 
@@ -124,18 +120,21 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			}
 			return err
 		}
+		tx, err := s.DB.Channels.Begin()
+		if err != nil {
+			return err
+		}
 
 		if err := tx.Create(channel); err != nil {
+			return err
+		}
+		if err := tx.Commit(); err != nil {
 			return err
 		}
 
 	}
 
-	if err := tx.AddSubscription(channel.ID, user.ID); err != nil {
-		return err
-	}
-
-	if err := tx.Commit(); err != nil {
+	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
 		return err
 	}
 

@@ -28,7 +28,6 @@ type ChannelWriter interface {
 type ChannelTransaction interface {
 	Transaction
 	Create(*models.Channel) error
-	AddSubscription(int64, int64) error
 	AddCategories(*models.Channel) error
 	AddPodcasts(*models.Channel) error
 }
@@ -202,13 +201,6 @@ func (tx *ChannelDBTransaction) AddCategories(channel *models.Channel) error {
 
 	q := fmt.Sprintf("SELECT add_categories($1, ARRAY[%s])", strings.Join(params, ", "))
 	_, err := tx.Exec(q, args...)
-	return dbErr(err, q)
-}
-
-func (tx *ChannelDBTransaction) AddSubscription(channelID int64, userID int64) error {
-
-	q := "INSERT INTO subscriptions(channel_id, user_id) VALUES($1, $2)"
-	_, err := tx.Exec(q, channelID, userID)
 	return dbErr(err, q)
 }
 

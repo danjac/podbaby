@@ -59,14 +59,18 @@ func (t *mockChannelTransaction) AddPodcasts(_ *models.Channel) error {
 	return nil
 }
 
-func (t *mockChannelTransaction) AddSubscription(_, _ int64) error {
-	return nil
-}
-
 type mockChannelWriter struct{}
 
-func (tm *mockChannelWriter) Begin() (database.ChannelTransaction, error) {
+func (w *mockChannelWriter) Begin() (database.ChannelTransaction, error) {
 	return &mockChannelTransaction{}, nil
+}
+
+type mockSubscriptionWriter struct {
+	*database.SubscriptionDBWriter
+}
+
+func (w *mockSubscriptionWriter) Create(_, _ int64) error {
+	return nil
 }
 
 func TestAddChannelIfNew(t *testing.T) {
@@ -86,6 +90,9 @@ func TestAddChannelIfNew(t *testing.T) {
 			Channels: &database.ChannelDB{
 				ChannelReader: &mockGetChannelWithNone{},
 				ChannelWriter: &mockChannelWriter{},
+			},
+			Subscriptions: &database.SubscriptionDB{
+				SubscriptionWriter: &mockSubscriptionWriter{},
 			},
 		},
 		Feedparser: &mockFeedparser{},
