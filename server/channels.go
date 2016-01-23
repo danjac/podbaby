@@ -125,6 +125,10 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
+		defer func() {
+			_ = tx.Rollback()
+		}()
+
 		if err := tx.Create(channel); err != nil {
 			return err
 		}
@@ -146,6 +150,10 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 				s.Log.Error(err)
 				return
 			}
+
+			defer func() {
+				_ = tx.Rollback()
+			}()
 
 			if err := tx.AddPodcasts(channel); err != nil {
 				s.Log.Error(err)

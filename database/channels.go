@@ -206,10 +206,7 @@ func (tx *ChannelDBTransaction) AddCategories(channel *models.Channel) error {
 
 func (tx *ChannelDBTransaction) AddPodcasts(channel *models.Channel) error {
 
-	for _, pc := range channel.Podcasts {
-		pc.ChannelID = channel.ID
-
-		q := `SELECT insert_podcast(
+	q := `SELECT insert_podcast(
         :channel_id, 
         :guid,
         :title, 
@@ -218,11 +215,14 @@ func (tx *ChannelDBTransaction) AddPodcasts(channel *models.Channel) error {
         :source,
         :pub_date)`
 
-		q, args, err := sqlx.Named(q, pc)
-		if err != nil {
-			return dbErr(err, q)
-		}
-		err = dbErr(tx.QueryRowx(tx.Rebind(q), args...).Scan(&pc.ID), q)
+	stmt, err := tx.PrepareNamed(tx.Rebind(q))
+	if err != nil {
+		return err
+	}
+
+	for _, pc := range channel.Podcasts {
+		pc.ChannelID = channel.ID
+		err = dbErr(stmt.QueryRowx(&pc).Scan(&pc.ID), q)
 		if err != nil {
 			return err
 		}
