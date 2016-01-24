@@ -3,10 +3,9 @@ import _ from 'lodash';
 import md5 from 'md5';
 
 
-const Gravatar = props => {
-  const size = props.size || 20;
-  const code = md5(_.trim(props.email.toLowerCase()));
-  const src = `https://gravatar.com/avatar/${code}?s=${size}`;
+const Gravatar = ({ email, size }) => {
+  const code = md5(_.trim(email.toLowerCase()));
+  const src = `https://gravatar.com/avatar/${code}?s=${size || 20}`;
   return <img src={src} />;
 };
 

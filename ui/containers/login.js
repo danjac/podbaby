@@ -15,10 +15,6 @@ export class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    const { dispatch } = this.props;
-    this.actions = bindActionCreators(actions.auth, dispatch);
-    this.alerts = bindActionCreators(actions.alerts, dispatch);
-
     this.handleLoginComplete = this.handleLoginComplete.bind(this);
     this.handleOpenRecoverPasswordForm = this.handleOpenRecoverPasswordForm.bind(this);
     this.handleCloseRecoverPasswordForm = this.handleCloseRecoverPasswordForm.bind(this);
@@ -26,20 +22,20 @@ export class Login extends React.Component {
   }
 
   handleLoginComplete(result) {
-    this.actions.loginComplete(result);
+    this.props.actions.loginComplete(result);
   }
 
   handleOpenRecoverPasswordForm(event) {
     event.preventDefault();
-    this.actions.openRecoverPasswordForm();
+    this.props.actions.openRecoverPasswordForm();
   }
 
   handleCloseRecoverPasswordForm() {
-    this.actions.closeRecoverPasswordForm();
+    this.props.actions.closeRecoverPasswordForm();
   }
 
   handleRecoverPasswordComplete() {
-    this.actions.recoverPasswordComplete();
+    this.props.actions.recoverPasswordComplete();
   }
 
   render() {
@@ -69,7 +65,7 @@ export class Login extends React.Component {
 
 Login.propTypes = {
   auth: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  actions: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -78,4 +74,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Login);
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators(actions.auth, dispatch),
+  };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

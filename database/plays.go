@@ -6,49 +6,50 @@ import (
 )
 
 type PlayReader interface {
-	SelectByUserID(int64) ([]models.Play, error)
+	SelectByUserID(DataHandler, int64) ([]models.Play, error)
 }
 
 type PlayWriter interface {
-	Create(int64, int64) error
-	DeleteAll(int64) error
+	Create(DataHandler, int64, int64) error
+	DeleteAll(DataHandler, int64) error
 }
 
-type PlayDB struct {
+type PlayDB interface {
 	PlayReader
 	PlayWriter
 }
 
-func newPlayDB(db *sqlx.DB) *PlayDB {
-	return &PlayDB{
-		PlayReader: &PlayDBReader{db},
-		PlayWriter: &PlayDBWriter{db},
+type PlaySqlDB struct {
+	PlayReader
+	PlayWriter
+}
+
+func newPlayDB() PlayDB {
+	return &PlaySqlDB{
+		PlayReader: &PlaySqlReader{},
+		PlayWriter: &PlaySqlWriter{},
 	}
 }
 
-type PlayDBReader struct {
-	*sqlx.DB
-}
+type PlaySqlReader struct{}
 
-func (db *PlayDBReader) SelectByUserID(userID int64) ([]models.Play, error) {
+func (r *PlaySqlReader) SelectByUserID(dh DataHandler, userID int64) ([]models.Play, error) {
 	q := "SELECT podcast_id, created_at FROM plays WHERE user_id=$1"
 	var plays []models.Play
-	err := sqlx.Select(db, &plays, q, userID)
+	err := sqlx.Select(dh, &plays, q, userID)
 	return plays, dbErr(err, q)
 }
 
-type PlayDBWriter struct {
-	*sqlx.DB
-}
+type PlaySqlWriter struct{}
 
-func (db *PlayDBWriter) Create(podcastID, userID int64) error {
+func (w *PlaySqlWriter) Create(dh DataHandler, podcastID, userID int64) error {
 	q := "SELECT add_play($1, $2)"
-	_, err := db.Exec(q, podcastID, userID)
+	_, err := dh.Exec(q, podcastID, userID)
 	return dbErr(err, q)
 }
 
-func (db *PlayDBWriter) DeleteAll(userID int64) error {
+func (w *PlaySqlWriter) DeleteAll(dh DataHandler, userID int64) error {
 	q := "DELETE FROM plays WHERE user_id=$1"
-	_, err := db.Exec(q, userID)
+	_, err := dh.Exec(q, userID)
 	return dbErr(err, q)
 }

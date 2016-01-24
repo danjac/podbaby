@@ -95,6 +95,18 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 	}
 
 	user, _ := getUser(r)
+	/*
+
+	   conn := store.FromContext(ctx)
+	   channelsDB := conn.Channels()
+
+	   channels, err := channelsDB.GetByURL(conn, decoder.URL)
+
+	   tx, err := conn.Begin()
+
+	   err := channelsDB.Create(tx)
+
+	*/
 	channel, err := s.DB.Channels.GetByURL(decoder.URL)
 	isNewChannel := false
 
@@ -120,7 +132,7 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			}
 			return err
 		}
-		tx, err := s.DB.Channels.Begin()
+		tx, err := s.DB.Begin()
 		if err != nil {
 			return err
 		}

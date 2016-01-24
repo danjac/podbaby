@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 
-const PageHeader = props => {
+const PageHeader = ({ header }) => {
   return (
     <div className="page-header">
-      <h2>{props.header}</h2>
+      <h2>{header}</h2>
     </div>
   );
 };
