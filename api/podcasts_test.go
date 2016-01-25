@@ -1,5 +1,7 @@
 package api
 
+/*
+
 import (
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
@@ -103,3 +105,4 @@ func TestLatestPodcastsIfNotLoggedIn(t *testing.T) {
 	}
 
 }
+*/

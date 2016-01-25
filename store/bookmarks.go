@@ -18,13 +18,13 @@ type BookmarkStore interface {
 	BookmarkWriter
 }
 
-type BookmarkSqlDB struct {
+type BookmarkSqlStore struct {
 	BookmarkReader
 	BookmarkWriter
 }
 
 func newBookmarkStore() BookmarkStore {
-	return &BookmarkSqlDB{
+	return &BookmarkSqlStore{
 		BookmarkReader: &BookmarkSqlReader{},
 		BookmarkWriter: &BookmarkSqlWriter{},
 	}

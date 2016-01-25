@@ -1,5 +1,6 @@
 package api
 
+/*
 import (
 	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/models"
@@ -137,3 +138,4 @@ func TestIsEmailIfNotLoggedInAndEmailExists(t *testing.T) {
 	}
 
 }
+*/

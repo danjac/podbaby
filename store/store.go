@@ -106,7 +106,7 @@ func (store *SqlStore) Plays() PlayStore {
 }
 
 func (store *SqlStore) Subscriptions() SubscriptionStore {
-	return newSubscriptionStore()
+	return store.subscriptions
 }
 
 func New(cfg *config.Config) (Store, error) {
@@ -117,6 +117,8 @@ func New(cfg *config.Config) (Store, error) {
 	return &SqlStore{
 		conn:          &SqlConnection{db},
 		categories:    newCategoryStore(),
+		channels:      newChannelStore(),
+		users:         newUserStore(),
 		podcasts:      newPodcastStore(),
 		bookmarks:     newBookmarkStore(),
 		subscriptions: newSubscriptionStore(),

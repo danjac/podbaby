@@ -1,5 +1,6 @@
 package api
 
+/*
 import (
 	"fmt"
 	"github.com/danjac/podbaby/database"
@@ -112,3 +113,4 @@ func TestAddChannelIfNew(t *testing.T) {
 	}
 
 }
+*/
