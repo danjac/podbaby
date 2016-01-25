@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -11,6 +12,9 @@ func getBookmarks(c *echo.Context) error {
 		user  = getUser(c)
 		store = getStore(c)
 	)
+
+	fmt.Println(c.Path())
+	fmt.Println(getIntOr404(c, "id"))
 
 	result, err := store.Podcasts().SelectBookmarked(
 		store.Conn(),

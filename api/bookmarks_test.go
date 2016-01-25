@@ -14,9 +14,10 @@ func TestGetBookmarksIfNotOk(t *testing.T) {
 		ID: 10,
 	}
 
-	req, _ := http.NewRequest("GET", "/", nil)
+	req, _ := http.NewRequest("GET", "/5/", nil)
 	w := httptest.NewRecorder()
 	e := echo.New()
+	e.Get("/:id/", getBookmarks)
 
 	c := echo.NewContext(req, echo.NewResponse(w, e), e)
 
@@ -34,7 +35,7 @@ func TestGetBookmarksIfNotOk(t *testing.T) {
 	c.Set(userContextKey, user)
 	c.Set(storeContextKey, s)
 
-	if err := getBookmarks(c); err == nil {
+	if err := getBookmarks(c); err != nil {
 		t.Fatal("This should return an error")
 	}
 
@@ -66,8 +67,8 @@ func TestGetBookmarksIfOk(t *testing.T) {
 	c.Set(userContextKey, user)
 	c.Set(storeContextKey, s)
 
-	if err := getBookmarks(c); err == nil {
-		t.Fatal("This should return an error")
+	if err := getBookmarks(c); err != nil {
+		t.Fatal("This should not return an error")
 	}
 
 }
