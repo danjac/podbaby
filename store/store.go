@@ -37,17 +37,24 @@ type Transaction interface {
 
 type Store interface {
 	Conn() Connection
-	Users() UserDB
-	Channels() ChannelDB
-	Categories() CategoryDB
-	Podcasts() PodcastDB
-	Bookmarks() BookmarkDB
-	Subscriptions() SubscriptionDB
-	Plays() PlayDB
+	Users() UserStore
+	Channels() ChannelStore
+	Categories() CategoryStore
+	Podcasts() PodcastStore
+	Bookmarks() BookmarkStore
+	Subscriptions() SubscriptionStore
+	Plays() PlayStore
 }
 
 type SqlStore struct {
-	conn Connection
+	conn          Connection
+	users         UserStore
+	categories    CategoryStore
+	channels      ChannelStore
+	podcasts      PodcastStore
+	bookmarks     BookmarkStore
+	subscriptions SubscriptionStore
+	plays         PlayStore
 }
 
 type SqlConnection struct {
@@ -74,32 +81,32 @@ type SqlTransaction struct {
 	*sqlx.Tx
 }
 
-func (store *SqlStore) Users() UserDB {
-	return newUserDB()
+func (store *SqlStore) Users() UserStore {
+	return store.users
 }
 
-func (store *SqlStore) Channels() ChannelDB {
-	return newChannelDB()
+func (store *SqlStore) Channels() ChannelStore {
+	return store.channels
 }
 
-func (store *SqlStore) Categories() CategoryDB {
-	return newCategoryDB()
+func (store *SqlStore) Categories() CategoryStore {
+	return store.categories
 }
 
-func (store *SqlStore) Bookmarks() BookmarkDB {
-	return newBookmarkDB()
+func (store *SqlStore) Bookmarks() BookmarkStore {
+	return store.bookmarks
 }
 
-func (store *SqlStore) Podcasts() PodcastDB {
-	return newPodcastDB()
+func (store *SqlStore) Podcasts() PodcastStore {
+	return store.podcasts
 }
 
-func (store *SqlStore) Plays() PlayDB {
-	return newPlayDB()
+func (store *SqlStore) Plays() PlayStore {
+	return store.plays
 }
 
-func (store *SqlStore) Subscriptions() SubscriptionDB {
-	return newSubscriptionDB()
+func (store *SqlStore) Subscriptions() SubscriptionStore {
+	return newSubscriptionStore()
 }
 
 func New(cfg *config.Config) (Store, error) {
@@ -108,6 +115,11 @@ func New(cfg *config.Config) (Store, error) {
 		return nil, err
 	}
 	return &SqlStore{
-		conn: &SqlConnection{db},
+		conn:          &SqlConnection{db},
+		categories:    newCategoryStore(),
+		podcasts:      newPodcastStore(),
+		bookmarks:     newBookmarkStore(),
+		subscriptions: newSubscriptionStore(),
+		plays:         newPlayStore(),
 	}, nil
 }

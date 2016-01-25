@@ -30,11 +30,11 @@ func (v validator) invalid(field, msg string) validator {
 }
 
 func (v validator) render() error {
-	return v.c.JSON(http.StatusBadRequest, v)
+	return v.c.JSON(http.StatusBadRequest, v.errors)
 }
 
 func (v validator) ok() bool {
-	return len(v.errors) > 0
+	return len(v.errors) == 0
 }
 
 func (v validator) validate(d decoder) (bool, error) {

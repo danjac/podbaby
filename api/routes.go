@@ -11,6 +11,7 @@ func withRoutes(e *echo.Echo) {
 	// API
 
 	api := e.Group("/api/")
+	api.Get("/search/", searchAll)
 
 	// PUBLIC ROUTES
 
@@ -30,10 +31,7 @@ func withRoutes(e *echo.Echo) {
 	channels.Get("category/:id/", getChannelsByCategory)
 	channels.Get("recommended/", getRecommendations)
 	channels.Get(":id/", getChannelDetail)
-
-	search := api.Group("search/")
-	search.Get("", searchAll)
-	search.Get("channels/:id/", searchChannel)
+	channels.Get(":id/search/", searchChannel)
 
 	// podcasts
 
@@ -68,6 +66,7 @@ func withRoutes(e *echo.Echo) {
 
 	bookmarks := member.Group("bookmarks/")
 	bookmarks.Get("", getBookmarks)
+	bookmarks.Get("search/", searchBookmarks)
 	bookmarks.Post(":id/", addBookmark)
 	bookmarks.Delete(":id/", removeBookmark)
 

@@ -14,18 +14,18 @@ type PlayWriter interface {
 	DeleteAll(DataHandler, int64) error
 }
 
-type PlayDB interface {
+type PlayStore interface {
 	PlayReader
 	PlayWriter
 }
 
-type PlaySqlDB struct {
+type PlaySqlStore struct {
 	PlayReader
 	PlayWriter
 }
 
-func newPlayDB() PlayDB {
-	return &PlaySqlDB{
+func newPlayStore() PlayStore {
+	return &PlaySqlStore{
 		PlayReader: &PlaySqlReader{},
 		PlayWriter: &PlaySqlWriter{},
 	}
@@ -37,7 +37,7 @@ func (r *PlaySqlReader) SelectByUserID(dh DataHandler, userID int64) ([]models.P
 	q := "SELECT podcast_id, created_at FROM plays WHERE user_id=$1"
 	var plays []models.Play
 	err := sqlx.Select(dh, &plays, q, userID)
-	return plays, dbErr(err, q)
+	return plays, err
 }
 
 type PlaySqlWriter struct{}
@@ -45,11 +45,11 @@ type PlaySqlWriter struct{}
 func (w *PlaySqlWriter) Create(dh DataHandler, podcastID, userID int64) error {
 	q := "SELECT add_play($1, $2)"
 	_, err := dh.Exec(q, podcastID, userID)
-	return dbErr(err, q)
+	return err
 }
 
 func (w *PlaySqlWriter) DeleteAll(dh DataHandler, userID int64) error {
 	q := "DELETE FROM plays WHERE user_id=$1"
 	_, err := dh.Exec(q, userID)
-	return dbErr(err, q)
+	return err
 }
