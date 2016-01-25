@@ -1,14 +1,20 @@
-package server
+package api
 
 import (
 	"fmt"
 	"github.com/danjac/podbaby/models"
+	"github.com/labstack/echo"
 	"net/http"
 )
 
-func getOPML(s *Server, w http.ResponseWriter, r *http.Request) error {
-	user, _ := getUser(r)
-	channels, err := s.DB.Channels.SelectSubscribed(user.ID)
+func getOPML(c *echo.Context) error {
+
+	var (
+		user  = userFromContext(c)
+		store = storeFromContext(c)
+	)
+
+	channels, err := store.Channels().SelectSubscribed(store.Conn(), user.ID)
 	if err != nil {
 		return err
 	}
@@ -30,5 +36,5 @@ func getOPML(s *Server, w http.ResponseWriter, r *http.Request) error {
 		},
 		)
 	}
-	return s.Render.XML(w, http.StatusOK, opml)
+	return c.XML(http.StatusOK, opml)
 }

@@ -21,5 +21,5 @@ type ChannelDetail struct {
 	Categories []Category `json:"categories"`
 	Podcasts   []Podcast  `json:"podcasts"`
 	Related    []Channel  `json:"relatedChannels"`
-	Page       *Page      `json:"page"`
+	Page       *Paginator `json:"page"`
 }

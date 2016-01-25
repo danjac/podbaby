@@ -1,11 +1,12 @@
-package database
+package store
 
-import "database/sql"
+import (
+	"fmt"
+)
 
 type DBError interface {
 	error
 	Query() string
-	IsNoRows() bool
 }
 
 type sqlError struct {
@@ -14,20 +15,16 @@ type sqlError struct {
 }
 
 func (e sqlError) Error() string {
-	return e.err.Error()
+	return fmt.Sprintf("%s:%s", e.err.Error(), e.Query())
 }
 
 func (e sqlError) Query() string {
 	return e.sql
 }
 
-func (e sqlError) IsNoRows() bool {
-	return e.err == sql.ErrNoRows
-}
-
-func dbErr(err error, sql string) error {
+func dbErr(err error, query string) error {
 	if err == nil {
 		return nil
 	}
-	return sqlError{err, sql}
+	return sqlError{err, query}
 }

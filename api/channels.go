@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"net/http"
@@ -38,10 +38,22 @@ func getRecommendations(s *Server, w http.ResponseWriter, r *http.Request) error
 }
 
 func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
-	channelID, _ := getID(r)
 
-	channel, err := s.DB.Channels.GetByID(channelID)
+	channelID, err := getInt64(c, "id") // getIntOr404(c, "id") ???
 	if err != nil {
+		return err
+	}
+
+	var (
+		store = storeFromContext(c)
+		conn  = store.Conn()
+	)
+
+	channel, err := store.Channels().GetByID(conn, channelID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return
+		}
 		return err
 	}
 
@@ -49,7 +61,7 @@ func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 		Channel: channel,
 	}
 
-	categories, err := s.DB.Categories.SelectByChannelID(channelID)
+	categories, err := store.Categories().SelectByChannelID(conn, channelID)
 	if err != nil {
 		return err
 	}
@@ -77,37 +89,32 @@ func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 	return s.Render.JSON(w, http.StatusOK, detail)
 }
 
-func getChannels(s *Server, w http.ResponseWriter, r *http.Request) error {
-	user, _ := getUser(r)
-	channels, err := s.DB.Channels.SelectSubscribed(user.ID)
+func getSubscriptions(c *echo.Context) error {
+	var (
+		user  = userFromContext(c)
+		store = storeFromContext(c)
+	)
+	channels, err := store.Channels().SelectSubscribed(store.Conn(), user.ID)
 	if err != nil {
 		return err
 	}
-	return s.Render.JSON(w, http.StatusOK, channels)
+	return c.JSON(http.StatusOK, channels)
 }
 
-func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
+func addChannel(c *echo.Context) error {
 
 	decoder := &decoders.NewChannel{}
-
-	if err := decoders.Decode(r, decoder); err != nil {
+	if err, ok := decoders.Decode(c, decoder); !ok {
 		return err
 	}
 
-	user, _ := getUser(r)
-	/*
-
-	   conn := store.FromContext(ctx)
-	   channelsDB := conn.Channels()
-
-	   channels, err := channelsDB.GetByURL(conn, decoder.URL)
-
-	   tx, err := conn.Begin()
-
-	   err := channelsDB.Create(tx)
-
-	*/
-	channel, err := s.DB.Channels.GetByURL(decoder.URL)
+	var (
+		store        = storeFromContext(c)
+		conn         = store.Conn()
+		channelStore = store.Channels()
+		user         = userFromContext(c)
+	)
+	channel, err := channelStore.GetByURL(conn, decoder.URL)
 	isNewChannel := false
 
 	if err != nil {
@@ -126,13 +133,14 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 		if err := s.Feedparser.Fetch(channel); err != nil {
 			if err == feedparser.ErrInvalidFeed {
-				err = decoders.Errors{
+				errors := decoders.Errors{
 					"url": "Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
 				}
+				return errors.Render(c)
 			}
 			return err
 		}
-		tx, err := s.DB.Begin()
+		tx, err := conn.Begin()
 		if err != nil {
 			return err
 		}
@@ -141,7 +149,7 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 			_ = tx.Rollback()
 		}()
 
-		if err := tx.Create(channel); err != nil {
+		if err := channelStore.Create(tx, channel); err != nil {
 			return err
 		}
 		if err := tx.Commit(); err != nil {
@@ -150,16 +158,21 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 
 	}
 
-	if err := s.DB.Subscriptions.Create(channel.ID, user.ID); err != nil {
+	if err := store.Subscriptions().Create(conn, channel.ID, user.ID); err != nil {
 		return err
 	}
 
 	if isNewChannel {
-		go func(channel *models.Channel) {
+		go func(c *echo.Context, channel *models.Channel) {
 
-			tx, err := s.DB.Channels.Begin()
+			var (
+				store        = storeFromContext(c)
+				channelStore = store.Channels()
+				log          = c.Echo().Logger()
+			)
+			tx, err := store.Conn().Begin()
 			if err != nil {
-				s.Log.Error(err)
+				log.Error(err)
 				return
 			}
 
@@ -167,21 +180,21 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 				_ = tx.Rollback()
 			}()
 
-			if err := tx.AddPodcasts(channel); err != nil {
-				s.Log.Error(err)
+			if err := channelStore.AddPodcasts(tx, channel); err != nil {
+				log.Error(err)
 				return
 			}
 
-			if err := tx.AddCategories(channel); err != nil {
-				s.Log.Error(err)
+			if err := channelStore.AddCategories(tx, channel); err != nil {
+				log.Error(err)
 				return
 			}
 
 			if err := tx.Commit(); err != nil {
-				s.Log.Error(err)
+				log.Error(err)
 			}
 
-		}(channel)
+		}(c, channel)
 
 	}
 
@@ -192,5 +205,5 @@ func addChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
 		status = http.StatusOK
 	}
 
-	return s.Render.JSON(w, status, channel)
+	return c.JSON(status, channel)
 }

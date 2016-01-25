@@ -3,7 +3,7 @@ package models
 import "testing"
 
 func TestPageIfEmpty(t *testing.T) {
-	p := NewPage(1, 0)
+	p := NewPaginator(1, 0)
 	if p.NumPages != 0 {
 		t.Fail()
 	}
@@ -13,7 +13,7 @@ func TestPageIfEmpty(t *testing.T) {
 }
 
 func TestPageIfNotEmpty(t *testing.T) {
-	p := NewPage(1, 100)
+	p := NewPaginator(1, 100)
 	if p.NumPages != 10 {
 		t.Fail()
 	}
@@ -23,7 +23,7 @@ func TestPageIfNotEmpty(t *testing.T) {
 }
 
 func TestPageOffset(t *testing.T) {
-	p := NewPage(5, 100)
+	p := NewPaginator(5, 100)
 	if p.NumPages != 10 {
 		t.Fail()
 	}

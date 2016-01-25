@@ -1,4 +1,4 @@
-package database
+package store
 
 import (
 	"github.com/danjac/podbaby/models"

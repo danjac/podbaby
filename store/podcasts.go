@@ -1,4 +1,4 @@
-package database
+package store
 
 import (
 	"github.com/danjac/podbaby/models"
@@ -98,7 +98,7 @@ WHERE pl.user_id=$1`
 	}
 
 	result := &models.PodcastList{
-		Page: models.NewPage(page, numRows),
+		Page: models.NewPaginator(page, numRows),
 	}
 
 	q = `SELECT p.id, p.title, p.enclosure_url, p.description,
@@ -132,7 +132,7 @@ func (r *PodcastSqlReader) SelectAll(dh DataHandler, page int64) (*models.Podcas
 	}
 
 	result := &models.PodcastList{
-		Page: models.NewPage(page, numRows),
+		Page: models.NewPaginator(page, numRows),
 	}
 
 	q = `SELECT p.id, p.title, p.enclosure_url, p.description,
@@ -163,7 +163,7 @@ WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
 	}
 
 	result := &models.PodcastList{
-		Page: models.NewPage(page, numRows),
+		Page: models.NewPaginator(page, numRows),
 	}
 
 	q = `SELECT p.id, p.title, p.enclosure_url, p.description,
@@ -197,7 +197,7 @@ WHERE b.user_id=$1`
 	}
 
 	result := &models.PodcastList{
-		Page: models.NewPage(page, numRows),
+		Page: models.NewPaginator(page, numRows),
 	}
 
 	q = `SELECT p.id, p.title, p.enclosure_url, p.description,
@@ -231,7 +231,7 @@ func (r *PodcastSqlReader) SelectByChannelID(dh DataHandler, channelID, page int
 	}
 
 	result := &models.PodcastList{
-		Page: models.NewPage(page, numRows),
+		Page: models.NewPaginator(page, numRows),
 	}
 
 	q = `SELECT id, title, enclosure_url, description, pub_date, source

@@ -1,12 +1,12 @@
 package decoders
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/labstack/echo"
 )
 
 const minNameLength = 3
@@ -19,17 +19,29 @@ func (e Errors) Error() string {
 	return fmt.Sprintf("%v", e)
 }
 
+func (e Errors) Render(c *echo.Context) error {
+	return c.JSON(http.StatusBadRequest, e)
+}
+
 type Decoder interface {
 	Decode() error
 }
 
 // Decode decodes JSON body of request and runs through validator
-func Decode(r *http.Request, decoder Decoder) error {
-	defer r.Body.Close()
-	if err := json.NewDecoder(r.Body).Decode(decoder); err != nil {
-		return err
+// if err, ok := d.Decode(c); !ok {
+// return err }
+
+func Decode(c *echo.Context, decoder Decoder) (error, bool) {
+	if err := c.Bind(decoder); err != nil {
+		return err, false
 	}
-	return decoder.Decode()
+	if err := decoder.Decode(); err != nil {
+		if e, ok := err.(Errors); ok {
+			return e.Render(c), false
+		}
+		return err, false
+	}
+	return nil, true
 }
 
 type RecoverPassword struct {

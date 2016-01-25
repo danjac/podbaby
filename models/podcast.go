@@ -3,8 +3,8 @@ package models
 import "time"
 
 type PodcastList struct {
-	Podcasts []Podcast `json:"podcasts"`
-	Page     *Page     `json:"page"`
+	Podcasts []Podcast  `json:"podcasts"`
+	Page     *Paginator `json:"page"`
 }
 
 type Podcast struct {

@@ -4,8 +4,8 @@ import "math"
 
 const defaultPageSize = 10
 
-func NewPage(page int64, numRows int64) *Page {
-	p := &Page{
+func NewPaginator(page int64, numRows int64) *Paginator {
+	p := &Paginator{
 		CurrentPage: page,
 		NumRows:     numRows,
 		PageSize:    defaultPageSize,
@@ -15,7 +15,7 @@ func NewPage(page int64, numRows int64) *Page {
 	return p
 }
 
-type Page struct {
+type Paginator struct {
 	NumRows     int64 `json:"numRows"`
 	NumPages    int64 `json:"numPages"`
 	CurrentPage int64 `json:"page"`

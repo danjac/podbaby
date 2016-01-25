@@ -2,12 +2,11 @@ package commands
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/danjac/podbaby/config"
-	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/mailer"
-	"github.com/danjac/podbaby/server"
+	"github.com/danjac/podbaby/store"
+	"golang.org/x/net/context"
+	"net/http"
 )
 
 // Serve runs the webserver
@@ -15,7 +14,7 @@ func Serve(cfg *config.Config) {
 
 	log := configureLogger()
 
-	db := database.MustConnect(cfg)
+	db, err := store.New(cfg)
 	defer db.Close()
 
 	mailer, err := mailer.New(cfg)
