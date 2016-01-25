@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
 	"github.com/jmoiron/sqlx"
@@ -69,6 +68,5 @@ type mockPodcastStore struct {
 }
 
 func (s *mockPodcastStore) SelectBookmarked(_ store.DataHandler, userID int64, page int64) (*models.PodcastList, error) {
-	fmt.Println("Calling with userID:", userID)
 	return s.selectBookmarked(userID, page)
 }

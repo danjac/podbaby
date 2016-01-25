@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/danjac/podbaby/models"
 	"github.com/labstack/echo"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,7 +21,6 @@ func TestGetBookmarksIfNotOk(t *testing.T) {
 	c := echo.NewContext(req, echo.NewResponse(w, e), e)
 
 	var mockSelectBookmarked = func(_, _ int64) (*models.PodcastList, error) {
-		log.Println("CALLIng MOCK SELECT BOOKMARKS")
 		return nil, errMockDBError
 	}
 
@@ -42,8 +40,6 @@ func TestGetBookmarksIfNotOk(t *testing.T) {
 
 }
 
-/*
-
 func TestGetBookmarksIfOk(t *testing.T) {
 
 	user := &models.User{
@@ -56,13 +52,14 @@ func TestGetBookmarksIfOk(t *testing.T) {
 
 	c := echo.NewContext(req, echo.NewResponse(w, e), e)
 
-	var getBookmarks = func(_ int64) (*models.PodcastList, error) {
+	var mockSelectBookmarked = func(_, _ int64) (*models.PodcastList, error) {
 		return &models.PodcastList{}, nil
 	}
 
 	s := &mockStore{
-		bookmarks: mockBookmarkStore{
-			getBookmarks: getBookmarks,
+		conn: &mockConnection{},
+		podcasts: &mockPodcastStore{
+			selectBookmarked: mockSelectBookmarked,
 		},
 	}
 
@@ -74,4 +71,3 @@ func TestGetBookmarksIfOk(t *testing.T) {
 	}
 
 }
-*/
