@@ -1,64 +1,74 @@
-package server
+package api
 
 import (
+	"github.com/labstack/echo"
 	"net/http"
 	"strings"
 
 	"github.com/danjac/podbaby/models"
 )
 
-func searchAll(s *Server, w http.ResponseWriter, r *http.Request) error {
+func searchAll(c *echo.Context) error {
 
-	query := strings.Trim(r.FormValue("q"), " ")
+	var (
+		store = getStore(c)
+		conn  = store.Conn()
+	)
+
+	query := strings.Trim(c.Form("q"), " ")
 
 	result := &models.SearchResult{}
 
 	if query != "" {
 		var err error
-		if result.Channels, err = s.DB.Channels.Search(query); err != nil {
+		if result.Channels, err = store.Channels().Search(conn, query); err != nil {
 			return err
 		}
-		if result.Podcasts, err = s.DB.Podcasts.Search(query); err != nil {
+		if result.Podcasts, err = store.Podcasts().Search(conn, query); err != nil {
 			return err
 		}
 	}
 
-	return s.Render.JSON(w, http.StatusOK, result)
+	return c.JSON(http.StatusOK, result)
 }
 
-func searchBookmarks(s *Server, w http.ResponseWriter, r *http.Request) error {
+func searchBookmarks(c *echo.Context) error {
 
-	user, _ := getUser(r)
-	query := strings.Trim(r.FormValue("q"), " ")
+	var (
+		store = getStore(c)
+		user  = getUser(c)
+	)
+	query := strings.Trim(c.Form("q"), " ")
 
 	var podcasts []models.Podcast
 	var err error
 
 	if query != "" {
-		if podcasts, err = s.DB.Podcasts.SearchBookmarked(query, user.ID); err != nil {
+		if podcasts, err = store.Podcasts().SearchBookmarked(store.Conn(), query, user.ID); err != nil {
 			return err
 		}
 	}
 
-	return s.Render.JSON(w, http.StatusOK, podcasts)
+	return c.JSON(http.StatusOK, podcasts)
 }
 
-func searchChannel(s *Server, w http.ResponseWriter, r *http.Request) error {
+func searchChannel(c *echo.Context) error {
 
-	query := strings.Trim(r.FormValue("q"), " ")
-
-	channelID, err := getID(r)
+	channelID, err := getIntOr404(c, "id")
 	if err != nil {
 		return err
 	}
 
+	query := strings.Trim(c.Form("q"), " ")
+	store := getStore(c)
+
 	var podcasts []models.Podcast
 
 	if query != "" {
-		if podcasts, err = s.DB.Podcasts.SearchByChannelID(query, channelID); err != nil {
+		if podcasts, err = store.Podcasts().SearchByChannelID(store.Conn(), query, channelID); err != nil {
 			return err
 		}
 	}
 
-	return s.Render.JSON(w, http.StatusOK, podcasts)
+	return c.JSON(http.StatusOK, podcasts)
 }

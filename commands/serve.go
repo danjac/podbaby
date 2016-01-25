@@ -2,28 +2,37 @@ package commands
 
 import (
 	"fmt"
+	"github.com/danjac/podbaby/api"
 	"github.com/danjac/podbaby/config"
+	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
 	"github.com/danjac/podbaby/store"
-	"golang.org/x/net/context"
+	"log"
 	"net/http"
 )
 
 // Serve runs the webserver
 func Serve(cfg *config.Config) {
 
-	log := configureLogger()
+	store, err := store.New(cfg)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	db, err := store.New(cfg)
-	defer db.Close()
+	defer store.Conn().Close()
 
 	mailer, err := mailer.New(cfg)
 
-	if err != nil {
-		panic(err)
+	feedparser := feedparser.New()
+
+	env := &api.Env{
+		Store:      store,
+		Mailer:     mailer,
+		Config:     cfg,
+		Feedparser: feedparser,
 	}
 
-	handler := server.New(db, mailer, log, cfg).Configure()
+	handler := api.New(env)
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), handler); err != nil {
 		panic(err)

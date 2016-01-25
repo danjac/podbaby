@@ -1,14 +1,19 @@
 package api
 
-import "net/http"
+import (
+	"github.com/labstack/echo"
+	"net/http"
+)
 
 func getBookmarks(c *echo.Context) error {
 
-	user := userFromContext(c)
-	store := storeFromContext(c)
+	var (
+		user  = getUser(c)
+		store = getStore(c)
+	)
 
 	result, err := store.Podcasts().SelectBookmarked(
-		store.Conn,
+		store.Conn(),
 		user.ID,
 		getPage(c))
 
@@ -20,32 +25,36 @@ func getBookmarks(c *echo.Context) error {
 }
 
 func addBookmark(c *echo.Context) error {
-	user := userFromContext(c)
-	podcastID, err := getInt64(c, "id")
+	podcastID, err := getIntOr404(c, "id")
 
 	if err != nil {
 		return err
 	}
 
-	store := storeFromContext(c)
+	var (
+		user  = getUser(c)
+		store = getStore(c)
+	)
 
-	if err := store.Bookmarks().Create(store.Conn, podcastID, user.ID); err != nil {
+	if err := store.Bookmarks().Create(store.Conn(), podcastID, user.ID); err != nil {
 		return err
 	}
-	c.NoContent(http.StatusCreated)
+	return c.NoContent(http.StatusCreated)
 }
 
 func removeBookmark(c *echo.Context) error {
-	user := userFromContext(c)
-	podcastID, err := getInt64(c, "id")
+	podcastID, err := getIntOr404(c, "id")
 
 	if err != nil {
 		return err
 	}
 
-	store := storeFromContext(c)
+	var (
+		user  = getUser(c)
+		store = getStore(c)
+	)
 
-	if err := store.Bookmarks().Delete(store.Conn, podcastID, user.ID); err != nil {
+	if err := store.Bookmarks().Delete(store.Conn(), podcastID, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusNoContent)

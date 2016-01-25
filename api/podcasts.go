@@ -1,38 +1,48 @@
-package server
+package api
 
 import (
 	"github.com/danjac/podbaby/models"
+	"github.com/labstack/echo"
 	"net/http"
 )
 
-func getPodcast(s *Server, w http.ResponseWriter, r *http.Request) error {
+func getPodcast(c *echo.Context) error {
 
-	podcastID, _ := getID(r)
-	podcast, err := s.DB.Podcasts.GetByID(podcastID)
+	podcastID, err := getIntOr404(c, "id")
 	if err != nil {
 		return err
 	}
-	return s.Render.JSON(w, http.StatusOK, podcast)
+
+	store := getStore(c)
+
+	podcast, err := store.Podcasts().GetByID(store.Conn(), podcastID)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, podcast)
 }
 
-func getLatestPodcasts(s *Server, w http.ResponseWriter, r *http.Request) error {
+func getLatestPodcasts(c *echo.Context) error {
 
 	var (
-		result *models.PodcastList
-		err    error
+		err          error
+		result       *models.PodcastList
+		page         = getPage(c)
+		store        = getStore(c)
+		conn         = store.Conn()
+		podcastStore = store.Podcasts()
 	)
 
-	user, ok := getUser(r)
-	page := getPage(r)
+	user, ok := getUserOk(c)
 
 	if ok { // user authenticated
-		result, err = s.DB.Podcasts.SelectSubscribed(user.ID, page)
+		result, err = podcastStore.SelectSubscribed(conn, user.ID, page)
 	} else {
-		result, err = s.DB.Podcasts.SelectAll(page)
+		result, err = podcastStore.SelectAll(conn, page)
 	}
 
 	if err != nil {
 		return err
 	}
-	return s.Render.JSON(w, http.StatusOK, result)
+	return c.JSON(http.StatusOK, result)
 }

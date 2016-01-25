@@ -13,8 +13,8 @@ func indexPage(c *echo.Context) error {
 	var (
 		dynamicContentURL string
 		err               error
-		cfg               = configFromContext(c)
-		store             = storeFromContext(c)
+		cfg               = getConfig(c)
+		store             = getStore(c)
 		conn              = store.Conn()
 	)
 
@@ -59,5 +59,5 @@ func indexPage(c *echo.Context) error {
 		"user":              user,
 		"timestamp":         time.Now().Unix(),
 	}
-	return c.HTML(http.StatusOK, "index", data)
+	return c.Render(http.StatusOK, "index.tmpl", data)
 }

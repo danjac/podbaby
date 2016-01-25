@@ -1,5 +1,15 @@
 package api
 
+import (
+	"encoding/base64"
+	"github.com/danjac/podbaby/config"
+	"github.com/labstack/echo"
+	"net/http"
+	"time"
+
+	"github.com/gorilla/securecookie"
+)
+
 const cookieTimeout = 24
 
 type CookieStore interface {
@@ -13,7 +23,7 @@ type secureCookieStore struct {
 }
 
 func (s *secureCookieStore) Write(c *echo.Context, key string, value interface{}) error {
-	encoded, err := s.Encode(value)
+	encoded, err := s.Encode(key, value)
 	if err == nil {
 		cookie := &http.Cookie{
 			Name:     key,
@@ -36,7 +46,7 @@ func (s *secureCookieStore) Read(c *echo.Context, key string, dst interface{}) e
 	return s.Decode(key, cookie.Value, dst)
 }
 
-func NewCookieStore(cfg *Config) CookieStore {
+func newCookieStore(cfg *config.Config) CookieStore {
 	secureCookieKey, _ := base64.StdEncoding.DecodeString(cfg.SecureCookieKey)
 	cookie := securecookie.New(
 		[]byte(cfg.SecretKey),

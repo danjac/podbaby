@@ -1,29 +1,50 @@
-package server
+package api
 
-import "net/http"
+import (
+	"github.com/labstack/echo"
+	"net/http"
+)
 
-func addPlay(s *Server, w http.ResponseWriter, r *http.Request) error {
-	podcastID, _ := getID(r)
-	user, _ := getUser(r)
-	if err := s.DB.Plays.Create(podcastID, user.ID); err != nil {
-		return err
-	}
-	return s.Render.Text(w, http.StatusCreated, "played")
-}
+func addPlay(c *echo.Context) error {
 
-func getPlays(s *Server, w http.ResponseWriter, r *http.Request) error {
-	user, _ := getUser(r)
-	result, err := s.DB.Podcasts.SelectPlayed(user.ID, getPage(r))
+	var (
+		user  = getUser(c)
+		store = getStore(c)
+	)
+
+	podcastID, err := getIntOr404(c, "id")
 	if err != nil {
 		return err
 	}
-	return s.Render.JSON(w, http.StatusOK, result)
-}
 
-func deleteAllPlays(s *Server, w http.ResponseWriter, r *http.Request) error {
-	user, _ := getUser(r)
-	if err := s.DB.Plays.DeleteAll(user.ID); err != nil {
+	if err := store.Plays().Create(store.Conn(), podcastID, user.ID); err != nil {
 		return err
 	}
-	return s.Render.Text(w, http.StatusOK, "all plays removed")
+	return c.NoContent(http.StatusCreated)
+}
+
+func getPlays(c *echo.Context) error {
+
+	var (
+		user  = getUser(c)
+		store = getStore(c)
+	)
+
+	result, err := store.Podcasts().SelectPlayed(store.Conn(), user.ID, getPage(c))
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, result)
+}
+
+func deleteAllPlays(c *echo.Context) error {
+	var (
+		user  = getUser(c)
+		store = getStore(c)
+	)
+
+	if err := store.Plays().DeleteAll(store.Conn(), user.ID); err != nil {
+		return err
+	}
+	return c.NoContent(http.StatusNoContent)
 }

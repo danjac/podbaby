@@ -2,14 +2,16 @@ package commands
 
 import (
 	"github.com/danjac/podbaby/config"
-	"github.com/danjac/podbaby/database"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/store"
 )
 
-func fetchChannel(channel *models.Channel, db *database.DB, f feedparser.Feedparser) error {
+func fetchChannel(channel *models.Channel, store store.Store, f feedparser.Feedparser) error {
 
-	tx, err := db.Channels.Begin()
+	channelStore := store.Channels()
+
+	tx, err := store.Conn().Begin()
 	if err != nil {
 		return err
 	}
@@ -18,11 +20,11 @@ func fetchChannel(channel *models.Channel, db *database.DB, f feedparser.Feedpar
 		return err
 	}
 
-	if err := tx.AddCategories(channel); err != nil {
+	if err := channelStore.AddCategories(tx, channel); err != nil {
 		return err
 	}
 
-	if err := tx.AddPodcasts(channel); err != nil {
+	if err := channelStore.AddPodcasts(tx, channel); err != nil {
 		return err
 	}
 	if err := tx.Commit(); err != nil {
@@ -35,13 +37,13 @@ func fetchChannel(channel *models.Channel, db *database.DB, f feedparser.Feedpar
 // Fetch retrieves latest podcasts
 func Fetch(cfg *config.Config) {
 
-	db := database.MustConnect(cfg)
-	defer db.Close()
+	store, err := store.New(cfg)
+	if err != nil {
+		panic(err)
+	}
+	defer store.Conn().Close()
 
-	log := configureLogger()
-	log.Info("fetching...")
-
-	channels, err := db.Channels.SelectAll()
+	channels, err := store.Channels().SelectAll(store.Conn())
 
 	if err != nil {
 		panic(err)
@@ -51,9 +53,7 @@ func Fetch(cfg *config.Config) {
 
 	for _, channel := range channels {
 
-		log.Info("Channel:" + channel.Title)
-		if err := fetchChannel(&channel, db, f); err != nil {
-			log.Error(err)
+		if err := fetchChannel(&channel, store, f); err != nil {
 			continue
 		}
 

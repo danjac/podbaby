@@ -1,16 +1,12 @@
 package api
 
-import (
-	"github.com/danjac/podbaby/config"
-	"github.com/labstack/echo"
-	"net/http"
-)
+import "github.com/labstack/echo"
 
-func withRoutes(e *echo.Echo, cfg *config.Config) {
+func withRoutes(e *echo.Echo) {
 
 	// front page
 
-	c.Get("/", indexPage)
+	e.Get("/", indexPage)
 
 	// API
 
@@ -20,67 +16,66 @@ func withRoutes(e *echo.Echo, cfg *config.Config) {
 
 	// authentication
 
-	auth := api.Group("/auth/")
-	auth.Post("/login/", login)
-	auth.Post("/signup/", signup)
-	auth.Post("/recoverpass/", recoverpass)
-	auth.Get("/name/", isName)
-	auth.Get("/email/", isEmail)
-	auth.Delete("/logout/", logout)
+	auth := api.Group("auth/")
+	auth.Post("login/", login)
+	auth.Post("signup/", signup)
+	auth.Post("recoverpass/", recoverPassword)
+	auth.Get("name/", isName)
+	auth.Get("email/", isEmail)
+	auth.Delete("logout/", logout)
 
 	// channels
 
-	channels := api.Group("/channels/")
-	channels.Get("/:id/", getChannelDetail)
-	channels.Get("/category/:id/", getChannelsByCategory)
+	channels := api.Group("channels/")
+	channels.Get("category/:id/", getChannelsByCategory)
+	channels.Get("recommended/", getRecommendations)
+	channels.Get(":id/", getChannelDetail)
 
-	search := api.Group("/search/")
-	search.Get("/", searchAll)
-	search.Get("/channels/:id/", searchChannel)
+	search := api.Group("search/")
+	search.Get("", searchAll)
+	search.Get("channels/:id/", searchChannel)
 
 	// podcasts
 
-	podcasts := api.Group("/podcasts/")
-	podcasts.Get("/detail/:id/", getPodcast)
-	podcasts.Get("/latest/", getLatestPodcasts)
+	podcasts := api.Group("podcasts/")
+	podcasts.Get("detail/:id/", getPodcast)
+	podcasts.Get("latest/", getLatestPodcasts)
 
 	// MEMBERS ONLY
 
-	member := api.Group("/member/")
-	member.Use(authorize)
+	member := api.Group("member/")
+	member.Use(authorize())
 
-	member.Get("/recommended/", getRecommendations)
-	member.Post("/new/", addChannel)
+	member.Post("new/", addChannel)
 
 	// settings
 
-	settings := member.Group("/settings/")
-	settings.Use(authMiddleware(true))
+	settings := member.Group("settings/")
 
-	settings.Get("/email/", isEmail)
-	settings.Patch("/email/", changeEmail)
-	settings.Delete("/", deleteAccount)
+	settings.Patch("email/", changeEmail)
+	settings.Patch("password/", changePassword)
+	settings.Delete("", deleteAccount)
 
 	// subscriptions
 
-	subs = member.Group("/subscriptions/")
-	subs.Get("/", getChannels)
-	subs.Get("/:prefix.opml", getOPML)
-	subs.Post("/:id/", subscribe)
-	subs.Delete("/:id/", unsubscribe)
+	subs := member.Group("subscriptions/")
+	subs.Get("", getSubscriptions)
+	subs.Get(":prefix.opml", getOPML)
+	subs.Post(":id/", subscribe)
+	subs.Delete(":id/", unsubscribe)
 
 	// bookmarks
 
-	bookmarks := member.Group("/bookmarks/")
-	bookmarks.Get("/", getBookmarks)
-	bookmarks.Post("/:id/", addBookmark)
-	bookmarks.Delete("/:id/", removeBookmark)
+	bookmarks := member.Group("bookmarks/")
+	bookmarks.Get("", getBookmarks)
+	bookmarks.Post(":id/", addBookmark)
+	bookmarks.Delete(":id/", removeBookmark)
 
 	// plays
 
-	plays := member.Group("/plays/")
-	plays.Get("/", getPlays)
-	plays.Post("/", addPlay)
-	plays.Delete("/", deleteAllPlays)
+	plays := member.Group("plays/")
+	plays.Get("", getPlays)
+	plays.Post("", addPlay)
+	plays.Delete("", deleteAllPlays)
 
 }

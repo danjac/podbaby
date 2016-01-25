@@ -2,52 +2,80 @@ package api
 
 import (
 	"database/sql"
-	"encoding/base64"
-	"errors"
 	"github.com/justinas/nosurf"
 	"github.com/labstack/echo"
+	mw "github.com/labstack/echo/middleware"
+	"html/template"
+	"io"
 	"net/http"
-	"time"
+	"strconv"
 
 	"github.com/danjac/podbaby/config"
-	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
+	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
-	"github.com/gorilla/securecookie"
 )
 
 const (
-	cookieUserID          = "userid"
-	userContextKey        = "user"
-	storeContextKey       = "store"
-	feedparserContextKey  = "feedparser"
-	mailerContextKey      = "mailer"
-	cookieStoreContextKey = "cookieStore"
-	configContextKey      = "config"
+	userCookieKey           = "userid"
+	userContextKey          = "user"
+	storeContextKey         = "store"
+	feedparserContextKey    = "feedparser"
+	mailerContextKey        = "mailer"
+	cookieStoreContextKey   = "cookieStore"
+	configContextKey        = "config"
+	authenticatorContextKey = "authenticator"
 )
 
 type Env struct {
 	*config.Config
-	Store      store.Store
-	Cookie     CookieStore
-	Feedparser feedparser.Feedparser
-	Mailer     mailer.Mailer
+	Store       store.Store
+	CookieStore CookieStore
+	Feedparser  feedparser.Feedparser
+	Mailer      mailer.Mailer
+}
+
+type authenticator interface {
+	authenticate(*echo.Context) (*models.User, error)
+}
+
+type renderer struct {
+	templates *template.Template
+}
+
+// Render HTML
+func (r *renderer) Render(w io.Writer, name string, data interface{}) error {
+	return r.templates.ExecuteTemplate(w, name, data)
 }
 
 func New(env *Env) http.Handler {
 
 	e := echo.New()
+	e.Use(mw.Logger())
+	e.Use(mw.Recover())
+
+	// Render HTML
+
+	templates, err := template.ParseGlob("templates/*.tmpl")
+	if err != nil {
+		panic(err)
+	}
+	e.SetRenderer(&renderer{templates})
 
 	// add all the application globals we'll need
 
+	auth := &defaultAuthenticator{}
+	cookieStore := newCookieStore(env.Config)
+
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
-			c.Set(storeContextKey, store)
-			c.Set(mailerContextKey, mailer)
-			c.Set(feedparserContextKey, feedparser)
-			c.Set(configContextKey, cfg)
-			c.Set(cookieStoreContextKey, cookie)
+			c.Set(storeContextKey, env.Store)
+			c.Set(mailerContextKey, env.Mailer)
+			c.Set(feedparserContextKey, env.Feedparser)
+			c.Set(configContextKey, env.Config)
+			c.Set(cookieStoreContextKey, cookieStore)
+			c.Set(authenticatorContextKey, auth)
 			return h(c)
 		}
 	})
@@ -57,15 +85,15 @@ func New(env *Env) http.Handler {
 
 	withRoutes(e)
 
-	return nosurf.Pure(e)
+	return nosurf.NewPure(e)
 
 }
 
-func userFromContext(c *echo.Context) *models.User {
+func getUser(c *echo.Context) *models.User {
 	return c.Get(userContextKey).(*models.User)
 }
 
-func userFromContextOk(c *echo.Context) (*models.User, bool) {
+func getUserOk(c *echo.Context) (*models.User, bool) {
 	v := c.Get(userContextKey)
 	if v == nil {
 		return nil, false
@@ -73,27 +101,31 @@ func userFromContextOk(c *echo.Context) (*models.User, bool) {
 	return c.Get(userContextKey).(*models.User), true
 }
 
-func storeFromContext(c *echo.Context) store.Store {
+func getStore(c *echo.Context) store.Store {
 	return c.Get(storeContextKey).(store.Store)
 }
 
-func cookieStoreFromContext(c *echo.Context) CookieStore {
+func getCookieStore(c *echo.Context) CookieStore {
 	return c.Get(cookieStoreContextKey).(CookieStore)
 }
 
-func mailerFromContext(c *echo.Context) mailer.Mailer {
+func getMailer(c *echo.Context) mailer.Mailer {
 	return c.Get(mailerContextKey).(mailer.Mailer)
 }
 
-func feedparserFromContext(c *echo.Context) feedparser.Feedparser {
+func getFeedparser(c *echo.Context) feedparser.Feedparser {
 	return c.Get(feedparserContextKey).(feedparser.Feedparser)
 }
 
-func configFromContext(c *echo.Context) *config.Config {
+func getConfig(c *echo.Context) *config.Config {
 	return c.Get(configContextKey).(*config.Config)
 }
 
-func getInt64(c *echo.Context, name string) (int64, error) {
+func getAuthenticator(c *echo.Context) authenticator {
+	return c.Get(authenticatorContextKey).(authenticator)
+}
+
+func getIntOr404(c *echo.Context, name string) (int64, error) {
 	value, err := strconv.ParseInt(c.Param(name), 10, 64)
 	if err != nil {
 		return value, echo.NewHTTPError(http.StatusNotFound)
@@ -114,7 +146,7 @@ func getPage(c *echo.Context) int64 {
 }
 
 func authorize() echo.MiddlewareFunc {
-	return func(h echo.HandlerFunc) echo.handlerFunc {
+	return func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
 			user, err := authenticate(c)
 			if err != nil {
@@ -128,27 +160,23 @@ func authorize() echo.MiddlewareFunc {
 	}
 }
 
-func login(c *echo.Context, userID int64) error {
-	cookieStore := cookieStoreFromContext(c)
-	return cookieStore.Write(userCookieID, userID)
-}
-
-func logout(c *echo.Context) error {
-	cookieStore := cookieStoreFromContext(c)
-	return cookieStore.Write(userCookieID, 0)
-}
-
 func authenticate(c *echo.Context) (*models.User, error) {
+	return getAuthenticator(c).authenticate(c)
+}
+
+type defaultAuthenticator struct{}
+
+func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, error) {
 
 	// just in case this function has already been called elsewhere
-	if user, ok := userFromContextOk(c); ok {
+	if user, ok := getUserOk(c); ok {
 		return user, nil
 	}
 
-	cookieStore := cookieStoreFromContext(c)
+	cookieStore := getCookieStore(c)
 	var userID int64
 
-	if err := cookieStore.Read(cookieUserID, &userID); err != nil {
+	if err := cookieStore.Read(c, userCookieKey, &userID); err != nil {
 		return nil, nil
 	}
 
@@ -156,7 +184,7 @@ func authenticate(c *echo.Context) (*models.User, error) {
 		return nil, nil
 	}
 
-	store := storeFromContext(c)
+	store := getStore(c)
 	user, err := store.Users().GetByID(store.Conn(), userID)
 
 	if err != nil {

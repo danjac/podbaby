@@ -1,58 +1,73 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 
-	"github.com/danjac/podbaby/decoders"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
+	"github.com/labstack/echo"
 )
 
-func getChannelsByCategory(s *Server, w http.ResponseWriter, r *http.Request) error {
+func getChannelsByCategory(c *echo.Context) error {
 
-	categoryID, _ := getID(r)
-	channels, err := s.DB.Channels.SelectByCategoryID(categoryID)
+	categoryID, err := getIntOr404(c, "id")
 	if err != nil {
 		return err
 	}
-	return s.Render.JSON(w, http.StatusOK, channels)
+
+	store := getStore(c)
+
+	channels, err := store.Channels().SelectByCategoryID(store.Conn(), categoryID)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, channels)
 }
 
-func getRecommendations(s *Server, w http.ResponseWriter, r *http.Request) error {
-	user, ok := getUser(r)
+func getRecommendations(c *echo.Context) error {
+
 	var (
 		channels []models.Channel
 		err      error
+		store    = getStore(c)
+		conn     = store.Conn()
 	)
-	if ok {
-		channels, err = s.DB.Channels.SelectRecommendedByUserID(user.ID)
+
+	user, _ := authenticate(c)
+	if user != nil {
+		channels, err = store.Channels().SelectRecommendedByUserID(conn, user.ID)
 	} else {
-		channels, err = s.DB.Channels.SelectRecommended()
+		channels, err = store.Channels().SelectRecommended(conn)
 	}
 
 	if err != nil {
 		return err
 	}
 
-	return s.Render.JSON(w, http.StatusOK, channels)
+	return c.JSON(http.StatusOK, channels)
 }
 
-func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
+func getChannelDetail(c *echo.Context) error {
 
-	channelID, err := getInt64(c, "id") // getIntOr404(c, "id") ???
+	channelID, err := getIntOr404(c, "id")
+
 	if err != nil {
 		return err
 	}
 
 	var (
-		store = storeFromContext(c)
-		conn  = store.Conn()
+		store         = getStore(c)
+		conn          = store.Conn()
+		channelStore  = store.Channels()
+		podcastStore  = store.Podcasts()
+		categoryStore = store.Categories()
 	)
 
-	channel, err := store.Channels().GetByID(conn, channelID)
+	channel, err := channelStore.GetByID(conn, channelID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return
+			return echo.NewHTTPError(http.StatusNotFound)
 		}
 		return err
 	}
@@ -61,21 +76,21 @@ func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 		Channel: channel,
 	}
 
-	categories, err := store.Categories().SelectByChannelID(conn, channelID)
+	categories, err := categoryStore.SelectByChannelID(conn, channelID)
 	if err != nil {
 		return err
 	}
 
 	detail.Categories = categories
 
-	related, err := s.DB.Channels.SelectRelated(channelID)
+	related, err := channelStore.SelectRelated(conn, channelID)
 	if err != nil {
 		return err
 	}
 
 	detail.Related = related
 
-	podcasts, err := s.DB.Podcasts.SelectByChannelID(channelID, getPage(r))
+	podcasts, err := podcastStore.SelectByChannelID(conn, channelID, getPage(c))
 	if err != nil {
 		return err
 	}
@@ -86,13 +101,13 @@ func getChannelDetail(s *Server, w http.ResponseWriter, r *http.Request) error {
 		detail.Podcasts = append(detail.Podcasts, pc)
 	}
 	detail.Page = podcasts.Page
-	return s.Render.JSON(w, http.StatusOK, detail)
+	return c.JSON(http.StatusOK, detail)
 }
 
 func getSubscriptions(c *echo.Context) error {
 	var (
-		user  = userFromContext(c)
-		store = storeFromContext(c)
+		user  = getUser(c)
+		store = getStore(c)
 	)
 	channels, err := store.Channels().SelectSubscribed(store.Conn(), user.ID)
 	if err != nil {
@@ -103,22 +118,26 @@ func getSubscriptions(c *echo.Context) error {
 
 func addChannel(c *echo.Context) error {
 
-	decoder := &decoders.NewChannel{}
-	if err, ok := decoders.Decode(c, decoder); !ok {
+	var (
+		validator    = newValidator(c)
+		store        = getStore(c)
+		conn         = store.Conn()
+		channelStore = store.Channels()
+		user         = getUser(c)
+		f            = getFeedparser(c)
+	)
+
+	decoder := &newChannelDecoder{}
+
+	if ok, err := validator.validate(decoder); !ok {
 		return err
 	}
 
-	var (
-		store        = storeFromContext(c)
-		conn         = store.Conn()
-		channelStore = store.Channels()
-		user         = userFromContext(c)
-	)
 	channel, err := channelStore.GetByURL(conn, decoder.URL)
 	isNewChannel := false
 
 	if err != nil {
-		if isErrNoRows(err) {
+		if err == sql.ErrNoRows {
 			isNewChannel = true
 		} else {
 			return err
@@ -131,12 +150,12 @@ func addChannel(c *echo.Context) error {
 			URL: decoder.URL,
 		}
 
-		if err := s.Feedparser.Fetch(channel); err != nil {
+		if err := f.Fetch(channel); err != nil {
 			if err == feedparser.ErrInvalidFeed {
-				errors := decoders.Errors{
-					"url": "Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
-				}
-				return errors.Render(c)
+				return validator.invalid(
+					"url",
+					"Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
+				).render()
 			}
 			return err
 		}
@@ -166,7 +185,7 @@ func addChannel(c *echo.Context) error {
 		go func(c *echo.Context, channel *models.Channel) {
 
 			var (
-				store        = storeFromContext(c)
+				store        = getStore(c)
 				channelStore = store.Channels()
 				log          = c.Echo().Logger()
 			)

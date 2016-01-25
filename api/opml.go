@@ -10,8 +10,8 @@ import (
 func getOPML(c *echo.Context) error {
 
 	var (
-		user  = userFromContext(c)
-		store = storeFromContext(c)
+		user  = getUser(c)
+		store = getStore(c)
 	)
 
 	channels, err := store.Channels().SelectSubscribed(store.Conn(), user.ID)
