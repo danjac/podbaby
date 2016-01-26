@@ -16,12 +16,24 @@ export function login(identifier, password) {
   });
 }
 
+export function recoverPassword(identifier) {
+  return axios.post(`/api/auth/recoverpass/`, { identifier });
+}
+
 export function signup(name, email, password) {
   return axios.post('/api/auth/signup/', {
     name,
     email,
     password,
   });
+}
+
+export function isName(name) {
+  return axios.get(`/api/auth/name/`, { params: { name } });
+}
+
+export function isEmail(email) {
+  return axios.get(`/api/auth/email/`, { params: { email } });
 }
 
 export function search(query) {
@@ -60,9 +72,8 @@ export function getPodcast(id) {
   return axios.get(`/api/podcasts/detail/${id}/`);
 }
 
-
 export function nowPlaying(id) {
-  return axios.post(`/api/plays/${id}/`);
+  return axios.post(`/api/member/plays/${id}/`);
 }
 
 export function getRecentlyPlayed(page = 1) {
@@ -97,26 +108,14 @@ export function deleteBookmark(id) {
   return axios.delete(`/api/member/bookmarks/${id}/`);
 }
 
-export function isName(name) {
-  return axios.get(`/api/auth/name/`, { params: { name } });
-}
-
-export function isEmail(email) {
-  return axios.get(`/api/auth/email/`, { params: { email } });
-}
-
 export function changeEmail(email) {
-  return axios.patch(`/api/settings/email/`, { email });
+  return axios.patch(`/api/member/settings/email/`, { email });
 }
 
 export function changePassword(oldPassword, newPassword) {
-  return axios.patch(`/api/settings/password/`, { oldPassword, newPassword });
-}
-
-export function recoverPassword(identifier) {
-  return axios.post(`/api/auth/recoverpass/`, { identifier });
+  return axios.patch(`/api/member/settings/password/`, { oldPassword, newPassword });
 }
 
 export function deleteAccount() {
-  return axios.delete('/api/settings/');
+  return axios.delete('/api/member/settings/');
 }

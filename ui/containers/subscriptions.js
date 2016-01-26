@@ -86,7 +86,7 @@ export class Subscriptions extends React.Component {
         <Input>
           <a
             className="btn btn-default form-control"
-            href={`/podbaby-${moment().format('YYYY-MM-DD')}.opml`}
+            href={`/api/member/subscriptions/podbaby-${moment().format('YYYY-MM-DD')}.opml`}
             download
           ><Icon icon="download" /> Download OPML</a>
         </Input>

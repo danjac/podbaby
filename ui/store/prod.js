@@ -1,7 +1,14 @@
-import { createStore, compose } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 
-import middleware from '../middleware';
+import { reduxRouterMiddleware, apiErrorMiddleware } from '../middleware';
 import reducer from '../reducers';
+
+const middleware = applyMiddleware(
+  reduxRouterMiddleware,
+  thunkMiddleware,
+  apiErrorMiddleware
+);
 
 const createFinalStore = compose(middleware)(createStore);
 

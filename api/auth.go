@@ -248,7 +248,7 @@ func changeEmail(c *echo.Context) error {
 	}
 
 	if exists, _ := userStore.IsEmail(conn, decoder.Email, user.ID); exists {
-		return validator.invalid("meail", "This email address is taken").render()
+		return validator.invalid("email", "This email address is taken").render()
 	}
 
 	if err := userStore.UpdateEmail(conn, decoder.Email, user.ID); err != nil {

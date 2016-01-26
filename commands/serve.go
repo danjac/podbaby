@@ -32,7 +32,10 @@ func Serve(cfg *config.Config) {
 		Feedparser: feedparser,
 	}
 
-	handler := api.New(env)
+	handler, err := api.New(env)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), handler); err != nil {
 		panic(err)

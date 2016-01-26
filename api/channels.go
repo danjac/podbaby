@@ -2,7 +2,6 @@ package api
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 
 	"github.com/danjac/podbaby/feedparser"
@@ -128,12 +127,9 @@ func addChannel(c *echo.Context) error {
 		f            = getFeedparser(c)
 	)
 
-	log.Println("OK")
-
 	decoder := &newChannelDecoder{}
 
 	if ok, err := validator.validate(decoder); !ok {
-		log.Println("BAD ERROR", err)
 		return err
 	}
 
@@ -144,19 +140,15 @@ func addChannel(c *echo.Context) error {
 		if err == sql.ErrNoRows {
 			isNewChannel = true
 		} else {
-			log.Println("BAD SQL ERROR:", err)
 			return err
 		}
 	}
-	log.Println("NEWCHANNEL?", isNewChannel)
 
 	if isNewChannel {
 
 		channel = &models.Channel{
 			URL: decoder.URL,
 		}
-
-		log.Println("OK2")
 
 		if err := f.Fetch(channel); err != nil {
 			if err == feedparser.ErrInvalidFeed {

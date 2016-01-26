@@ -49,7 +49,7 @@ func (r *renderer) Render(w io.Writer, name string, data interface{}) error {
 	return r.templates.ExecuteTemplate(w, name, data)
 }
 
-func New(env *Env) http.Handler {
+func New(env *Env) (http.Handler, error) {
 
 	e := echo.New()
 	e.Use(mw.Logger())
@@ -59,7 +59,7 @@ func New(env *Env) http.Handler {
 
 	templates, err := template.ParseGlob("templates/*.tmpl")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	e.SetRenderer(&renderer{templates})
 
@@ -85,7 +85,7 @@ func New(env *Env) http.Handler {
 
 	withRoutes(e)
 
-	return nosurf.NewPure(e)
+	return nosurf.NewPure(e), nil
 
 }
 

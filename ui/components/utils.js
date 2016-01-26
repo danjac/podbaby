@@ -3,7 +3,7 @@ import sanitizeHtml from 'sanitize-html';
 import MobileDetect from 'mobile-detect';
 
 const sanitizeOptions = {
-  allowedTags: ['a', 'code', 'em', 'strong', 'b', 'br', 'span', 'img'],
+  allowedTags: ['a', 'code', 'em', 'strong', 'b', 'br', 'span', 'img', 'pre', 'div', 'p'],
   allowedAttributes: {
     a: ['href'],
     span: ['style'],

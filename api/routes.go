@@ -74,7 +74,7 @@ func withRoutes(e *echo.Echo) {
 
 	plays := member.Group("plays/")
 	plays.Get("", getPlays)
-	plays.Post("", addPlay)
+	plays.Post(":id/", addPlay)
 	plays.Delete("", deleteAllPlays)
 
 }

@@ -1,22 +1,21 @@
-import { createStore, compose } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import createLogger from 'redux-logger';
 
-import DevTools from '../containers/devtools';
-import middleware, { reduxRouterMiddleware } from '../middleware';
+import { reduxRouterMiddleware, apiErrorMiddleware } from '../middleware';
 import reducer from '../reducers';
 
+const loggerMiddleware = createLogger();
 
-const createFinalStore = compose(
-  middleware,
-  DevTools.instrument()
-)(createStore);
+const middleware = applyMiddleware(
+  reduxRouterMiddleware,
+  thunkMiddleware,
+  apiErrorMiddleware,
+  loggerMiddleware
+);
+
+const createFinalStore = compose(middleware)(createStore);
 
 export default function configureStore(initialState) {
-  const store = createFinalStore(reducer, initialState);
-  if (module.hot) {
-    module.hot.accept('../reducers', () =>
-      store.replaceReducer(require('../reducers'))
-    );
-  }
-  reduxRouterMiddleware.listenForReplays(store);
-  return store;
+  return createFinalStore(reducer, initialState);
 }

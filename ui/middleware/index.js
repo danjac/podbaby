@@ -1,14 +1,12 @@
-import { applyMiddleware } from 'redux';
 import { syncHistory } from 'redux-simple-router';
 import { hashHistory } from 'react-router';
-import thunkMiddleware from 'redux-thunk';
 
 import { routeActions } from 'redux-simple-router';
 
 import { alerts } from '../actions';
 
 // should catch any API errors and act accordingly
-const apiErrorMiddleware = store => next => action => {
+export const apiErrorMiddleware = store => next => action => {
   const result = next(action);
 
   if (result.payload && result.payload.error) {
@@ -43,9 +41,3 @@ const apiErrorMiddleware = store => next => action => {
 };
 
 export const reduxRouterMiddleware = syncHistory(hashHistory);
-
-export default applyMiddleware(
-  reduxRouterMiddleware,
-  thunkMiddleware,
-  apiErrorMiddleware
-);

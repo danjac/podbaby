@@ -98,11 +98,11 @@ func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int6
     SELECT c.id, c.title, c.description, c.image, c.url, c.website
     FROM channels c
     JOIN channels_categories cc ON cc.channel_id=c.id
-    WHERE cc.category_id IN (
+    WHERE (cc.category_id IN (
        SELECT cc.category_id FROM channels_categories cc
        WHERE cc.channel_id IN (SELECT channel_id FROM user_subs)
-    )
-    AND c.id NOT IN (SELECT channel_id FROM user_subs)
+    ) AND c.id NOT IN (SELECT channel_id FROM user_subs)
+    ) OR ((SELECT COUNT(channel_id) FROM user_subs) = 0)
     GROUP BY c.id
     ORDER BY RANDOM()
     LIMIT $2`
