@@ -8,6 +8,7 @@ import { Link } from 'react-router';
 import {
   ButtonGroup,
   Button,
+  Badge,
   Input,
   Grid,
   Row,
@@ -142,6 +143,8 @@ export class Channel extends React.Component {
       return <div>Sorry, could not find this channel.</div>;
     }
 
+    const counterBadge = channel.numPodcasts ? <Badge>{channel.numPodcasts}</Badge> : '';
+
     const website = channel.website.Valid ? channel.website.String : '';
     const { isSubscribed } = channel;
 
@@ -187,7 +190,7 @@ export class Channel extends React.Component {
             </a>
           </div>
           <div className="media-body">
-            <h2 className="media-heading">{channel.title}</h2>
+            <h2 className="media-heading">{channel.title} {counterBadge}</h2>
           </div>
         </div>
         {channel.description ?

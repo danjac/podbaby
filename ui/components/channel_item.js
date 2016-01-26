@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import {
   Button,
   Panel,
+  Badge,
 } from 'react-bootstrap';
 
 import Image from './image';
@@ -13,6 +14,8 @@ import { sanitize } from './utils';
 function ChannelItem(props) {
   const { channel, subscribe, isLoggedIn } = props;
   const url = `/channel/${channel.id}/`;
+
+  const counterBadge = channel.numPodcasts ? <Badge>{channel.numPodcasts}</Badge> : '';
 
   return (
     <Panel>
@@ -31,7 +34,7 @@ function ChannelItem(props) {
       </div>
       <div className="media-body">
         <h4 className="media-heading">
-          <Link to={url}>{channel.title}</Link>
+          <Link to={url}>{channel.title}</Link> {counterBadge}
         {isLoggedIn ?
           <Button style={{ float: 'right' }} title={channel.isSubscribed ?
             'Unsubscribe' : 'Subscribe'} onClick={subscribe}

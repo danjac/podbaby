@@ -47,14 +47,14 @@ func newChannelStore() ChannelStore {
 type channelSqlReader struct{}
 
 func (r *channelSqlReader) SelectAll(dh DataHandler) ([]models.Channel, error) {
-	q := "SELECT id, title, description, url, image, website FROM channels"
+	q := "SELECT id, title, description, url, image, website, num_podcasts FROM channels"
 	var channels []models.Channel
 	return channels, sqlx.Select(dh, &channels, q)
 }
 
 func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) ([]models.Channel, error) {
 	q := `
-    SELECT c.id, c.title, c.image, c.description, c.website, c.url
+    SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
     JOIN channels_categories cc 
     ON cc.channel_id = c.id
@@ -67,7 +67,7 @@ func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) 
 
 func (r *channelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]models.Channel, error) {
 	q := `
-    SELECT c.id, c.title, c.image, c.description, c.website, c.url
+    SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
     JOIN subscriptions s ON s.channel_id=c.id
     WHERE s.user_id in (
@@ -82,7 +82,7 @@ func (r *channelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]mod
 
 func (r *channelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, error) {
 	q := `
-    SELECT c.id, c.title, c.image, c.description, c.website, c.url
+    SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
     JOIN subscriptions s ON s.channel_id = c.id
     GROUP BY c.id
@@ -113,7 +113,7 @@ func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int6
 func (r *channelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]models.Channel, error) {
 
 	q := `
-    SELECT c.id, c.title, c.description, c.image, c.url, c.website
+    SELECT c.id, c.title, c.description, c.image, c.url, c.website, c.num_podcasts
     FROM channels c
     JOIN subscriptions s ON s.channel_id = c.id
     WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
@@ -126,7 +126,7 @@ func (r *channelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]mod
 func (r *channelSqlReader) Search(dh DataHandler, query string) ([]models.Channel, error) {
 
 	q := `
-    SELECT c.id, c.title, c.description, c.url, c.image, c.website
+    SELECT c.id, c.title, c.description, c.url, c.image, c.website, c.num_podcasts
     FROM channels c, plainto_tsquery($1) as q
     WHERE (c.tsv @@ q)
     ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 20`
@@ -136,7 +136,7 @@ func (r *channelSqlReader) Search(dh DataHandler, query string) ([]models.Channe
 
 func (r *channelSqlReader) GetByURL(dh DataHandler, url string) (*models.Channel, error) {
 	q := `
-    SELECT id, title, description, url, image, website
+    SELECT id, title, description, url, image, website, num_podcasts
     FROM channels
     WHERE url=$1`
 	channel := &models.Channel{}
