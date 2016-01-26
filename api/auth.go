@@ -76,7 +76,7 @@ func recoverPassword(c *echo.Context) error {
 			data,
 		)
 		if err != nil {
-			//c.Echo().Logger().Error(err)
+			c.Echo().Logger().Error(err)
 		}
 
 	}(c, user.Email, data)

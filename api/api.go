@@ -94,11 +94,8 @@ func getUser(c *echo.Context) *models.User {
 }
 
 func getUserOk(c *echo.Context) (*models.User, bool) {
-	v := c.Get(userContextKey)
-	if v == nil {
-		return nil, false
-	}
-	return c.Get(userContextKey).(*models.User), true
+	user, ok := c.Get(userContextKey).(*models.User)
+	return user, ok
 }
 
 func getStore(c *echo.Context) store.Store {

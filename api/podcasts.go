@@ -33,9 +33,9 @@ func getLatestPodcasts(c *echo.Context) error {
 		podcastStore = store.Podcasts()
 	)
 
-	user, ok := getUserOk(c)
+	user, err := authenticate(c)
 
-	if ok { // user authenticated
+	if user != nil { // user authenticated
 		result, err = podcastStore.SelectSubscribed(conn, user.ID, page)
 	} else {
 		result, err = podcastStore.SelectAll(conn, page)
