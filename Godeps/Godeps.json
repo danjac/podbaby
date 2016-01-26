@@ -3,9 +3,9 @@
 	"GoVersion": "go1.5.3",
 	"Deps": [
 		{
-			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.8.6-7-g9c060de",
-			"Rev": "9c060de643590dae45da9d7c26276463bfc46fa0"
+			"ImportPath": "github.com/DATA-DOG/go-sqlmock",
+			"Comment": "v1.0.0-3-gf55ca83",
+			"Rev": "f55ca83ba02feba08208bb040df161997084d398"
 		},
 		{
 			"ImportPath": "github.com/asaskevich/govalidator",
@@ -16,14 +16,6 @@
 			"ImportPath": "github.com/codegangsta/cli",
 			"Comment": "1.2.0-187-gc31a797",
 			"Rev": "c31a7975863e7810c92e2e288a9ab074f9a88f29"
-		},
-		{
-			"ImportPath": "github.com/gorilla/context",
-			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
-		},
-		{
-			"ImportPath": "github.com/gorilla/mux",
-			"Rev": "f8220e087da2fc83d083bfc0289ed7f9db3536bd"
 		},
 		{
 			"ImportPath": "github.com/gorilla/securecookie",
@@ -52,18 +44,37 @@
 			"Rev": "76f54ee73233b171ca9ee82ef837a1fc4d3809c0"
 		},
 		{
-			"ImportPath": "github.com/justinas/alice",
-			"Rev": "82db91fe6d1db4c070fed544cb5d0b5cc08fe276"
-		},
-		{
 			"ImportPath": "github.com/justinas/nosurf",
 			"Comment": "0.1-50-g45adcfc",
 			"Rev": "45adcfcaf70610a5934db447ffe0ea9d13462c9e"
 		},
 		{
+			"ImportPath": "github.com/labstack/echo",
+			"Comment": "v1.3-8-g5d70ff4",
+			"Rev": "5d70ff42fc19fcd063429f40ce047dd4f21d1d5b"
+		},
+		{
+			"ImportPath": "github.com/labstack/gommon/color",
+			"Comment": "v0.0.3-28-g25c3ce2",
+			"Rev": "25c3ce2d2abe76d8dd935305f1a8c1063dd3aac3"
+		},
+		{
+			"ImportPath": "github.com/labstack/gommon/log",
+			"Comment": "v0.0.3-28-g25c3ce2",
+			"Rev": "25c3ce2d2abe76d8dd935305f1a8c1063dd3aac3"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Comment": "go1.0-cutoff-63-g11fc39a",
 			"Rev": "11fc39a580a008f1f39bb3d11d984fb34ed778d9"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-colorable",
+			"Rev": "3dac7b4f76f6e17fb39b768b89e3783d16e237fe"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-isatty",
+			"Rev": "56b76bdf51f7708750eac80fa38b952bb9f32639"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
@@ -74,8 +85,16 @@
 			"Rev": "173ce04bfaf66c7bb0fa9d5c0bfd93e773909dbd"
 		},
 		{
-			"ImportPath": "gopkg.in/unrolled/render.v1",
-			"Rev": "40a2dfa24398d37b4a14938442a0f4fe4307b929"
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "2e9cee70ee697e0a2ef894b560dda50dec7dff58"
+		},
+		{
+			"ImportPath": "golang.org/x/net/http2",
+			"Rev": "2e9cee70ee697e0a2ef894b560dda50dec7dff58"
+		},
+		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "2e9cee70ee697e0a2ef894b560dda50dec7dff58"
 		}
 	]
 }
