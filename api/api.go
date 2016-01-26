@@ -52,6 +52,7 @@ func (r *renderer) Render(w io.Writer, name string, data interface{}) error {
 func New(env *Env) (http.Handler, error) {
 
 	e := echo.New()
+	e.SetDebug(true)
 	e.Use(mw.Logger())
 	e.Use(mw.Recover())
 
@@ -77,6 +78,17 @@ func New(env *Env) (http.Handler, error) {
 			c.Set(cookieStoreContextKey, cookieStore)
 			c.Set(authenticatorContextKey, auth)
 			return h(c)
+		}
+	})
+
+	// catch sql no rows errors and return as a 404
+	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
+		return func(c *echo.Context) error {
+			err := h(c)
+			if err == sql.ErrNoRows {
+				return echo.NewHTTPError(http.StatusNotFound)
+			}
+			return err
 		}
 	})
 

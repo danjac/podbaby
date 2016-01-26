@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 
 import {
   Button,
+  ButtonGroup,
   Panel,
   Badge,
 } from 'react-bootstrap';
@@ -35,23 +36,25 @@ function ChannelItem(props) {
       <div className="media-body">
         <h4 className="media-heading">
           <Link to={url}>{channel.title}</Link> {counterBadge}
-        {isLoggedIn ?
-          <Button style={{ float: 'right' }} title={channel.isSubscribed ?
-            'Unsubscribe' : 'Subscribe'} onClick={subscribe}
-          >
-            <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
-            channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
-            }
-          </Button>
-        : ''}
-        </h4>
-        <p
-          style={{ marginTop: 20 }}
-          dangerouslySetInnerHTML={sanitize(channel.description)}
-        />
-      </div>
+            </h4>
+        </div>
     </div>
-  </Panel>
+    {isLoggedIn ?
+    <ButtonGroup style={{ marginTop: 20 }}>
+      <Button title={channel.isSubscribed ?
+        'Unsubscribe' : 'Subscribe'} onClick={subscribe}
+      >
+        <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
+        channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
+        }
+      </Button>
+    </ButtonGroup>
+    : ''}
+    <p
+      style={{ marginTop: 20 }}
+      dangerouslySetInnerHTML={sanitize(channel.description)}
+    />
+</Panel>
   );
 }
 

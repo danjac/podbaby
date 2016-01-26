@@ -1,25 +1,22 @@
 package api
 
-/*
 import (
-	"github.com/danjac/podbaby/database"
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/danjac/podbaby/models"
-	"gopkg.in/unrolled/render.v1"
+	"github.com/danjac/podbaby/store"
+	"github.com/labstack/echo"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 )
 
-type mockIsEmailExistsUserReader struct {
-	*database.UserDBReader
+type fakeAuthenticator struct {
+	user *models.User
 }
 
-func (db *mockIsEmailExistsUserReader) IsEmail(email string, userID int64) (bool, error) {
-	if email == "test@gmail.com" {
-		return userID != 1, nil
-	}
-	return false, nil
+func (a *fakeAuthenticator) authenticate(c *echo.Context) (*models.User, error) {
+	return a.user, nil
 }
 
 func TestIsEmailIfLoggedInAndAnotherEmailExists(t *testing.T) {
@@ -27,21 +24,25 @@ func TestIsEmailIfLoggedInAndAnotherEmailExists(t *testing.T) {
 	user := &models.User{
 		ID: 2,
 	}
-
-	getContext = mockGetContextWithUser(user)
-
-	req, _ := http.NewRequest("GET", "/?email=test@gmail.com", nil)
-	w := httptest.NewRecorder()
-	s := &Server{
-		DB: &database.DB{
-			Users: &database.UserDB{
-				UserReader: &mockIsEmailExistsUserReader{},
-			},
-		},
-		Render: render.New(),
+	s, mock, err := store.NewMock()
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	if err := isEmail(s, w, req); err != nil {
+	rows := sqlmock.NewRows([]string{""}).AddRow(1)
+
+	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM users*`).WillReturnRows(rows)
+	req, _ := http.NewRequest("GET", "/?email=test@gmail.com", nil)
+	w := httptest.NewRecorder()
+
+	e := echo.New()
+	c := echo.NewContext(req, echo.NewResponse(w, e), e)
+
+	c.Set(storeContextKey, s)
+	c.Set(userContextKey, user)
+	c.Set(authenticatorContextKey, &fakeAuthenticator{user})
+
+	if err := isEmail(c); err != nil {
 		t.Fatal(err)
 	}
 
@@ -50,30 +51,34 @@ func TestIsEmailIfLoggedInAndAnotherEmailExists(t *testing.T) {
 	}
 
 	if !strings.Contains(w.Body.String(), "true") {
-		t.Fatalf("should return false if user's own email:%s", w.Body.String())
+		t.Fatalf("should return true if someone else's email:%s", w.Body.String())
 	}
 }
 
-func TestIsEmailIfLoggedInAndEmailExists(t *testing.T) {
+func TestIsEmailIfLoggedInAndOwnEmailExists(t *testing.T) {
 
 	user := &models.User{
-		ID: 1,
+		ID: 2,
+	}
+	s, mock, err := store.NewMock()
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	getContext = mockGetContextWithUser(user)
+	rows := sqlmock.NewRows([]string{""}).AddRow(0)
 
+	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM users*`).WillReturnRows(rows)
 	req, _ := http.NewRequest("GET", "/?email=test@gmail.com", nil)
 	w := httptest.NewRecorder()
-	s := &Server{
-		DB: &database.DB{
-			Users: &database.UserDB{
-				UserReader: &mockIsEmailExistsUserReader{},
-			},
-		},
-		Render: render.New(),
-	}
 
-	if err := isEmail(s, w, req); err != nil {
+	e := echo.New()
+	c := echo.NewContext(req, echo.NewResponse(w, e), e)
+
+	c.Set(storeContextKey, s)
+	c.Set(userContextKey, user)
+	c.Set(authenticatorContextKey, &fakeAuthenticator{user})
+
+	if err := isEmail(c); err != nil {
 		t.Fatal(err)
 	}
 
@@ -86,56 +91,74 @@ func TestIsEmailIfLoggedInAndEmailExists(t *testing.T) {
 	}
 }
 
-func TestIsEmailIfNotLoggedInAndEmailNotExists(t *testing.T) {
-
-	getContext = mockGetContext(make(map[string]interface{}))
-
-	req, _ := http.NewRequest("GET", "/?email=test2@gmail.com", nil)
-	w := httptest.NewRecorder()
-	s := &Server{
-		DB: &database.DB{
-			Users: &database.UserDB{
-				UserReader: &mockIsEmailExistsUserReader{},
-			},
-		},
-		Render: render.New(),
-	}
-
-	if err := isEmail(s, w, req); err != nil {
-		t.Fatal(err)
-	}
-	if w.Code != http.StatusOK {
-		t.Fatal("Should return a 200 OK")
-	}
-	if !strings.Contains(w.Body.String(), "false") {
-		t.Fatal("should return false if used email")
-	}
-
-}
 func TestIsEmailIfNotLoggedInAndEmailExists(t *testing.T) {
 
-	getContext = mockGetContext(make(map[string]interface{}))
-
-	req, _ := http.NewRequest("GET", "/?email=test@gmail.com", nil)
-	w := httptest.NewRecorder()
-	s := &Server{
-		DB: &database.DB{
-			Users: &database.UserDB{
-				UserReader: &mockIsEmailExistsUserReader{},
-			},
-		},
-		Render: render.New(),
+	user := &models.User{
+		ID: 2,
 	}
-
-	if err := isEmail(s, w, req); err != nil {
+	s, mock, err := store.NewMock()
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	rows := sqlmock.NewRows([]string{""}).AddRow(1)
+
+	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM users*`).WillReturnRows(rows)
+	req, _ := http.NewRequest("GET", "/?email=test@gmail.com", nil)
+	w := httptest.NewRecorder()
+
+	e := echo.New()
+	c := echo.NewContext(req, echo.NewResponse(w, e), e)
+
+	c.Set(storeContextKey, s)
+	c.Set(userContextKey, user)
+	c.Set(authenticatorContextKey, &fakeAuthenticator{nil})
+
+	if err := isEmail(c); err != nil {
+		t.Fatal(err)
+	}
+
 	if w.Code != http.StatusOK {
 		t.Fatal("Should return a 200 OK")
 	}
+
 	if !strings.Contains(w.Body.String(), "true") {
-		t.Fatal("should return true if used email")
+		t.Fatalf("should return true if email taken %s", w.Body.String())
+	}
+}
+
+func TestIsEmailIfNotLoggedInAndEmailDoesNotExist(t *testing.T) {
+
+	user := &models.User{
+		ID: 2,
+	}
+	s, mock, err := store.NewMock()
+	if err != nil {
+		t.Fatal(err)
 	}
 
+	rows := sqlmock.NewRows([]string{""}).AddRow(0)
+
+	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM users*`).WillReturnRows(rows)
+	req, _ := http.NewRequest("GET", "/?email=test@gmail.com", nil)
+	w := httptest.NewRecorder()
+
+	e := echo.New()
+	c := echo.NewContext(req, echo.NewResponse(w, e), e)
+
+	c.Set(storeContextKey, s)
+	c.Set(userContextKey, user)
+	c.Set(authenticatorContextKey, &fakeAuthenticator{nil})
+
+	if err := isEmail(c); err != nil {
+		t.Fatal(err)
+	}
+
+	if w.Code != http.StatusOK {
+		t.Fatal("Should return a 200 OK")
+	}
+
+	if !strings.Contains(w.Body.String(), "false") {
+		t.Fatalf("should return false if email not taken %s", w.Body.String())
+	}
 }
-*/

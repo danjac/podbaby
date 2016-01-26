@@ -66,9 +66,6 @@ func getChannelDetail(c *echo.Context) error {
 
 	channel, err := channelStore.GetByID(conn, channelID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return echo.NewHTTPError(http.StatusNotFound)
-		}
 		return err
 	}
 
