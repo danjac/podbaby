@@ -37,7 +37,7 @@ func TestGetBookmarksIfOk(t *testing.T) {
 	}
 
 	rows := sqlmock.NewRows([]string{""}).AddRow(1)
-	mock.ExpectQuery(`^SELECT COUNT\(DISTINCT(.+) FROM podcasts p*`).WillReturnRows(rows)
+	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM bookmarks*`).WillReturnRows(rows)
 
 	rows = sqlmock.NewRows([]string{
 		"id", "title", "enclosure_url", "description",
@@ -77,7 +77,7 @@ func TestGetBookmarksIfNotOk(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := fmt.Errorf("some error")
-	mock.ExpectQuery(`^SELECT COUNT\(DISTINCT(.+) FROM podcasts p*`).WillReturnError(result)
+	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM bookmarks*`).WillReturnError(result)
 
 	c.Set(userContextKey, user)
 	c.Set(storeContextKey, s)
