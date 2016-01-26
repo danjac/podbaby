@@ -3,6 +3,6 @@ language: go
 go:
     - 1.5.3
 
-install: travis_wait go get github.com/tools/godep && get golang.org/x/sys/unix && godep restore && nvm install 5.4.1 && nvm use 5.4.1 && npm cache clean && npm install
+install: travis_wait go get github.com/tools/godep && go get golang.org/x/sys/unix && godep restore && nvm install 5.4.1 && nvm use 5.4.1 && npm cache clean && npm install
 
 script: make test
