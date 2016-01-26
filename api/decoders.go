@@ -15,8 +15,8 @@ const (
 )
 
 type validator struct {
-	c      *echo.Context
-	errors map[string]string
+	context *echo.Context
+	errors  map[string]string
 }
 
 func newValidator(c *echo.Context) *validator {
@@ -30,7 +30,7 @@ func (v validator) invalid(field, msg string) validator {
 }
 
 func (v validator) render() error {
-	return v.c.JSON(http.StatusBadRequest, v.errors)
+	return v.context.JSON(http.StatusBadRequest, v.errors)
 }
 
 func (v validator) ok() bool {
@@ -38,10 +38,12 @@ func (v validator) ok() bool {
 }
 
 func (v validator) validate(d decoder) (bool, error) {
-	if err := v.c.Bind(d); err != nil {
+	if err := v.context.Bind(d); err != nil {
+		fmt.Println("BINDING FAIL", err)
 		return false, err
 	}
 	if d.decode(v); !v.ok() {
+		fmt.Println("DECODING FAIL", v.errors)
 		return false, v.render()
 	}
 	return true, nil

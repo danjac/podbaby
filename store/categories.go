@@ -14,19 +14,19 @@ type CategoryStore interface {
 	CategoryReader
 }
 
-type CategorySqlStore struct {
+type categorySqlStore struct {
 	CategoryReader
 }
 
 func newCategoryStore() CategoryStore {
-	return &CategorySqlStore{
-		CategoryReader: &CategorySqlReader{},
+	return &categorySqlStore{
+		CategoryReader: &categorySqlReader{},
 	}
 }
 
-type CategorySqlReader struct{}
+type categorySqlReader struct{}
 
-func (r *CategorySqlReader) SelectAll(dh DataHandler) ([]models.Category, error) {
+func (r *categorySqlReader) SelectAll(dh DataHandler) ([]models.Category, error) {
 	q := `
     SELECT id, name, parent_id 
     FROM categories 
@@ -37,7 +37,7 @@ func (r *CategorySqlReader) SelectAll(dh DataHandler) ([]models.Category, error)
 	return categories, err
 }
 
-func (r *CategorySqlReader) SelectByChannelID(dh DataHandler, channelID int64) ([]models.Category, error) {
+func (r *categorySqlReader) SelectByChannelID(dh DataHandler, channelID int64) ([]models.Category, error) {
 	q := `
     SELECT c.id, c.name, c.parent_id FROM categories c 
     JOIN channels_categories cc ON cc.category_id=c.id

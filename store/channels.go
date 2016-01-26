@@ -32,27 +32,27 @@ type ChannelStore interface {
 	ChannelWriter
 }
 
-type ChannelSqlStore struct {
+type channelSqlStore struct {
 	ChannelReader
 	ChannelWriter
 }
 
 func newChannelStore() ChannelStore {
-	return &ChannelSqlStore{
-		ChannelReader: &ChannelSqlReader{},
-		ChannelWriter: &ChannelSqlWriter{},
+	return &channelSqlStore{
+		ChannelReader: &channelSqlReader{},
+		ChannelWriter: &channelSqlWriter{},
 	}
 }
 
-type ChannelSqlReader struct{}
+type channelSqlReader struct{}
 
-func (r *ChannelSqlReader) SelectAll(dh DataHandler) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectAll(dh DataHandler) ([]models.Channel, error) {
 	q := "SELECT id, title, description, url, image, website FROM channels"
 	var channels []models.Channel
 	return channels, sqlx.Select(dh, &channels, q)
 }
 
-func (r *ChannelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) ([]models.Channel, error) {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url
     FROM channels c
@@ -65,7 +65,7 @@ func (r *ChannelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) 
 	return channels, sqlx.Select(dh, &channels, q, categoryID)
 }
 
-func (r *ChannelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]models.Channel, error) {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url
     FROM channels c
@@ -80,7 +80,7 @@ func (r *ChannelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]mod
 	return channels, sqlx.Select(dh, &channels, q, channelID)
 }
 
-func (r *ChannelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, error) {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url
     FROM channels c
@@ -92,7 +92,7 @@ func (r *ChannelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, 
 	return channels, sqlx.Select(dh, &channels, q, maxRecommendations)
 }
 
-func (r *ChannelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int64) ([]models.Channel, error) {
 	q := `
     WITH user_subs AS (SELECT channel_id FROM subscriptions WHERE user_id=$1)
     SELECT c.id, c.title, c.description, c.image, c.url, c.website
@@ -110,7 +110,7 @@ func (r *ChannelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int6
 	return channels, sqlx.Select(dh, &channels, q, userID, maxRecommendations)
 }
 
-func (r *ChannelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]models.Channel, error) {
 
 	q := `
     SELECT c.id, c.title, c.description, c.image, c.url, c.website
@@ -123,7 +123,7 @@ func (r *ChannelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]mod
 	return channels, sqlx.Select(dh, &channels, q, userID)
 }
 
-func (r *ChannelSqlReader) Search(dh DataHandler, query string) ([]models.Channel, error) {
+func (r *channelSqlReader) Search(dh DataHandler, query string) ([]models.Channel, error) {
 
 	q := `
     SELECT c.id, c.title, c.description, c.url, c.image, c.website
@@ -134,16 +134,16 @@ func (r *ChannelSqlReader) Search(dh DataHandler, query string) ([]models.Channe
 	return channels, sqlx.Select(dh, &channels, q, query)
 }
 
-func (r *ChannelSqlReader) GetByURL(dh DataHandler, url string) (*models.Channel, error) {
+func (r *channelSqlReader) GetByURL(dh DataHandler, url string) (*models.Channel, error) {
 	q := `
-    SELECT c.id, c.title, c.description, c.url, c.image, c.website
-    FROM channels c
+    SELECT id, title, description, url, image, website
+    FROM channels
     WHERE url=$1`
 	channel := &models.Channel{}
 	return channel, sqlx.Get(dh, channel, q, url)
 }
 
-func (r *ChannelSqlReader) GetByID(dh DataHandler, id int64) (*models.Channel, error) {
+func (r *channelSqlReader) GetByID(dh DataHandler, id int64) (*models.Channel, error) {
 	q := `
     SELECT c.id, c.title, c.description, c.url, c.image, c.website
     FROM channels c
@@ -152,9 +152,9 @@ func (r *ChannelSqlReader) GetByID(dh DataHandler, id int64) (*models.Channel, e
 	return channel, sqlx.Get(dh, channel, q, id)
 }
 
-type ChannelSqlWriter struct{}
+type channelSqlWriter struct{}
 
-func (w *ChannelSqlWriter) Create(dh DataHandler, ch *models.Channel) error {
+func (w *channelSqlWriter) Create(dh DataHandler, ch *models.Channel) error {
 
 	q := `SELECT upsert_channel (
     :url, 
@@ -173,7 +173,7 @@ func (w *ChannelSqlWriter) Create(dh DataHandler, ch *models.Channel) error {
 	return dh.QueryRowx(dh.Rebind(q), args...).Scan(&ch.ID)
 }
 
-func (w *ChannelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel) error {
+func (w *channelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel) error {
 	if len(channel.Categories) == 0 {
 		return nil
 	}
@@ -192,7 +192,7 @@ func (w *ChannelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel
 	return err
 }
 
-func (w *ChannelSqlWriter) AddPodcasts(dh DataHandler, channel *models.Channel) error {
+func (w *channelSqlWriter) AddPodcasts(dh DataHandler, channel *models.Channel) error {
 
 	q := `SELECT insert_podcast(
         :channel_id, 

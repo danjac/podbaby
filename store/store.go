@@ -1,6 +1,7 @@
 package store
 
 import (
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/danjac/podbaby/config"
 	"github.com/jmoiron/sqlx"
 )
@@ -46,7 +47,7 @@ type Store interface {
 	Plays() PlayStore
 }
 
-type SqlStore struct {
+type sqlStore struct {
 	conn          Connection
 	users         UserStore
 	categories    CategoryStore
@@ -57,65 +58,61 @@ type SqlStore struct {
 	plays         PlayStore
 }
 
-type SqlConnection struct {
+type sqlConnection struct {
 	*sqlx.DB
 }
 
-func (store *SqlStore) Conn() Connection {
+func (store *sqlStore) Conn() Connection {
 	return store.conn
 }
 
-func (conn *SqlConnection) Close() error {
+func (conn *sqlConnection) Close() error {
 	return conn.DB.Close()
 }
 
-func (conn *SqlConnection) Begin() (Transaction, error) {
+func (conn *sqlConnection) Begin() (Transaction, error) {
 	tx, err := conn.DB.Beginx()
 	if err != nil {
 		return nil, err
 	}
-	return &SqlTransaction{tx}, nil
+	return &sqlTransaction{tx}, nil
 }
 
-type SqlTransaction struct {
+type sqlTransaction struct {
 	*sqlx.Tx
 }
 
-func (store *SqlStore) Users() UserStore {
+func (store *sqlStore) Users() UserStore {
 	return store.users
 }
 
-func (store *SqlStore) Channels() ChannelStore {
+func (store *sqlStore) Channels() ChannelStore {
 	return store.channels
 }
 
-func (store *SqlStore) Categories() CategoryStore {
+func (store *sqlStore) Categories() CategoryStore {
 	return store.categories
 }
 
-func (store *SqlStore) Bookmarks() BookmarkStore {
+func (store *sqlStore) Bookmarks() BookmarkStore {
 	return store.bookmarks
 }
 
-func (store *SqlStore) Podcasts() PodcastStore {
+func (store *sqlStore) Podcasts() PodcastStore {
 	return store.podcasts
 }
 
-func (store *SqlStore) Plays() PlayStore {
+func (store *sqlStore) Plays() PlayStore {
 	return store.plays
 }
 
-func (store *SqlStore) Subscriptions() SubscriptionStore {
+func (store *sqlStore) Subscriptions() SubscriptionStore {
 	return store.subscriptions
 }
 
-func New(cfg *config.Config) (Store, error) {
-	db, err := sqlx.Connect("postgres", cfg.DatabaseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &SqlStore{
-		conn:          &SqlConnection{db},
+func newSqlStore(db *sqlx.DB) Store {
+	return &sqlStore{
+		conn:          &sqlConnection{db},
 		categories:    newCategoryStore(),
 		channels:      newChannelStore(),
 		users:         newUserStore(),
@@ -123,5 +120,22 @@ func New(cfg *config.Config) (Store, error) {
 		bookmarks:     newBookmarkStore(),
 		subscriptions: newSubscriptionStore(),
 		plays:         newPlayStore(),
-	}, nil
+	}
+}
+
+func New(cfg *config.Config) (Store, error) {
+	db, err := sqlx.Connect("postgres", cfg.DatabaseURL)
+	if err != nil {
+		return nil, err
+	}
+	return newSqlStore(db), nil
+}
+
+func NewMock() (Store, sqlmock.Sqlmock, error) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		return nil, mock, err
+	}
+	dbx := sqlx.NewDb(db, "postgres")
+	return newSqlStore(dbx), mock, nil
 }

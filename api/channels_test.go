@@ -1,11 +1,11 @@
 package api
 
-/*
 import (
 	"fmt"
-	"github.com/danjac/podbaby/database"
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/danjac/podbaby/models"
-	"gopkg.in/unrolled/render.v1"
+	"github.com/danjac/podbaby/store"
+	"github.com/labstack/echo"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -26,81 +26,43 @@ func (f *mockFeedparser) Fetch(ch *models.Channel) error {
 	return nil
 }
 
-type mockGetChannelWithNone struct {
-	*database.ChannelDBReader
-}
-
-func (db *mockGetChannelWithNone) GetByURL(_ string) (*models.Channel, error) {
-	return nil, &mockDBErrNoRows{}
-}
-
-type mockTransaction struct{}
-
-func (t *mockTransaction) Commit() error {
-	return nil
-}
-
-func (t *mockTransaction) Rollback() error {
-	return nil
-}
-
-type mockChannelTransaction struct {
-	*mockTransaction
-}
-
-func (t *mockChannelTransaction) Create(_ *models.Channel) error {
-	return nil
-}
-
-func (t *mockChannelTransaction) AddCategories(_ *models.Channel) error {
-	return nil
-}
-
-func (t *mockChannelTransaction) AddPodcasts(_ *models.Channel) error {
-	return nil
-}
-
-type mockChannelWriter struct{}
-
-func (w *mockChannelWriter) Begin() (database.ChannelTransaction, error) {
-	return &mockChannelTransaction{}, nil
-}
-
-type mockSubscriptionWriter struct {
-	*database.SubscriptionDBWriter
-}
-
-func (w *mockSubscriptionWriter) Create(_, _ int64) error {
-	return nil
-}
-
 func TestAddChannelIfNew(t *testing.T) {
 
 	user := &models.User{
 		ID: 1,
 	}
 
-	getContext = mockGetContextWithUser(user)
 	url := "http://joeroganexp.joerogan.libsynpro.com/rss"
 
 	r := strings.NewReader(fmt.Sprintf(`{ "url": "%s" }`, url))
 	req, _ := http.NewRequest("GET", "/", r)
 	w := httptest.NewRecorder()
-	s := &Server{
-		DB: &database.DB{
-			Channels: &database.ChannelDB{
-				ChannelReader: &mockGetChannelWithNone{},
-				ChannelWriter: &mockChannelWriter{},
-			},
-			Subscriptions: &database.SubscriptionDB{
-				SubscriptionWriter: &mockSubscriptionWriter{},
-			},
-		},
-		Feedparser: &mockFeedparser{},
-		Render:     render.New(),
+
+	e := echo.New()
+	c := echo.NewContext(req, echo.NewResponse(w, e), e)
+
+	s, mock, err := store.NewMock()
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	if err := addChannel(s, w, req); err != nil {
+	empty := sqlmock.NewRows([]string{})
+	newChannel := sqlmock.NewRows([]string{""}).AddRow(1)
+	newSub := sqlmock.NewResult(1, 1)
+
+	mock.ExpectQuery("^SELECT (.+) FROM channels*").WillReturnRows(empty)
+	mock.ExpectBegin()
+	mock.ExpectQuery("^SELECT upsert_channel (.+)*").WillReturnRows(newChannel)
+	mock.ExpectCommit()
+	mock.ExpectExec("^INSERT INTO subscriptions*").WillReturnResult(newSub)
+
+	c.Set(storeContextKey, s)
+	c.Set(userContextKey, user)
+	c.Set(feedparserContextKey, &mockFeedparser{})
+
+	c.Request().Header.Set(echo.ContentType, "application/json")
+
+	if err := addChannel(c); err != nil {
 		t.Fatal(err)
 	}
 
@@ -113,4 +75,3 @@ func TestAddChannelIfNew(t *testing.T) {
 	}
 
 }
-*/

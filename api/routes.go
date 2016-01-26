@@ -11,7 +11,7 @@ func withRoutes(e *echo.Echo) {
 	// API
 
 	api := e.Group("/api/")
-	api.Get("/search/", searchAll)
+	api.Get("search/", searchAll)
 
 	// PUBLIC ROUTES
 

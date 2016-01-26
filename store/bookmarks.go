@@ -18,36 +18,36 @@ type BookmarkStore interface {
 	BookmarkWriter
 }
 
-type BookmarkSqlStore struct {
+type bookmarkSqlStore struct {
 	BookmarkReader
 	BookmarkWriter
 }
 
 func newBookmarkStore() BookmarkStore {
-	return &BookmarkSqlStore{
-		BookmarkReader: &BookmarkSqlReader{},
-		BookmarkWriter: &BookmarkSqlWriter{},
+	return &bookmarkSqlStore{
+		BookmarkReader: &bookmarkSqlReader{},
+		BookmarkWriter: &bookmarkSqlWriter{},
 	}
 }
 
-type BookmarkSqlReader struct{}
+type bookmarkSqlReader struct{}
 
-func (r *BookmarkSqlReader) SelectByUserID(dh DataHandler, userID int64) ([]int64, error) {
+func (r *bookmarkSqlReader) SelectByUserID(dh DataHandler, userID int64) ([]int64, error) {
 	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1"
 	var result []int64
 	err := sqlx.Select(dh, &result, q, userID)
 	return result, err
 }
 
-type BookmarkSqlWriter struct{}
+type bookmarkSqlWriter struct{}
 
-func (db *BookmarkSqlWriter) Create(dh DataHandler, podcastID, userID int64) error {
+func (db *bookmarkSqlWriter) Create(dh DataHandler, podcastID, userID int64) error {
 	q := "INSERT INTO bookmarks(podcast_id, user_id) VALUES($1, $2)"
 	_, err := dh.Exec(q, podcastID, userID)
 	return err
 }
 
-func (db *BookmarkSqlWriter) Delete(dh DataHandler, podcastID, userID int64) error {
+func (db *bookmarkSqlWriter) Delete(dh DataHandler, podcastID, userID int64) error {
 	q := "DELETE FROM bookmarks WHERE podcast_id=$1 AND user_id=$2"
 	_, err := dh.Exec(q, podcastID, userID)
 	return err
