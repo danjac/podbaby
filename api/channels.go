@@ -90,11 +90,7 @@ func getChannelDetail(c *echo.Context) error {
 
 	detail.Related = related
 
-	podcasts, err := podcastStore.SelectByChannelID(
-		conn,
-		channelID,
-		channel.NumPodcasts,
-		getPage(c))
+	podcasts, err := podcastStore.SelectByChannel(conn, channel, getPage(c))
 
 	if err != nil {
 		return err

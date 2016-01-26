@@ -11,7 +11,7 @@ type PodcastReader interface {
 	GetByID(DataHandler, int64) (*models.Podcast, error)
 	SelectAll(DataHandler, int64) (*models.PodcastList, error)
 	SelectSubscribed(DataHandler, int64, int64) (*models.PodcastList, error)
-	SelectByChannelID(DataHandler, int64, int64, int64) (*models.PodcastList, error)
+	SelectByChannel(DataHandler, *models.Channel, int64) (*models.PodcastList, error)
 	SelectBookmarked(DataHandler, int64, int64) (*models.PodcastList, error)
 	SelectPlayed(DataHandler, int64, int64) (*models.PodcastList, error)
 	Search(DataHandler, string) ([]models.Podcast, error)
@@ -242,13 +242,13 @@ func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, userID, page int64) 
 	return result, err
 }
 
-func (r *podcastSqlReader) SelectByChannelID(dh DataHandler, channelID, numPodcasts, page int64) (*models.PodcastList, error) {
+func (r *podcastSqlReader) SelectByChannel(dh DataHandler, channel *models.Channel, page int64) (*models.PodcastList, error) {
 
 	result := &models.PodcastList{
-		Page: models.NewPaginator(page, numPodcasts),
+		Page: models.NewPaginator(page, channel.NumPodcasts),
 	}
 
-	if numPodcasts == 0 {
+	if channel.NumPodcasts == 0 {
 		return result, nil
 	}
 
@@ -263,7 +263,7 @@ func (r *podcastSqlReader) SelectByChannelID(dh DataHandler, channelID, numPodca
 		dh,
 		&result.Podcasts,
 		q,
-		channelID,
+		channel.ID,
 		result.Page.Offset,
 		result.Page.PageSize)
 	return result, err
