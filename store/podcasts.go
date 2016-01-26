@@ -11,7 +11,7 @@ type PodcastReader interface {
 	GetByID(DataHandler, int64) (*models.Podcast, error)
 	SelectAll(DataHandler, int64) (*models.PodcastList, error)
 	SelectSubscribed(DataHandler, int64, int64) (*models.PodcastList, error)
-	SelectByChannelID(DataHandler, int64, int64) (*models.PodcastList, error)
+	SelectByChannelID(DataHandler, int64, int64, int64) (*models.PodcastList, error)
 	SelectBookmarked(DataHandler, int64, int64) (*models.PodcastList, error)
 	SelectPlayed(DataHandler, int64, int64) (*models.PodcastList, error)
 	Search(DataHandler, string) ([]models.Podcast, error)
@@ -133,7 +133,7 @@ func (r *podcastSqlReader) SelectPlayed(dh DataHandler, userID, page int64) (*mo
 func (r *podcastSqlReader) SelectAll(dh DataHandler, page int64) (*models.PodcastList, error) {
 	var numRows int64
 
-	q := "SELECT COUNT(id) FROM podcasts"
+	q := "SELECT reltuples::bigint AS count FROM pg_class WHERE oid = 'public.podcasts'::regclass"
 
 	if err := dh.QueryRowx(q).Scan(&numRows); err != nil {
 		return nil, err
@@ -167,8 +167,8 @@ func (r *podcastSqlReader) SelectAll(dh DataHandler, page int64) (*models.Podcas
 func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, userID, page int64) (*models.PodcastList, error) {
 
 	q := `
-    SELECT COUNT(DISTINCT(id)) FROM podcasts
-    WHERE channel_id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
+    SELECT SUM(num_podcasts) FROM channels
+    WHERE id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
 
 	var numRows int64
 
@@ -205,9 +205,7 @@ func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, userID, page int64) 
 
 func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, userID, page int64) (*models.PodcastList, error) {
 
-	q := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
-    JOIN bookmarks b ON b.podcast_id = p.id
-    WHERE b.user_id=$1`
+	q := `SELECT COUNT(id) FROM bookmarks WHERE user_id=$1`
 
 	var numRows int64
 
@@ -244,25 +242,17 @@ func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, userID, page int64) 
 	return result, err
 }
 
-func (r *podcastSqlReader) SelectByChannelID(dh DataHandler, channelID, page int64) (*models.PodcastList, error) {
-
-	q := "SELECT COUNT(id) FROM podcasts WHERE channel_id=$1"
-
-	var numRows int64
-
-	if err := dh.QueryRowx(q, channelID).Scan(&numRows); err != nil {
-		return nil, err
-	}
+func (r *podcastSqlReader) SelectByChannelID(dh DataHandler, channelID, numPodcasts, page int64) (*models.PodcastList, error) {
 
 	result := &models.PodcastList{
-		Page: models.NewPaginator(page, numRows),
+		Page: models.NewPaginator(page, numPodcasts),
 	}
 
-	if numRows == 0 {
+	if numPodcasts == 0 {
 		return result, nil
 	}
 
-	q = `
+	q := `
     SELECT id, title, enclosure_url, description, pub_date, source
     FROM podcasts
     WHERE channel_id=$1

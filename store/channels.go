@@ -95,7 +95,7 @@ func (r *channelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, 
 func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int64) ([]models.Channel, error) {
 	q := `
     WITH user_subs AS (SELECT channel_id FROM subscriptions WHERE user_id=$1)
-    SELECT c.id, c.title, c.description, c.image, c.url, c.website
+    SELECT c.id, c.title, c.description, c.image, c.url, c.website, c.num_podcasts
     FROM channels c
     JOIN channels_categories cc ON cc.channel_id=c.id
     WHERE (cc.category_id IN (
@@ -145,7 +145,7 @@ func (r *channelSqlReader) GetByURL(dh DataHandler, url string) (*models.Channel
 
 func (r *channelSqlReader) GetByID(dh DataHandler, id int64) (*models.Channel, error) {
 	q := `
-    SELECT c.id, c.title, c.description, c.url, c.image, c.website
+    SELECT c.id, c.title, c.description, c.url, c.image, c.website, c.num_podcasts
     FROM channels c
     WHERE id=$1`
 	channel := &models.Channel{}

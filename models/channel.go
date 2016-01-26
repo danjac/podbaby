@@ -12,6 +12,7 @@ type Channel struct {
 	Image       string         `db:"image" json:"image"`
 	URL         string         `db:"url" json:"url"`
 	Website     sql.NullString `db:"website" json:"website"`
+	NumPodcasts int64          `db:"num_podcasts" json:"numPodcasts"`
 	Podcasts    []*Podcast     `db:"-" json:"-"`
 	Categories  []string       `db:"-" json:"-"`
 }
