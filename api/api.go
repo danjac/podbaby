@@ -6,6 +6,7 @@ import (
 	"github.com/justinas/nosurf"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
+	"golang.org/x/net/http2"
 	"html/template"
 	"io"
 	"net/http"
@@ -101,9 +102,9 @@ func Run(env *Env) error {
 
 	// add CSRF protection
 	s := e.Server(fmt.Sprintf(":%v", env.Port))
-	s.Handler = nosurf.NewPure(s.Handler)
-	e.RunServer(s)
-	return nil
+	s.Handler = nosurf.NewPure(e)
+	http2.ConfigureServer(s, nil)
+	return s.ListenAndServe()
 
 }
 
