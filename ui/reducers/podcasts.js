@@ -61,6 +61,7 @@ export default function (state = initialState, action) {
 
     case Actions.BOOKMARKS_SEARCH_FAILURE:
     case Actions.CHANNEL_SEARCH_FAILURE:
+
     case Actions.GET_BOOKMARKS_FAILURE:
     case Actions.GET_RECENT_PLAYS_FAILURE:
     case Actions.LATEST_PODCASTS_FAILURE:

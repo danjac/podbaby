@@ -8,7 +8,8 @@
   "scripts": {
     "build": "webpack -p --progress --config=webpack.config.prod.js",
     "dev": "node react-dev-server.js",
-    "test": "mocha --opts ./ui/test/mocha.opts"
+    "test": "mocha --opts ./ui/test/mocha.opts",
+    "cover": "isparta cover -i ui/**/*.js -x ui/test/*"
   },
   "keywords": [
     "podcast",
