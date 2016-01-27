@@ -54,6 +54,8 @@ export class Subscriptions extends React.Component {
           Discover new channels and podcasts <Link to="/search/">here</Link>.</div>);
     }
 
+    const pager = <Pager page={page} onSelectPage={this.handleSelectPage} />;
+
     return (
       <DocumentTitle title={getTitle('My subscriptions')}>
       <div>
@@ -73,8 +75,7 @@ export class Subscriptions extends React.Component {
             download
           ><Icon icon="download" /> Download OPML</a>
         </Input>
-        <Pager page={page} onSelectPage={this.handleSelectPage} />
-
+        {pager}
         {this.props.channels.map(channel => {
           const toggleSubscribe = () => {
             this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
@@ -88,6 +89,7 @@ export class Subscriptions extends React.Component {
             />
           );
         })}
+        {pager}
       </div>
     </DocumentTitle>
     );

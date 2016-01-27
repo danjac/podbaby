@@ -91,6 +91,8 @@ export class Category extends React.Component {
           Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
     }
 
+    const pager = <Pager page={page} onSelectPage={this.handleSelectPage} />;
+
     return (
       <DocumentTitle title={getTitle(`Category: ${category.name}`)}>
       <div>
@@ -104,7 +106,7 @@ export class Category extends React.Component {
           onKeyUp={this.handleFilterChannels}
           placeholder="Find a feed in this category"
         />
-        <Pager page={page} onSelectPage={this.handleSelectPage} />
+        {pager}
         {channels.map(channel => {
           const toggleSubscribe = () => {
             this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
@@ -118,6 +120,7 @@ export class Category extends React.Component {
             />
           );
         })}
+        {pager}
       </div>
     </DocumentTitle>
     );
