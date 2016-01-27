@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"path/filepath"
 	"strconv"
 
 	"github.com/danjac/podbaby/config"
@@ -58,7 +59,7 @@ func New(env *Env) (http.Handler, error) {
 
 	// Render HTML
 
-	templates, err := template.ParseGlob("templates/*.tmpl")
+	templates, err := template.ParseGlob(filepath.Join(env.TemplateDir, "*.tmpl"))
 	if err != nil {
 		return nil, err
 	}

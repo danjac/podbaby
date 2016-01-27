@@ -10,6 +10,7 @@ const (
 	defaultPort            = 5000
 	defaultStaticURL       = "/static/"
 	defaultStaticDir       = "./static/"
+	defaultTemplateDir     = "./templates"
 	defaultMailTemplateDir = "./templates/email"
 	devStaticURL           = "http://localhost:8080/static/"
 )
@@ -30,6 +31,7 @@ func New() *Config {
 		Port:              defaultPort,
 		StaticDir:         defaultStaticDir,
 		StaticURL:         defaultStaticURL,
+		TemplateDir:       defaultTemplateDir,
 		DynamicContentURL: devStaticURL,
 		SecretKey:         generateRandomKey(),
 	}
@@ -78,6 +80,7 @@ type Config struct {
 	DatabaseURL,
 	StaticURL,
 	DynamicContentURL,
+	TemplateDir,
 	StaticDir,
 	GoogleAnalyticsID,
 	SecureCookieKey,
