@@ -11,14 +11,6 @@ import (
 	"testing"
 )
 
-type fakeAuthenticator struct {
-	user *models.User
-}
-
-func (a *fakeAuthenticator) authenticate(c *echo.Context) (*models.User, error) {
-	return a.user, nil
-}
-
 func TestIsEmailIfLoggedInAndAnotherEmailExists(t *testing.T) {
 
 	user := &models.User{

@@ -11,6 +11,7 @@ func withRoutes(e *echo.Echo) {
 	// API
 
 	api := e.Group("/api/")
+
 	api.Get("search/", searchAll)
 
 	// PUBLIC ROUTES
@@ -18,6 +19,7 @@ func withRoutes(e *echo.Echo) {
 	// authentication
 
 	auth := api.Group("auth/")
+
 	auth.Post("login/", login)
 	auth.Post("signup/", signup)
 	auth.Post("recoverpass/", recoverPassword)
@@ -28,6 +30,7 @@ func withRoutes(e *echo.Echo) {
 	// channels
 
 	channels := api.Group("channels/")
+
 	channels.Get("category/:id/", getChannelsByCategory)
 	channels.Get("recommended/", getRecommendations)
 	channels.Get(":id/", getChannelDetail)
@@ -36,12 +39,14 @@ func withRoutes(e *echo.Echo) {
 	// podcasts
 
 	podcasts := api.Group("podcasts/")
+
 	podcasts.Get("detail/:id/", getPodcast)
 	podcasts.Get("latest/", getLatestPodcasts)
 
 	// MEMBERS ONLY
 
 	member := api.Group("member/")
+
 	member.Use(authorize())
 
 	member.Post("new/", addChannel)
@@ -57,6 +62,7 @@ func withRoutes(e *echo.Echo) {
 	// subscriptions
 
 	subs := member.Group("subscriptions/")
+
 	subs.Get("", getSubscriptions)
 	subs.Get(":prefix.opml", getOPML)
 	subs.Post(":id/", subscribe)
@@ -65,6 +71,7 @@ func withRoutes(e *echo.Echo) {
 	// bookmarks
 
 	bookmarks := member.Group("bookmarks/")
+
 	bookmarks.Get("", getBookmarks)
 	bookmarks.Get("search/", searchBookmarks)
 	bookmarks.Post(":id/", addBookmark)
@@ -73,6 +80,7 @@ func withRoutes(e *echo.Echo) {
 	// plays
 
 	plays := member.Group("plays/")
+
 	plays.Get("", getPlays)
 	plays.Post(":id/", addPlay)
 	plays.Delete("", deleteAllPlays)
