@@ -43,12 +43,8 @@ export default function (state = initialState, action) {
     case Actions.CLEAR_SEARCH:
     case Actions.SEARCH_FAILURE:
     case Actions.GET_CHANNELS_FAILURE:
-      return Object.assign({}, state, {
-        channels: [],
-        isLoading: false,
-        filter: '',
-        page: 1,
-      });
+      return initialState;
+
     default:
       return state;
   }

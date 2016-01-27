@@ -10,7 +10,6 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case Actions.CATEGORIES_LOADED:
       return Object.assign({}, state, {
-        categories: action.payload,
         categoryMap: _.keyBy(action.payload, 'id'),
       });
     case Actions.GET_CATEGORY:

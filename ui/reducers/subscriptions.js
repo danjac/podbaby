@@ -10,7 +10,7 @@ export default function (state = initialState, action) {
       return (action.payload && action.payload.subscriptions) || [];
 
     case Actions.LOGOUT:
-      return [];
+      return initialState;
 
     case Actions.ADD_CHANNEL_SUCCESS:
       return state.concat(action.payload.id);
