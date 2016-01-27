@@ -23,7 +23,7 @@ class ChangeEmailForm extends React.Component {
   handleSubmit(values) {
     return new Promise((resolve, reject) => {
       const { email } = values;
-      api.changeEmail(values.email)
+      api.changeEmail(email)
       .then(() => {
         this.props.onComplete(email);
         resolve();

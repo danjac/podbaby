@@ -57,7 +57,7 @@ type recoverPasswordDecoder struct {
 
 func (d *recoverPasswordDecoder) decode(v *validator) {
 	if d.Identifier == "" {
-		v.invalid("Identifier", "Email or user name required")
+		v.invalid("identifier", "Email or user name required")
 	}
 }
 

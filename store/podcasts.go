@@ -173,7 +173,10 @@ func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, userID, page int64) 
 	var numRows int64
 
 	if err := dh.QueryRowx(q, userID).Scan(&numRows); err != nil {
-		return nil, err
+		// scan error, as result may be NULL
+		if err != nil {
+			numRows = 0
+		}
 	}
 
 	result := &models.PodcastList{
