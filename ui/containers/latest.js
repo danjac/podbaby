@@ -28,7 +28,7 @@ export class Latest extends React.Component {
   }
 
   handleRefresh(event) {
-    event.prevetDefault();
+    event.preventDefault();
     this.actions.getLatestPodcasts(1);
   }
 
