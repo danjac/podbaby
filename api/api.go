@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/justinas/nosurf"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
@@ -50,7 +51,7 @@ func (r *renderer) Render(w io.Writer, name string, data interface{}) error {
 	return r.templates.ExecuteTemplate(w, name, data)
 }
 
-func New(env *Env) (http.Handler, error) {
+func Run(env *Env) error {
 
 	e := echo.New()
 	e.SetDebug(true)
@@ -61,7 +62,7 @@ func New(env *Env) (http.Handler, error) {
 
 	templates, err := template.ParseGlob(filepath.Join(env.TemplateDir, "*.tmpl"))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	e.SetRenderer(&renderer{templates})
 
@@ -98,7 +99,11 @@ func New(env *Env) (http.Handler, error) {
 
 	withRoutes(e)
 
-	return nosurf.NewPure(e), nil
+	// add CSRF protection
+	s := e.Server(fmt.Sprintf(":%v", env.Port))
+	s.Handler = nosurf.NewPure(s.Handler)
+	e.RunServer(s)
+	return nil
 
 }
 

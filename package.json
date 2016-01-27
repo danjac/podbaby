@@ -56,6 +56,7 @@
     "bootstrap": "^3.3.6",
     "bootswatch": "^3.3.6",
     "classnames": "^2.2.1",
+    "express": "^4.13.4",
     "font-awesome": "^4.5.0",
     "history": "^1.13.1",
     "lodash": "^4.0.0",
