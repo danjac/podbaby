@@ -2,6 +2,7 @@ package commands
 
 import (
 	"github.com/danjac/podbaby/api"
+	"github.com/danjac/podbaby/cache"
 	"github.com/danjac/podbaby/config"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
@@ -20,11 +21,17 @@ func Serve(cfg *config.Config) {
 	defer store.Conn().Close()
 
 	mailer, err := mailer.New(cfg)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	cache := cache.New(cfg)
 
 	feedparser := feedparser.New()
 
 	env := &api.Env{
 		Store:      store,
+		Cache:      cache,
 		Mailer:     mailer,
 		Config:     cfg,
 		Feedparser: feedparser,

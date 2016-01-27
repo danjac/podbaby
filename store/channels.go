@@ -11,7 +11,7 @@ const maxRecommendations = 20
 
 type ChannelReader interface {
 	SelectAll(DataHandler) ([]models.Channel, error)
-	SelectByCategoryID(DataHandler, int64) ([]models.Channel, error)
+	SelectByCategoryID(DataHandler, *[]models.Channel, int64) error
 	SelectSubscribed(DataHandler, int64) ([]models.Channel, error)
 	SelectRelated(DataHandler, int64) ([]models.Channel, error)
 	SelectRecommended(DataHandler) ([]models.Channel, error)
@@ -52,7 +52,7 @@ func (r *channelSqlReader) SelectAll(dh DataHandler) ([]models.Channel, error) {
 	return channels, sqlx.Select(dh, &channels, q)
 }
 
-func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models.Channel, categoryID int64) error {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
@@ -61,8 +61,7 @@ func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, categoryID int64) 
     WHERE cc.category_id=$1
     GROUP BY c.id
     ORDER BY c.title`
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q, categoryID)
+	return sqlx.Select(dh, channels, q, categoryID)
 }
 
 func (r *channelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]models.Channel, error) {

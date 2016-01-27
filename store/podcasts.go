@@ -9,7 +9,7 @@ const maxSearchRows = 20
 
 type PodcastReader interface {
 	GetByID(DataHandler, int64) (*models.Podcast, error)
-	SelectAll(DataHandler, int64) (*models.PodcastList, error)
+	SelectAll(DataHandler, *models.PodcastList, int64) error
 	SelectSubscribed(DataHandler, int64, int64) (*models.PodcastList, error)
 	SelectByChannel(DataHandler, *models.Channel, int64) (*models.PodcastList, error)
 	SelectBookmarked(DataHandler, int64, int64) (*models.PodcastList, error)
@@ -130,21 +130,19 @@ func (r *podcastSqlReader) SelectPlayed(dh DataHandler, userID, page int64) (*mo
 
 }
 
-func (r *podcastSqlReader) SelectAll(dh DataHandler, page int64) (*models.PodcastList, error) {
+func (r *podcastSqlReader) SelectAll(dh DataHandler, result *models.PodcastList, page int64) error {
 	var numRows int64
 
 	q := "SELECT reltuples::bigint AS count FROM pg_class WHERE oid = 'public.podcasts'::regclass"
 
 	if err := dh.QueryRowx(q).Scan(&numRows); err != nil {
-		return nil, err
+		return err
 	}
 
-	result := &models.PodcastList{
-		Page: models.NewPaginator(page, numRows),
-	}
+	result.Page = models.NewPaginator(page, numRows)
 
 	if numRows == 0 {
-		return result, nil
+		return nil
 	}
 
 	q = `
@@ -155,13 +153,12 @@ func (r *podcastSqlReader) SelectAll(dh DataHandler, page int64) (*models.Podcas
     ORDER BY p.pub_date DESC
     OFFSET $1 LIMIT $2`
 
-	err := sqlx.Select(
+	return sqlx.Select(
 		dh,
 		&result.Podcasts,
 		q,
 		result.Page.Offset,
 		result.Page.PageSize)
-	return result, err
 }
 
 func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, userID, page int64) (*models.PodcastList, error) {

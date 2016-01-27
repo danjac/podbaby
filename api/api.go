@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/danjac/podbaby/cache"
 	"github.com/danjac/podbaby/config"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/mailer"
@@ -25,6 +26,7 @@ const (
 	userContextKey          = "user"
 	storeContextKey         = "store"
 	feedparserContextKey    = "feedparser"
+	cacheContextKey         = "cache"
 	mailerContextKey        = "mailer"
 	cookieStoreContextKey   = "cookieStore"
 	configContextKey        = "config"
@@ -33,6 +35,7 @@ const (
 
 type Env struct {
 	*config.Config
+	Cache       cache.Cache
 	Store       store.Store
 	CookieStore CookieStore
 	Feedparser  feedparser.Feedparser
@@ -77,6 +80,7 @@ func Run(env *Env) error {
 			c.Set(storeContextKey, env.Store)
 			c.Set(mailerContextKey, env.Mailer)
 			c.Set(feedparserContextKey, env.Feedparser)
+			c.Set(cacheContextKey, env.Cache)
 			c.Set(configContextKey, env.Config)
 			c.Set(cookieStoreContextKey, cookieStore)
 			c.Set(authenticatorContextKey, auth)
@@ -115,6 +119,10 @@ func getUser(c *echo.Context) *models.User {
 func getUserOk(c *echo.Context) (*models.User, bool) {
 	user, ok := c.Get(userContextKey).(*models.User)
 	return user, ok
+}
+
+func getCache(c *echo.Context) cache.Cache {
+	return c.Get(cacheContextKey).(cache.Cache)
 }
 
 func getStore(c *echo.Context) store.Store {

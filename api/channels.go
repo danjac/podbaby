@@ -2,7 +2,9 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
@@ -16,12 +18,22 @@ func getChannelsByCategory(c *echo.Context) error {
 		return err
 	}
 
-	store := getStore(c)
+	var (
+		channels = []models.Channel{}
+		key      = fmt.Sprintf("channels:category:%v", categoryID)
+		cache    = getCache(c)
+		timeout  = time.Hour
+	)
 
-	channels, err := store.Channels().SelectByCategoryID(store.Conn(), categoryID)
+	err = cache.Get(key, timeout, &channels, func() error {
+		store := getStore(c)
+		return store.Channels().SelectByCategoryID(store.Conn(), &channels, categoryID)
+	})
+
 	if err != nil {
 		return err
 	}
+
 	return c.JSON(http.StatusOK, channels)
 }
 
@@ -57,49 +69,63 @@ func getChannelDetail(c *echo.Context) error {
 	}
 
 	var (
-		store         = getStore(c)
-		conn          = store.Conn()
-		channelStore  = store.Channels()
-		podcastStore  = store.Podcasts()
-		categoryStore = store.Categories()
+		page    = getPage(c)
+		cache   = getCache(c)
+		key     = fmt.Sprintf("channel:%v:page:%v", channelID, page)
+		timeout = time.Minute * 30
+		detail  = &models.ChannelDetail{}
 	)
 
-	channel, err := channelStore.GetByID(conn, channelID)
+	err = cache.Get(key, timeout, detail, func() error {
+
+		var (
+			store         = getStore(c)
+			conn          = store.Conn()
+			channelStore  = store.Channels()
+			podcastStore  = store.Podcasts()
+			categoryStore = store.Categories()
+		)
+
+		channel, err := channelStore.GetByID(conn, channelID)
+		if err != nil {
+			return err
+		}
+		detail.Channel = channel
+
+		categories, err := categoryStore.SelectByChannelID(conn, channelID)
+		if err != nil {
+			return err
+		}
+
+		detail.Categories = categories
+
+		related, err := channelStore.SelectRelated(conn, channelID)
+		if err != nil {
+			return err
+		}
+
+		detail.Related = related
+
+		podcasts, err := podcastStore.SelectByChannel(conn, channel, page)
+
+		if err != nil {
+			return err
+		}
+
+		for _, pc := range podcasts.Podcasts {
+			pc.Name = channel.Title
+			pc.Image = channel.Image
+			pc.ChannelID = channel.ID
+			detail.Podcasts = append(detail.Podcasts, pc)
+		}
+		detail.Page = podcasts.Page
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
 
-	detail := &models.ChannelDetail{
-		Channel: channel,
-	}
-
-	categories, err := categoryStore.SelectByChannelID(conn, channelID)
-	if err != nil {
-		return err
-	}
-
-	detail.Categories = categories
-
-	related, err := channelStore.SelectRelated(conn, channelID)
-	if err != nil {
-		return err
-	}
-
-	detail.Related = related
-
-	podcasts, err := podcastStore.SelectByChannel(conn, channel, getPage(c))
-
-	if err != nil {
-		return err
-	}
-
-	for _, pc := range podcasts.Podcasts {
-		pc.Name = channel.Title
-		pc.Image = channel.Image
-		pc.ChannelID = channel.ID
-		detail.Podcasts = append(detail.Podcasts, pc)
-	}
-	detail.Page = podcasts.Page
 	return c.JSON(http.StatusOK, detail)
 }
 

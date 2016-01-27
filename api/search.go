@@ -1,9 +1,11 @@
 package api
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/danjac/podbaby/models"
 )
@@ -11,24 +13,35 @@ import (
 func searchAll(c *echo.Context) error {
 
 	var (
-		store = getStore(c)
-		conn  = store.Conn()
+		cache   = getCache(c)
+		query   = strings.ToLower(strings.Trim(c.Form("q"), " "))
+		result  = &models.SearchResult{}
+		key     = fmt.Sprintf("search:all:%v", query)
+		timeout = time.Minute * 30
 	)
 
-	query := strings.Trim(c.Form("q"), " ")
-
-	result := &models.SearchResult{}
-
 	if query != "" {
-		var err error
-		if result.Channels, err = store.Channels().Search(conn, query); err != nil {
-			return err
-		}
-		if result.Podcasts, err = store.Podcasts().Search(conn, query); err != nil {
+		err := cache.Get(key, timeout, result, func() error {
+
+			var (
+				store = getStore(c)
+				conn  = store.Conn()
+			)
+
+			var err error
+			if result.Channels, err = store.Channels().Search(conn, query); err != nil {
+				return err
+			}
+			if result.Podcasts, err = store.Podcasts().Search(conn, query); err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
 			return err
 		}
 	}
-
 	return c.JSON(http.StatusOK, result)
 }
 
