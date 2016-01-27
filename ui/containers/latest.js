@@ -42,7 +42,7 @@ export class Latest extends React.Component {
         <div>
         {this.props.page.page !== 1 || this.props.isLoading ? '' :
         <form className="form">
-          <Button bsStyle="primary" className="form-control">
+          <Button bsStyle="primary" className="form-control" onClick={this.handleRefresh}>
             <Icon icon="refresh" /> Update
           </Button>
         </form>}
