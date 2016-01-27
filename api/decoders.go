@@ -39,11 +39,9 @@ func (v *validator) ok() bool {
 
 func (v *validator) validate(d decoder) (bool, error) {
 	if err := v.context.Bind(d); err != nil {
-		fmt.Println("BINDING FAIL", err)
 		return false, err
 	}
 	if d.decode(v); !v.ok() {
-		fmt.Println("DECODING FAIL", v.errors)
 		return false, v.render()
 	}
 	return true, nil
