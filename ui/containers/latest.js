@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import DocumentTitle from 'react-document-title';
 import { Button } from 'react-bootstrap';
+import DocumentTitle from 'react-document-title';
 
 import * as actions from '../actions';
 import { podcastsSelector } from '../selectors';
@@ -21,9 +21,7 @@ export class Latest extends React.Component {
     this.handleRefresh = this.handleRefresh.bind(this);
   }
 
-  handleSelectPage(event, selectedEvent) {
-    event.preventDefault();
-    const page = selectedEvent.eventKey;
+  handleSelectPage(page) {
     this.actions.getLatestPodcasts(page);
   }
 

@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
-import { Pagination } from 'react-bootstrap';
-
 import Loading from './loading';
+import Pager from './pager';
 import Podcast from './podcast_item';
 
 export class PodcastList extends React.Component {
@@ -14,10 +13,10 @@ export class PodcastList extends React.Component {
       dispatch,
       isLoggedIn,
       podcasts,
-      page,
-      onSelectPage,
       isLoading,
       ifEmpty,
+      page,
+      onSelectPage,
       showChannel,
     } = this.props;
 
@@ -27,24 +26,14 @@ export class PodcastList extends React.Component {
 
     const emptyMsg = typeof ifEmpty === 'undefined' ? 'No podcasts found' : ifEmpty;
     if (_.isEmpty(podcasts)) {
-      return <div>{emptyMsg}</div>;
+      return <div className="lead">{emptyMsg}</div>;
     }
 
-    const pagination = (
-      page && onSelectPage && page.numPages > 1 ?
-      <Pagination
-        onSelect={onSelectPage}
-        first
-        last
-        prev
-        next
-        maxButtons={6}
-        items={page.numPages}
-        activePage={page.page}
-      /> : '');
+    const pager = <Pager page={page} onSelectPage={onSelectPage} />;
+
     return (
       <div>
-        {pagination}
+        {pager}
         {podcasts.map(podcast => {
           const togglePlayer = event => {
             event.preventDefault();
@@ -73,7 +62,7 @@ export class PodcastList extends React.Component {
               togglePlayer={togglePlayer}
             />);
         })}
-        {pagination}
+        {pager}
         </div>
       );
   }

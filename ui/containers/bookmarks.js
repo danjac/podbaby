@@ -49,9 +49,7 @@ export class Bookmarks extends React.Component {
     this.refs.query.getInputDOMNode().select();
   }
 
-  handleSelectPage(event, selectedEvent) {
-    event.preventDefault();
-    const page = selectedEvent.eventKey;
+  handleSelectPage(page) {
     this.actions.getBookmarks(page);
   }
 

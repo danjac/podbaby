@@ -23,9 +23,7 @@ export class Recent extends React.Component {
     this.handleClearAll = this.handleClearAll.bind(this);
   }
 
-  handleSelectPage(event, selectedEvent) {
-    event.preventDefault();
-    const page = selectedEvent.eventKey;
+  handleSelectPage(page) {
     this.actions.getRecentlyPlayed(page);
   }
 

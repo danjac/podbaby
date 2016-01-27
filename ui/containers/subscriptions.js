@@ -6,14 +6,12 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import DocumentTitle from 'react-document-title';
 
-import {
-  Input,
-  Pagination,
-} from 'react-bootstrap';
+import { Input } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import { channelsSelector } from '../selectors';
 import PageHeader from '../components/header';
+import Pager from '../components/pager';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
@@ -35,9 +33,7 @@ export class Subscriptions extends React.Component {
     this.actions.filterChannels(value);
   }
 
-  handleSelectPage(event, selectedEvent) {
-    event.preventDefault();
-    const page = selectedEvent.eventKey;
+  handleSelectPage(page) {
     this.actions.selectPage(page);
   }
 
@@ -54,22 +50,9 @@ export class Subscriptions extends React.Component {
 
     if (_.isEmpty(unfilteredChannels) && !isLoading) {
       return (
-        <span>You haven't subscribed to any channels yet.
-          Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
+        <div className="lead">You haven't subscribed to any channels yet.
+          Discover new channels and podcasts <Link to="/search/">here</Link>.</div>);
     }
-
-    const pagination = (
-      page && page.numPages > 1 ?
-      <Pagination
-        onSelect={this.handleSelectPage}
-        first
-        last
-        prev
-        next
-        maxButtons={6}
-        items={page.numPages}
-        activePage={page.page}
-      /> : '');
 
     return (
       <DocumentTitle title={getTitle('My subscriptions')}>
@@ -90,20 +73,21 @@ export class Subscriptions extends React.Component {
             download
           ><Icon icon="download" /> Download OPML</a>
         </Input>
-        {pagination}
-      {this.props.channels.map(channel => {
-        const toggleSubscribe = () => {
-          this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
-        };
-        return (
-          <ChannelItem
-            key={channel.id}
-            channel={channel}
-            isLoggedIn
-            subscribe={toggleSubscribe}
-          />
-        );
-      })}
+        <Pager page={page} onSelectPage={this.handleSelectPage} />
+
+        {this.props.channels.map(channel => {
+          const toggleSubscribe = () => {
+            this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
+          };
+          return (
+            <ChannelItem
+              key={channel.id}
+              channel={channel}
+              isLoggedIn
+              subscribe={toggleSubscribe}
+            />
+          );
+        })}
       </div>
     </DocumentTitle>
     );

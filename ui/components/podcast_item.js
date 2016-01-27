@@ -66,25 +66,28 @@ export default function PodcastItem(props) {
 
   if (showChannel) {
     header = (
-      <div className="media">
-        <div className="media-left media-middle">
-          <Link to={channelUrl}>
-            <Image
-              className="media-object"
-              src={image}
-              errSrc="/static/podcast.png"
-              imgProps={{
-                height: 60,
-                width: 60,
-                alt: podcast.name,
-              }}
-            />
-          </Link>
-        </div>
-        <div className="media-body">
-          <h4>{showExpanded ? podcast.title :
-            <Link to={podcastUrl}>{podcast.title}</Link>} {playedAt}</h4>
-          <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
+      <div>
+        <h4>{showExpanded ? podcast.title :
+          <Link to={podcastUrl}>{podcast.title}</Link>} {playedAt}
+        </h4>
+        <div className="media">
+          <div className="media-left media-middle">
+            <Link to={channelUrl}>
+              <Image
+                className="media-object"
+                src={image}
+                errSrc="/static/podcast.png"
+                imgProps={{
+                  height: 60,
+                  width: 60,
+                  alt: podcast.name,
+                }}
+              />
+            </Link>
+          </div>
+          <div className="media-body">
+            <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
+          </div>
         </div>
       </div>
     );

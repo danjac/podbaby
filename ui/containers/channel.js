@@ -118,10 +118,8 @@ export class Channel extends React.Component {
     this.actions.subscribe.toggleSubscribe(channel);
   }
 
-  handleSelectPage(event, selectedEvent) {
-    event.preventDefault();
+  handleSelectPage(page) {
     const { channel } = this.props;
-    const page = selectedEvent.eventKey;
     this.actions.channel.getChannel(channel.id, page);
   }
 

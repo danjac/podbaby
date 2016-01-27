@@ -7,7 +7,6 @@ import DocumentTitle from 'react-document-title';
 
 import {
   Input,
-  Pagination,
   ButtonGroup,
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +15,7 @@ import {
 import * as actions from '../actions';
 import { channelsSelector, categorySelector } from '../selectors';
 import { isMobile } from '../components/utils';
+import Pager from '../components/pager';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
 import { getTitle } from './utils';
@@ -27,8 +27,8 @@ export class Category extends React.Component {
     const { dispatch } = this.props;
     this.actions = bindActionCreators(actions.channels, dispatch);
     this.handleFilterChannels = this.handleFilterChannels.bind(this);
-    this.handleSelectPage = this.handleSelectPage.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleSelectPage = this.handleSelectPage.bind(this);
   }
 
   handleFilterChannels() {
@@ -36,9 +36,7 @@ export class Category extends React.Component {
     this.actions.filterChannels(value);
   }
 
-  handleSelectPage(event, selectedEvent) {
-    event.preventDefault();
-    const page = selectedEvent.eventKey;
+  handleSelectPage(page) {
     this.actions.selectPage(page);
   }
 
@@ -81,7 +79,7 @@ export class Category extends React.Component {
   }
 
   render() {
-    const { page, unfilteredChannels, isLoading, category } = this.props;
+    const { channels, unfilteredChannels, isLoading, category, page } = this.props;
 
     if (isLoading) {
       return <Loading />;
@@ -92,19 +90,6 @@ export class Category extends React.Component {
         <span>There are no feeds for this category.
           Discover new channels and podcasts <Link to="/search/">here</Link>.</span>);
     }
-
-    const pagination = (
-      page && page.numPages > 1 ?
-      <Pagination
-        onSelect={this.handleSelectPage}
-        first
-        last
-        prev
-        next
-        maxButtons={6}
-        items={page.numPages}
-        activePage={page.page}
-      /> : '');
 
     return (
       <DocumentTitle title={getTitle(`Category: ${category.name}`)}>
@@ -119,20 +104,20 @@ export class Category extends React.Component {
           onKeyUp={this.handleFilterChannels}
           placeholder="Find a feed in this category"
         />
-        {pagination}
-      {this.props.channels.map(channel => {
-        const toggleSubscribe = () => {
-          this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
-        };
-        return (
-          <ChannelItem
-            key={channel.id}
-            channel={channel}
-            isLoggedIn
-            subscribe={toggleSubscribe}
-          />
-        );
-      })}
+        <Pager page={page} onSelectPage={this.handleSelectPage} />
+        {channels.map(channel => {
+          const toggleSubscribe = () => {
+            this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
+          };
+          return (
+            <ChannelItem
+              key={channel.id}
+              channel={channel}
+              isLoggedIn
+              subscribe={toggleSubscribe}
+            />
+          );
+        })}
       </div>
     </DocumentTitle>
     );
