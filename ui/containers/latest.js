@@ -40,12 +40,12 @@ export class Latest extends React.Component {
     return (
       <DocumentTitle title={getTitle('Latest podcasts')}>
         <div>
-        {this.props.page.page === 1 ?
+        {this.props.isLoading ? '' :
         <form className="form">
           <Button bsStyle="primary" className="form-control">
             <Icon icon="refresh" /> Update
           </Button>
-        </form> : ''}
+        </form>}
         <PodcastList
           actions={actions}
           ifEmpty={ifEmptyMsg}
