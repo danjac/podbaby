@@ -4,11 +4,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DocumentTitle from 'react-document-title';
+import { Button } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import { channelsSelector } from '../selectors';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
+import Icon from '../components/icon';
 import { getTitle } from './utils';
 
 export class Recommendations extends React.Component {
@@ -17,6 +19,12 @@ export class Recommendations extends React.Component {
     super(props);
     const { dispatch } = this.props;
     this.actions = bindActionCreators(actions.channels, dispatch);
+    this.handleGetRecommendations = this.handleGetRecommendations.bind(this);
+  }
+
+  handleGetRecommendations(event) {
+    event.preventDefault();
+    this.actions.getRecommendations();
   }
 
   render() {
@@ -35,6 +43,12 @@ export class Recommendations extends React.Component {
     return (
       <DocumentTitle title={getTitle('Recommendations')}>
       <div>
+      {isLoggedIn ?
+      <form className="form">
+        <Button bsStyle="primary" className="form-control" onClick={this.handleGetRecommendations}>
+          <Icon icon="refresh" /> More recommendations
+        </Button>
+      </form> : ''}
       {this.props.channels.map(channel => {
         const toggleSubscribe = () => {
           this.props.dispatch(actions.subscribe.toggleSubscribe(channel));
