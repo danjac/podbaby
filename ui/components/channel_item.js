@@ -41,8 +41,11 @@ function ChannelItem(props) {
         </Link>
       </div>
     {isLoggedIn ?
-    <div className="text-center" style={{ marginTop: 20 }}>
-      <Button title={channel.isSubscribed ?
+    <div style={{ marginTop: 20 }}>
+      <Button
+        bsStyle={channel.isSubscribed ? 'default' : 'primary'}
+        className="form-control"
+        title={channel.isSubscribed ?
         'Unsubscribe' : 'Subscribe'} onClick={subscribe}
       >
         <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
