@@ -63,17 +63,19 @@ export class Category extends React.Component {
   renderChildren() {
     const { category } = this.props;
     return (
-      <ButtonGroup>
-        {category.children.map(child => {
-          return (
-          <Link
-            key={child.id}
-            className="btn btn-info"
-            to={`/categories/${child.id}/`}
-          >{child.name}</Link>
-          );
-        })}
-      </ButtonGroup>
+      <div className="text-center">
+        <ButtonGroup>
+          {category.children.map(child => {
+            return (
+            <Link
+              key={child.id}
+              className="btn btn-info"
+              to={`/categories/${child.id}/`}
+            >{child.name}</Link>
+            );
+          })}
+        </ButtonGroup>
+      </div>
     );
   }
 
