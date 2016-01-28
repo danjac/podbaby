@@ -23,7 +23,7 @@ const AlertList = props => {
       style={{
         position: 'fixed',
         height: '50px',
-        width: '500px',
+        width: '300',
         opacity: 0.9,
         textAlign: 'center',
         margin: '5% auto',

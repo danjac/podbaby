@@ -3,9 +3,8 @@ import { Link } from 'react-router';
 
 import {
   Button,
-  ButtonGroup,
   Panel,
-  Badge,
+  Label,
 } from 'react-bootstrap';
 
 import Image from './image';
@@ -16,12 +15,20 @@ function ChannelItem(props) {
   const { channel, subscribe, isLoggedIn } = props;
   const url = `/channel/${channel.id}/`;
 
-  const counterBadge = channel.numPodcasts ? <Badge>{channel.numPodcasts}</Badge> : '';
-
   return (
     <Panel>
-    <div className="media">
-      <div className="media-left">
+    <div className="thumbnail">
+        <div className="caption text-center">
+          <h4>
+            <Link to={url}>{channel.title}</Link>
+              </h4>
+          {channel.numPodcasts ?
+          <h5>
+            <Label bsStyle="primary">
+              {channel.numPodcasts} podcast{channel.numPodcasts > 1 ? 's' : ''}
+            </Label>
+          </h5> : ''}
+        </div>
         <Link to={url}>
         <Image className="media-object"
           src={channel.image}
@@ -33,14 +40,8 @@ function ChannelItem(props) {
         />
         </Link>
       </div>
-      <div className="media-body">
-        <h4 className="media-heading">
-          <Link to={url}>{channel.title}</Link> {counterBadge}
-            </h4>
-        </div>
-    </div>
     {isLoggedIn ?
-    <ButtonGroup style={{ marginTop: 20 }}>
+    <div className="text-center" style={{ marginTop: 20 }}>
       <Button title={channel.isSubscribed ?
         'Unsubscribe' : 'Subscribe'} onClick={subscribe}
       >
@@ -48,7 +49,7 @@ function ChannelItem(props) {
         channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
         }
       </Button>
-    </ButtonGroup>
+    </div>
     : ''}
     <p
       style={{ marginTop: 20 }}

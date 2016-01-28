@@ -44,7 +44,7 @@ describe('Podcast component', function () {
     const props = makePodcastProps(podcast, { showChannel: true });
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, 'media-body');
+    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, 'thumbnail');
     assert.equal(tags.length, 1);
     const $header = TestUtils.findRenderedDOMComponentWithTag(rendered, 'h5');
     assert.equal($header.textContent, podcast.name);
@@ -55,7 +55,7 @@ describe('Podcast component', function () {
     const props = makePodcastProps(podcast, { showChannel: false });
     const component = <Wrapper><Podcast {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
-    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, 'media-object');
+    const tags = TestUtils.scryRenderedDOMComponentsWithClass(rendered, 'thumbnail');
     assert.equal(tags.length, 0);
   });
 });

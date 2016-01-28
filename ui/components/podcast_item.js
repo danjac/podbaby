@@ -6,7 +6,7 @@ import {
   ButtonGroup,
   Button,
   Panel,
-  Badge,
+  Label,
 } from 'react-bootstrap';
 
 
@@ -60,21 +60,29 @@ export default function PodcastItem(props) {
   const image = podcast.image || '/static/podcast.png';
 
   const playedAt = isLoggedIn && podcast.lastPlayedAt ?
-    <Badge>Listened {formatListenDate(podcast.lastPlayedAt)}</Badge> : '';
+    <div className="text-center">
+      <h5>
+      <Label bsStyle="success">
+       Listened {formatListenDate(podcast.lastPlayedAt)}
+      </Label>
+      </h5>
+    </div> : '';
 
   let header;
 
   if (showChannel) {
     header = (
-      <div>
+      <div className="text-center">
         <h4>{showExpanded ? podcast.title :
-          <Link to={podcastUrl}>{podcast.title}</Link>} {playedAt}
+          <Link to={podcastUrl}>{podcast.title}</Link>}
         </h4>
-        <div className="media">
-          <div className="media-left media-middle">
+        {playedAt}
+        <div className="thumbnail">
+          <div className="caption text-center">
+            <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
+          </div>
             <Link to={channelUrl}>
               <Image
-                className="media-object"
                 src={image}
                 errSrc="/static/podcast.png"
                 imgProps={{
@@ -85,14 +93,15 @@ export default function PodcastItem(props) {
               />
             </Link>
           </div>
-          <div className="media-body">
-            <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
-          </div>
-        </div>
       </div>
     );
   } else {
-    header = <h4><Link to={podcastUrl}>{podcast.title} {playedAt}</Link></h4>;
+    header = (
+      <div className="text-center">
+        <h4><Link to={podcastUrl}>{podcast.title}</Link></h4>
+        {playedAt}
+      </div>
+    );
   }
 
   return (
