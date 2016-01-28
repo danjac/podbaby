@@ -40,20 +40,18 @@ export function togglePlayer(podcast) {
 
 function playBookmarked(pos) {
   return (dispatch, getState) => {
-    let nextPlaying;
-
     const state = getState();
     const { bookmarks } = state.bookmarks;
     const playing = state.player.bookmarkId;
 
+    let nextPlaying;
+
     if (playing) {
       let index = bookmarks.indexOf(playing) + pos;
-      if (index >= bookmarks.length) {
-        index = 0;
-      } else if (index < 0) {
+      if (index < 0) {
         index = bookmarks.length - 1;
       }
-      nextPlaying = bookmarks[index];
+      nextPlaying = bookmarks[index] || bookmarks[0];
     } else {
       nextPlaying = bookmarks[0];
     }
