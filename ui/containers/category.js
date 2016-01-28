@@ -14,7 +14,6 @@ import {
 
 import * as actions from '../actions';
 import { channelsSelector, categorySelector } from '../selectors';
-import { isMobile } from '../components/utils';
 import Pager from '../components/pager';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
@@ -64,7 +63,7 @@ export class Category extends React.Component {
   renderChildren() {
     const { category } = this.props;
     return (
-      <ButtonGroup vertical={isMobile()}>
+      <ButtonGroup>
         {category.children.map(child => {
           return (
           <Link
