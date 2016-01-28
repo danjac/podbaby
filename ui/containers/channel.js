@@ -8,7 +8,7 @@ import { Link } from 'react-router';
 import {
   ButtonGroup,
   Button,
-  Badge,
+  Label,
   Input,
   Grid,
   Row,
@@ -141,7 +141,6 @@ export class Channel extends React.Component {
       return <div>Sorry, could not find this channel.</div>;
     }
 
-    const counterBadge = channel.numPodcasts ? <Badge>{channel.numPodcasts}</Badge> : '';
 
     const website = channel.website.Valid ? channel.website.String : '';
     const { isSubscribed } = channel;
@@ -172,48 +171,36 @@ export class Channel extends React.Component {
     return (
       <DocumentTitle title={getTitle(channel.title)}>
         <div>
-        <div className="media">
-          <div className="media-left">
-            <a href="#">
-              <Image
-                className="media-object"
-                src={channel.image}
-                errSrc="/static/podcast.png"
-                imgProps={{
-                  height: 120,
-                  width: 120,
-                  alt: channel.title,
-                }}
-              />
-            </a>
+          <div className="thumbnail">
+            <div className="caption text-center">
+              <h2>{channel.title}</h2>
+            </div>
+            <Image
+              src={channel.image}
+              errSrc="/static/podcast.png"
+              imgProps={{
+                height: 120,
+                width: 120,
+                alt: channel.title,
+              }}
+            />
+            {channel.numPodcasts ?
+            <div className="caption text-center">
+              <h4>
+                <Label bsStyle="primary">
+                  {channel.numPodcasts} podcast{channel.numPodcasts > 1 ? 's' : ''}
+                </Label>
+              </h4>
+            </div> : ''}
           </div>
-          <div className="media-body">
-            <h2 className="media-heading">{channel.title} {counterBadge}</h2>
-          </div>
-        </div>
-        {channel.description ?
-        <p
-          className="lead"
-          style={{ marginTop: 20 }}
-          dangerouslySetInnerHTML={sanitize(channel.description)}
-        /> : ''}
-        <Grid>
-          <Row>
-            <Col xs={6} md={6}>
-              <ButtonGroup className="pull-left" vertical={mobile}>
-              {categories.map(category => {
-                return (
-                <Link
-                  key={category.id}
-                  className="btn btn-info"
-                  to={`/categories/${category.id}/`}
-                >{category.name}</Link>
-                );
-              })}
-              </ButtonGroup>
-            </Col>
-            <Col xs={6} md={6}>
-            <ButtonGroup className="pull-right" vertical={mobile}>
+          {channel.description ?
+          <p
+            className="lead"
+            style={{ marginTop: 20 }}
+            dangerouslySetInnerHTML={sanitize(channel.description)}
+          /> : ''}
+          <div className="text-center">
+            <ButtonGroup vertical={mobile}>
               {isLoggedIn ?
               <Button
                 title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
@@ -240,9 +227,18 @@ export class Channel extends React.Component {
               </a>
               ) : ''}
             </ButtonGroup>
-          </Col>
-        </Row>
-        </Grid>
+          <ButtonGroup vertical={mobile}>
+          {categories.map(category => {
+            return (
+            <Link
+              key={category.id}
+              className="btn btn-info"
+              to={`/categories/${category.id}/`}
+            >{category.name}</Link>
+            );
+          })}
+          </ButtonGroup>
+        </div>
         <hr />
         <form onSubmit={this.handleSearch}>
           <Input
