@@ -95,6 +95,25 @@
 		{
 			"ImportPath": "golang.org/x/net/websocket",
 			"Rev": "2e9cee70ee697e0a2ef894b560dda50dec7dff58"
+		},
+		{
+			"ImportPath": "gopkg.in/bsm/ratelimit.v1",
+			"Rev": "bda20d5067a03094fc6762f7ead53027afac5f28"
+		},
+		{
+			"ImportPath": "gopkg.in/go-redis/cache.v1",
+			"Comment": "v1.0.0",
+			"Rev": "5f131d0e10e76fccda78bdba48f730448bc185da"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v3",
+			"Comment": "v3.2.10",
+			"Rev": "eef3fd78ef0f78e8406339c27fd46c6af93f24ba"
+		},
+		{
+			"ImportPath": "gopkg.in/vmihailenco/msgpack.v2",
+			"Comment": "v2.4.8",
+			"Rev": "5731fae55dfe5ba533d3a420a1cede799df2e23e"
 		}
 	]
 }
