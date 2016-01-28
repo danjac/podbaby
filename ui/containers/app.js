@@ -65,6 +65,7 @@ export class App extends React.Component {
     this.handleUpdatePlayerTime = this.handleUpdatePlayerTime.bind(this);
     this.handlePlayerPlayNext = this.handlePlayerPlayNext.bind(this);
     this.handlePlayerPlayLast = this.handlePlayerPlayLast.bind(this);
+    this.handlePlayerPlayRandom = this.handlePlayerPlayRandom.bind(this);
   }
 
   handleLogout(event) {
@@ -98,6 +99,10 @@ export class App extends React.Component {
     if (this.props.player.podcast) {
       this.actions.bookmarks.toggleBookmark(this.props.player.podcast);
     }
+  }
+
+  handlePlayerPlayRandom() {
+    this.actions.player.playRandom();
   }
 
   handlePlayerPlayNext() {
@@ -151,6 +156,7 @@ export class App extends React.Component {
           bookmarks={this.props.bookmarks.bookmarks}
           onPlayNext={this.handlePlayerPlayNext}
           onPlayLast={this.handlePlayerPlayLast}
+          onPlayRandom={this.handlePlayerPlayRandom}
           onToggleBookmark={this.handleTogglePlayerBookmark}
           onTimeUpdate={this.handleUpdatePlayerTime}
           onClose={this.handleClosePlayer}

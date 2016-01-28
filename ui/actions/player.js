@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as api from '../api';
 import { Actions, Storage } from '../constants';
 import { createAction } from './utils';
@@ -38,7 +39,31 @@ export function togglePlayer(podcast) {
   };
 }
 
-function playBookmarked(pos) {
+function playPodcastWithBookmark(id, dispatch, state) {
+  const onSuccess = result => {
+    dispatch(createAction(Actions.UPDATE_PODCAST_CACHE, result));
+    dispatch(createAction(Actions.BOOKMARKS_CURRENTLY_PLAYING, result.id));
+    dispatch(togglePlayer(Object.assign({}, result, { isBookmarked: true })));
+  };
+
+  const { podcastCache } = state.podcasts;
+  const cached = podcastCache[id];
+  if (cached) {
+    onSuccess(cached);
+    return;
+  }
+
+  api.getPodcast(id)
+  .then(result => {
+    onSuccess(result.data);
+  })
+  .catch(error => {
+    dispatch(createAction(Actions.GET_PODCAST_FAILURE, { error }));
+  });
+}
+
+
+function playNextBookmarkedPodcast(pos) {
   return (dispatch, getState) => {
     const state = getState();
     const { bookmarks } = state.bookmarks;
@@ -57,37 +82,30 @@ function playBookmarked(pos) {
     }
 
     if (nextPlaying) {
-      const onSuccess = podcast => {
-        dispatch(createAction(Actions.UPDATE_PODCAST_CACHE, podcast));
-        dispatch(createAction(Actions.BOOKMARKS_CURRENTLY_PLAYING, podcast.id));
-        dispatch(togglePlayer(Object.assign({}, podcast, { isBookmarked: true })));
-      };
-
-      const { podcastCache } = state.podcasts;
-      const cached = podcastCache[nextPlaying];
-      if (cached) {
-        onSuccess(cached);
-        return;
-      }
-
-      api.getPodcast(nextPlaying)
-      .then(result => {
-        onSuccess(result.data);
-      })
-      .catch(error => {
-        dispatch(createAction(Actions.GET_PODCAST_FAILURE, { error }));
-      });
+      playPodcastWithBookmark(nextPlaying, dispatch, state);
     }
   };
 }
 
+export function playRandom() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const { bookmarks } = state.bookmarks;
+    if (!bookmarks) {
+      return;
+    }
+    const bookmarkId = _.sample(bookmarks);
+    playPodcastWithBookmark(bookmarkId, dispatch, state);
+  };
+}
+
 export function playLast() {
-  return playBookmarked(-1);
+  return playNextBookmarkedPodcast(-1);
 }
 
 
 export function playNext() {
-  return playBookmarked(1);
+  return playNextBookmarkedPodcast(1);
 }
 
 // reload player from session

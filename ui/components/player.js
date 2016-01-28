@@ -21,6 +21,7 @@ class Player extends React.Component {
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePlayNext = this.handlePlayNext.bind(this);
     this.handlePlayLast = this.handlePlayLast.bind(this);
+    this.handlePlayRandom = this.handlePlayRandom.bind(this);
   }
 
   handleClose(event) {
@@ -39,6 +40,10 @@ class Player extends React.Component {
 
   handleBookmark() {
     this.props.onToggleBookmark();
+  }
+
+  handlePlayRandom() {
+    this.props.onPlayRandom();
   }
 
   handlePlayNext() {
@@ -79,6 +84,13 @@ class Player extends React.Component {
               onClick={this.handlePlayNext}
             >
               <Icon icon="forward" />
+            </Button>
+            <Button
+              title="Play random podcast from my bookmarks"
+              style={btnStyle}
+              onClick={this.handlePlayRandom}
+            >
+              <Icon icon="random" />
             </Button>
            </span>
           : ''}
@@ -185,6 +197,7 @@ Player.propTypes = {
   onToggleBookmark: PropTypes.func.isRequired,
   onPlayNext: PropTypes.func.isRequired,
   onPlayLast: PropTypes.func.isRequired,
+  onPlayRandom: PropTypes.func.isRequired,
   player: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   bookmarks: PropTypes.array,
