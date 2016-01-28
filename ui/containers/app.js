@@ -63,6 +63,8 @@ export class App extends React.Component {
     this.handleClosePlayer = this.handleClosePlayer.bind(this);
     this.handleTogglePlayerBookmark = this.handleTogglePlayerBookmark.bind(this);
     this.handleUpdatePlayerTime = this.handleUpdatePlayerTime.bind(this);
+    this.handlePlayerPlayNext = this.handlePlayerPlayNext.bind(this);
+    this.handlePlayerPlayLast = this.handlePlayerPlayLast.bind(this);
   }
 
   handleLogout(event) {
@@ -96,6 +98,14 @@ export class App extends React.Component {
     if (this.props.player.podcast) {
       this.actions.bookmarks.toggleBookmark(this.props.player.podcast);
     }
+  }
+
+  handlePlayerPlayNext() {
+    this.actions.player.playNext();
+  }
+
+  handlePlayerPlayLast() {
+    this.actions.player.playLast();
   }
 
   handleUpdatePlayerTime(event) {
@@ -138,6 +148,9 @@ export class App extends React.Component {
         <Player
           player={this.props.player}
           isLoggedIn={isLoggedIn}
+          bookmarks={this.props.bookmarks.bookmarks}
+          onPlayNext={this.handlePlayerPlayNext}
+          onPlayLast={this.handlePlayerPlayLast}
           onToggleBookmark={this.handleTogglePlayerBookmark}
           onTimeUpdate={this.handleUpdatePlayerTime}
           onClose={this.handleClosePlayer}
@@ -162,6 +175,7 @@ App.propTypes = {
   auth: PropTypes.object.isRequired,
   addChannel: PropTypes.object.isRequired,
   player: PropTypes.object.isRequired,
+  bookmarks: PropTypes.object.isRequired,
   alerts: PropTypes.array.isRequired,
 };
 
@@ -171,13 +185,20 @@ App.contextTypes = {
 
 
 const mapStateToProps = state => {
-  const { routing, auth, addChannel, player, alerts } = state;
+  const {
+    routing,
+    auth,
+    addChannel,
+    player,
+    alerts,
+    bookmarks } = state;
   return {
     auth,
     addChannel,
     player,
     alerts,
     routing,
+    bookmarks,
   };
 };
 

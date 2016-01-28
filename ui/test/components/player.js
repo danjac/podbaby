@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import TestUtils from 'react-addons-test-utils';
 import { assert } from 'chai';
 import jsdom from 'jsdom-global';
@@ -17,7 +18,12 @@ describe('Player component', function () {
   });
 
   it('should render the truncated podcast title', function () {
-    const podcast = makePodcast({ name: 'We do cool podcasts', title: 'Some title' });
+    const podcast = makePodcast({
+      name: 'We do cool podcasts each and every day',
+      title: _.repeat('testing,', 100) });
+
+    const totalLength = podcast.name.length + podcast.title.length + 3;
+
     const props = makePlayerProps(podcast);
     const component = <Wrapper><Player {...props} /></Wrapper>;
     const rendered = TestUtils.renderIntoDocument(component, 'div');
@@ -26,7 +32,7 @@ describe('Player component', function () {
     const $link = $title.children[0];
 
     const title = $link.getAttribute('title');
-    assert.equal(title, 'We do cool podcasts : Some title');
-    assert.equal($link.textContent, 'We do cool podcasts : Some ...');
+    assert.equal(title.length, totalLength);
+    assert.equal($link.textContent.length, 200);
   });
 });

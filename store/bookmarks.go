@@ -33,7 +33,7 @@ func newBookmarkStore() BookmarkStore {
 type bookmarkSqlReader struct{}
 
 func (r *bookmarkSqlReader) SelectByUserID(dh DataHandler, result *[]int64, userID int64) error {
-	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1"
+	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1 ORDER BY id DESC"
 	return sqlx.Select(dh, result, q, userID)
 }
 

@@ -4,6 +4,7 @@ const initialState = {
   podcast: null,
   isPlaying: false,
   currentTime: 0,
+  bookmarkId: null,
 };
 
 export default function (state = initialState, action) {
@@ -28,6 +29,8 @@ export default function (state = initialState, action) {
       return initialState;
     case Actions.RELOAD_PLAYER:
       return action.payload || initialState;
+    case Actions.BOOKMARKS_CURRENTLY_PLAYING:
+      return Object.assign({}, state, { bookmarkId: action.payload });
     default:
       return state;
   }

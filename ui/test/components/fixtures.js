@@ -30,6 +30,8 @@ export const makePlayerProps = (podcast, props = {}) => {
     onClose: _.noop,
     onTimeUpdate: _.noop,
     onToggleBookmark: _.noop,
+    onPlayNext: _.noop,
+    onPlayLast: _.noop,
     isLoggedIn: true,
     player: {
       podcast,

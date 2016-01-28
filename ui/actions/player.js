@@ -38,6 +38,50 @@ export function togglePlayer(podcast) {
   };
 }
 
+function playBookmarked(pos) {
+  return (dispatch, getState) => {
+    let nextPlaying;
+
+    const state = getState();
+    const { bookmarks } = state.bookmarks;
+    const playing = state.player.bookmarkId;
+
+    if (playing) {
+      let index = bookmarks.indexOf(playing) + pos;
+      if (index >= bookmarks.length) {
+        index = 0;
+      } else if (index < 0) {
+        index = bookmarks.length - 1;
+      }
+      nextPlaying = bookmarks[index];
+    } else {
+      nextPlaying = bookmarks[0];
+    }
+
+    if (nextPlaying) {
+      api.getPodcast(nextPlaying)
+      .then(result => {
+        dispatch(createAction(Actions.BOOKMARKS_CURRENTLY_PLAYING, nextPlaying));
+        const podcast = result.data;
+        podcast.isBookmarked = true;
+        dispatch(togglePlayer(podcast));
+      })
+      .catch(error => {
+        dispatch(createAction(Actions.GET_PODCAST_FAILURE, { error }));
+      });
+    }
+  };
+}
+
+export function playLast() {
+  return playBookmarked(-1);
+}
+
+
+export function playNext() {
+  return playBookmarked(1);
+}
+
 // reload player from session
 export function reloadPlayer() {
   const data = window.sessionStorage.getItem(Storage.CURRENT_PODCAST);

@@ -2,6 +2,7 @@ import { Actions } from '../constants';
 
 const initialState = {
   query: '',
+  playing: null,
   bookmarks: [],
 };
 
@@ -31,6 +32,9 @@ export default function (state = initialState, action) {
 
     case Actions.CLEAR_BOOKMARKS_SEARCH:
       return Object.assign({}, state, { query: '' });
+
+    case Actions.BOOKMARKS_CURRENTLY_PLAYING:
+      return Object.assign({}, state, { playing: action.payload });
 
     default:
       return state;
