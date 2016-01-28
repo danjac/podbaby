@@ -66,8 +66,7 @@ function playPodcastWithBookmark(id, dispatch, state) {
 function playNextBookmarkedPodcast(pos) {
   return (dispatch, getState) => {
     const state = getState();
-    const { bookmarks } = state.bookmarks;
-    const playing = state.player.bookmarkId;
+    const { bookmarks, playing } = state.bookmarks;
 
     let nextPlaying;
 
