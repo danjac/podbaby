@@ -8,6 +8,7 @@ const initialState = {
 
 export default function (state = initialState, action) {
   let bookmarks;
+  let playing;
 
   switch (action.type) {
 
@@ -20,7 +21,7 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, { bookmarks });
 
     case Actions.LOGOUT:
-      return Object.assign({}, state, { bookmarks: [] });
+      return Object.assign({}, state, { bookmarks: [], playing: null });
 
     case Actions.ADD_BOOKMARK:
       bookmarks = state.bookmarks.slice();
@@ -28,7 +29,7 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, { bookmarks });
 
     case Actions.DELETE_BOOKMARK:
-      let playing = state.playing;
+      playing = state.playing;
       if (state.bookmarks && state.playing === action.payload) {
         const prev = state.bookmarks.indexOf(state.playing) - 1;
         playing = state.bookmarks[prev < 1 ? 0 : prev];
@@ -39,6 +40,12 @@ export default function (state = initialState, action) {
     case Actions.CLEAR_BOOKMARKS_SEARCH:
       return Object.assign({}, state, { query: '' });
 
+    case Actions.RELOAD_PLAYER:
+      playing = action.payload ? action.payload.podcast.id : null;
+      if (!state.bookmarks.includes(playing)) {
+        playing = null;
+      }
+      return Object.assign({}, state, { playing });
     case Actions.BOOKMARKS_CURRENTLY_PLAYING:
       return Object.assign({}, state, { playing: action.payload });
 
