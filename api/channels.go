@@ -88,6 +88,8 @@ func getChannelDetail(c *echo.Context) error {
 			categoryStore = store.Categories()
 		)
 
+		detail.Channel = &models.Channel{}
+
 		if err := channelStore.GetByID(conn, detail.Channel, channelID); err != nil {
 			return err
 		}

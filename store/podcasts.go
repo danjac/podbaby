@@ -246,7 +246,7 @@ func (r *podcastSqlReader) SelectByChannel(dh DataHandler, result *models.Podcas
 
 	return sqlx.Select(
 		dh,
-		result.Podcasts,
+		&result.Podcasts,
 		q,
 		channel.ID,
 		result.Page.Offset,
