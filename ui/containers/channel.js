@@ -26,7 +26,7 @@ import PodcastList from '../components/podcasts';
 import Image from '../components/image';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
-import { sanitize, isMobile } from '../components/utils';
+import { sanitize } from '../components/utils';
 import { getTitle } from './utils';
 
 const RelatedChannel = props => {
@@ -166,8 +166,6 @@ export class Channel extends React.Component {
         </Grid>
     </div> : '';
 
-    const mobile = isMobile();
-
     return (
       <DocumentTitle title={getTitle(channel.title)}>
         <div>
@@ -200,7 +198,7 @@ export class Channel extends React.Component {
             dangerouslySetInnerHTML={sanitize(channel.description)}
           /> : ''}
           <div className="text-center">
-            <ButtonGroup vertical={mobile}>
+            <ButtonGroup>
               {isLoggedIn ?
               <Button
                 title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
@@ -227,17 +225,19 @@ export class Channel extends React.Component {
               </a>
               ) : ''}
             </ButtonGroup>
-          <ButtonGroup vertical={mobile}>
-          {categories.map(category => {
-            return (
-            <Link
-              key={category.id}
-              className="btn btn-info"
-              to={`/categories/${category.id}/`}
-            >{category.name}</Link>
-            );
-          })}
-          </ButtonGroup>
+          </div>
+          <div className="text-center" style={{ marginTop: 20 }}>
+            <ButtonGroup>
+            {categories.map(category => {
+              return (
+              <Link
+                key={category.id}
+                className="btn btn-info"
+                to={`/categories/${category.id}/`}
+              >{category.name}</Link>
+              );
+            })}
+            </ButtonGroup>
         </div>
         <hr />
         <form onSubmit={this.handleSearch}>
