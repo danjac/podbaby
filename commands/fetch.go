@@ -47,16 +47,19 @@ func Fetch(cfg *config.Config) {
 
 	store, err := store.New(cfg)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 	defer store.Conn().Close()
 
-	channels, err := store.Channels().SelectAll(store.Conn())
+	var channels []models.Channel
+	if err := store.Channels().SelectAll(store.Conn(), &channels); err != nil {
+		log.Fatalln(err)
+	}
 	numChannels := len(channels)
 	log.Printf("%d channels to fetch", numChannels)
 
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	f := feedparser.New()

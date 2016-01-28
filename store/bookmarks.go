@@ -10,7 +10,7 @@ type BookmarkWriter interface {
 }
 
 type BookmarkReader interface {
-	SelectByUserID(DataHandler, int64) ([]int64, error)
+	SelectByUserID(DataHandler, *[]int64, int64) error
 }
 
 type BookmarkStore interface {
@@ -32,11 +32,9 @@ func newBookmarkStore() BookmarkStore {
 
 type bookmarkSqlReader struct{}
 
-func (r *bookmarkSqlReader) SelectByUserID(dh DataHandler, userID int64) ([]int64, error) {
+func (r *bookmarkSqlReader) SelectByUserID(dh DataHandler, result *[]int64, userID int64) error {
 	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1"
-	var result []int64
-	err := sqlx.Select(dh, &result, q, userID)
-	return result, err
+	return sqlx.Select(dh, result, q, userID)
 }
 
 type bookmarkSqlWriter struct{}

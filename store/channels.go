@@ -10,15 +10,15 @@ import (
 const maxRecommendations = 20
 
 type ChannelReader interface {
-	SelectAll(DataHandler) ([]models.Channel, error)
+	SelectAll(DataHandler, *[]models.Channel) error
 	SelectByCategoryID(DataHandler, *[]models.Channel, int64) error
-	SelectSubscribed(DataHandler, int64) ([]models.Channel, error)
-	SelectRelated(DataHandler, int64) ([]models.Channel, error)
-	SelectRecommended(DataHandler) ([]models.Channel, error)
-	SelectRecommendedByUserID(DataHandler, int64) ([]models.Channel, error)
-	Search(DataHandler, string) ([]models.Channel, error)
-	GetByID(DataHandler, int64) (*models.Channel, error)
-	GetByURL(DataHandler, string) (*models.Channel, error)
+	SelectSubscribed(DataHandler, *[]models.Channel, int64) error
+	SelectRelated(DataHandler, *[]models.Channel, int64) error
+	SelectRecommended(DataHandler, *[]models.Channel) error
+	SelectRecommendedByUserID(DataHandler, *[]models.Channel, int64) error
+	Search(DataHandler, *[]models.Channel, string) error
+	GetByID(DataHandler, *models.Channel, int64) error
+	GetByURL(DataHandler, *models.Channel, string) error
 }
 
 type ChannelWriter interface {
@@ -46,10 +46,9 @@ func newChannelStore() ChannelStore {
 
 type channelSqlReader struct{}
 
-func (r *channelSqlReader) SelectAll(dh DataHandler) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectAll(dh DataHandler, channels *[]models.Channel) error {
 	q := "SELECT id, title, description, url, image, website, num_podcasts FROM channels"
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q)
+	return sqlx.Select(dh, &channels, q)
 }
 
 func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models.Channel, categoryID int64) error {
@@ -64,7 +63,7 @@ func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models
 	return sqlx.Select(dh, channels, q, categoryID)
 }
 
-func (r *channelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectRelated(dh DataHandler, channels *[]models.Channel, channelID int64) error {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
@@ -75,11 +74,10 @@ func (r *channelSqlReader) SelectRelated(dh DataHandler, channelID int64) ([]mod
     GROUP BY c.id
     ORDER BY RANDOM() DESC LIMIT 3`
 
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q, channelID)
+	return sqlx.Select(dh, channels, q, channelID)
 }
 
-func (r *channelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectRecommended(dh DataHandler, channels *[]models.Channel) error {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
@@ -87,11 +85,10 @@ func (r *channelSqlReader) SelectRecommended(dh DataHandler) ([]models.Channel, 
     GROUP BY c.id
     ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $1
     `
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q, maxRecommendations)
+	return sqlx.Select(dh, channels, q, maxRecommendations)
 }
 
-func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, channels *[]models.Channel, userID int64) error {
 	q := `
     WITH user_subs AS (SELECT channel_id FROM subscriptions WHERE user_id=$1)
     SELECT c.id, c.title, c.description, c.image, c.url, c.website, c.num_podcasts
@@ -105,11 +102,10 @@ func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, userID int6
     GROUP BY c.id
     ORDER BY RANDOM()
     LIMIT $2`
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q, userID, maxRecommendations)
+	return sqlx.Select(dh, channels, q, userID, maxRecommendations)
 }
 
-func (r *channelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]models.Channel, error) {
+func (r *channelSqlReader) SelectSubscribed(dh DataHandler, channels *[]models.Channel, userID int64) error {
 
 	q := `
     SELECT c.id, c.title, c.description, c.image, c.url, c.website, c.num_podcasts
@@ -118,37 +114,33 @@ func (r *channelSqlReader) SelectSubscribed(dh DataHandler, userID int64) ([]mod
     WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
     GROUP BY c.id
     ORDER BY title`
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q, userID)
+	return sqlx.Select(dh, channels, q, userID)
 }
 
-func (r *channelSqlReader) Search(dh DataHandler, query string) ([]models.Channel, error) {
+func (r *channelSqlReader) Search(dh DataHandler, channels *[]models.Channel, query string) error {
 
 	q := `
     SELECT c.id, c.title, c.description, c.url, c.image, c.website, c.num_podcasts
     FROM channels c, plainto_tsquery($1) as q
     WHERE (c.tsv @@ q)
     ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 20`
-	var channels []models.Channel
-	return channels, sqlx.Select(dh, &channels, q, query)
+	return sqlx.Select(dh, channels, q, query)
 }
 
-func (r *channelSqlReader) GetByURL(dh DataHandler, url string) (*models.Channel, error) {
+func (r *channelSqlReader) GetByURL(dh DataHandler, channel *models.Channel, url string) error {
 	q := `
     SELECT id, title, description, url, image, website, num_podcasts
     FROM channels
     WHERE url=$1`
-	channel := &models.Channel{}
-	return channel, sqlx.Get(dh, channel, q, url)
+	return sqlx.Get(dh, channel, q, url)
 }
 
-func (r *channelSqlReader) GetByID(dh DataHandler, id int64) (*models.Channel, error) {
+func (r *channelSqlReader) GetByID(dh DataHandler, channel *models.Channel, id int64) error {
 	q := `
     SELECT c.id, c.title, c.description, c.url, c.image, c.website, c.num_podcasts
     FROM channels c
     WHERE id=$1`
-	channel := &models.Channel{}
-	return channel, sqlx.Get(dh, channel, q, id)
+	return sqlx.Get(dh, channel, q, id)
 }
 
 type channelSqlWriter struct{}

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/danjac/podbaby/models"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -8,12 +9,14 @@ import (
 func getBookmarks(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user   = getUser(c)
+		store  = getStore(c)
+		result = &models.PodcastList{}
 	)
 
-	result, err := store.Podcasts().SelectBookmarked(
+	err := store.Podcasts().SelectBookmarked(
 		store.Conn(),
+		result,
 		user.ID,
 		getPage(c))
 

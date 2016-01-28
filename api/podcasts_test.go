@@ -73,6 +73,7 @@ func TestLatestPodcastsIfNotLoggedIn(t *testing.T) {
 
 	c.Set(authenticatorContextKey, &fakeAuthenticator{nil})
 	c.Set(storeContextKey, s)
+	c.Set(cacheContextKey, &fakeCache{})
 
 	rows := sqlmock.NewRows([]string{""}).AddRow(1)
 	mock.ExpectQuery(`^SELECT reltuples*`).WillReturnRows(rows)

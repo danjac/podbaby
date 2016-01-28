@@ -6,7 +6,7 @@ import (
 )
 
 type PlayReader interface {
-	SelectByUserID(DataHandler, int64) ([]models.Play, error)
+	SelectByUserID(DataHandler, *[]models.Play, int64) error
 }
 
 type PlayWriter interface {
@@ -33,11 +33,9 @@ func newPlayStore() PlayStore {
 
 type playSqlReader struct{}
 
-func (r *playSqlReader) SelectByUserID(dh DataHandler, userID int64) ([]models.Play, error) {
+func (r *playSqlReader) SelectByUserID(dh DataHandler, plays *[]models.Play, userID int64) error {
 	q := "SELECT podcast_id, created_at FROM plays WHERE user_id=$1"
-	var plays []models.Play
-	err := sqlx.Select(dh, &plays, q, userID)
-	return plays, err
+	return sqlx.Select(dh, plays, q, userID)
 }
 
 type playSqlWriter struct{}

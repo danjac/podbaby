@@ -43,9 +43,8 @@ func recoverPassword(c *echo.Context) error {
 		return err
 	}
 
-	user, err := userStore.GetByNameOrEmail(conn, decoder.Identifier)
-
-	if err != nil {
+	user := &models.User{}
+	if err := userStore.GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
 		if err == sql.ErrNoRows {
 			return validator.invalid("identifier", "No user found matching this email or name").render()
 		}
@@ -194,9 +193,9 @@ func login(c *echo.Context) error {
 		return err
 	}
 
-	user, err := store.Users().GetByNameOrEmail(conn, decoder.Identifier)
+	user := &models.User{}
 
-	if err != nil {
+	if err := store.Users().GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
 		if err == sql.ErrNoRows {
 			return validator.invalid("identifier", "No user found matching this name or email").render()
 		}
@@ -208,13 +207,13 @@ func login(c *echo.Context) error {
 	}
 
 	// get bookmarks & subscriptions
-	if user.Bookmarks, err = store.Bookmarks().SelectByUserID(conn, user.ID); err != nil {
+	if err := store.Bookmarks().SelectByUserID(conn, &user.Bookmarks, user.ID); err != nil {
 		return err
 	}
-	if user.Subscriptions, err = store.Subscriptions().SelectByUserID(conn, user.ID); err != nil {
+	if err := store.Subscriptions().SelectByUserID(conn, &user.Subscriptions, user.ID); err != nil {
 		return err
 	}
-	if user.Plays, err = store.Plays().SelectByUserID(conn, user.ID); err != nil {
+	if err := store.Plays().SelectByUserID(conn, &user.Plays, user.ID); err != nil {
 		return err
 	}
 	// login user

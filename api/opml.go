@@ -10,12 +10,12 @@ import (
 func getOPML(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user     = getUser(c)
+		store    = getStore(c)
+		channels []models.Channel
 	)
 
-	channels, err := store.Channels().SelectSubscribed(store.Conn(), user.ID)
-	if err != nil {
+	if err := store.Channels().SelectSubscribed(store.Conn(), &channels, user.ID); err != nil {
 		return err
 	}
 	opml := &models.OPML{

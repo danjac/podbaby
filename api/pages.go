@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/danjac/podbaby/models"
 	"github.com/justinas/nosurf"
 	"github.com/labstack/echo"
 )
@@ -25,18 +26,23 @@ func indexPage(c *echo.Context) error {
 	}
 
 	if user != nil {
-		if user.Bookmarks, err = store.Bookmarks().SelectByUserID(conn, user.ID); err != nil {
+		if err = store.Bookmarks().SelectByUserID(conn, &user.Bookmarks, user.ID); err != nil {
 			return err
 		}
-		if user.Subscriptions, err = store.Subscriptions().SelectByUserID(conn, user.ID); err != nil {
+		if err = store.Subscriptions().SelectByUserID(conn, &user.Subscriptions, user.ID); err != nil {
 			return err
 		}
-		if user.Plays, err = store.Plays().SelectByUserID(conn, user.ID); err != nil {
+		if err = store.Plays().SelectByUserID(conn, &user.Plays, user.ID); err != nil {
 			return err
 		}
 	}
 
-	categories, err := store.Categories().SelectAll(conn)
+	var categories []models.Category
+
+	err = getCache(c).Get("categories", time.Hour*24, &categories, func() error {
+		return store.Categories().SelectAll(conn, &categories)
+	})
+
 	if err != nil {
 		return err
 	}

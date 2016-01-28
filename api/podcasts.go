@@ -14,13 +14,21 @@ func getPodcast(c *echo.Context) error {
 	if err != nil {
 		return err
 	}
+	var (
+		cache   = getCache(c)
+		key     = fmt.Sprintf("podcast:%v", podcastID)
+		timeout = time.Hour * 24
+	)
+	podcast := &models.Podcast{}
 
-	store := getStore(c)
-
-	podcast, err := store.Podcasts().GetByID(store.Conn(), podcastID)
+	err = cache.Get(key, timeout, podcast, func() error {
+		store := getStore(c)
+		return store.Podcasts().GetByID(store.Conn(), podcast, podcastID)
+	})
 	if err != nil {
 		return err
 	}
+
 	return c.JSON(http.StatusOK, podcast)
 }
 
@@ -38,7 +46,7 @@ func getLatestPodcasts(c *echo.Context) error {
 	user, err := authenticate(c)
 
 	if user != nil { // user authenticated
-		result, err = podcastStore.SelectSubscribed(conn, user.ID, page)
+		err = podcastStore.SelectSubscribed(conn, result, user.ID, page)
 	} else {
 		err = getCache(c).Get(fmt.Sprintf("latest-podcasts:%v", page), time.Minute*30, result, func() error {
 			return podcastStore.SelectAll(conn, result, page)

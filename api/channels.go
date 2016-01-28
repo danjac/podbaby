@@ -48,9 +48,11 @@ func getRecommendations(c *echo.Context) error {
 
 	user, _ := authenticate(c)
 	if user != nil {
-		channels, err = store.Channels().SelectRecommendedByUserID(conn, user.ID)
+		err = store.Channels().SelectRecommendedByUserID(conn, &channels, user.ID)
 	} else {
-		channels, err = store.Channels().SelectRecommended(conn)
+		err = getCache(c).Get("recommendations", time.Hour*24, &channels, func() error {
+			return store.Channels().SelectRecommended(conn, &channels)
+		})
 	}
 
 	if err != nil {
@@ -86,36 +88,28 @@ func getChannelDetail(c *echo.Context) error {
 			categoryStore = store.Categories()
 		)
 
-		channel, err := channelStore.GetByID(conn, channelID)
-		if err != nil {
-			return err
-		}
-		detail.Channel = channel
-
-		categories, err := categoryStore.SelectByChannelID(conn, channelID)
-		if err != nil {
+		if err := channelStore.GetByID(conn, detail.Channel, channelID); err != nil {
 			return err
 		}
 
-		detail.Categories = categories
-
-		related, err := channelStore.SelectRelated(conn, channelID)
-		if err != nil {
+		if err := categoryStore.SelectByChannelID(conn, &detail.Categories, channelID); err != nil {
 			return err
 		}
 
-		detail.Related = related
+		if err := channelStore.SelectRelated(conn, &detail.Related, channelID); err != nil {
+			return err
+		}
 
-		podcasts, err := podcastStore.SelectByChannel(conn, channel, page)
+		podcasts := &models.PodcastList{}
 
-		if err != nil {
+		if err := podcastStore.SelectByChannel(conn, podcasts, detail.Channel, page); err != nil {
 			return err
 		}
 
 		for _, pc := range podcasts.Podcasts {
-			pc.Name = channel.Title
-			pc.Image = channel.Image
-			pc.ChannelID = channel.ID
+			pc.Name = detail.Channel.Title
+			pc.Image = detail.Channel.Image
+			pc.ChannelID = channelID
 			detail.Podcasts = append(detail.Podcasts, pc)
 		}
 		detail.Page = podcasts.Page
@@ -134,8 +128,8 @@ func getSubscriptions(c *echo.Context) error {
 		user  = getUser(c)
 		store = getStore(c)
 	)
-	channels, err := store.Channels().SelectSubscribed(store.Conn(), user.ID)
-	if err != nil {
+	var channels []models.Channel
+	if err := store.Channels().SelectSubscribed(store.Conn(), &channels, user.ID); err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, channels)
@@ -158,10 +152,10 @@ func addChannel(c *echo.Context) error {
 		return err
 	}
 
-	channel, err := channelStore.GetByURL(conn, decoder.URL)
+	channel := &models.Channel{}
 	isNewChannel := false
 
-	if err != nil {
+	if err := channelStore.GetByURL(conn, channel, decoder.URL); err != nil {
 		if err == sql.ErrNoRows {
 			isNewChannel = true
 		} else {

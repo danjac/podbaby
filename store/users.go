@@ -13,8 +13,8 @@ type UserWriter interface {
 }
 
 type UserReader interface {
-	GetByID(DataHandler, int64) (*models.User, error)
-	GetByNameOrEmail(DataHandler, string) (*models.User, error)
+	GetByID(DataHandler, *models.User, int64) error
+	GetByNameOrEmail(DataHandler, *models.User, string) error
 	IsName(DataHandler, string) (bool, error)
 	IsEmail(DataHandler, string, int64) (bool, error)
 }
@@ -67,18 +67,14 @@ func (w *userSqlWriter) DeleteUser(dh DataHandler, userID int64) error {
 
 type userSqlReader struct{}
 
-func (r *userSqlReader) GetByID(dh DataHandler, id int64) (*models.User, error) {
+func (r *userSqlReader) GetByID(dh DataHandler, user *models.User, id int64) error {
 	q := "SELECT * FROM users WHERE id=$1"
-	user := &models.User{}
-	err := sqlx.Get(dh, user, q, id)
-	return user, err
+	return sqlx.Get(dh, user, q, id)
 }
 
-func (r *userSqlReader) GetByNameOrEmail(dh DataHandler, identifier string) (*models.User, error) {
+func (r *userSqlReader) GetByNameOrEmail(dh DataHandler, user *models.User, identifier string) error {
 	q := "SELECT * FROM users WHERE email=$1 or name=$1"
-	user := &models.User{}
-	err := sqlx.Get(dh, user, q, identifier)
-	return user, err
+	return sqlx.Get(dh, user, q, identifier)
 }
 
 func (r *userSqlReader) IsName(dh DataHandler, name string) (bool, error) {

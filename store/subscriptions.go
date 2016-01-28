@@ -10,7 +10,7 @@ type SubscriptionWriter interface {
 }
 
 type SubscriptionReader interface {
-	SelectByUserID(DataHandler, int64) ([]int64, error)
+	SelectByUserID(DataHandler, *[]int64, int64) error
 }
 
 type SubscriptionStore interface {
@@ -32,11 +32,9 @@ func newSubscriptionStore() SubscriptionStore {
 
 type subscriptionSqlReader struct{}
 
-func (r *subscriptionSqlReader) SelectByUserID(dh DataHandler, userID int64) ([]int64, error) {
+func (r *subscriptionSqlReader) SelectByUserID(dh DataHandler, result *[]int64, userID int64) error {
 	q := "SELECT channel_id FROM subscriptions WHERE user_id=$1"
-	var result []int64
-	err := sqlx.Select(dh, &result, q, userID)
-	return result, err
+	return sqlx.Select(dh, result, q, userID)
 }
 
 type subscriptionSqlWriter struct{}

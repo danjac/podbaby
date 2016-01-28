@@ -50,7 +50,6 @@ func TestGetBookmarksIfOk(t *testing.T) {
 
 	if err := getBookmarks(c); err != nil {
 		t.Fatal(err)
-		t.Fatal("This should not return an error")
 	}
 
 	body := w.Body.String()

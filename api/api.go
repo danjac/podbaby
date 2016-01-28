@@ -209,9 +209,8 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 	}
 
 	store := getStore(c)
-	user, err := store.Users().GetByID(store.Conn(), userID)
-
-	if err != nil {
+	user := &models.User{}
+	if err := store.Users().GetByID(store.Conn(), user, userID); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}

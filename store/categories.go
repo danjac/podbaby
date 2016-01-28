@@ -6,8 +6,8 @@ import (
 )
 
 type CategoryReader interface {
-	SelectAll(DataHandler) ([]models.Category, error)
-	SelectByChannelID(DataHandler, int64) ([]models.Category, error)
+	SelectAll(DataHandler, *[]models.Category) error
+	SelectByChannelID(DataHandler, *[]models.Category, int64) error
 }
 
 type CategoryStore interface {
@@ -26,25 +26,21 @@ func newCategoryStore() CategoryStore {
 
 type categorySqlReader struct{}
 
-func (r *categorySqlReader) SelectAll(dh DataHandler) ([]models.Category, error) {
+func (r *categorySqlReader) SelectAll(dh DataHandler, categories *[]models.Category) error {
 	q := `
     SELECT id, name, parent_id 
     FROM categories 
     WHERE id IN (SELECT category_id FROM channels_categories)
     ORDER BY name`
-	var categories []models.Category
-	err := sqlx.Select(dh, &categories, q)
-	return categories, err
+	return sqlx.Select(dh, categories, q)
 }
 
-func (r *categorySqlReader) SelectByChannelID(dh DataHandler, channelID int64) ([]models.Category, error) {
+func (r *categorySqlReader) SelectByChannelID(dh DataHandler, categories *[]models.Category, channelID int64) error {
 	q := `
     SELECT c.id, c.name, c.parent_id FROM categories c 
     JOIN channels_categories cc ON cc.category_id=c.id
     WHERE cc.channel_id=$1
     GROUP BY c.id
     ORDER BY c.name`
-	var categories []models.Category
-	err := sqlx.Select(dh, &categories, q, channelID)
-	return categories, err
+	return sqlx.Select(dh, categories, q, channelID)
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/danjac/podbaby/models"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -26,12 +27,12 @@ func addPlay(c *echo.Context) error {
 func getPlays(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user   = getUser(c)
+		store  = getStore(c)
+		result = &models.PodcastList{}
 	)
 
-	result, err := store.Podcasts().SelectPlayed(store.Conn(), user.ID, getPage(c))
-	if err != nil {
+	if err := store.Podcasts().SelectPlayed(store.Conn(), result, user.ID, getPage(c)); err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, result)
