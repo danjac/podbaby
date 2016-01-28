@@ -5,6 +5,7 @@ const initialState = {
   podcasts: [],
   showDetail: [],
   isLoading: true,
+  podcastCache: {},
   page: {
     numPages: 0,
     numRows: 0,
@@ -30,6 +31,7 @@ export default function (state = initialState, action) {
     case Actions.BOOKMARKS_SEARCH_SUCCESS:
       return Object.assign({}, state, {
         podcasts: action.payload,
+        podcastCache: Object.assign({}, state.podcastCache, _.keyBy(action.payload, 'id')),
         isLoading: false,
       });
 
@@ -41,11 +43,13 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, {
         podcasts: action.payload.podcasts,
         page: action.payload.page,
+        podcastCache: Object.assign({}, state.podcastCache, _.keyBy(action.payload.podcasts, 'id')),
         isLoading: false,
       });
 
     case Actions.SEARCH_SUCCESS:
       return Object.assign({}, state, {
+        podcastCache: Object.assign({}, state.podcastCache, _.keyBy(action.payload.podcasts, 'id')),
         podcasts: action.payload.podcasts,
         isLoading: false,
       });
@@ -53,11 +57,17 @@ export default function (state = initialState, action) {
     case Actions.CLEAR_RECENT_PLAYS:
       return Object.assign({}, state, { podcasts: [] });
 
-    case Actions.CLEAR_SEARCH:
+    case Actions.GET_PODCAST_SUCCESS:
+      return Object.assign({}, state, {
+        podcastCache: Object.assign({},
+        state.podcastCache, { [action.payload.id]: action.payload }
+        ),
+      });
 
+    case Actions.CLEAR_SEARCH:
     case Actions.SEARCH_REQUEST:
     case Actions.PODCASTS_REQUEST:
-      return initialState;
+      return Object.assign({}, initialState, { podcastCache: state.podcastCache });
 
     case Actions.BOOKMARKS_SEARCH_FAILURE:
     case Actions.CHANNEL_SEARCH_FAILURE:

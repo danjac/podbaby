@@ -59,12 +59,22 @@ function playBookmarked(pos) {
     }
 
     if (nextPlaying) {
+      const onSuccess = podcast => {
+        dispatch(createAction(Actions.GET_PODCAST_SUCCESS, podcast));
+        dispatch(createAction(Actions.BOOKMARKS_CURRENTLY_PLAYING, podcast.id));
+        dispatch(togglePlayer(Object.assign({}, podcast, { isBookmarked: true })));
+      };
+
+      const { podcastCache } = state.podcasts;
+      const cached = podcastCache[nextPlaying];
+      if (cached) {
+        onSuccess(cached);
+        return;
+      }
+
       api.getPodcast(nextPlaying)
       .then(result => {
-        dispatch(createAction(Actions.BOOKMARKS_CURRENTLY_PLAYING, nextPlaying));
-        const podcast = result.data;
-        podcast.isBookmarked = true;
-        dispatch(togglePlayer(podcast));
+        onSuccess(result.data);
       })
       .catch(error => {
         dispatch(createAction(Actions.GET_PODCAST_FAILURE, { error }));
