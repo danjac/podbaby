@@ -60,7 +60,7 @@ function playBookmarked(pos) {
 
     if (nextPlaying) {
       const onSuccess = podcast => {
-        dispatch(createAction(Actions.GET_PODCAST_SUCCESS, podcast));
+        dispatch(createAction(Actions.UPDATE_PODCAST_CACHE, podcast));
         dispatch(createAction(Actions.BOOKMARKS_CURRENTLY_PLAYING, podcast.id));
         dispatch(togglePlayer(Object.assign({}, podcast, { isBookmarked: true })));
       };

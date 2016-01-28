@@ -57,6 +57,7 @@ export default function (state = initialState, action) {
     case Actions.CLEAR_RECENT_PLAYS:
       return Object.assign({}, state, { podcasts: [] });
 
+    case Actions.UPDATE_PODCAST_CACHE:
     case Actions.GET_PODCAST_SUCCESS:
       return Object.assign({}, state, {
         podcastCache: Object.assign({},
