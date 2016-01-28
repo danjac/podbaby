@@ -48,7 +48,7 @@ type channelSqlReader struct{}
 
 func (r *channelSqlReader) SelectAll(dh DataHandler, channels *[]models.Channel) error {
 	q := "SELECT id, title, description, url, image, website, num_podcasts FROM channels"
-	return sqlx.Select(dh, &channels, q)
+	return sqlx.Select(dh, channels, q)
 }
 
 func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models.Channel, categoryID int64) error {
