@@ -21,7 +21,7 @@ func searchAll(c *echo.Context) error {
 	)
 
 	if query != "" {
-		err := cache.Get(key, timeout, result, func() error {
+		if err := cache.Get(key, timeout, result, func() error {
 
 			var (
 				store = getStore(c)
@@ -36,8 +36,7 @@ func searchAll(c *echo.Context) error {
 			}
 
 			return nil
-		})
-		if err != nil {
+		}); err != nil {
 			return err
 		}
 	}
@@ -76,11 +75,10 @@ func searchChannel(c *echo.Context) error {
 	var podcasts []models.Podcast
 
 	if query != "" {
-		err := getCache(c).Get(cacheKey, time.Minute*30, &podcasts, func() error {
+		if err := getCache(c).Get(cacheKey, time.Minute*30, &podcasts, func() error {
 			store := getStore(c)
 			return store.Podcasts().SearchByChannelID(store.Conn(), &podcasts, query, channelID)
-		})
-		if err != nil {
+		}); err != nil {
 			return err
 		}
 	}

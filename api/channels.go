@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"fmt"
+	"github.com/labstack/gommon/log"
 	"net/http"
 	"time"
 
@@ -25,12 +26,10 @@ func getChannelsByCategory(c *echo.Context) error {
 		timeout  = time.Hour
 	)
 
-	err = cache.Get(key, timeout, &channels, func() error {
+	if err := cache.Get(key, timeout, &channels, func() error {
 		store := getStore(c)
 		return store.Channels().SelectByCategoryID(store.Conn(), &channels, categoryID)
-	})
-
-	if err != nil {
+	}); err != nil {
 		return err
 	}
 
@@ -78,7 +77,7 @@ func getChannelDetail(c *echo.Context) error {
 		detail  = &models.ChannelDetail{}
 	)
 
-	err = cache.Get(key, timeout, detail, func() error {
+	if err := cache.Get(key, timeout, detail, func() error {
 
 		var (
 			store         = getStore(c)
@@ -116,9 +115,7 @@ func getChannelDetail(c *echo.Context) error {
 		}
 		detail.Page = podcasts.Page
 		return nil
-	})
-
-	if err != nil {
+	}); err != nil {
 		return err
 	}
 
@@ -203,12 +200,11 @@ func addChannel(c *echo.Context) error {
 	}
 
 	if isNewChannel {
-		go func(c *echo.Context, channel *models.Channel) {
+		go func(channel *models.Channel, log *log.Logger) {
 
 			var (
 				store        = getStore(c)
 				channelStore = store.Channels()
-				log          = c.Echo().Logger()
 			)
 			tx, err := store.Conn().Begin()
 			if err != nil {
@@ -234,7 +230,7 @@ func addChannel(c *echo.Context) error {
 				log.Error(err)
 			}
 
-		}(c, channel)
+		}(channel, c.Echo().Logger())
 
 	}
 

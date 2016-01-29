@@ -21,11 +21,10 @@ func getPodcast(c *echo.Context) error {
 	)
 	podcast := &models.Podcast{}
 
-	err = cache.Get(key, timeout, podcast, func() error {
+	if err := cache.Get(key, timeout, podcast, func() error {
 		store := getStore(c)
 		return store.Podcasts().GetByID(store.Conn(), podcast, podcastID)
-	})
-	if err != nil {
+	}); err != nil {
 		return err
 	}
 

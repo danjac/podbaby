@@ -39,11 +39,9 @@ func indexPage(c *echo.Context) error {
 
 	var categories []models.Category
 
-	err = getCache(c).Get("categories", time.Hour*24, &categories, func() error {
+	if err := getCache(c).Get("categories", time.Hour*24, &categories, func() error {
 		return store.Categories().SelectAll(conn, &categories)
-	})
-
-	if err != nil {
+	}); err != nil {
 		return err
 	}
 
