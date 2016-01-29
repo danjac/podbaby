@@ -54,6 +54,8 @@ const RelatedChannel = props => {
         {isLoggedIn ?
           <div className="caption text-center">
             <Button
+              className="form-control"
+              bsStyle={channel.isSubscribed ? 'default' : 'primary'}
               title={channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
               onClick={handleSubscribe}
             >
@@ -201,6 +203,7 @@ export class Channel extends React.Component {
             <ButtonGroup>
               {isLoggedIn ?
               <Button
+                bsStyle={channel.isSubscribed ? 'default' : 'primary'}
                 title={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
                 onClick={this.handleSubscribe}
               >
