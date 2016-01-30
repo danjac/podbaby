@@ -68,18 +68,15 @@ export class App extends React.Component {
     this.handlePlayerPlayRandom = this.handlePlayerPlayRandom.bind(this);
   }
 
-  handleLogout(event) {
-    event.preventDefault();
+  handleLogout() {
     this.actions.auth.logout();
   }
 
-  handleOpenAddChannelForm(event) {
-    event.preventDefault();
+  handleOpenAddChannelForm() {
     this.actions.addChannel.open();
   }
 
-  handleCloseAddChannelForm(event) {
-    event.preventDefault();
+  handleCloseAddChannelForm() {
     this.actions.addChannel.close();
   }
 
@@ -164,6 +161,7 @@ export class App extends React.Component {
 
         <AddChannelModal
           {...this.props.addChannel}
+          dispatch={this.props.dispatch}
           container={this}
           onComplete={this.handleAddChannelComplete}
           onClose={this.handleCloseAddChannelForm}

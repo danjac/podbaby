@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import validator from 'validator';
 
+import { routeActions } from 'redux-simple-router';
+
 import {
   Modal,
   Button,
@@ -12,6 +14,7 @@ import {
 import * as api from '../api';
 import Icon from './icon';
 import { FormGroup } from './form';
+import { alerts } from '../actions';
 
 const validate = values => {
   return values.url && validator.isURL(values.url) ? {} : {
@@ -56,6 +59,13 @@ export class AddChannelModal extends React.Component {
         resolve();
       }, error => {
         reject(error.data.url ? error.data : { url: error.data });
+        if (error.status === 401) {
+          this.props.resetForm();
+          this.props.onClose();
+          const { dispatch } = this.props;
+          dispatch(alerts.warning('You must be logged in to continue'));
+          dispatch(routeActions.push('/login/'));
+        }
       });
     });
   }
@@ -113,6 +123,7 @@ export class AddChannelModal extends React.Component {
 
 AddChannelModal.propTypes = {
   fields: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   resetForm: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
