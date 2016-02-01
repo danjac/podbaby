@@ -17,6 +17,8 @@ func (a *fakeAuthenticator) authenticate(c *echo.Context) (*models.User, error) 
 
 type fakeCache struct{}
 
+func (c *fakeCache) Delete(string) error { return nil }
+
 func (c *fakeCache) Get(_ string, _ time.Duration, _ interface{}, fn cache.Setter) error {
 	return fn()
 }

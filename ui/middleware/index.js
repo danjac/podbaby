@@ -1,9 +1,7 @@
 import { syncHistory } from 'redux-simple-router';
 import { hashHistory } from 'react-router';
-
-import { routeActions } from 'redux-simple-router';
-
 import { alerts } from '../actions';
+import { unauthorized } from '../actions/auth';
 
 // should catch any API errors and act accordingly
 export const apiErrorMiddleware = store => next => action => {
@@ -21,8 +19,7 @@ export const apiErrorMiddleware = store => next => action => {
 
       case 401:
 
-        store.dispatch(alerts.warning('You must be logged in to continue'));
-        store.dispatch(routeActions.push('/login/'));
+        store.dispatch(unauthorized());
         break;
 
       case 404:

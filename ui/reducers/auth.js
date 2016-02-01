@@ -31,6 +31,7 @@ export default function (state = initialState, action) {
       return Object.assign({}, state,
       { showRecoverPasswordForm: action.type === Actions.OPEN_RECOVER_PASSWORD_FORM });
 
+    case Actions.SESSION_TIMEOUT:
     case Actions.DELETE_ACCOUNT_SUCCESS:
     case Actions.LOGOUT:
       return initialState;

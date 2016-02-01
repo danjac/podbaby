@@ -13,6 +13,7 @@ type Setter func() error
 
 type Cache interface {
 	Get(string, time.Duration, interface{}, Setter) error
+	Delete(string) error
 }
 
 func New(cfg *config.Config) Cache {
@@ -42,6 +43,10 @@ func New(cfg *config.Config) Cache {
 
 type defaultCache struct {
 	codec *rc.Codec
+}
+
+func (c *defaultCache) Delete(key string) error {
+	return c.codec.Delete(key)
 }
 
 func (c *defaultCache) Get(key string, timeout time.Duration, obj interface{}, fn Setter) error {

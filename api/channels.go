@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"fmt"
-	"github.com/labstack/gommon/log"
 	"net/http"
 	"time"
 
@@ -162,6 +161,15 @@ func addChannel(c *echo.Context) error {
 		}
 	}
 
+	tx, err := conn.Begin()
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = tx.Rollback()
+	}()
+
 	if isNewChannel {
 
 		channel = &models.Channel{
@@ -177,61 +185,27 @@ func addChannel(c *echo.Context) error {
 			}
 			return err
 		}
-		tx, err := conn.Begin()
-		if err != nil {
-			return err
-		}
-
-		defer func() {
-			_ = tx.Rollback()
-		}()
 
 		if err := channelStore.Create(tx, channel); err != nil {
 			return err
 		}
-		if err := tx.Commit(); err != nil {
+
+		if err := channelStore.AddPodcasts(tx, channel); err != nil {
+			return err
+		}
+
+		if err := channelStore.AddCategories(tx, channel); err != nil {
 			return err
 		}
 
 	}
 
-	if err := store.Subscriptions().Create(conn, channel.ID, user.ID); err != nil {
+	if err := store.Subscriptions().Create(tx, channel.ID, user.ID); err != nil {
 		return err
 	}
 
-	if isNewChannel {
-		go func(channel *models.Channel, log *log.Logger) {
-
-			var (
-				store        = getStore(c)
-				channelStore = store.Channels()
-			)
-			tx, err := store.Conn().Begin()
-			if err != nil {
-				log.Error(err)
-				return
-			}
-
-			defer func() {
-				_ = tx.Rollback()
-			}()
-
-			if err := channelStore.AddPodcasts(tx, channel); err != nil {
-				log.Error(err)
-				return
-			}
-
-			if err := channelStore.AddCategories(tx, channel); err != nil {
-				log.Error(err)
-				return
-			}
-
-			if err := tx.Commit(); err != nil {
-				log.Error(err)
-			}
-
-		}(channel, c.Echo().Logger())
-
+	if err := tx.Commit(); err != nil {
+		return err
 	}
 
 	var status int

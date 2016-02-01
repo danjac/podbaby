@@ -32,6 +32,14 @@ export function recoverPasswordComplete() {
   };
 }
 
+export function unauthorized() {
+  return dispatch => {
+    dispatch(createAction(Actions.SESSION_TIMEOUT));
+    dispatch(alerts.warning('You must be logged in to continue'));
+    dispatch(routeActions.push('/login/'));
+  };
+}
+
 export function loginComplete(loginInfo) {
   return (dispatch, getState) => {
     const { auth } = getState();

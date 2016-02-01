@@ -14,13 +14,11 @@ func getBookmarks(c *echo.Context) error {
 		result = &models.PodcastList{}
 	)
 
-	err := store.Podcasts().SelectBookmarked(
+	if err := store.Podcasts().SelectBookmarked(
 		store.Conn(),
 		result,
 		user.ID,
-		getPage(c))
-
-	if err != nil {
+		getPage(c)); err != nil {
 		return err
 	}
 

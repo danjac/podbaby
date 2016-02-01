@@ -2,8 +2,6 @@ import React, { PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import validator from 'validator';
 
-import { routeActions } from 'redux-simple-router';
-
 import {
   Modal,
   Button,
@@ -14,7 +12,7 @@ import {
 import * as api from '../api';
 import Icon from './icon';
 import { FormGroup } from './form';
-import { alerts } from '../actions';
+import { unauthorized } from '../actions/auth';
 
 const validate = values => {
   return values.url && validator.isURL(values.url) ? {} : {
@@ -59,12 +57,12 @@ export class AddChannelModal extends React.Component {
         resolve();
       }, error => {
         reject(error.data.url ? error.data : { url: error.data });
+        // handle if session timed out
+        // would be nice to have more elegant way
         if (error.status === 401) {
           this.props.resetForm();
           this.props.onClose();
-          const { dispatch } = this.props;
-          dispatch(alerts.warning('You must be logged in to continue'));
-          dispatch(routeActions.push('/login/'));
+          this.props.dispatch(unauthorized());
         }
       });
     });
