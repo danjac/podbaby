@@ -34,6 +34,7 @@ func TestContext(t *testing.T) {
 	userJSONIndent := "{\n_?\"id\": \"1\",\n_?\"name\": \"Joe\"\n_}"
 	userXML := `<user><id>1</id><name>Joe</name></user>`
 	userXMLIndent := "_<user>\n_?<id>1</id>\n_?<name>Joe</name>\n_</user>"
+	incorrectContent := "this is incorrect content"
 
 	var nonMarshallableChannel chan bool
 
@@ -68,14 +69,18 @@ func TestContext(t *testing.T) {
 	//------
 
 	// JSON
-	testBind(t, c, "application/json")
+	testBindOk(t, c, ApplicationJSON)
+	c.request, _ = http.NewRequest(POST, "/", strings.NewReader(incorrectContent))
+	testBindError(t, c, ApplicationJSON)
 
 	// XML
 	c.request, _ = http.NewRequest(POST, "/", strings.NewReader(userXML))
-	testBind(t, c, ApplicationXML)
+	testBindOk(t, c, ApplicationXML)
+	c.request, _ = http.NewRequest(POST, "/", strings.NewReader(incorrectContent))
+	testBindError(t, c, ApplicationXML)
 
 	// Unsupported
-	testBind(t, c, "")
+	testBindError(t, c, "")
 
 	//--------
 	// Render
@@ -229,6 +234,10 @@ func TestContext(t *testing.T) {
 
 	// reset
 	c.reset(req, NewResponse(httptest.NewRecorder(), e), e)
+
+	// after reset (nil store) set test
+	c.Set("user", "Joe")
+	assert.Equal(t, "Joe", c.Get("user"))
 }
 
 func TestContextPath(t *testing.T) {
@@ -280,14 +289,37 @@ func TestContextNetContext(t *testing.T) {
 	assert.Equal(t, "val", c.Value("key"))
 }
 
-func testBind(t *testing.T, c *Context, ct string) {
+func TestContextEcho(t *testing.T) {
+	c := new(Context)
+
+	// Should be null when initialized without one
+	assert.Nil(t, c.Echo())
+}
+
+func testBindOk(t *testing.T, c *Context, ct string) {
 	c.request.Header.Set(ContentType, ct)
 	u := new(user)
 	err := c.Bind(u)
-	if ct == "" {
-		assert.Error(t, UnsupportedMediaType)
-	} else if assert.NoError(t, err) {
+	if assert.NoError(t, err) {
 		assert.Equal(t, "1", u.ID)
 		assert.Equal(t, "Joe", u.Name)
+	}
+}
+
+func testBindError(t *testing.T, c *Context, ct string) {
+	c.request.Header.Set(ContentType, ct)
+	u := new(user)
+	err := c.Bind(u)
+
+	switch ct {
+	case ApplicationJSON, ApplicationXML:
+		if assert.IsType(t, new(HTTPError), err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*HTTPError).code)
+		}
+	default:
+		if assert.IsType(t, new(HTTPError), err) {
+			assert.Equal(t, ErrUnsupportedMediaType, err)
+		}
+
 	}
 }
