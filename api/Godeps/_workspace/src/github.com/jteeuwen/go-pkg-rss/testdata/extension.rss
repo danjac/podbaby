@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"  xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Extensions Test</title>
+    <link>http://test.extensions.net</link>
+    <description>Just a Test</description>
+    <language>en-US</language>
+    <lastBuildDate>Wed, 27 Mar 2013 12:30:18 PDT</lastBuildDate>
+    <image>
+      <link>http://test.extensions.net</link>
+      <url>http://test.extensions.net/test.jpg</url>
+      <title>Extensions Test</title>
+    </image>
+    <itunes:author>The Author</itunes:author>
+    <itunes:owner>
+      <itunes:name></itunes:name>
+      <itunes:email>test@rss.com</itunes:email>
+    </itunes:owner>
+    <itunes:category text="Politics"></itunes:category>
+    <itunes:image href="http://golang.org/doc/gopher/project.png" />
+    <item>
+      <title>Cellular Biomedicine Group, Inc. (0001378624) (Filer)</title>
+      <link>http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/0001354488-13-006749-index.htm</link>
+      <guid>http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/0001354488-13-006749-xbrl.zip</guid>
+      <enclosure url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/0001354488-13-006749-xbrl.zip" length="133879" type="application/zip" />
+      <description>10-Q/A</description>
+      <pubDate>Fri, 06 Dec 2013 17:29:22 EST</pubDate>
+      <edgar:xbrlFiling xmlns:edgar="http://www.sec.gov/Archives/edgar">
+        <edgar:companyName>Cellular Biomedicine Group, Inc.</edgar:companyName>
+        <edgar:formType>10-Q/A</edgar:formType>
+        <edgar:filingDate>12/06/2013</edgar:filingDate>
+        <edgar:cikNumber>0001378624</edgar:cikNumber>
+        <edgar:accessionNumber>0001354488-13-006749</edgar:accessionNumber>
+        <edgar:fileNumber>000-52282</edgar:fileNumber>
+        <edgar:acceptanceDatetime>20131206172922</edgar:acceptanceDatetime>
+        <edgar:period>20130630</edgar:period>
+        <edgar:assistantDirector>7</edgar:assistantDirector>
+        <edgar:assignedSic>6199</edgar:assignedSic>
+        <edgar:fiscalYearEnd>1231</edgar:fiscalYearEnd>
+        <edgar:xbrlFiles>
+          <edgar:xbrlFile edgar:sequence="1" edgar:file="cbmg_10qa.htm" edgar:type="10-Q/A" edgar:size="2367019" edgar:description="CURRENT REPORT AMENDMENT" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cbmg_10qa.htm" />
+          <edgar:xbrlFile edgar:sequence="2" edgar:file="cbmg_ex311.htm" edgar:type="EX-31.1" edgar:size="19198" edgar:description="CERTIFICATION" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cbmg_ex311.htm" />
+          <edgar:xbrlFile edgar:sequence="3" edgar:file="cbmg_ex312.htm" edgar:type="EX-31.2" edgar:size="18548" edgar:description="CERTIFICATION" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cbmg_ex312.htm" />
+          <edgar:xbrlFile edgar:sequence="4" edgar:file="cbmg_ex321.htm" edgar:type="EX-32.1" edgar:size="9490" edgar:description="CERTIFICATION" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cbmg_ex321.htm" />
+          <edgar:xbrlFile edgar:sequence="5" edgar:file="cmbg-20130630.xml" edgar:type="EX-101.INS" edgar:size="1535753" edgar:description="" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cmbg-20130630.xml" />
+          <edgar:xbrlFile edgar:sequence="6" edgar:file="cmbg-20130630.xsd" edgar:type="EX-101.SCH" edgar:size="48804" edgar:description="" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cmbg-20130630.xsd" />
+          <edgar:xbrlFile edgar:sequence="7" edgar:file="cmbg-20130630_cal.xml" edgar:type="EX-101.CAL" edgar:size="60044" edgar:description="" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cmbg-20130630_cal.xml" />
+          <edgar:xbrlFile edgar:sequence="8" edgar:file="cmbg-20130630_def.xml" edgar:type="EX-101.DEF" edgar:size="138211" edgar:description="" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cmbg-20130630_def.xml" />
+          <edgar:xbrlFile edgar:sequence="9" edgar:file="cmbg-20130630_lab.xml" edgar:type="EX-101.LAB" edgar:size="264038" edgar:description="" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cmbg-20130630_lab.xml" />
+          <edgar:xbrlFile edgar:sequence="10" edgar:file="cmbg-20130630_pre.xml" edgar:type="EX-101.PRE" edgar:size="247808" edgar:description="" edgar:url="http://www.sec.gov/Archives/edgar/data/1378624/000135448813006749/cmbg-20130630_pre.xml" />
+        </edgar:xbrlFiles>
+      </edgar:xbrlFiling>
+    </item>
+  </channel>
+

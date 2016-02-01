@@ -1,6 +1,6 @@
 package api
 
-import "github.com/labstack/echo"
+import "github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 
 func configureRoutes(e *echo.Echo) {
 

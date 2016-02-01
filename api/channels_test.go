@@ -2,10 +2,10 @@ package api
 
 import (
 	"fmt"
-	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/DATA-DOG/go-sqlmock"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
-	"github.com/labstack/echo"
 	"net/http"
 	"net/http/httptest"
 	"strings"

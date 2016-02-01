@@ -1,7 +1,7 @@
 package models
 
 import (
-	"golang.org/x/crypto/bcrypt"
+	"github.com/danjac/podbaby/models/Godeps/_workspace/src/golang.org/x/crypto/bcrypt"
 	"time"
 )
 

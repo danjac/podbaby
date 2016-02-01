@@ -2,9 +2,9 @@ package feedparser
 
 import (
 	"errors"
+	"github.com/danjac/podbaby/feedparser/Godeps/_workspace/src/github.com/jinzhu/now"
+	rss "github.com/danjac/podbaby/feedparser/Godeps/_workspace/src/github.com/jteeuwen/go-pkg-rss"
 	"github.com/danjac/podbaby/models"
-	"github.com/jinzhu/now"
-	rss "github.com/jteeuwen/go-pkg-rss"
 	"strings"
 	"time"
 )

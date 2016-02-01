@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/asaskevich/govalidator"
-	"github.com/labstack/echo"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/asaskevich/govalidator"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 )
 
 const (

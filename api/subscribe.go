@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/labstack/echo"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"net/http"
 )
 

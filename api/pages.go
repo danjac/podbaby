@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/justinas/nosurf"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/models"
-	"github.com/justinas/nosurf"
-	"github.com/labstack/echo"
 )
 
 func indexPage(c *echo.Context) error {

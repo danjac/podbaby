@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"github.com/labstack/echo"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"net/http"
 	"strings"
 	"time"

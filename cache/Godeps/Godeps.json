@@ -1,0 +1,29 @@
+{
+	"ImportPath": "github.com/danjac/podbaby/cache",
+	"GoVersion": "go1.5.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Rev": "e95799a481bbcc3d01c2ad5178524cb8bec9f370"
+		},
+		{
+			"ImportPath": "gopkg.in/bsm/ratelimit.v1",
+			"Rev": "f14ad9c78b155f69b480cfa41cb655259baac260"
+		},
+		{
+			"ImportPath": "gopkg.in/go-redis/cache.v1",
+			"Comment": "v1.0.0",
+			"Rev": "5f131d0e10e76fccda78bdba48f730448bc185da"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v3",
+			"Comment": "v3.2.28",
+			"Rev": "3f059e5c53cd635382697546e6225f1437e3c5a2"
+		},
+		{
+			"ImportPath": "gopkg.in/vmihailenco/msgpack.v2",
+			"Comment": "v2.4.9",
+			"Rev": "c14236230ebdfc78cd82b478ea8d662ccdc6441a"
+		}
+	]
+}

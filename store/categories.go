@@ -2,7 +2,7 @@ package store
 
 import (
 	"github.com/danjac/podbaby/models"
-	"github.com/jmoiron/sqlx"
+	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/jmoiron/sqlx"
 )
 
 type CategoryReader interface {

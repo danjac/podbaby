@@ -1,0 +1,28 @@
+{
+	"ImportPath": "github.com/danjac/podbaby/store",
+	"GoVersion": "go1.5.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/DATA-DOG/go-sqlmock",
+			"Comment": "v1.0.0-5-gf49a90b",
+			"Rev": "f49a90b6f7f3763b76ca1618f1bbd6189239be7a"
+		},
+		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Rev": "e95799a481bbcc3d01c2ad5178524cb8bec9f370"
+		},
+		{
+			"ImportPath": "github.com/jmoiron/sqlx",
+			"Comment": "sqlx-v1.1-60-gddb3dc8",
+			"Rev": "ddb3dc8bd6515cf1af155d322e01bd26a03bff18"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "1f22c0103821b9390939b6776727195525381532"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "1f22c0103821b9390939b6776727195525381532"
+		}
+	]
+}

@@ -1,0 +1,14 @@
+{
+	"ImportPath": "github.com/danjac/podbaby/models",
+	"GoVersion": "go1.5.3",
+	"Deps": [
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "1f22c0103821b9390939b6776727195525381532"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "1f22c0103821b9390939b6776727195525381532"
+		}
+	]
+}

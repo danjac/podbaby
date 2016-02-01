@@ -2,7 +2,7 @@ package api
 
 import (
 	"database/sql"
-	"github.com/labstack/echo"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"math/rand"
 	"net/http"
 	"time"

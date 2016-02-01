@@ -1,10 +1,10 @@
 package cache
 
 import (
+	rc "github.com/danjac/podbaby/cache/Godeps/_workspace/src/gopkg.in/go-redis/cache.v1"
+	"github.com/danjac/podbaby/cache/Godeps/_workspace/src/gopkg.in/redis.v3"
+	"github.com/danjac/podbaby/cache/Godeps/_workspace/src/gopkg.in/vmihailenco/msgpack.v2"
 	"github.com/danjac/podbaby/config"
-	rc "gopkg.in/go-redis/cache.v1"
-	"gopkg.in/redis.v3"
-	"gopkg.in/vmihailenco/msgpack.v2"
 	"time"
 )
 

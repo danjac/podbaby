@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"github.com/gorilla/securecookie"
+	"github.com/danjac/podbaby/config/Godeps/_workspace/src/github.com/gorilla/securecookie"
 	"log"
 )
 

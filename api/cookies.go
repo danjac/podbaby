@@ -2,12 +2,12 @@ package api
 
 import (
 	"encoding/base64"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/config"
-	"github.com/labstack/echo"
 	"net/http"
 	"time"
 
-	"github.com/gorilla/securecookie"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/gorilla/securecookie"
 )
 
 const cookieTimeout = 24

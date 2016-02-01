@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
-	"github.com/labstack/echo"
 )
 
 func getChannelsByCategory(c *echo.Context) error {

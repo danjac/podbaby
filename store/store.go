@@ -1,9 +1,9 @@
 package store
 
 import (
-	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/danjac/podbaby/config"
-	"github.com/jmoiron/sqlx"
+	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/DATA-DOG/go-sqlmock"
+	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/jmoiron/sqlx"
 )
 
 type closer interface {

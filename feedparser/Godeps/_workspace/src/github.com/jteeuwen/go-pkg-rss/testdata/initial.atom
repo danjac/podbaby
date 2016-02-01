@@ -1,0 +1,8 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title type="text">Some title</title>
+	<id>http://www.example.com/feed/atom/</id>
+	<entry>
+		<title>First title</title>
+		<id>1</id>
+	</entry>
+</feed>
