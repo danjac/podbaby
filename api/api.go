@@ -102,7 +102,7 @@ func Run(env *Env) error {
 	// static configuration
 	e.Static(env.StaticURL, env.StaticDir)
 
-	withRoutes(e)
+	configureRoutes(e)
 
 	// add CSRF protection
 	s := e.Server(fmt.Sprintf(":%v", env.Port))

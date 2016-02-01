@@ -2,7 +2,7 @@ package api
 
 import "github.com/labstack/echo"
 
-func withRoutes(e *echo.Echo) {
+func configureRoutes(e *echo.Echo) {
 
 	// front page
 

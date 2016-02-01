@@ -11,6 +11,22 @@ import (
 
 const iTunesDTD = "http://www.itunes.com/dtds/podcast-1.0.dtd"
 
+type keywordSet map[string]string
+
+func (k keywordSet) add(kw string) {
+	k[kw] = kw
+}
+
+func (k keywordSet) slice() []string {
+	i := 0
+	rv := make([]string, len(k))
+	for key := range k {
+		rv[i] = key
+		i++
+	}
+	return rv
+}
+
 func init() {
 	// support for additional pub date formats we've found
 	formats := []string{
@@ -107,18 +123,13 @@ func (f *feedparserImpl) Fetch(channel *models.Channel) error {
 	channel.Categories = result.getCategories()
 
 	// we just want unique categories
-	keywordMap := make(map[string]string)
+	keywords := make(keywordSet)
 
 	for _, c := range result.channel.Categories {
-		keywordMap[c.Text] = c.Text
+		keywords.add(c.Text)
 	}
 
-	var keywords []string
-	for _, kw := range keywordMap {
-		keywords = append(keywords, kw)
-	}
-
-	channel.Keywords.String = strings.Join(keywords, " ")
+	channel.Keywords.String = strings.Join(keywords.slice(), " ")
 	channel.Keywords.Valid = true
 
 	var podcasts []*models.Podcast
