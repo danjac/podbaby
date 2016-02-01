@@ -3,12 +3,10 @@ package api
 import (
 	"database/sql"
 	"github.com/labstack/echo"
-	"github.com/labstack/gommon/log"
 	"math/rand"
 	"net/http"
 	"time"
 
-	"github.com/danjac/podbaby/mailer"
 	"github.com/danjac/podbaby/models"
 )
 
@@ -66,19 +64,19 @@ func recoverPassword(c *echo.Context) error {
 		"host":         c.Request().Host,
 	}
 
-	go func(mailer mailer.Mailer, logger *log.Logger, to string, data map[string]string) {
+	go func(to string, data map[string]string) {
 
-		if err := mailer.SendFromTemplate(
+		if err := getMailer(c).SendFromTemplate(
 			"services@podbaby.me",
 			[]string{to},
 			"Your new password",
 			"recover_password.tmpl",
 			data,
 		); err != nil {
-			logger.Error(err)
+			c.Echo().Logger().Error(err)
 		}
 
-	}(getMailer(c), c.Echo().Logger(), user.Email, data)
+	}(user.Email, data)
 
 	return c.NoContent(http.StatusOK)
 }
