@@ -48,13 +48,16 @@ func TestAddChannelIfNew(t *testing.T) {
 
 	empty := sqlmock.NewRows([]string{})
 	newChannel := sqlmock.NewRows([]string{""}).AddRow(1)
+	newPodcast := sqlmock.NewRows([]string{""}).AddRow(1)
 	newSub := sqlmock.NewResult(1, 1)
 
 	mock.ExpectQuery("^SELECT (.+) FROM channels*").WillReturnRows(empty)
 	mock.ExpectBegin()
 	mock.ExpectQuery("^SELECT upsert_channel (.+)*").WillReturnRows(newChannel)
-	mock.ExpectCommit()
+	mock.ExpectPrepare("^SELECT insert_podcast*").WillReturnError(nil)
+	mock.ExpectQuery("^SELECT insert_podcast*").WillReturnRows(newPodcast)
 	mock.ExpectExec("^INSERT INTO subscriptions*").WillReturnResult(newSub)
+	mock.ExpectCommit()
 
 	c.Set(storeContextKey, s)
 	c.Set(userContextKey, user)

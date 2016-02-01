@@ -178,14 +178,14 @@ func (w *channelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel
 		args = append(args, category)
 	}
 
-	q := fmt.Sprintf("SELECT add_categories($1, ARRAY[%s])", strings.Join(params, ", "))
+	q := fmt.Sprintf("SELECT add_categories ($1, ARRAY[%s])", strings.Join(params, ", "))
 	_, err := dh.Exec(q, args...)
 	return err
 }
 
 func (w *channelSqlWriter) AddPodcasts(dh DataHandler, channel *models.Channel) error {
 
-	q := `SELECT insert_podcast(
+	q := `SELECT insert_podcast (
         :channel_id, 
         :guid,
         :title, 
