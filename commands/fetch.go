@@ -6,16 +6,38 @@ import (
 	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
 	"log"
+	"sync"
 	"time"
 )
 
-func fetchChannel(channel *models.Channel, store store.Store, f feedparser.Feedparser) error {
+func handleBatch(batch []models.Channel, s store.Store, f feedparser.Feedparser) {
+
+	var wg sync.WaitGroup
+	wg.Add(len(batch))
+
+	for _, channel := range batch {
+		go func(channel models.Channel) {
+			defer wg.Done()
+			if err := fetchChannel(&channel, s, f); err != nil {
+				log.Printf("Error fetching channel %s: %v", channel.Title, err)
+			}
+		}(channel)
+	}
+
+	wg.Wait()
+}
+
+func fetchChannel(channel *models.Channel, s store.Store, f feedparser.Feedparser) error {
+
+	if channel.URL == "" {
+		return nil
+	}
 
 	log.Printf("Channel: %s", channel.Title)
 
-	channelStore := store.Channels()
+	channelStore := s.Channels()
 
-	tx, err := store.Conn().Begin()
+	tx, err := s.Conn().Begin()
 
 	if err != nil {
 		return err
@@ -52,17 +74,19 @@ func Fetch(cfg *config.Config) {
 
 	start := time.Now()
 
-	store, err := store.New(cfg)
+	s, err := store.New(cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer store.Conn().Close()
+	conn := s.Conn()
+	defer conn.Close()
 
 	var channels []models.Channel
-	if err := store.Channels().SelectAll(store.Conn(), &channels); err != nil {
+	if err := s.Channels().SelectAll(conn, &channels); err != nil {
 		log.Fatalln(err)
 	}
 	numChannels := len(channels)
+
 	log.Printf("%d channels to fetch", numChannels)
 
 	if err != nil {
@@ -71,10 +95,16 @@ func Fetch(cfg *config.Config) {
 
 	f := feedparser.New()
 
-	for _, channel := range channels {
+	batchSize := cfg.MaxDBConnections / 10
+	batch := make([]models.Channel, batchSize)
 
-		if err := fetchChannel(&channel, store, f); err != nil {
-			log.Printf("Error fetching channel %s: %v", channel.Title, err)
+	for i, channel := range channels {
+
+		batch = append(batch, channel)
+
+		if i > 0 && (i%batchSize == 0 || i == numChannels-1) {
+			handleBatch(batch, s, f)
+			batch = make([]models.Channel, batchSize)
 		}
 
 	}
