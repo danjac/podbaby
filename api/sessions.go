@@ -10,25 +10,25 @@ import (
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/gorilla/securecookie"
 )
 
-const cookieTimeout = 24
+const sessionTimeout = 24
 
-type CookieStore interface {
+type Session interface {
 	Write(*echo.Context, string, interface{}) error
 	Read(*echo.Context, string, interface{}) error
 }
 
-type secureCookieStore struct {
+type secureCookieSession struct {
 	*securecookie.SecureCookie
 	isSecure bool
 }
 
-func (s *secureCookieStore) Write(c *echo.Context, key string, value interface{}) error {
+func (s *secureCookieSession) Write(c *echo.Context, key string, value interface{}) error {
 	encoded, err := s.Encode(key, value)
 	if err == nil {
 		cookie := &http.Cookie{
 			Name:     key,
 			Value:    encoded,
-			Expires:  time.Now().Add(time.Hour * cookieTimeout),
+			Expires:  time.Now().Add(time.Hour * sessionTimeout),
 			Secure:   s.isSecure,
 			HttpOnly: true,
 			Path:     "/",
@@ -38,7 +38,7 @@ func (s *secureCookieStore) Write(c *echo.Context, key string, value interface{}
 	return err
 }
 
-func (s *secureCookieStore) Read(c *echo.Context, key string, dst interface{}) error {
+func (s *secureCookieSession) Read(c *echo.Context, key string, dst interface{}) error {
 	cookie, err := c.Request().Cookie(key)
 	if err != nil {
 		return err
@@ -46,13 +46,13 @@ func (s *secureCookieStore) Read(c *echo.Context, key string, dst interface{}) e
 	return s.Decode(key, cookie.Value, dst)
 }
 
-func newCookieStore(cfg *config.Config) CookieStore {
+func newSession(cfg *config.Config) Session {
 	secureCookieKey, _ := base64.StdEncoding.DecodeString(cfg.SecureCookieKey)
 	cookie := securecookie.New(
 		[]byte(cfg.SecretKey),
 		secureCookieKey,
 	)
-	return &secureCookieStore{
+	return &secureCookieSession{
 		SecureCookie: cookie,
 		isSecure:     !cfg.IsDev(),
 	}

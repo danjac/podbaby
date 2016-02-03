@@ -27,18 +27,18 @@ const (
 	feedparserContextKey    = "feedparser"
 	cacheContextKey         = "cache"
 	mailerContextKey        = "mailer"
-	cookieStoreContextKey   = "cookieStore"
+	sessionContextKey       = "session"
 	configContextKey        = "config"
 	authenticatorContextKey = "authenticator"
 )
 
 type Env struct {
 	*config.Config
-	Cache       cache.Cache
-	Store       store.Store
-	CookieStore CookieStore
-	Feedparser  feedparser.Feedparser
-	Mailer      mailer.Mailer
+	Cache      cache.Cache
+	Store      store.Store
+	Session    Session
+	Feedparser feedparser.Feedparser
+	Mailer     mailer.Mailer
 }
 
 type authenticator interface {
@@ -72,7 +72,7 @@ func Run(env *Env) error {
 	// add all the application globals we'll need
 
 	auth := &defaultAuthenticator{}
-	cookieStore := newCookieStore(env.Config)
+	session := newSession(env.Config)
 
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
@@ -81,7 +81,7 @@ func Run(env *Env) error {
 			c.Set(feedparserContextKey, env.Feedparser)
 			c.Set(cacheContextKey, env.Cache)
 			c.Set(configContextKey, env.Config)
-			c.Set(cookieStoreContextKey, cookieStore)
+			c.Set(sessionContextKey, session)
 			c.Set(authenticatorContextKey, auth)
 			return h(c)
 		}
@@ -128,8 +128,8 @@ func getStore(c *echo.Context) store.Store {
 	return c.Get(storeContextKey).(store.Store)
 }
 
-func getCookieStore(c *echo.Context) CookieStore {
-	return c.Get(cookieStoreContextKey).(CookieStore)
+func getSession(c *echo.Context) Session {
+	return c.Get(sessionContextKey).(Session)
 }
 
 func getMailer(c *echo.Context) mailer.Mailer {
@@ -196,10 +196,10 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 		return user, nil
 	}
 
-	cookieStore := getCookieStore(c)
+	session := getSession(c)
 	var userID int
 
-	if err := cookieStore.Read(c, userCookieKey, &userID); err != nil {
+	if err := session.Read(c, userCookieKey, &userID); err != nil {
 		return nil, nil
 	}
 

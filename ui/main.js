@@ -10,6 +10,7 @@ import configureRoutes from './routes';
 const store = configureStore();
 const routes = configureRoutes(store);
 
+// should really be passed to configureStore()
 store.dispatch(auth.setCurrentUser(window.__DATA__.user));
 store.dispatch(categories.loadCategories(window.__DATA__.categories));
 store.dispatch(player.reloadPlayer());

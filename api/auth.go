@@ -131,11 +131,11 @@ func isEmail(c *echo.Context) error {
 func signup(c *echo.Context) error {
 
 	var (
-		v           = newValidator(c)
-		cookieStore = getCookieStore(c)
-		s           = getStore(c)
-		userStore   = s.Users()
-		conn        = s.Conn()
+		v         = newValidator(c)
+		session   = getSession(c)
+		s         = getStore(c)
+		userStore = s.Users()
+		conn      = s.Conn()
 	)
 	decoder := &signupDecoder{}
 
@@ -167,7 +167,7 @@ func signup(c *echo.Context) error {
 		return err
 	}
 
-	if err := cookieStore.Write(c, userCookieKey, user.ID); err != nil {
+	if err := session.Write(c, userCookieKey, user.ID); err != nil {
 		return err
 	}
 
@@ -177,10 +177,10 @@ func signup(c *echo.Context) error {
 func login(c *echo.Context) error {
 
 	var (
-		v           = newValidator(c)
-		cookieStore = getCookieStore(c)
-		s           = getStore(c)
-		conn        = s.Conn()
+		v       = newValidator(c)
+		session = getSession(c)
+		s       = getStore(c)
+		conn    = s.Conn()
 	)
 
 	decoder := &loginDecoder{}
@@ -217,7 +217,7 @@ func login(c *echo.Context) error {
 	}
 	// login user
 
-	if err := cookieStore.Write(c, userCookieKey, user.ID); err != nil {
+	if err := session.Write(c, userCookieKey, user.ID); err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, user)
@@ -225,7 +225,7 @@ func login(c *echo.Context) error {
 }
 
 func logout(c *echo.Context) error {
-	getCookieStore(c).Write(c, userCookieKey, 0)
+	getSession(c).Write(c, userCookieKey, 0)
 	return c.NoContent(http.StatusOK)
 }
 
