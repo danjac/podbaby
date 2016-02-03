@@ -37,29 +37,23 @@ func fetchChannel(channel *models.Channel, s store.Store, f feedparser.Feedparse
 
 	channelStore := s.Channels()
 
-	tx, err := s.Conn().Begin()
+	if err := f.Fetch(channel); err != nil {
+		return err
+	}
 
+	tx, err := s.Conn().Begin()
 	if err != nil {
 		return err
 	}
 
 	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+		_ = tx.Rollback()
 	}()
 
-	if err = f.Fetch(channel); err != nil {
+	if err = channelStore.CreateOrUpdate(tx, channel); err != nil {
 		return err
 	}
 
-	if err = channelStore.AddCategories(tx, channel); err != nil {
-		return err
-	}
-
-	if err = channelStore.AddPodcasts(tx, channel); err != nil {
-		return err
-	}
 	if err = tx.Commit(); err != nil {
 		return err
 	}

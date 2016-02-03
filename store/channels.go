@@ -22,7 +22,7 @@ type ChannelReader interface {
 }
 
 type ChannelWriter interface {
-	Create(DataHandler, *models.Channel) error
+	CreateOrUpdate(DataHandler, *models.Channel) error
 	AddCategories(DataHandler, *models.Channel) error
 	AddPodcasts(DataHandler, *models.Channel) error
 }
@@ -145,7 +145,7 @@ func (r *channelSqlReader) GetByID(dh DataHandler, channel *models.Channel, id i
 
 type channelSqlWriter struct{}
 
-func (w *channelSqlWriter) Create(dh DataHandler, ch *models.Channel) error {
+func (w *channelSqlWriter) CreateOrUpdate(dh DataHandler, ch *models.Channel) error {
 
 	q := `SELECT upsert_channel (
     :url, 
@@ -161,7 +161,20 @@ func (w *channelSqlWriter) Create(dh DataHandler, ch *models.Channel) error {
 		return err
 	}
 
-	return handleError(dh.QueryRowx(dh.Rebind(q), args...).Scan(&ch.ID), q)
+	if err := dh.QueryRowx(dh.Rebind(q), args...).Scan(&ch.ID); err != nil {
+		return handleError(err, q)
+	}
+
+	if err = w.AddCategories(dh, ch); err != nil {
+		return handleError(err, q)
+	}
+
+	if err = w.AddPodcasts(dh, ch); err != nil {
+		return handleError(err, q)
+	}
+
+	return nil
+
 }
 
 func (w *channelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel) error {

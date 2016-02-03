@@ -186,15 +186,7 @@ func addChannel(c *echo.Context) error {
 			return err
 		}
 
-		if err := channelStore.Create(tx, channel); err != nil {
-			return err
-		}
-
-		if err := channelStore.AddPodcasts(tx, channel); err != nil {
-			return err
-		}
-
-		if err := channelStore.AddCategories(tx, channel); err != nil {
+		if err := channelStore.CreateOrUpdate(tx, channel); err != nil {
 			return err
 		}
 
