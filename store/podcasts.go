@@ -8,15 +8,15 @@ import (
 const maxSearchRows = 20
 
 type PodcastReader interface {
-	GetByID(DataHandler, *models.Podcast, int64) error
-	SelectAll(DataHandler, *models.PodcastList, int64) error
-	SelectSubscribed(DataHandler, *models.PodcastList, int64, int64) error
-	SelectByChannel(DataHandler, *models.PodcastList, *models.Channel, int64) error
-	SelectBookmarked(DataHandler, *models.PodcastList, int64, int64) error
-	SelectPlayed(DataHandler, *models.PodcastList, int64, int64) error
+	GetByID(DataHandler, *models.Podcast, int) error
+	SelectAll(DataHandler, *models.PodcastList, int) error
+	SelectSubscribed(DataHandler, *models.PodcastList, int, int) error
+	SelectByChannel(DataHandler, *models.PodcastList, *models.Channel, int) error
+	SelectBookmarked(DataHandler, *models.PodcastList, int, int) error
+	SelectPlayed(DataHandler, *models.PodcastList, int, int) error
 	Search(DataHandler, *[]models.Podcast, string) error
-	SearchBookmarked(DataHandler, *[]models.Podcast, string, int64) error
-	SearchByChannelID(DataHandler, *[]models.Podcast, string, int64) error
+	SearchBookmarked(DataHandler, *[]models.Podcast, string, int) error
+	SearchByChannelID(DataHandler, *[]models.Podcast, string, int) error
 }
 
 type PodcastStore interface {
@@ -37,7 +37,7 @@ func newPodcastStore() PodcastStore {
 
 type podcastSqlReader struct{}
 
-func (r *podcastSqlReader) GetByID(dh DataHandler, podcast *models.Podcast, id int64) error {
+func (r *podcastSqlReader) GetByID(dh DataHandler, podcast *models.Podcast, id int) error {
 	q := `
     SELECT p.id, p.title, p.enclosure_url, p.description,
         p.channel_id, c.title AS name, 
@@ -58,7 +58,7 @@ func (r *podcastSqlReader) Search(dh DataHandler, podcasts *[]models.Podcast, qu
 	return sqlx.Select(dh, podcasts, q, query, maxSearchRows)
 }
 
-func (r *podcastSqlReader) SearchByChannelID(dh DataHandler, podcasts *[]models.Podcast, query string, channelID int64) error {
+func (r *podcastSqlReader) SearchByChannelID(dh DataHandler, podcasts *[]models.Podcast, query string, channelID int) error {
 	q := `
     SELECT p.id, p.title, p.enclosure_url, p.description,
        p.channel_id, p.pub_date, c.title AS name, 
@@ -70,7 +70,7 @@ func (r *podcastSqlReader) SearchByChannelID(dh DataHandler, podcasts *[]models.
 
 }
 
-func (r *podcastSqlReader) SearchBookmarked(dh DataHandler, podcasts *[]models.Podcast, query string, userID int64) error {
+func (r *podcastSqlReader) SearchBookmarked(dh DataHandler, podcasts *[]models.Podcast, query string, userID int) error {
 	q := `
     SELECT p.id, p.title, p.enclosure_url, p.description,
         p.channel_id, p.pub_date, c.title AS name, c.image, p.source
@@ -84,13 +84,13 @@ func (r *podcastSqlReader) SearchBookmarked(dh DataHandler, podcasts *[]models.P
 
 }
 
-func (r *podcastSqlReader) SelectPlayed(dh DataHandler, result *models.PodcastList, userID, page int64) error {
+func (r *podcastSqlReader) SelectPlayed(dh DataHandler, result *models.PodcastList, userID, page int) error {
 
 	q := `SELECT COUNT(DISTINCT(p.id)) FROM podcasts p
     JOIN plays pl ON pl.podcast_id = p.id
     WHERE pl.user_id=$1`
 
-	var numRows int64
+	var numRows int
 
 	if err := dh.QueryRowx(q, userID).Scan(&numRows); err != nil {
 		return err
@@ -123,8 +123,8 @@ func (r *podcastSqlReader) SelectPlayed(dh DataHandler, result *models.PodcastLi
 
 }
 
-func (r *podcastSqlReader) SelectAll(dh DataHandler, result *models.PodcastList, page int64) error {
-	var numRows int64
+func (r *podcastSqlReader) SelectAll(dh DataHandler, result *models.PodcastList, page int) error {
+	var numRows int
 
 	q := "SELECT reltuples::bigint AS count FROM pg_class WHERE oid = 'public.podcasts'::regclass"
 
@@ -154,13 +154,13 @@ func (r *podcastSqlReader) SelectAll(dh DataHandler, result *models.PodcastList,
 		result.Page.PageSize)
 }
 
-func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, result *models.PodcastList, userID, page int64) error {
+func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, result *models.PodcastList, userID, page int) error {
 
 	q := `
     SELECT SUM(num_podcasts) FROM channels
     WHERE id IN (SELECT channel_id FROM subscriptions WHERE user_id=$1)`
 
-	var numRows int64
+	var numRows int
 
 	if err := dh.QueryRowx(q, userID).Scan(&numRows); err != nil {
 		// scan error, as result may be NULL
@@ -193,11 +193,11 @@ func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, result *models.Podca
 		result.Page.PageSize)
 }
 
-func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, result *models.PodcastList, userID, page int64) error {
+func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, result *models.PodcastList, userID, page int) error {
 
 	q := `SELECT COUNT(id) FROM bookmarks WHERE user_id=$1`
 
-	var numRows int64
+	var numRows int
 
 	if err := dh.QueryRowx(q, userID).Scan(&numRows); err != nil {
 		return err
@@ -229,7 +229,7 @@ func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, result *models.Podca
 		result.Page.PageSize)
 }
 
-func (r *podcastSqlReader) SelectByChannel(dh DataHandler, result *models.PodcastList, channel *models.Channel, page int64) error {
+func (r *podcastSqlReader) SelectByChannel(dh DataHandler, result *models.PodcastList, channel *models.Channel, page int) error {
 
 	result.Page = models.NewPaginator(page, channel.NumPodcasts)
 

@@ -11,13 +11,13 @@ const maxRecommendations = 20
 
 type ChannelReader interface {
 	SelectAll(DataHandler, *[]models.Channel) error
-	SelectByCategoryID(DataHandler, *[]models.Channel, int64) error
-	SelectSubscribed(DataHandler, *[]models.Channel, int64) error
-	SelectRelated(DataHandler, *[]models.Channel, int64) error
+	SelectByCategoryID(DataHandler, *[]models.Channel, int) error
+	SelectSubscribed(DataHandler, *[]models.Channel, int) error
+	SelectRelated(DataHandler, *[]models.Channel, int) error
 	SelectRecommended(DataHandler, *[]models.Channel) error
-	SelectRecommendedByUserID(DataHandler, *[]models.Channel, int64) error
+	SelectRecommendedByUserID(DataHandler, *[]models.Channel, int) error
 	Search(DataHandler, *[]models.Channel, string) error
-	GetByID(DataHandler, *models.Channel, int64) error
+	GetByID(DataHandler, *models.Channel, int) error
 	GetByURL(DataHandler, *models.Channel, string) error
 }
 
@@ -51,7 +51,7 @@ func (r *channelSqlReader) SelectAll(dh DataHandler, channels *[]models.Channel)
 	return sqlx.Select(dh, channels, q)
 }
 
-func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models.Channel, categoryID int64) error {
+func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models.Channel, categoryID int) error {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
@@ -63,7 +63,7 @@ func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models
 	return sqlx.Select(dh, channels, q, categoryID)
 }
 
-func (r *channelSqlReader) SelectRelated(dh DataHandler, channels *[]models.Channel, channelID int64) error {
+func (r *channelSqlReader) SelectRelated(dh DataHandler, channels *[]models.Channel, channelID int) error {
 	q := `
     SELECT c.id, c.title, c.image, c.description, c.website, c.url, c.num_podcasts
     FROM channels c
@@ -88,7 +88,7 @@ func (r *channelSqlReader) SelectRecommended(dh DataHandler, channels *[]models.
 	return sqlx.Select(dh, channels, q, maxRecommendations)
 }
 
-func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, channels *[]models.Channel, userID int64) error {
+func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, channels *[]models.Channel, userID int) error {
 	q := `
     WITH user_subs AS (SELECT channel_id FROM subscriptions WHERE user_id=$1)
     SELECT c.id, c.title, c.description, c.image, c.url, c.website, c.num_podcasts
@@ -105,7 +105,7 @@ func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, channels *[
 	return sqlx.Select(dh, channels, q, userID, maxRecommendations)
 }
 
-func (r *channelSqlReader) SelectSubscribed(dh DataHandler, channels *[]models.Channel, userID int64) error {
+func (r *channelSqlReader) SelectSubscribed(dh DataHandler, channels *[]models.Channel, userID int) error {
 
 	q := `
     SELECT c.id, c.title, c.description, c.image, c.url, c.website, c.num_podcasts
@@ -135,7 +135,7 @@ func (r *channelSqlReader) GetByURL(dh DataHandler, channel *models.Channel, url
 	return sqlx.Get(dh, channel, q, url)
 }
 
-func (r *channelSqlReader) GetByID(dh DataHandler, channel *models.Channel, id int64) error {
+func (r *channelSqlReader) GetByID(dh DataHandler, channel *models.Channel, id int) error {
 	q := `
     SELECT c.id, c.title, c.description, c.url, c.image, c.website, c.num_podcasts
     FROM channels c

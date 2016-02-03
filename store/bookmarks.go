@@ -5,12 +5,12 @@ import (
 )
 
 type BookmarkWriter interface {
-	Create(DataHandler, int64, int64) error
-	Delete(DataHandler, int64, int64) error
+	Create(DataHandler, int, int) error
+	Delete(DataHandler, int, int) error
 }
 
 type BookmarkReader interface {
-	SelectByUserID(DataHandler, *[]int64, int64) error
+	SelectByUserID(DataHandler, *[]int, int) error
 }
 
 type BookmarkStore interface {
@@ -32,20 +32,20 @@ func newBookmarkStore() BookmarkStore {
 
 type bookmarkSqlReader struct{}
 
-func (r *bookmarkSqlReader) SelectByUserID(dh DataHandler, result *[]int64, userID int64) error {
+func (r *bookmarkSqlReader) SelectByUserID(dh DataHandler, result *[]int, userID int) error {
 	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1 ORDER BY id DESC"
 	return sqlx.Select(dh, result, q, userID)
 }
 
 type bookmarkSqlWriter struct{}
 
-func (db *bookmarkSqlWriter) Create(dh DataHandler, podcastID, userID int64) error {
+func (db *bookmarkSqlWriter) Create(dh DataHandler, podcastID, userID int) error {
 	q := "INSERT INTO bookmarks(podcast_id, user_id) VALUES($1, $2)"
 	_, err := dh.Exec(q, podcastID, userID)
 	return err
 }
 
-func (db *bookmarkSqlWriter) Delete(dh DataHandler, podcastID, userID int64) error {
+func (db *bookmarkSqlWriter) Delete(dh DataHandler, podcastID, userID int) error {
 	q := "DELETE FROM bookmarks WHERE podcast_id=$1 AND user_id=$2"
 	_, err := dh.Exec(q, podcastID, userID)
 	return err

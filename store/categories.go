@@ -7,7 +7,7 @@ import (
 
 type CategoryReader interface {
 	SelectAll(DataHandler, *[]models.Category) error
-	SelectByChannelID(DataHandler, *[]models.Category, int64) error
+	SelectByChannelID(DataHandler, *[]models.Category, int) error
 }
 
 type CategoryStore interface {
@@ -35,7 +35,7 @@ func (r *categorySqlReader) SelectAll(dh DataHandler, categories *[]models.Categ
 	return sqlx.Select(dh, categories, q)
 }
 
-func (r *categorySqlReader) SelectByChannelID(dh DataHandler, categories *[]models.Category, channelID int64) error {
+func (r *categorySqlReader) SelectByChannelID(dh DataHandler, categories *[]models.Category, channelID int) error {
 	q := `
     SELECT c.id, c.name, c.parent_id FROM categories c 
     JOIN channels_categories cc ON cc.category_id=c.id

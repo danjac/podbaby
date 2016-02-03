@@ -149,20 +149,20 @@ func getAuthenticator(c *echo.Context) authenticator {
 	return c.Get(authenticatorContextKey).(authenticator)
 }
 
-func getIntOr404(c *echo.Context, name string) (int64, error) {
-	value, err := strconv.ParseInt(c.Param(name), 10, 64)
+func getIntOr404(c *echo.Context, name string) (int, error) {
+	value, err := strconv.Atoi(c.Param(name))
 	if err != nil {
 		return value, echo.NewHTTPError(http.StatusNotFound)
 	}
 	return value, nil
 }
 
-func getPage(c *echo.Context) int64 {
+func getPage(c *echo.Context) int {
 	value := c.Form("page")
 	if value == "" {
 		return 1
 	}
-	page, err := strconv.ParseInt(value, 10, 64)
+	page, err := strconv.Atoi(value)
 	if err != nil {
 		page = 1
 	}
@@ -198,7 +198,7 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 	}
 
 	cookieStore := getCookieStore(c)
-	var userID int64
+	var userID int
 
 	if err := cookieStore.Read(c, userCookieKey, &userID); err != nil {
 		return nil, nil

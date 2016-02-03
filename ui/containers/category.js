@@ -116,7 +116,7 @@ export class Category extends React.Component {
             <ChannelItem
               key={channel.id}
               channel={channel}
-              isLoggedIn
+              isLoggedIn={this.props.isLoggedIn}
               subscribe={toggleSubscribe}
             />
           );
@@ -134,6 +134,7 @@ Category.propTypes = {
   dispatch: PropTypes.func.isRequired,
   page: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
   unfilteredChannels: PropTypes.array.isRequired,
 };
 
@@ -146,6 +147,7 @@ const mapStateToProps = state => {
     channelsSelector(state), {
       isLoading: state.channels.isLoading,
       category: categorySelector(state),
+      isLoggedIn: state.auth.isLoggedIn,
     });
 };
 

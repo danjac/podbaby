@@ -7,16 +7,16 @@ import (
 
 type UserWriter interface {
 	Create(DataHandler, *models.User) error
-	UpdateEmail(DataHandler, string, int64) error
-	UpdatePassword(DataHandler, string, int64) error
-	DeleteUser(DataHandler, int64) error
+	UpdateEmail(DataHandler, string, int) error
+	UpdatePassword(DataHandler, string, int) error
+	DeleteUser(DataHandler, int) error
 }
 
 type UserReader interface {
-	GetByID(DataHandler, *models.User, int64) error
+	GetByID(DataHandler, *models.User, int) error
 	GetByNameOrEmail(DataHandler, *models.User, string) error
 	IsName(DataHandler, string) (bool, error)
-	IsEmail(DataHandler, string, int64) (bool, error)
+	IsEmail(DataHandler, string, int) (bool, error)
 }
 
 type UserStore interface {
@@ -39,13 +39,13 @@ func newUserStore() UserStore {
 
 type userSqlWriter struct{}
 
-func (w *userSqlWriter) UpdateEmail(dh DataHandler, email string, userID int64) error {
+func (w *userSqlWriter) UpdateEmail(dh DataHandler, email string, userID int) error {
 	q := "UPDATE users SET email=$1 WHERE id=$2"
 	_, err := dh.Exec(q, email, userID)
 	return err
 }
 
-func (w *userSqlWriter) UpdatePassword(dh DataHandler, password string, userID int64) error {
+func (w *userSqlWriter) UpdatePassword(dh DataHandler, password string, userID int) error {
 	q := "UPDATE users SET password=$1 WHERE id=$2"
 	_, err := dh.Exec(q, password, userID)
 	return err
@@ -59,7 +59,7 @@ func (w *userSqlWriter) Create(dh DataHandler, user *models.User) error {
 	return dh.QueryRowx(dh.Rebind(q), args...).Scan(&user.ID)
 }
 
-func (w *userSqlWriter) DeleteUser(dh DataHandler, userID int64) error {
+func (w *userSqlWriter) DeleteUser(dh DataHandler, userID int) error {
 	q := "DELETE FROM users WHERE id=$1"
 	_, err := dh.Exec(q, userID)
 	return err
@@ -67,7 +67,7 @@ func (w *userSqlWriter) DeleteUser(dh DataHandler, userID int64) error {
 
 type userSqlReader struct{}
 
-func (r *userSqlReader) GetByID(dh DataHandler, user *models.User, id int64) error {
+func (r *userSqlReader) GetByID(dh DataHandler, user *models.User, id int) error {
 	q := "SELECT * FROM users WHERE id=$1"
 	return sqlx.Get(dh, user, q, id)
 }
@@ -79,7 +79,7 @@ func (r *userSqlReader) GetByNameOrEmail(dh DataHandler, user *models.User, iden
 
 func (r *userSqlReader) IsName(dh DataHandler, name string) (bool, error) {
 	q := "SELECT COUNT(id) FROM users WHERE name=$1"
-	var count int64
+	var count int
 	if err := dh.QueryRowx(q, name).Scan(&count); err != nil {
 		return false, err
 	}
@@ -87,7 +87,7 @@ func (r *userSqlReader) IsName(dh DataHandler, name string) (bool, error) {
 
 }
 
-func (r *userSqlReader) IsEmail(dh DataHandler, email string, userID int64) (bool, error) {
+func (r *userSqlReader) IsEmail(dh DataHandler, email string, userID int) (bool, error) {
 
 	q := "SELECT COUNT(id) FROM users WHERE email ILIKE $1"
 	args := []interface{}{email}
@@ -97,7 +97,7 @@ func (r *userSqlReader) IsEmail(dh DataHandler, email string, userID int64) (boo
 		args = append(args, userID)
 	}
 
-	var count int64
+	var count int
 
 	if err := dh.QueryRowx(q, args...).Scan(&count); err != nil {
 		return false, err
