@@ -8,6 +8,7 @@ import (
 
 const (
 	defaultPort            = 5000
+	defaultDBConnections   = 99
 	defaultStaticURL       = "/static/"
 	defaultStaticDir       = "./static/"
 	defaultTemplateDir     = "./templates"
@@ -29,6 +30,7 @@ func New() *Config {
 		},
 		Env:               "prod",
 		Port:              defaultPort,
+		MaxDBConnections:  defaultDBConnections,
 		StaticDir:         defaultStaticDir,
 		StaticURL:         defaultStaticURL,
 		TemplateDir:       defaultTemplateDir,
@@ -74,8 +76,9 @@ type MailConfig struct {
 
 // Config is server configuration
 type Config struct {
-	Mail *MailConfig
-	Port int
+	Mail             *MailConfig
+	Port             int
+	MaxDBConnections int
 	Env,
 	DatabaseURL,
 	StaticURL,

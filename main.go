@@ -52,6 +52,13 @@ func main() {
 					Usage:       "Server port",
 					Destination: &cfg.Port,
 				},
+				cli.IntFlag{
+					Name:        "max-db-conns",
+					Value:       99,
+					EnvVar:      "MAx_DB_CONNECTIONS",
+					Usage:       "Maximum database connections",
+					Destination: &cfg.MaxDBConnections,
+				},
 				cli.StringFlag{
 					Name:        "env",
 					Value:       "prod",
@@ -108,6 +115,13 @@ func main() {
 					EnvVar:      "DB_URL",
 					Usage:       "Database connection URL",
 					Destination: &cfg.DatabaseURL,
+				},
+				cli.IntFlag{
+					Name:        "max-db-conns",
+					Value:       99,
+					EnvVar:      "MAx_DB_CONNECTIONS",
+					Usage:       "Maximum database connections",
+					Destination: &cfg.MaxDBConnections,
 				},
 			},
 			Action: func(c *cli.Context) {

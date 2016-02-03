@@ -128,6 +128,8 @@ func New(cfg *config.Config) (Store, error) {
 	if err != nil {
 		return nil, err
 	}
+	//db.SetMaxIdleConns(0)
+	db.SetMaxOpenConns(cfg.MaxDBConnections)
 	return newSqlStore(db), nil
 }
 

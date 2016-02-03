@@ -6,7 +6,6 @@ import (
 	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
 	"log"
-	"sync"
 	"time"
 )
 
@@ -23,21 +22,23 @@ func fetchChannel(channel *models.Channel, store store.Store, f feedparser.Feedp
 	}
 
 	defer func() {
-		_ = tx.Rollback()
+		if err != nil {
+			tx.Rollback()
+		}
 	}()
 
-	if err := f.Fetch(channel); err != nil {
+	if err = f.Fetch(channel); err != nil {
 		return err
 	}
 
-	if err := channelStore.AddCategories(tx, channel); err != nil {
+	if err = channelStore.AddCategories(tx, channel); err != nil {
 		return err
 	}
 
-	if err := channelStore.AddPodcasts(tx, channel); err != nil {
+	if err = channelStore.AddPodcasts(tx, channel); err != nil {
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		return err
 	}
 	return nil
@@ -70,21 +71,13 @@ func Fetch(cfg *config.Config) {
 
 	f := feedparser.New()
 
-	var wg sync.WaitGroup
-
-	wg.Add(numChannels)
-
 	for _, channel := range channels {
 
-		go func(channel models.Channel) {
-			defer wg.Done()
-			if err := fetchChannel(&channel, store, f); err != nil {
-				log.Printf("Error fetching channel %s: %v", channel.Title, err)
-			}
-		}(channel)
+		if err := fetchChannel(&channel, store, f); err != nil {
+			log.Printf("Error fetching channel %s: %v", channel.Title, err)
+		}
 
 	}
-	wg.Wait()
 	log.Printf("Fetch completed, %d channels fetched in %v", numChannels, time.Since(start))
 
 }
