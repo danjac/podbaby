@@ -136,7 +136,7 @@ func getSubscriptions(c *echo.Context) error {
 func addChannel(c *echo.Context) error {
 
 	var (
-		validator    = newValidator(c)
+		v            = newValidator(c)
 		store        = getStore(c)
 		conn         = store.Conn()
 		channelStore = store.Channels()
@@ -146,7 +146,7 @@ func addChannel(c *echo.Context) error {
 
 	decoder := &newChannelDecoder{}
 
-	if ok, err := validator.validate(decoder); !ok {
+	if ok, err := v.handle(decoder); !ok {
 		return err
 	}
 
@@ -178,7 +178,7 @@ func addChannel(c *echo.Context) error {
 
 		if err := f.Fetch(channel); err != nil {
 			if err == feedparser.ErrInvalidFeed {
-				return validator.invalid(
+				return v.invalid(
 					"url",
 					"Sorry, we were unable to handle this feed, or the feed did not appear to contain any podcasts.",
 				).render()

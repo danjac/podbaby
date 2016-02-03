@@ -31,23 +31,24 @@ func generateRandomPassword() string {
 func recoverPassword(c *echo.Context) error {
 
 	var (
-		validator = newValidator(c)
+		v         = newValidator(c)
 		store     = getStore(c)
 		userStore = store.Users()
 		conn      = store.Conn()
 	)
 
 	decoder := &recoverPasswordDecoder{}
-
-	if ok, err := validator.validate(decoder); !ok {
-		return err
-	}
-
 	user := &models.User{}
-	if err := userStore.GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
-		if err == sql.ErrNoRows {
-			return validator.invalid("identifier", "No user found matching this email or name").render()
+
+	if ok, err := v.handleFunc(decoder, func(v *validator) error {
+		if err := userStore.GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
+			if err == sql.ErrNoRows {
+				v.invalid("identifier", "No user found matching this email or name")
+			}
+			return err
 		}
+		return nil
+	}); !ok {
 		return err
 	}
 
@@ -130,7 +131,7 @@ func isEmail(c *echo.Context) error {
 func signup(c *echo.Context) error {
 
 	var (
-		validator   = newValidator(c)
+		v           = newValidator(c)
 		cookieStore = getCookieStore(c)
 		store       = getStore(c)
 		userStore   = store.Users()
@@ -138,20 +139,17 @@ func signup(c *echo.Context) error {
 	)
 	decoder := &signupDecoder{}
 
-	if ok, err := validator.validate(decoder); !ok {
+	if ok, err := v.handleFunc(decoder, func(v *validator) error {
+		if exists, _ := userStore.IsEmail(conn, decoder.Email, 0); exists {
+			v.invalid("email", "This email address is taken")
+		}
+
+		if exists, _ := userStore.IsName(conn, decoder.Name); exists {
+			v.invalid("name", "This name is taken")
+		}
+		return nil
+	}); !ok {
 		return err
-	}
-
-	if exists, _ := userStore.IsEmail(conn, decoder.Email, 0); exists {
-		validator.invalid("email", "This email address is taken")
-	}
-
-	if exists, _ := userStore.IsName(conn, decoder.Name); exists {
-		validator.invalid("name", "This name is taken")
-	}
-
-	if !validator.ok() {
-		return validator.render()
 	}
 
 	// make new user
@@ -179,29 +177,32 @@ func signup(c *echo.Context) error {
 func login(c *echo.Context) error {
 
 	var (
-		validator   = newValidator(c)
+		v           = newValidator(c)
 		cookieStore = getCookieStore(c)
 		store       = getStore(c)
 		conn        = store.Conn()
 	)
 
 	decoder := &loginDecoder{}
-
-	if ok, err := validator.validate(decoder); !ok {
-		return err
-	}
-
 	user := &models.User{}
 
-	if err := store.Users().GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
-		if err == sql.ErrNoRows {
-			return validator.invalid("identifier", "No user found matching this name or email").render()
+	if ok, err := v.handleFunc(decoder, func(v *validator) error {
+		if err := store.Users().GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
+			if err == sql.ErrNoRows {
+				v.invalid("identifier", "No user found matching this name or email")
+			} else {
+				return err
+			}
 		}
-		return err
-	}
 
-	if !user.CheckPassword(decoder.Password) {
-		return validator.invalid("password", "Your password is invalid").render()
+		if !user.CheckPassword(decoder.Password) {
+			v.invalid("password", "Your password is invalid")
+		}
+
+		return nil
+
+	}); !ok {
+		return err
 	}
 
 	// get bookmarks & subscriptions
@@ -231,7 +232,7 @@ func logout(c *echo.Context) error {
 func changeEmail(c *echo.Context) error {
 
 	var (
-		validator = newValidator(c)
+		v         = newValidator(c)
 		user      = getUser(c)
 		store     = getStore(c)
 		userStore = store.Users()
@@ -240,12 +241,14 @@ func changeEmail(c *echo.Context) error {
 
 	decoder := &changeEmailDecoder{}
 
-	if ok, err := validator.validate(decoder); !ok {
-		return err
-	}
+	if ok, err := v.handleFunc(decoder, func(v *validator) error {
+		if exists, _ := userStore.IsEmail(conn, decoder.Email, user.ID); exists {
+			v.invalid("email", "This email address is taken")
+		}
+		return nil
 
-	if exists, _ := userStore.IsEmail(conn, decoder.Email, user.ID); exists {
-		return validator.invalid("email", "This email address is taken").render()
+	}); !ok {
+		return err
 	}
 
 	if err := userStore.UpdateEmail(conn, decoder.Email, user.ID); err != nil {
@@ -258,21 +261,24 @@ func changeEmail(c *echo.Context) error {
 func changePassword(c *echo.Context) error {
 
 	var (
-		validator = newValidator(c)
-		user      = getUser(c)
-		store     = getStore(c)
+		v     = newValidator(c)
+		user  = getUser(c)
+		store = getStore(c)
 	)
 
 	decoder := &changePasswordDecoder{}
-	if ok, err := validator.validate(decoder); !ok {
+	if ok, err := v.handleFunc(decoder, func(v *validator) error {
+		if !user.CheckPassword(decoder.OldPassword) {
+			v.invalid("oldPassword", "Your old password was not recognized")
+		}
+		return nil
+
+	}); !ok {
 		return err
 	}
 
 	// validate old password first
 
-	if !user.CheckPassword(decoder.OldPassword) {
-		return validator.invalid("oldPassword", "Your old password was not recognized").render()
-	}
 	user.SetPassword(decoder.NewPassword)
 
 	if err := store.Users().UpdatePassword(store.Conn(), user.Password, user.ID); err != nil {

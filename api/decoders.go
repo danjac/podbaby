@@ -37,7 +37,8 @@ func (v *validator) ok() bool {
 	return len(v.errors) == 0
 }
 
-func (v *validator) validate(d decoder) (bool, error) {
+// if validation fails will render error map
+func (v *validator) handle(d decoder) (bool, error) {
 	if err := v.context.Bind(d); err != nil {
 		return false, err
 	}
@@ -45,6 +46,27 @@ func (v *validator) validate(d decoder) (bool, error) {
 		return false, v.render()
 	}
 	return true, nil
+}
+
+type validatorFn func(*validator) error
+
+// works like handle, but allows you to run a post-validation function
+// e.g. if you need to do some database checking etc inside a handler.
+func (v *validator) handleFunc(d decoder, fn validatorFn) (bool, error) {
+	if ok, err := v.handle(d); !ok {
+		return false, err
+	}
+
+	if err := fn(v); err != nil {
+		return false, err
+	}
+
+	if !v.ok() {
+		return false, v.render()
+	}
+
+	return true, nil
+
 }
 
 type decoder interface {
