@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	userCookieKey           = "userid"
+	userSessionKey          = "userid"
 	userContextKey          = "user"
 	storeContextKey         = "store"
 	feedparserContextKey    = "feedparser"
@@ -199,7 +199,7 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 	session := getSession(c)
 	var userID int
 
-	if err := session.Read(c, userCookieKey, &userID); err != nil {
+	if err := session.Read(c, userSessionKey, &userID); err != nil {
 		return nil, nil
 	}
 
