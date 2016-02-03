@@ -1,13 +1,13 @@
 package api
 
 import (
-	"database/sql"
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/store"
 )
 
 func init() {
@@ -32,9 +32,9 @@ func recoverPassword(c *echo.Context) error {
 
 	var (
 		v         = newValidator(c)
-		store     = getStore(c)
-		userStore = store.Users()
-		conn      = store.Conn()
+		s         = getStore(c)
+		userStore = s.Users()
+		conn      = s.Conn()
 	)
 
 	decoder := &recoverPasswordDecoder{}
@@ -42,7 +42,7 @@ func recoverPassword(c *echo.Context) error {
 
 	if ok, err := v.handleFunc(decoder, func(v *validator) error {
 		if err := userStore.GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
-			if err == sql.ErrNoRows {
+			if err == store.ErrNoRows {
 				v.invalid("identifier", "No user found matching this email or name")
 			}
 			return err
@@ -87,7 +87,7 @@ func isName(c *echo.Context) error {
 	var (
 		err    error
 		exists bool
-		store  = getStore(c)
+		s      = getStore(c)
 	)
 
 	name := c.Form("name")
@@ -95,7 +95,7 @@ func isName(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
-	if exists, err = store.Users().IsName(store.Conn(), name); err != nil {
+	if exists, err = s.Users().IsName(s.Conn(), name); err != nil {
 		return err
 	}
 
@@ -107,7 +107,7 @@ func isEmail(c *echo.Context) error {
 		err    error
 		exists bool
 		userID int
-		store  = getStore(c)
+		s      = getStore(c)
 	)
 
 	email := c.Form("email")
@@ -120,7 +120,7 @@ func isEmail(c *echo.Context) error {
 		userID = user.ID
 	}
 
-	if exists, err = store.Users().IsEmail(store.Conn(), email, userID); err != nil {
+	if exists, err = s.Users().IsEmail(s.Conn(), email, userID); err != nil {
 		return err
 	}
 
@@ -133,9 +133,9 @@ func signup(c *echo.Context) error {
 	var (
 		v           = newValidator(c)
 		cookieStore = getCookieStore(c)
-		store       = getStore(c)
-		userStore   = store.Users()
-		conn        = store.Conn()
+		s           = getStore(c)
+		userStore   = s.Users()
+		conn        = s.Conn()
 	)
 	decoder := &signupDecoder{}
 
@@ -179,16 +179,16 @@ func login(c *echo.Context) error {
 	var (
 		v           = newValidator(c)
 		cookieStore = getCookieStore(c)
-		store       = getStore(c)
-		conn        = store.Conn()
+		s           = getStore(c)
+		conn        = s.Conn()
 	)
 
 	decoder := &loginDecoder{}
 	user := &models.User{}
 
 	if ok, err := v.handleFunc(decoder, func(v *validator) error {
-		if err := store.Users().GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
-			if err == sql.ErrNoRows {
+		if err := s.Users().GetByNameOrEmail(conn, user, decoder.Identifier); err != nil {
+			if err == store.ErrNoRows {
 				v.invalid("identifier", "No user found matching this name or email")
 			} else {
 				return err
@@ -206,13 +206,13 @@ func login(c *echo.Context) error {
 	}
 
 	// get bookmarks & subscriptions
-	if err := store.Bookmarks().SelectByUserID(conn, &user.Bookmarks, user.ID); err != nil {
+	if err := s.Bookmarks().SelectByUserID(conn, &user.Bookmarks, user.ID); err != nil {
 		return err
 	}
-	if err := store.Subscriptions().SelectByUserID(conn, &user.Subscriptions, user.ID); err != nil {
+	if err := s.Subscriptions().SelectByUserID(conn, &user.Subscriptions, user.ID); err != nil {
 		return err
 	}
-	if err := store.Plays().SelectByUserID(conn, &user.Plays, user.ID); err != nil {
+	if err := s.Plays().SelectByUserID(conn, &user.Plays, user.ID); err != nil {
 		return err
 	}
 	// login user
@@ -234,9 +234,9 @@ func changeEmail(c *echo.Context) error {
 	var (
 		v         = newValidator(c)
 		user      = getUser(c)
-		store     = getStore(c)
-		userStore = store.Users()
-		conn      = store.Conn()
+		s         = getStore(c)
+		userStore = s.Users()
+		conn      = s.Conn()
 	)
 
 	decoder := &changeEmailDecoder{}
@@ -261,9 +261,9 @@ func changeEmail(c *echo.Context) error {
 func changePassword(c *echo.Context) error {
 
 	var (
-		v     = newValidator(c)
-		user  = getUser(c)
-		store = getStore(c)
+		v    = newValidator(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
 	decoder := &changePasswordDecoder{}
@@ -281,7 +281,7 @@ func changePassword(c *echo.Context) error {
 
 	user.SetPassword(decoder.NewPassword)
 
-	if err := store.Users().UpdatePassword(store.Conn(), user.Password, user.ID); err != nil {
+	if err := s.Users().UpdatePassword(s.Conn(), user.Password, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusOK)
@@ -290,11 +290,11 @@ func changePassword(c *echo.Context) error {
 func deleteAccount(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
-	if err := store.Users().DeleteUser(store.Conn(), user.ID); err != nil {
+	if err := s.Users().DeleteUser(s.Conn(), user.ID); err != nil {
 		return err
 	}
 

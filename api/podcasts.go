@@ -22,8 +22,8 @@ func getPodcast(c *echo.Context) error {
 	podcast := &models.Podcast{}
 
 	if err := cache.Get(key, timeout, podcast, func() error {
-		store := getStore(c)
-		return store.Podcasts().GetByID(store.Conn(), podcast, podcastID)
+		s := getStore(c)
+		return s.Podcasts().GetByID(s.Conn(), podcast, podcastID)
 	}); err != nil {
 		return err
 	}
@@ -37,9 +37,9 @@ func getLatestPodcasts(c *echo.Context) error {
 		err          error
 		result       = &models.PodcastList{}
 		page         = getPage(c)
-		store        = getStore(c)
-		conn         = store.Conn()
-		podcastStore = store.Podcasts()
+		s            = getStore(c)
+		conn         = s.Conn()
+		podcastStore = s.Podcasts()
 	)
 
 	user, err := authenticate(c)

@@ -9,8 +9,8 @@ import (
 func addPlay(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
 	podcastID, err := getIntOr404(c, "id")
@@ -18,7 +18,7 @@ func addPlay(c *echo.Context) error {
 		return err
 	}
 
-	if err := store.Plays().Create(store.Conn(), podcastID, user.ID); err != nil {
+	if err := s.Plays().Create(s.Conn(), podcastID, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusCreated)
@@ -28,11 +28,11 @@ func getPlays(c *echo.Context) error {
 
 	var (
 		user   = getUser(c)
-		store  = getStore(c)
+		s      = getStore(c)
 		result = &models.PodcastList{}
 	)
 
-	if err := store.Podcasts().SelectPlayed(store.Conn(), result, user.ID, getPage(c)); err != nil {
+	if err := s.Podcasts().SelectPlayed(s.Conn(), result, user.ID, getPage(c)); err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, result)
@@ -40,11 +40,11 @@ func getPlays(c *echo.Context) error {
 
 func deleteAllPlays(c *echo.Context) error {
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
-	if err := store.Plays().DeleteAll(store.Conn(), user.ID); err != nil {
+	if err := s.Plays().DeleteAll(s.Conn(), user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusNoContent)

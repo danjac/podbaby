@@ -35,7 +35,7 @@ type playSqlReader struct{}
 
 func (r *playSqlReader) SelectByUserID(dh DataHandler, plays *[]models.Play, userID int) error {
 	q := "SELECT podcast_id, created_at FROM plays WHERE user_id=$1"
-	return sqlx.Select(dh, plays, q, userID)
+	return handleError(sqlx.Select(dh, plays, q, userID), q)
 }
 
 type playSqlWriter struct{}
@@ -43,11 +43,11 @@ type playSqlWriter struct{}
 func (w *playSqlWriter) Create(dh DataHandler, podcastID, userID int) error {
 	q := "SELECT add_play($1, $2)"
 	_, err := dh.Exec(q, podcastID, userID)
-	return err
+	return handleError(err, q)
 }
 
 func (w *playSqlWriter) DeleteAll(dh DataHandler, userID int) error {
 	q := "DELETE FROM plays WHERE user_id=$1"
 	_, err := dh.Exec(q, userID)
-	return err
+	return handleError(err, q)
 }

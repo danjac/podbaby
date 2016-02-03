@@ -48,7 +48,7 @@ type channelSqlReader struct{}
 
 func (r *channelSqlReader) SelectAll(dh DataHandler, channels *[]models.Channel) error {
 	q := "SELECT id, title, description, url, image, website, num_podcasts FROM channels"
-	return sqlx.Select(dh, channels, q)
+	return handleError(sqlx.Select(dh, channels, q), q)
 }
 
 func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models.Channel, categoryID int) error {
@@ -60,7 +60,7 @@ func (r *channelSqlReader) SelectByCategoryID(dh DataHandler, channels *[]models
     WHERE cc.category_id=$1
     GROUP BY c.id
     ORDER BY c.title`
-	return sqlx.Select(dh, channels, q, categoryID)
+	return handleError(sqlx.Select(dh, channels, q, categoryID), q)
 }
 
 func (r *channelSqlReader) SelectRelated(dh DataHandler, channels *[]models.Channel, channelID int) error {
@@ -74,7 +74,7 @@ func (r *channelSqlReader) SelectRelated(dh DataHandler, channels *[]models.Chan
     GROUP BY c.id
     ORDER BY RANDOM() DESC LIMIT 3`
 
-	return sqlx.Select(dh, channels, q, channelID)
+	return handleError(sqlx.Select(dh, channels, q, channelID), q)
 }
 
 func (r *channelSqlReader) SelectRecommended(dh DataHandler, channels *[]models.Channel) error {
@@ -85,7 +85,7 @@ func (r *channelSqlReader) SelectRecommended(dh DataHandler, channels *[]models.
     GROUP BY c.id
     ORDER BY COUNT(DISTINCT(s.id)) DESC LIMIT $1
     `
-	return sqlx.Select(dh, channels, q, maxRecommendations)
+	return handleError(sqlx.Select(dh, channels, q, maxRecommendations), q)
 }
 
 func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, channels *[]models.Channel, userID int) error {
@@ -102,7 +102,7 @@ func (r *channelSqlReader) SelectRecommendedByUserID(dh DataHandler, channels *[
     GROUP BY c.id
     ORDER BY RANDOM()
     LIMIT $2`
-	return sqlx.Select(dh, channels, q, userID, maxRecommendations)
+	return handleError(sqlx.Select(dh, channels, q, userID, maxRecommendations), q)
 }
 
 func (r *channelSqlReader) SelectSubscribed(dh DataHandler, channels *[]models.Channel, userID int) error {
@@ -114,7 +114,7 @@ func (r *channelSqlReader) SelectSubscribed(dh DataHandler, channels *[]models.C
     WHERE s.user_id=$1 AND title IS NOT NULL AND title != ''
     GROUP BY c.id
     ORDER BY title`
-	return sqlx.Select(dh, channels, q, userID)
+	return handleError(sqlx.Select(dh, channels, q, userID), q)
 }
 
 func (r *channelSqlReader) Search(dh DataHandler, channels *[]models.Channel, query string) error {
@@ -124,7 +124,7 @@ func (r *channelSqlReader) Search(dh DataHandler, channels *[]models.Channel, qu
     FROM channels c, plainto_tsquery($1) as q
     WHERE (c.tsv @@ q)
     ORDER BY ts_rank_cd(c.tsv, plainto_tsquery($1)) DESC LIMIT 20`
-	return sqlx.Select(dh, channels, q, query)
+	return handleError(sqlx.Select(dh, channels, q, query), q)
 }
 
 func (r *channelSqlReader) GetByURL(dh DataHandler, channel *models.Channel, url string) error {
@@ -132,7 +132,7 @@ func (r *channelSqlReader) GetByURL(dh DataHandler, channel *models.Channel, url
     SELECT id, title, description, url, image, website, num_podcasts
     FROM channels
     WHERE url=$1`
-	return sqlx.Get(dh, channel, q, url)
+	return handleError(sqlx.Get(dh, channel, q, url), q)
 }
 
 func (r *channelSqlReader) GetByID(dh DataHandler, channel *models.Channel, id int) error {
@@ -140,7 +140,7 @@ func (r *channelSqlReader) GetByID(dh DataHandler, channel *models.Channel, id i
     SELECT c.id, c.title, c.description, c.url, c.image, c.website, c.num_podcasts
     FROM channels c
     WHERE id=$1`
-	return sqlx.Get(dh, channel, q, id)
+	return handleError(sqlx.Get(dh, channel, q, id), q)
 }
 
 type channelSqlWriter struct{}
@@ -161,7 +161,7 @@ func (w *channelSqlWriter) Create(dh DataHandler, ch *models.Channel) error {
 		return err
 	}
 
-	return dh.QueryRowx(dh.Rebind(q), args...).Scan(&ch.ID)
+	return handleError(dh.QueryRowx(dh.Rebind(q), args...).Scan(&ch.ID), q)
 }
 
 func (w *channelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel) error {
@@ -180,7 +180,7 @@ func (w *channelSqlWriter) AddCategories(dh DataHandler, channel *models.Channel
 
 	q := fmt.Sprintf("SELECT add_categories ($1, ARRAY[%s])", strings.Join(params, ", "))
 	_, err := dh.Exec(q, args...)
-	return err
+	return handleError(err, q)
 }
 
 func (w *channelSqlWriter) AddPodcasts(dh DataHandler, channel *models.Channel) error {
@@ -198,14 +198,14 @@ func (w *channelSqlWriter) AddPodcasts(dh DataHandler, channel *models.Channel) 
 	defer stmt.Close()
 
 	if err != nil {
-		return err
+		return handleError(err, q)
 	}
 
 	for _, pc := range channel.Podcasts {
 		pc.ChannelID = channel.ID
 		err = stmt.QueryRowx(&pc).Scan(&pc.ID)
 		if err != nil {
-			return err
+			return handleError(err, q)
 		}
 	}
 	return nil

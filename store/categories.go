@@ -32,7 +32,7 @@ func (r *categorySqlReader) SelectAll(dh DataHandler, categories *[]models.Categ
     FROM categories 
     WHERE id IN (SELECT category_id FROM channels_categories)
     ORDER BY name`
-	return sqlx.Select(dh, categories, q)
+	return handleError(sqlx.Select(dh, categories, q), q)
 }
 
 func (r *categorySqlReader) SelectByChannelID(dh DataHandler, categories *[]models.Category, channelID int) error {
@@ -42,5 +42,5 @@ func (r *categorySqlReader) SelectByChannelID(dh DataHandler, categories *[]mode
     WHERE cc.channel_id=$1
     GROUP BY c.id
     ORDER BY c.name`
-	return sqlx.Select(dh, categories, q, channelID)
+	return handleError(sqlx.Select(dh, categories, q, channelID), q)
 }

@@ -8,8 +8,8 @@ import (
 func subscribe(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
 	channelID, err := getIntOr404(c, "id")
@@ -17,7 +17,7 @@ func subscribe(c *echo.Context) error {
 		return err
 	}
 
-	if err := store.Subscriptions().Create(store.Conn(), channelID, user.ID); err != nil {
+	if err := s.Subscriptions().Create(s.Conn(), channelID, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusOK)
@@ -26,8 +26,8 @@ func subscribe(c *echo.Context) error {
 func unsubscribe(c *echo.Context) error {
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
 	channelID, err := getIntOr404(c, "id")
@@ -35,7 +35,7 @@ func unsubscribe(c *echo.Context) error {
 		return err
 	}
 
-	if err := store.Subscriptions().Delete(store.Conn(), channelID, user.ID); err != nil {
+	if err := s.Subscriptions().Delete(s.Conn(), channelID, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusOK)

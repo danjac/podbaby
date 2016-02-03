@@ -24,14 +24,14 @@ func searchAll(c *echo.Context) error {
 		if err := cache.Get(key, timeout, result, func() error {
 
 			var (
-				store = getStore(c)
-				conn  = store.Conn()
+				s    = getStore(c)
+				conn = s.Conn()
 			)
 
-			if err := store.Channels().Search(conn, &result.Channels, query); err != nil {
+			if err := s.Channels().Search(conn, &result.Channels, query); err != nil {
 				return err
 			}
-			if err := store.Podcasts().Search(conn, &result.Podcasts, query); err != nil {
+			if err := s.Podcasts().Search(conn, &result.Podcasts, query); err != nil {
 				return err
 			}
 
@@ -46,15 +46,15 @@ func searchAll(c *echo.Context) error {
 func searchBookmarks(c *echo.Context) error {
 
 	var (
-		store = getStore(c)
-		user  = getUser(c)
+		s    = getStore(c)
+		user = getUser(c)
 	)
 	query := strings.ToLower(strings.Trim(c.Form("q"), " "))
 
 	var podcasts []models.Podcast
 
 	if query != "" {
-		if err := store.Podcasts().SearchBookmarked(store.Conn(), &podcasts, query, user.ID); err != nil {
+		if err := s.Podcasts().SearchBookmarked(s.Conn(), &podcasts, query, user.ID); err != nil {
 			return err
 		}
 	}
@@ -76,8 +76,8 @@ func searchChannel(c *echo.Context) error {
 
 	if query != "" {
 		if err := getCache(c).Get(cacheKey, time.Minute*30, &podcasts, func() error {
-			store := getStore(c)
-			return store.Podcasts().SearchByChannelID(store.Conn(), &podcasts, query, channelID)
+			s := getStore(c)
+			return s.Podcasts().SearchByChannelID(s.Conn(), &podcasts, query, channelID)
 		}); err != nil {
 			return err
 		}

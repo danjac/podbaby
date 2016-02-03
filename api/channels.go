@@ -1,7 +1,6 @@
 package api
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 	"time"
@@ -9,6 +8,7 @@ import (
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/feedparser"
 	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/store"
 )
 
 func getChannelsByCategory(c *echo.Context) error {
@@ -26,8 +26,8 @@ func getChannelsByCategory(c *echo.Context) error {
 	)
 
 	if err := cache.Get(key, timeout, &channels, func() error {
-		store := getStore(c)
-		return store.Channels().SelectByCategoryID(store.Conn(), &channels, categoryID)
+		s := getStore(c)
+		return s.Channels().SelectByCategoryID(s.Conn(), &channels, categoryID)
 	}); err != nil {
 		return err
 	}
@@ -40,16 +40,16 @@ func getRecommendations(c *echo.Context) error {
 	var (
 		channels []models.Channel
 		err      error
-		store    = getStore(c)
-		conn     = store.Conn()
+		s        = getStore(c)
+		conn     = s.Conn()
 	)
 
 	user, _ := authenticate(c)
 	if user != nil {
-		err = store.Channels().SelectRecommendedByUserID(conn, &channels, user.ID)
+		err = s.Channels().SelectRecommendedByUserID(conn, &channels, user.ID)
 	} else {
 		err = getCache(c).Get("recommendations", time.Hour*24, &channels, func() error {
-			return store.Channels().SelectRecommended(conn, &channels)
+			return s.Channels().SelectRecommended(conn, &channels)
 		})
 	}
 
@@ -79,11 +79,11 @@ func getChannelDetail(c *echo.Context) error {
 	if err := cache.Get(key, timeout, detail, func() error {
 
 		var (
-			store         = getStore(c)
-			conn          = store.Conn()
-			channelStore  = store.Channels()
-			podcastStore  = store.Podcasts()
-			categoryStore = store.Categories()
+			s             = getStore(c)
+			conn          = s.Conn()
+			channelStore  = s.Channels()
+			podcastStore  = s.Podcasts()
+			categoryStore = s.Categories()
 		)
 
 		detail.Channel = &models.Channel{}
@@ -123,11 +123,11 @@ func getChannelDetail(c *echo.Context) error {
 
 func getSubscriptions(c *echo.Context) error {
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 	var channels []models.Channel
-	if err := store.Channels().SelectSubscribed(store.Conn(), &channels, user.ID); err != nil {
+	if err := s.Channels().SelectSubscribed(s.Conn(), &channels, user.ID); err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, channels)
@@ -137,9 +137,9 @@ func addChannel(c *echo.Context) error {
 
 	var (
 		v            = newValidator(c)
-		store        = getStore(c)
-		conn         = store.Conn()
-		channelStore = store.Channels()
+		s            = getStore(c)
+		conn         = s.Conn()
+		channelStore = s.Channels()
 		user         = getUser(c)
 		f            = getFeedparser(c)
 	)
@@ -154,7 +154,7 @@ func addChannel(c *echo.Context) error {
 	isNewChannel := false
 
 	if err := channelStore.GetByURL(conn, channel, decoder.URL); err != nil {
-		if err == sql.ErrNoRows {
+		if err == store.ErrNoRows {
 			isNewChannel = true
 		} else {
 			return err
@@ -200,7 +200,7 @@ func addChannel(c *echo.Context) error {
 
 	}
 
-	if err := store.Subscriptions().Create(tx, channel.ID, user.ID); err != nil {
+	if err := s.Subscriptions().Create(tx, channel.ID, user.ID); err != nil {
 		return err
 	}
 

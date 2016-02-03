@@ -10,12 +10,12 @@ func getBookmarks(c *echo.Context) error {
 
 	var (
 		user   = getUser(c)
-		store  = getStore(c)
+		s      = getStore(c)
 		result = &models.PodcastList{}
 	)
 
-	if err := store.Podcasts().SelectBookmarked(
-		store.Conn(),
+	if err := s.Podcasts().SelectBookmarked(
+		s.Conn(),
 		result,
 		user.ID,
 		getPage(c)); err != nil {
@@ -33,11 +33,11 @@ func addBookmark(c *echo.Context) error {
 	}
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
-	if err := store.Bookmarks().Create(store.Conn(), podcastID, user.ID); err != nil {
+	if err := s.Bookmarks().Create(s.Conn(), podcastID, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusCreated)
@@ -51,11 +51,11 @@ func removeBookmark(c *echo.Context) error {
 	}
 
 	var (
-		user  = getUser(c)
-		store = getStore(c)
+		user = getUser(c)
+		s    = getStore(c)
 	)
 
-	if err := store.Bookmarks().Delete(store.Conn(), podcastID, user.ID); err != nil {
+	if err := s.Bookmarks().Delete(s.Conn(), podcastID, user.ID); err != nil {
 		return err
 	}
 	return c.NoContent(http.StatusNoContent)

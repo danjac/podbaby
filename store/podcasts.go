@@ -45,7 +45,7 @@ func (r *podcastSqlReader) GetByID(dh DataHandler, podcast *models.Podcast, id i
     FROM podcasts p
     JOIN channels c ON c.id = p.channel_id
     WHERE p.id=$1`
-	return sqlx.Get(dh, podcast, q, id)
+	return handleError(sqlx.Get(dh, podcast, q, id), q)
 }
 
 func (r *podcastSqlReader) Search(dh DataHandler, podcasts *[]models.Podcast, query string) error {
@@ -55,7 +55,7 @@ func (r *podcastSqlReader) Search(dh DataHandler, podcasts *[]models.Podcast, qu
     FROM podcasts p, plainto_tsquery($1) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id
     ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1)) DESC LIMIT $2`
-	return sqlx.Select(dh, podcasts, q, query, maxSearchRows)
+	return handleError(sqlx.Select(dh, podcasts, q, query, maxSearchRows), q)
 }
 
 func (r *podcastSqlReader) SearchByChannelID(dh DataHandler, podcasts *[]models.Podcast, query string, channelID int) error {
@@ -66,7 +66,7 @@ func (r *podcastSqlReader) SearchByChannelID(dh DataHandler, podcasts *[]models.
     FROM podcasts p, plainto_tsquery($2) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id AND c.id=$1
     ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
-	return sqlx.Select(dh, podcasts, q, channelID, query, maxSearchRows)
+	return handleError(sqlx.Select(dh, podcasts, q, channelID, query, maxSearchRows), q)
 
 }
 
@@ -93,7 +93,7 @@ func (r *podcastSqlReader) SelectPlayed(dh DataHandler, result *models.PodcastLi
 	var numRows int
 
 	if err := dh.QueryRowx(q, userID).Scan(&numRows); err != nil {
-		return err
+		return handleError(err, q)
 	}
 
 	result.Page = models.NewPaginator(page, numRows)
@@ -113,13 +113,13 @@ func (r *podcastSqlReader) SelectPlayed(dh DataHandler, result *models.PodcastLi
     ORDER BY pl.created_at DESC
     OFFSET $2 LIMIT $3`
 
-	return sqlx.Select(
+	return handleError(sqlx.Select(
 		dh,
 		&result.Podcasts,
 		q,
 		userID,
 		result.Page.Offset,
-		result.Page.PageSize)
+		result.Page.PageSize), q)
 
 }
 
@@ -129,7 +129,7 @@ func (r *podcastSqlReader) SelectAll(dh DataHandler, result *models.PodcastList,
 	q := "SELECT reltuples::bigint AS count FROM pg_class WHERE oid = 'public.podcasts'::regclass"
 
 	if err := dh.QueryRowx(q).Scan(&numRows); err != nil {
-		return err
+		return handleError(err, q)
 	}
 
 	result.Page = models.NewPaginator(page, numRows)
@@ -146,12 +146,12 @@ func (r *podcastSqlReader) SelectAll(dh DataHandler, result *models.PodcastList,
     ORDER BY p.pub_date DESC
     OFFSET $1 LIMIT $2`
 
-	return sqlx.Select(
+	return handleError(sqlx.Select(
 		dh,
 		&result.Podcasts,
 		q,
 		result.Page.Offset,
-		result.Page.PageSize)
+		result.Page.PageSize), q)
 }
 
 func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, result *models.PodcastList, userID, page int) error {
@@ -184,13 +184,13 @@ func (r *podcastSqlReader) SelectSubscribed(dh DataHandler, result *models.Podca
     ORDER BY p.pub_date DESC
     OFFSET $2 LIMIT $3`
 
-	return sqlx.Select(
+	return handleError(sqlx.Select(
 		dh,
 		&result.Podcasts,
 		q,
 		userID,
 		result.Page.Offset,
-		result.Page.PageSize)
+		result.Page.PageSize), q)
 }
 
 func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, result *models.PodcastList, userID, page int) error {
@@ -200,7 +200,7 @@ func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, result *models.Podca
 	var numRows int
 
 	if err := dh.QueryRowx(q, userID).Scan(&numRows); err != nil {
-		return err
+		return handleError(err, q)
 	}
 
 	result.Page = models.NewPaginator(page, numRows)
@@ -220,13 +220,13 @@ func (r *podcastSqlReader) SelectBookmarked(dh DataHandler, result *models.Podca
     ORDER BY b.id DESC
     OFFSET $2 LIMIT $3`
 
-	return sqlx.Select(
+	return handleError(sqlx.Select(
 		dh,
 		&result.Podcasts,
 		q,
 		userID,
 		result.Page.Offset,
-		result.Page.PageSize)
+		result.Page.PageSize), q)
 }
 
 func (r *podcastSqlReader) SelectByChannel(dh DataHandler, result *models.PodcastList, channel *models.Channel, page int) error {
@@ -244,11 +244,11 @@ func (r *podcastSqlReader) SelectByChannel(dh DataHandler, result *models.Podcas
     ORDER BY pub_date DESC
     OFFSET $2 LIMIT $3`
 
-	return sqlx.Select(
+	return handleError(sqlx.Select(
 		dh,
 		&result.Podcasts,
 		q,
 		channel.ID,
 		result.Page.Offset,
-		result.Page.PageSize)
+		result.Page.PageSize), q)
 }

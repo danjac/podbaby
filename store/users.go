@@ -42,46 +42,46 @@ type userSqlWriter struct{}
 func (w *userSqlWriter) UpdateEmail(dh DataHandler, email string, userID int) error {
 	q := "UPDATE users SET email=$1 WHERE id=$2"
 	_, err := dh.Exec(q, email, userID)
-	return err
+	return handleError(err, q)
 }
 
 func (w *userSqlWriter) UpdatePassword(dh DataHandler, password string, userID int) error {
 	q := "UPDATE users SET password=$1 WHERE id=$2"
 	_, err := dh.Exec(q, password, userID)
-	return err
+	return handleError(err, q)
 }
 func (w *userSqlWriter) Create(dh DataHandler, user *models.User) error {
 	q := "INSERT INTO users(name, email, password) VALUES (:name, :email, :password) RETURNING id"
 	q, args, err := sqlx.Named(q, user)
 	if err != nil {
-		return err
+		return handleError(err, q)
 	}
-	return dh.QueryRowx(dh.Rebind(q), args...).Scan(&user.ID)
+	return handleError(dh.QueryRowx(dh.Rebind(q), args...).Scan(&user.ID), q)
 }
 
 func (w *userSqlWriter) DeleteUser(dh DataHandler, userID int) error {
 	q := "DELETE FROM users WHERE id=$1"
 	_, err := dh.Exec(q, userID)
-	return err
+	return handleError(err, q)
 }
 
 type userSqlReader struct{}
 
 func (r *userSqlReader) GetByID(dh DataHandler, user *models.User, id int) error {
 	q := "SELECT * FROM users WHERE id=$1"
-	return sqlx.Get(dh, user, q, id)
+	return handleError(sqlx.Get(dh, user, q, id), q)
 }
 
 func (r *userSqlReader) GetByNameOrEmail(dh DataHandler, user *models.User, identifier string) error {
 	q := "SELECT * FROM users WHERE email=$1 or name=$1"
-	return sqlx.Get(dh, user, q, identifier)
+	return handleError(sqlx.Get(dh, user, q, identifier), q)
 }
 
 func (r *userSqlReader) IsName(dh DataHandler, name string) (bool, error) {
 	q := "SELECT COUNT(id) FROM users WHERE name=$1"
 	var count int
 	if err := dh.QueryRowx(q, name).Scan(&count); err != nil {
-		return false, err
+		return false, handleError(err, q)
 	}
 	return count > 0, nil
 
@@ -100,7 +100,7 @@ func (r *userSqlReader) IsEmail(dh DataHandler, email string, userID int) (bool,
 	var count int
 
 	if err := dh.QueryRowx(q, args...).Scan(&count); err != nil {
-		return false, err
+		return false, handleError(err, q)
 	}
 	return count > 0, nil
 }

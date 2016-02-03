@@ -1,7 +1,6 @@
 package api
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/justinas/nosurf"
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
@@ -92,7 +91,7 @@ func Run(env *Env) error {
 	e.Use(func(h echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
 			err := h(c)
-			if err == sql.ErrNoRows {
+			if err == store.ErrNoRows {
 				return echo.NewHTTPError(http.StatusNotFound)
 			}
 			return err
@@ -208,10 +207,10 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 		return nil, nil
 	}
 
-	store := getStore(c)
+	s := getStore(c)
 	user := &models.User{}
-	if err := store.Users().GetByID(store.Conn(), user, userID); err != nil {
-		if err == sql.ErrNoRows {
+	if err := s.Users().GetByID(s.Conn(), user, userID); err != nil {
+		if err == store.ErrNoRows {
 			return nil, nil
 		}
 		return nil, err
