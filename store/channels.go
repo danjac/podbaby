@@ -195,6 +195,8 @@ func (w *channelSqlWriter) AddPodcasts(dh DataHandler, channel *models.Channel) 
         :pub_date)`
 
 	stmt, err := dh.PrepareNamed(dh.Rebind(q))
+	defer stmt.Close()
+
 	if err != nil {
 		return err
 	}
