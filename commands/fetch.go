@@ -6,6 +6,7 @@ import (
 	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -64,13 +65,21 @@ func Fetch(cfg *config.Config) {
 
 	f := feedparser.New()
 
+	var wg sync.WaitGroup
+
+	wg.Add(len(channels))
+
 	for _, channel := range channels {
 
-		if err := fetchChannel(&channel, store, f); err != nil {
-			continue
-		}
+		go func(channel *models.Channel) {
+			defer wg.Done()
+			if err := fetchChannel(channel, store, f); err != nil {
+				log.Printf("Error fetching channel: %v", err)
+			}
+		}(&channel)
 
 	}
+	wg.Wait()
 	log.Printf("Fetch completed, %d channels fetched in %v", numChannels, time.Since(start))
 
 }
