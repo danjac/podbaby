@@ -1,10 +1,10 @@
 package api
 
 import (
-	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/DATA-DOG/go-sqlmock"
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/models"
 	"github.com/danjac/podbaby/store"
+	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/DATA-DOG/go-sqlmock"
 	"net/http"
 	"net/http/httptest"
 	"strings"
