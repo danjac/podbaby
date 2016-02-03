@@ -158,7 +158,7 @@ func (w *channelSqlWriter) CreateOrUpdate(dh DataHandler, ch *models.Channel) er
 
 	q, args, err := sqlx.Named(q, ch)
 	if err != nil {
-		return err
+		return handleError(err, q)
 	}
 
 	if err := dh.QueryRowx(dh.Rebind(q), args...).Scan(&ch.ID); err != nil {
