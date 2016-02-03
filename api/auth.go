@@ -215,7 +215,6 @@ func login(c *echo.Context) error {
 		return err
 	}
 	// login user
-	c.Echo().Logger().Info("USERID:%v", user.ID)
 
 	if err := cookieStore.Write(c, userCookieKey, user.ID); err != nil {
 		return err

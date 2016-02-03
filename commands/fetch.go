@@ -17,9 +17,14 @@ func fetchChannel(channel *models.Channel, store store.Store, f feedparser.Feedp
 	channelStore := store.Channels()
 
 	tx, err := store.Conn().Begin()
+
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
 	if err := f.Fetch(channel); err != nil {
 		return err
@@ -67,16 +72,16 @@ func Fetch(cfg *config.Config) {
 
 	var wg sync.WaitGroup
 
-	wg.Add(len(channels))
+	wg.Add(numChannels)
 
 	for _, channel := range channels {
 
-		go func(channel *models.Channel) {
+		go func(channel models.Channel) {
 			defer wg.Done()
-			if err := fetchChannel(channel, store, f); err != nil {
-				log.Printf("Error fetching channel: %v", err)
+			if err := fetchChannel(&channel, store, f); err != nil {
+				log.Printf("Error fetching channel %s: %v", channel.Title, err)
 			}
-		}(&channel)
+		}(channel)
 
 	}
 	wg.Wait()
