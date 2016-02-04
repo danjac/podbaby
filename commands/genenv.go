@@ -69,9 +69,11 @@ func genenv(dst string) error {
 
 	pgHost := readLine("PostgreSQL Host (localhost:5432)?", "localhost:5432", true)
 
+	pgName := readLine("PostgreSQL database name?", "podbaby", true)
 	pgUser := readLine("PostgreSQL User?", "", false)
-	pgName := readLine("PostgreSQL Database (podbaby)", "podbaby", true)
 	pgPass := readSecret("PostgreSQL Password?", "", false)
+
+	pgDisable := readLine("PostgreSQL SSL enabled (Y/N)", "N", false)
 
 	smtpHost := readLine("SMTP Host? (localhost)", "localhost", true)
 	smtpUser := readLine("SMTP User?", "", false)
@@ -82,8 +84,12 @@ func genenv(dst string) error {
 
 	gaKey := readLine("Google analytics key?", "", false)
 
-	dbURL := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
+	dbURL := fmt.Sprintf("postgres://%s:%s@%s/%s",
 		pgUser, pgPass, pgHost, pgName)
+
+	if strings.ToLower(pgDisable) == "n" {
+		dbURL += "?sslmode=disable"
+	}
 
 	cfg := config.Default()
 	cfg.DatabaseURL = dbURL
@@ -96,10 +102,14 @@ func genenv(dst string) error {
 
 	t, err := template.New("env").Parse(`
 DB_URL="{{.DatabaseURL}}"
-GOOGLE_ANALYTICS_ID="{{.GoogleAnalyticsID}}"
 MAX_DB_CONNECTIONS="{{.MaxDBConnections}}"
+GOOGLE_ANALYTICS_ID="{{.GoogleAnalyticsID}}"
 SECRET_KEY="{{.SecretKey}}"
 SECURE_COOKIE_KEY="{{.SecureCookieKey}}"
+MAIL_ADDR="{{.Mail.Addr}}"
+MAIL_HOST="{{.Mail.Host}}"
+MAIL_USER="{{.Mail.User}}"
+MAIL_PASSWORD="{{.Mail.Password}}"
 `)
 	if err != nil {
 		return err
