@@ -72,8 +72,9 @@ func Fetch(cfg *config.Config) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer s.Close()
+
 	conn := s.Conn()
-	defer conn.Close()
 
 	var channels []models.Channel
 	if err := s.Channels().SelectAll(conn, &channels); err != nil {

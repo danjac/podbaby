@@ -37,6 +37,7 @@ type Transaction interface {
 }
 
 type Store interface {
+	Close() error
 	Conn() Connection
 	Users() UserStore
 	Channels() ChannelStore
@@ -60,6 +61,10 @@ type sqlStore struct {
 
 type sqlConnection struct {
 	*sqlx.DB
+}
+
+func (store *sqlStore) Close() error {
+	return store.conn.Close()
 }
 
 func (store *sqlStore) Conn() Connection {

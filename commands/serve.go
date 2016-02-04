@@ -18,7 +18,7 @@ func Serve(cfg *config.Config) {
 		log.Fatalln(err)
 	}
 
-	defer store.Conn().Close()
+	defer store.Close()
 
 	mailer, err := mailer.New(cfg)
 	if err != nil {

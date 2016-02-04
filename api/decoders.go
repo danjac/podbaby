@@ -91,8 +91,8 @@ type signupDecoder struct {
 
 func (d *signupDecoder) decode(v *validator) {
 
-	d.Name = strings.Trim(d.Name, " ")
-	d.Email = strings.ToLower(strings.Trim(d.Email, " "))
+	d.Name = strings.TrimSpace(d.Name)
+	d.Email = strings.ToLower(strings.TrimSpace(d.Email))
 
 	if len(d.Name) < minNameLength {
 		v.invalid("name", fmt.Sprintf("Your name must be at least %d characters long", minNameLength))
@@ -124,7 +124,7 @@ type newChannelDecoder struct {
 }
 
 func (d *newChannelDecoder) decode(v *validator) {
-	d.URL = strings.Trim(d.URL, " ")
+	d.URL = strings.TrimSpace(d.URL)
 	if d.URL == "" || !govalidator.IsURL(d.URL) {
 		v.invalid("url", "Valid URL is required")
 	}
@@ -135,7 +135,7 @@ type changeEmailDecoder struct {
 }
 
 func (d *changeEmailDecoder) decode(v *validator) {
-	d.Email = strings.Trim(strings.ToLower(d.Email), " ")
+	d.Email = strings.TrimSpace(strings.ToLower(d.Email))
 	if d.Email == "" || !govalidator.IsEmail(d.Email) {
 		v.invalid("email", "Valid email is required")
 	}
