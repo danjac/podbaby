@@ -35,9 +35,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/danjac/podbaby/commands/Godeps/_workspace/src/golang.org/x/crypto/ssh/terminal"
 	"github.com/danjac/podbaby/commands/Godeps/_workspace/src/golang.org/x/net/http2"
 	"github.com/danjac/podbaby/commands/Godeps/_workspace/src/golang.org/x/net/http2/hpack"
-	"golang.org/x/crypto/ssh/terminal"
 )
 
 // Flags

@@ -3,8 +3,8 @@ package commands
 import (
 	"bufio"
 	"fmt"
+	"github.com/danjac/podbaby/commands/Godeps/_workspace/src/golang.org/x/crypto/ssh/terminal"
 	"github.com/danjac/podbaby/config"
-	"golang.org/x/crypto/ssh/terminal"
 	"os"
 	"strings"
 	"text/template"
