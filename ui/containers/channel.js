@@ -122,6 +122,7 @@ export class Channel extends React.Component {
 
   handleSelectPage(page) {
     const { channel } = this.props;
+    window.scrollTo(0, 0);
     this.actions.channel.getChannel(channel.id, page);
   }
 

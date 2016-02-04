@@ -24,6 +24,7 @@ export class Recent extends React.Component {
   }
 
   handleSelectPage(page) {
+    window.scrollTo(0, 0);
     this.actions.getRecentlyPlayed(page);
   }
 

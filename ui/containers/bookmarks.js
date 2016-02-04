@@ -50,6 +50,7 @@ export class Bookmarks extends React.Component {
   }
 
   handleSelectPage(page) {
+    window.scrollTo(0, 0);
     this.actions.getBookmarks(page);
   }
 
