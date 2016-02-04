@@ -196,14 +196,18 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 		return user, nil
 	}
 
-	session := getSession(c)
-	var userID int
+	val, err := getSession(c).Read(c, userSessionKey)
 
-	if err := session.Read(c, userSessionKey, &userID); err != nil {
-		return nil, nil
+	if err != nil {
+		return nil, err
 	}
 
-	if userID == 0 {
+	var (
+		userID int
+		ok     bool
+	)
+
+	if userID, ok = val.(int); !ok || userID == 0 {
 		return nil, nil
 	}
 
