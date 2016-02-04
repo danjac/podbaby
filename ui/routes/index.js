@@ -57,8 +57,10 @@ export default function (store) {
   const getPodcast = nextState => actions.podcasts.getPodcast(nextState.params.id);
   const getSearch = nextState => actions.search.search(nextState.location.query.q);
 
+  const scrollUp = () => window.scrollTo(0, 0);
+
   return (
-    <Router history={hashHistory}>
+    <Router history={hashHistory} onUpdate={scrollUp}>
       <Route path="/" component={App}>
 
         <IndexRoute
