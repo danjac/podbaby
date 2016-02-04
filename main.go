@@ -14,7 +14,8 @@ func main() {
 	app := cli.NewApp()
 	app.EnableBashCompletion = true
 
-	cfg := config.New()
+	cfg := config.Default()
+	var envfile string
 
 	app.Commands = []cli.Command{
 		{
@@ -104,6 +105,21 @@ func main() {
 			Action: func(c *cli.Context) {
 				cfg.MustValidate()
 				commands.Serve(cfg)
+			},
+		},
+		{
+			Name:  "genenv",
+			Usage: "Generate an .env file",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "dest",
+					Usage:       "Destination file",
+					Value:       ".env",
+					Destination: &envfile,
+				},
+			},
+			Action: func(c *cli.Context) {
+				commands.Genenv(envfile)
 			},
 		},
 		{

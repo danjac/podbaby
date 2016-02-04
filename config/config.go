@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/base64"
 	"errors"
 	"github.com/danjac/podbaby/config/Godeps/_workspace/src/github.com/gorilla/securecookie"
 	"log"
@@ -21,7 +22,7 @@ var (
 	ErrMissingSecretKey   = errors.New("Secret key is missing")
 )
 
-func New() *Config {
+func Default() *Config {
 	return &Config{
 		Mail: &MailConfig{
 			Host:        "localhost",
@@ -91,5 +92,5 @@ type Config struct {
 }
 
 func RandomKey() string {
-	return string(securecookie.GenerateRandomKey(32))
+	return base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 }
