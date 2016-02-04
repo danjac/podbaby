@@ -61,7 +61,6 @@ func genenv(dst string) error {
 
 	if fileExists(dst) {
 		text := readLine("This file already exists. Overwrite (Y/N)?", "N", false)
-		fmt.Println("TEXT:", text, len(text))
 		if strings.ToLower(text) != "y" {
 			return nil
 		}
