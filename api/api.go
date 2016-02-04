@@ -196,7 +196,7 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 		return user, nil
 	}
 
-	userID, err := getSession(c).ReadInt(c, userSessionKey)
+	userID, err := getSession(c).readInt(c, userSessionKey)
 	if err != nil || userID == 0 {
 		return nil, err
 	}

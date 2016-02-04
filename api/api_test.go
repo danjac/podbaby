@@ -32,9 +32,9 @@ type fakeSession struct {
 	value int
 }
 
-func (s *fakeSession) Write(_ *echo.Context, _ string, _ interface{}) error { return nil }
-func (s *fakeSession) Read(_ *echo.Context, _ string, _ interface{}) error  { return nil }
-func (s *fakeSession) ReadInt(_ *echo.Context, _ string) (int, error)       { return s.value, nil }
+func (s *fakeSession) write(_ *echo.Context, _ string, _ interface{}) error { return nil }
+func (s *fakeSession) read(_ *echo.Context, _ string, _ interface{}) error  { return nil }
+func (s *fakeSession) readInt(_ *echo.Context, _ string) (int, error)       { return s.value, nil }
 
 func TestDefaultAuthenticatorMemoized(t *testing.T) {
 

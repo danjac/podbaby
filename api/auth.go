@@ -167,7 +167,7 @@ func signup(c *echo.Context) error {
 		return err
 	}
 
-	if err := session.Write(c, userSessionKey, user.ID); err != nil {
+	if err := session.write(c, userSessionKey, user.ID); err != nil {
 		return err
 	}
 
@@ -217,7 +217,7 @@ func login(c *echo.Context) error {
 	}
 	// login user
 
-	if err := session.Write(c, userSessionKey, user.ID); err != nil {
+	if err := session.write(c, userSessionKey, user.ID); err != nil {
 		return err
 	}
 	return c.JSON(http.StatusOK, user)
@@ -225,7 +225,7 @@ func login(c *echo.Context) error {
 }
 
 func logout(c *echo.Context) error {
-	getSession(c).Write(c, userSessionKey, 0)
+	getSession(c).write(c, userSessionKey, 0)
 	return c.NoContent(http.StatusOK)
 }
 

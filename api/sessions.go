@@ -13,9 +13,9 @@ import (
 const sessionTimeout = 24 * 30
 
 type session interface {
-	Write(*echo.Context, string, interface{}) error
-	Read(*echo.Context, string, interface{}) error
-	ReadInt(*echo.Context, string) (int, error)
+	write(*echo.Context, string, interface{}) error
+	read(*echo.Context, string, interface{}) error
+	readInt(*echo.Context, string) (int, error)
 }
 
 type secureCookieSession struct {
@@ -23,7 +23,7 @@ type secureCookieSession struct {
 	isSecure bool
 }
 
-func (s *secureCookieSession) Write(c *echo.Context, key string, value interface{}) error {
+func (s *secureCookieSession) write(c *echo.Context, key string, value interface{}) error {
 	encoded, err := s.Encode(key, value)
 	if err == nil {
 		cookie := &http.Cookie{
@@ -39,7 +39,7 @@ func (s *secureCookieSession) Write(c *echo.Context, key string, value interface
 	return err
 }
 
-func (s *secureCookieSession) Read(c *echo.Context, key string, dst interface{}) error {
+func (s *secureCookieSession) read(c *echo.Context, key string, dst interface{}) error {
 	cookie, err := c.Request().Cookie(key)
 	if err != nil {
 		return err
@@ -47,9 +47,9 @@ func (s *secureCookieSession) Read(c *echo.Context, key string, dst interface{})
 	return s.Decode(key, cookie.Value, dst)
 }
 
-func (s *secureCookieSession) ReadInt(c *echo.Context, key string) (int, error) {
+func (s *secureCookieSession) readInt(c *echo.Context, key string) (int, error) {
 	var rv int
-	err := s.Read(c, key, &rv)
+	err := s.read(c, key, &rv)
 	return rv, err
 }
 
