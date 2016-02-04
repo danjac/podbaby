@@ -36,7 +36,7 @@ type Env struct {
 	*config.Config
 	Cache      cache.Cache
 	Store      store.Store
-	Session    Session
+	Session    session
 	Feedparser feedparser.Feedparser
 	Mailer     mailer.Mailer
 }
@@ -128,8 +128,8 @@ func getStore(c *echo.Context) store.Store {
 	return c.Get(storeContextKey).(store.Store)
 }
 
-func getSession(c *echo.Context) Session {
-	return c.Get(sessionContextKey).(Session)
+func getSession(c *echo.Context) session {
+	return c.Get(sessionContextKey).(session)
 }
 
 func getMailer(c *echo.Context) mailer.Mailer {

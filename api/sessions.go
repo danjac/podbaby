@@ -10,9 +10,9 @@ import (
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/gorilla/securecookie"
 )
 
-const sessionTimeout = 24
+const sessionTimeout = 24 * 30
 
-type Session interface {
+type session interface {
 	Write(*echo.Context, string, interface{}) error
 	Read(*echo.Context, string, interface{}) error
 	ReadInt(*echo.Context, string) (int, error)
@@ -53,7 +53,7 @@ func (s *secureCookieSession) ReadInt(c *echo.Context, key string) (int, error) 
 	return rv, err
 }
 
-func newSession(cfg *config.Config) Session {
+func newSession(cfg *config.Config) session {
 	secureCookieKey, _ := base64.StdEncoding.DecodeString(cfg.SecureCookieKey)
 	cookie := securecookie.New(
 		[]byte(cfg.SecretKey),
