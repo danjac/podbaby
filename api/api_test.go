@@ -36,6 +36,39 @@ func (s *fakeSession) Write(_ *echo.Context, _ string, _ interface{}) error { re
 func (s *fakeSession) Read(_ *echo.Context, _ string, _ interface{}) error  { return nil }
 func (s *fakeSession) ReadInt(_ *echo.Context, _ string) (int, error)       { return s.value, nil }
 
+func TestDefaultAuthenticatorMemoized(t *testing.T) {
+
+	// should just return user if already in context
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	w := httptest.NewRecorder()
+
+	e := echo.New()
+	c := echo.NewContext(req, echo.NewResponse(w, e), e)
+
+	existingUser := &models.User{ID: 1}
+	c.Set(userContextKey, existingUser)
+
+	a := &defaultAuthenticator{}
+	user, err := a.authenticate(c)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("We should return a valid user")
+	}
+
+	if c.Get(userContextKey) == nil {
+		t.Fatal("User should be added to context")
+	}
+
+	if getUser(c).ID != existingUser.ID {
+		t.Fatal("Should be the same user")
+	}
+}
+
 func TestDefaultAuthenticatorIfIsUser(t *testing.T) {
 
 	req, _ := http.NewRequest("GET", "/", nil)
