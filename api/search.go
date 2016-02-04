@@ -14,7 +14,7 @@ func searchAll(c *echo.Context) error {
 
 	var (
 		cache   = getCache(c)
-		query   = strings.ToLower(strings.Trim(c.Form("q"), " "))
+		query   = strings.ToLower(strings.TrimSpace(c.Form("q")))
 		result  = &models.SearchResult{}
 		key     = fmt.Sprintf("search:all:%v", query)
 		timeout = time.Minute * 30
@@ -49,7 +49,7 @@ func searchBookmarks(c *echo.Context) error {
 		s    = getStore(c)
 		user = getUser(c)
 	)
-	query := strings.ToLower(strings.Trim(c.Form("q"), " "))
+	query := strings.ToLower(strings.TrimSpace(c.Form("q")))
 
 	var podcasts []models.Podcast
 
@@ -69,7 +69,7 @@ func searchChannel(c *echo.Context) error {
 		return err
 	}
 
-	query := strings.ToLower(strings.Trim(c.Form("q"), " "))
+	query := strings.ToLower(strings.TrimSpace(c.Form("q")))
 	cacheKey := fmt.Sprintf("search:channel:%v:%v", channelID, query)
 
 	var podcasts []models.Podcast
