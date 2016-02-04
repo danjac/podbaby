@@ -35,7 +35,7 @@ func New() *Config {
 		StaticURL:         defaultStaticURL,
 		TemplateDir:       defaultTemplateDir,
 		DynamicContentURL: devStaticURL,
-		SecretKey:         generateRandomKey(),
+		SecretKey:         RandomKey(),
 	}
 }
 
@@ -90,6 +90,6 @@ type Config struct {
 	SecretKey string
 }
 
-func generateRandomKey() string {
+func RandomKey() string {
 	return string(securecookie.GenerateRandomKey(32))
 }

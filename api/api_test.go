@@ -28,44 +28,23 @@ func (c *fakeCache) Get(_ string, _ time.Duration, _ interface{}, fn cache.Sette
 	return fn()
 }
 
-type fakeSession struct{}
-
-func (s *fakeSession) Read(_ *echo.Context, _ string) (interface{}, error) {
-	return nil, nil
+type fakeSession struct {
+	value int
 }
 
-func (s *fakeSession) Write(_ *echo.Context, _ string, _ interface{}) error {
-	return nil
-}
-
-type fakeEmptySession struct {
-	*fakeSession
-}
-
-func (s *fakeEmptySession) Read(_ *echo.Context, _ string) (interface{}, error) {
-	return 0, nil
-}
-
-type fakeNonEmptySession struct {
-	*fakeSession
-	value interface{}
-}
-
-func (s *fakeNonEmptySession) Read(_ *echo.Context, _ string) (interface{}, error) {
-	return s.value, nil
-}
+func (s *fakeSession) Write(_ *echo.Context, _ string, _ interface{}) error { return nil }
+func (s *fakeSession) Read(_ *echo.Context, _ string, _ interface{}) error  { return nil }
+func (s *fakeSession) ReadInt(_ *echo.Context, _ string) (int, error)       { return s.value, nil }
 
 func TestDefaultAuthenticatorIfIsUser(t *testing.T) {
 
-	req, _ := http.NewRequest("GET", "/5/", nil)
+	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 
 	e := echo.New()
 	c := echo.NewContext(req, echo.NewResponse(w, e), e)
 
-	userID := 1
-
-	session := &fakeNonEmptySession{value: userID}
+	session := &fakeSession{value: 1}
 
 	c.Set(sessionContextKey, session)
 
@@ -96,15 +75,17 @@ func TestDefaultAuthenticatorIfIsUser(t *testing.T) {
 	}
 
 }
+
 func TestDefaultAuthenticatorIfEmpty(t *testing.T) {
 
-	req, _ := http.NewRequest("GET", "/5/", nil)
+	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 
 	e := echo.New()
 	c := echo.NewContext(req, echo.NewResponse(w, e), e)
 
-	c.Set(sessionContextKey, &fakeEmptySession{})
+	session := &fakeSession{value: 0}
+	c.Set(sessionContextKey, session)
 
 	a := &defaultAuthenticator{}
 

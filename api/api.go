@@ -196,19 +196,9 @@ func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, erro
 		return user, nil
 	}
 
-	val, err := getSession(c).Read(c, userSessionKey)
-
-	if err != nil {
+	userID, err := getSession(c).ReadInt(c, userSessionKey)
+	if err != nil || userID == 0 {
 		return nil, err
-	}
-
-	var (
-		userID int
-		ok     bool
-	)
-
-	if userID, ok = val.(int); !ok || userID == 0 {
-		return nil, nil
 	}
 
 	s := getStore(c)

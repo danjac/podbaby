@@ -14,7 +14,8 @@ const sessionTimeout = 24
 
 type Session interface {
 	Write(*echo.Context, string, interface{}) error
-	Read(*echo.Context, string) (interface{}, error)
+	Read(*echo.Context, string, interface{}) error
+	ReadInt(*echo.Context, string) (int, error)
 }
 
 type secureCookieSession struct {
@@ -38,14 +39,18 @@ func (s *secureCookieSession) Write(c *echo.Context, key string, value interface
 	return err
 }
 
-func (s *secureCookieSession) Read(c *echo.Context, key string) (interface{}, error) {
+func (s *secureCookieSession) Read(c *echo.Context, key string, dst interface{}) error {
 	cookie, err := c.Request().Cookie(key)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var dst interface{}
-	err = s.Decode(key, cookie.Value, dst)
-	return dst, err
+	return s.Decode(key, cookie.Value, dst)
+}
+
+func (s *secureCookieSession) ReadInt(c *echo.Context, key string) (int, error) {
+	var rv int
+	err := s.Read(c, key, &rv)
+	return rv, err
 }
 
 func newSession(cfg *config.Config) Session {
