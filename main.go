@@ -108,6 +108,13 @@ func main() {
 			},
 		},
 		{
+			Name:  "secretkey",
+			Usage: "Creates a secret key",
+			Action: func(c *cli.Context) {
+				commands.SecretKey()
+			},
+		},
+		{
 			Name:  "genenv",
 			Usage: "Generate an .env file",
 			Flags: []cli.Flag{

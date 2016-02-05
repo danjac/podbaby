@@ -46,6 +46,11 @@ func readSecret(prompt, defaultValue string, required bool) string {
 	}
 }
 
+// SecretKey prints a 32 byte random key you can use for secure keys
+func SecretKey() {
+	fmt.Println(config.RandomKey())
+}
+
 // Genenv interactively generates an environment settings file
 // Usage: podbaby genenv [dest-file.env]
 func Genenv(dst string) {
