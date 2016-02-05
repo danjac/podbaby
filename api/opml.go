@@ -32,7 +32,7 @@ func getOPML(c *echo.Context) error {
 			Title:   channel.Title,
 			Text:    channel.Title,
 			URL:     channel.URL,
-			HtmlURL: website,
+			HTMLURL: website,
 		},
 		)
 	}

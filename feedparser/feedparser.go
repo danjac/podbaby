@@ -149,10 +149,10 @@ func (f *feedparserImpl) Fetch(channel *models.Channel) error {
 		if item.Guid == nil {
 			// use pub date + URL as standin Guid
 
-			podcast.Guid = item.PubDate + ":" + podcast.EnclosureURL
+			podcast.GUID = item.PubDate + ":" + podcast.EnclosureURL
 
 		} else {
-			podcast.Guid = *item.Guid
+			podcast.GUID = *item.Guid
 		}
 
 		if item.Source != nil {
