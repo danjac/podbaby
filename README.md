@@ -8,6 +8,7 @@ We assume the following are installed:
 - Go 1.5+
 - PostgreSQL 8+
 - NodeJS 5.4+
+- Redis 
 
 Install
 =======
