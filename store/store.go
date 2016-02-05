@@ -19,23 +19,27 @@ type preparer interface {
 	PrepareNamed(string) (*sqlx.NamedStmt, error)
 }
 
+// DataHandler is a connection or transaction executing queries
 type DataHandler interface {
 	sqlx.Ext
 	preparer
 }
 
+// Connection is a connection to the data store
 type Connection interface {
 	DataHandler
 	beginner
 	closer
 }
 
+// Transaction is a data store transaction
 type Transaction interface {
 	DataHandler
 	Rollback() error
 	Commit() error
 }
 
+// Store manages all data store interactions for the application
 type Store interface {
 	Close() error
 	Conn() Connection
@@ -115,7 +119,7 @@ func (store *sqlStore) Subscriptions() SubscriptionStore {
 	return store.subscriptions
 }
 
-func newSqlStore(db *sqlx.DB) Store {
+func newSQLStore(db *sqlx.DB) Store {
 	return &sqlStore{
 		conn:          &sqlConnection{db},
 		categories:    newCategoryStore(),
@@ -128,6 +132,7 @@ func newSqlStore(db *sqlx.DB) Store {
 	}
 }
 
+// New returns a new Store instance
 func New(cfg *config.Config) (Store, error) {
 	db, err := sqlx.Connect("postgres", cfg.DatabaseURL)
 	if err != nil {
@@ -135,14 +140,15 @@ func New(cfg *config.Config) (Store, error) {
 	}
 	//db.SetMaxIdleConns(0)
 	db.SetMaxOpenConns(cfg.MaxDBConnections)
-	return newSqlStore(db), nil
+	return newSQLStore(db), nil
 }
 
+// NewMock returns store instance and SqlMock handler for testing
 func NewMock() (Store, sqlmock.Sqlmock, error) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		return nil, mock, err
 	}
 	dbx := sqlx.NewDb(db, "postgres")
-	return newSqlStore(dbx), mock, nil
+	return newSQLStore(dbx), mock, nil
 }

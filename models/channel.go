@@ -4,6 +4,7 @@ import (
 	"database/sql"
 )
 
+// Channel is a single RSS/Atom podcast feed
 type Channel struct {
 	ID          int            `db:"id" json:"id"`
 	Title       string         `db:"title" json:"title"`
@@ -17,6 +18,7 @@ type Channel struct {
 	Categories  []string       `db:"-" json:"-"`
 }
 
+// ChannelDetail includes channel, podcast, and related channel info
 type ChannelDetail struct {
 	Channel    *Channel   `json:"channel"`
 	Categories []Category `json:"categories"`

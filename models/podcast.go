@@ -2,15 +2,17 @@ package models
 
 import "time"
 
+// PodcastList is a paginated list of podcasts
 type PodcastList struct {
 	Podcasts []Podcast  `json:"podcasts"`
 	Page     *Paginator `json:"page"`
 }
 
+// Podcast is a single podcast item
 type Podcast struct {
 	ID           int       `db:"id" json:"id"`
 	ChannelID    int       `db:"channel_id" json:"channelId"`
-	Guid         string    `db:"guid" json:"-"`
+	GUID         string    `db:"guid" json:"-"`
 	Name         string    `db:"name" json:"name"`
 	Image        string    `db:"image" json:"image"`
 	Title        string    `db:"title" json:"title"`

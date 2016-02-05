@@ -11,11 +11,15 @@ import (
 // Setter should generate a cacheable value if cache empty
 type Setter func() error
 
+// Cache manages application caching
 type Cache interface {
+	// Get retrieves value from cacher, or sets result of setter function if missing
 	Get(string, time.Duration, interface{}, Setter) error
+	// Delete removes item from cache
 	Delete(string) error
 }
 
+// New returns a new Cache instance
 func New(cfg *config.Config) Cache {
 	ring := redis.NewRing(&redis.RingOptions{
 		Addrs: map[string]string{

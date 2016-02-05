@@ -4,6 +4,7 @@ import "math"
 
 const defaultPageSize = 10
 
+// NewPaginator creates a new Paginator instance with precalculated fields
 func NewPaginator(page int, numRows int) *Paginator {
 	p := &Paginator{
 		CurrentPage: page,
@@ -15,6 +16,7 @@ func NewPaginator(page int, numRows int) *Paginator {
 	return p
 }
 
+// Paginator contains row/page/offset etc for a page instance
 type Paginator struct {
 	NumRows     int `json:"numRows"`
 	NumPages    int `json:"numPages"`

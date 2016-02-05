@@ -9,11 +9,15 @@ import (
 	"text/template"
 )
 
+// Mailer handles SMTP calls
 type Mailer interface {
+	// Send sends a plain SMTP email
 	Send(string, []string, string, string) error
+	// SendFromTemplate renders message to template and sends plain SMTP email
 	SendFromTemplate(string, []string, string, string, interface{}) error
 }
 
+// New returns a new Mailer instance
 func New(cfg *config.Config) (Mailer, error) {
 
 	auth := smtp.PlainAuth(

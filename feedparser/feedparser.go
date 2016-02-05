@@ -52,6 +52,7 @@ func init() {
 	}
 }
 
+// ErrInvalidFeed is returned if RSS/Atom is invalid, missing or empty
 var ErrInvalidFeed = errors.New("Invalid feed")
 
 type result struct {
@@ -80,7 +81,7 @@ func (r *result) getWebsiteURL() string {
 }
 
 func (r *result) getCategories() []string {
-	categories := make([]string, 0)
+	categories := []string{}
 	for _, ext := range r.channel.Extensions {
 		for _, exts := range ext {
 			for _, item := range exts {
@@ -91,12 +92,14 @@ func (r *result) getCategories() []string {
 	return categories
 }
 
+// Feedparser handles fetching of RSS/Atom podcast feeds
 type Feedparser interface {
 	Fetch(*models.Channel) error
 }
 
 type feedparserImpl struct{}
 
+// New returns a Feedparser instance
 func New() Feedparser {
 	return &feedparserImpl{}
 }
@@ -192,7 +195,7 @@ func isPlayable(mediaType string) bool {
 }
 
 func getCategories(ext *rss.Extension) []string {
-	categories := make([]string, 0)
+	categories := []string{}
 	if ext.Name != "category" {
 		return categories
 	}
