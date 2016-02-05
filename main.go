@@ -135,7 +135,7 @@ func main() {
 				cli.IntFlag{
 					Name:        "max-db-conns",
 					Value:       99,
-					EnvVar:      "MAx_DB_CONNECTIONS",
+					EnvVar:      "MAX_DB_CONNECTIONS",
 					Usage:       "Maximum database connections",
 					Destination: &cfg.MaxDBConnections,
 				},
