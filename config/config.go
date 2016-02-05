@@ -18,10 +18,13 @@ const (
 )
 
 var (
+	// ErrMissingDatabaseURL is returned if no database connection URL is set in config
 	ErrMissingDatabaseURL = errors.New("Database URL is missing")
-	ErrMissingSecretKey   = errors.New("Secret key is missing")
+	// ErrMissingSecretKey is returned if no secret key  is set in config
+	ErrMissingSecretKey = errors.New("Secret key is missing")
 )
 
+// Default returns a ready-made configuration with sensible settings
 func Default() *Config {
 	return &Config{
 		Mail: &MailConfig{
@@ -40,6 +43,7 @@ func Default() *Config {
 	}
 }
 
+// Validate checks that all required configuration settings are present and correct
 func (cfg *Config) Validate() error {
 	if cfg.DatabaseURL == "" {
 		return ErrMissingDatabaseURL
@@ -50,22 +54,24 @@ func (cfg *Config) Validate() error {
 	return nil
 }
 
+// MustValidate checks that all required configuration settings are present and correct
 func (cfg *Config) MustValidate() {
 	if err := cfg.Validate(); err != nil {
 		log.Fatal(err)
 	}
 }
 
+// IsDev checks if configuration is set to development mode
 func (cfg *Config) IsDev() bool {
 	return cfg.Env == "dev"
 }
 
+// IsProd checks if configuration is set to production mode
 func (cfg *Config) IsProd() bool {
-	return cfg.Env == "prod"
+	return !cfg.IsDev()
 }
 
 // MailConfig contains SMTP settings
-
 type MailConfig struct {
 	TemplateDir,
 	Addr,
@@ -91,6 +97,7 @@ type Config struct {
 	SecretKey string
 }
 
+// RandomKey generates a printable, random 32 byte string
 func RandomKey() string {
 	return base64.StdEncoding.EncodeToString(securecookie.GenerateRandomKey(32))
 }

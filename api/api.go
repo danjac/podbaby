@@ -32,11 +32,11 @@ const (
 	authenticatorContextKey = "authenticator"
 )
 
+// Env contains any externally configurable objects required by the api
 type Env struct {
 	*config.Config
 	Cache      cache.Cache
 	Store      store.Store
-	Session    session
 	Feedparser feedparser.Feedparser
 	Mailer     mailer.Mailer
 }
@@ -54,6 +54,7 @@ func (r *renderer) Render(w io.Writer, name string, data interface{}) error {
 	return r.templates.ExecuteTemplate(w, name, data)
 }
 
+// Run runs the API server
 func Run(env *Env) error {
 
 	e := echo.New()
