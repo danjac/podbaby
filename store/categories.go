@@ -5,28 +5,30 @@ import (
 	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/jmoiron/sqlx"
 )
 
+// CategoryReader handles reads from category data store
 type CategoryReader interface {
 	SelectAll(DataHandler, *[]models.Category) error
 	SelectByChannelID(DataHandler, *[]models.Category, int) error
 }
 
+// CategoryStore manages interactions with category data store
 type CategoryStore interface {
 	CategoryReader
 }
 
-type categorySqlStore struct {
+type categorySQLStore struct {
 	CategoryReader
 }
 
 func newCategoryStore() CategoryStore {
-	return &categorySqlStore{
-		CategoryReader: &categorySqlReader{},
+	return &categorySQLStore{
+		CategoryReader: &categorySQLReader{},
 	}
 }
 
-type categorySqlReader struct{}
+type categorySQLReader struct{}
 
-func (r *categorySqlReader) SelectAll(dh DataHandler, categories *[]models.Category) error {
+func (r *categorySQLReader) SelectAll(dh DataHandler, categories *[]models.Category) error {
 	q := `
     SELECT id, name, parent_id 
     FROM categories 
@@ -35,7 +37,7 @@ func (r *categorySqlReader) SelectAll(dh DataHandler, categories *[]models.Categ
 	return handleError(sqlx.Select(dh, categories, q), q)
 }
 
-func (r *categorySqlReader) SelectByChannelID(dh DataHandler, categories *[]models.Category, channelID int) error {
+func (r *categorySQLReader) SelectByChannelID(dh DataHandler, categories *[]models.Category, channelID int) error {
 	q := `
     SELECT c.id, c.name, c.parent_id FROM categories c 
     JOIN channels_categories cc ON cc.category_id=c.id
