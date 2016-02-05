@@ -6,8 +6,10 @@ import (
 	"fmt"
 )
 
+// ErrNoRows is returned if expected result is empty
 var ErrNoRows = errors.New("No rows found")
 
+// DBError returns basic error plus original query
 type DBError interface {
 	error
 	Query() string
