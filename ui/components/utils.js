@@ -1,4 +1,3 @@
-import { trim } from 'lodash';
 import moment from 'moment';
 import sanitizeHtml from 'sanitize-html';
 import MobileDetect from 'mobile-detect';
@@ -17,14 +16,9 @@ export const highlight = (text, query) => {
     return text;
   }
   const highlightStyle = 'background-color: #fffb24; font-weight: bold; padding: 2';
-  const querytolower = trim(query.toLowerCase());
-  const tokens = text.split(' ').map(token => {
-    if (token.toLowerCase().indexOf(querytolower) !== -1) {
-      return `<span style="${highlightStyle}">${token}</span>`;
-    }
-    return token;
-  });
-  return tokens.join(' ');
+
+  const regex = new RegExp('(' + query + ')', 'gi');
+  return text.replace(regex, '<span style="' + highlightStyle + '">$1</span>');
 };
 
 export const sanitize = dirty => {
