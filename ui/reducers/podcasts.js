@@ -48,9 +48,13 @@ export default function (state = initialState, action) {
       });
 
     case Actions.SEARCH_SUCCESS:
+      const { podcasts } = action.payload;
       return Object.assign({}, state, {
-        podcastCache: Object.assign({}, state.podcastCache, _.keyBy(action.payload.podcasts, 'id')),
-        podcasts: action.payload.podcasts,
+        podcastCache: Object.assign({},
+          state.podcastCache,
+          _.keyBy(podcasts.podcasts, 'id')),
+        page: podcasts.page,
+        podcasts: podcasts.podcasts,
         isLoading: false,
       });
 

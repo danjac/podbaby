@@ -7,7 +7,7 @@ export function clearSearch() {
   return createAction(Actions.CLEAR_SEARCH);
 }
 
-export function search(query, type) {
+export function search(query, type, page = 1) {
   if (!query) {
     return clearSearch();
   }
@@ -15,7 +15,7 @@ export function search(query, type) {
   return dispatch => {
     dispatch(requestPodcasts());
     dispatch(createAction(Actions.SEARCH_REQUEST, { query, type }));
-    api.search(query, type)
+    api.search(query, type, page)
     .then(result => {
       dispatch(createAction(Actions.SEARCH_SUCCESS, result.data));
     })

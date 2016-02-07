@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 const PageHeader = ({ header }) => {
   return (
     <div className="page-header">
-      <h2>{header}</h2>
+      <h3>{header}</h3>
     </div>
   );
 };

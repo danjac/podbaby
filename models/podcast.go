@@ -8,6 +8,11 @@ type PodcastList struct {
 	Page     *Paginator `json:"page"`
 }
 
+func NewPodcastList(page int) *PodcastList {
+	podcasts := []Podcast{}
+	return &PodcastList{podcasts, NewPaginator(page, 0)}
+}
+
 // Podcast is a single podcast item
 type Podcast struct {
 	ID           int       `db:"id" json:"id"`

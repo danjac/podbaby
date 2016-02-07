@@ -6,8 +6,8 @@ type SearchResult struct {
 	Podcasts *PodcastList `json:"podcasts"`
 }
 
-func NewSearchResult() *SearchResult {
+func NewSearchResult(page int) *SearchResult {
 	channels := []Channel{}
-	podcasts := NewPodcastList()
+	podcasts := NewPodcastList(page)
 	return &SearchResult{channels, podcasts}
 }

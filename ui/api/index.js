@@ -36,8 +36,8 @@ export function isEmail(email) {
   return axios.get(`/api/auth/email/`, { params: { email } });
 }
 
-export function search(query, type) {
-  return axios.get('/api/search/', { params: { q: query, t: type } });
+export function search(query, type, page = 1) {
+  return axios.get('/api/search/', { params: { q: query, t: type, page } });
 }
 
 export function searchChannel(query, id) {

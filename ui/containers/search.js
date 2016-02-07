@@ -22,6 +22,12 @@ export class Search extends React.Component {
     this.route = bindActionCreators(routeActions, this.props.dispatch);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleSelectPage = this.handleSelectPage.bind(this);
+  }
+
+  handleSelectPage(page) {
+    window.scrollTo(0, 0);
+    this.actions.search.search(this.props.searchQuery, 'podcasts', page);
   }
 
   handleSearch(event) {
@@ -50,17 +56,17 @@ export class Search extends React.Component {
       channels,
       podcasts,
       isLoading,
-      searchQuery } = this.props;
+      searchQuery,
+      searchType } = this.props;
 
     if (isLoading) {
       return '';
     }
 
-    if (channels.length === 0 &&
-        podcasts.length === 0 &&
+    if (channels.length === 0 && podcasts.length === 0 &&
         searchQuery) return <div>Sorry, no results found for your search.</div>;
 
-    const channelItems = channels.length > 0 && channels.map(channel => {
+    const channelItems = searchType === 'channels' && channels.map(channel => {
       const subscribe = event => {
         event.preventDefault();
         dispatch(actions.subscribe.toggleSubscribe(channel));
@@ -76,11 +82,12 @@ export class Search extends React.Component {
       );
     });
 
-    const podcastItems = podcasts.length > 0 ?
+    const podcastItems = searchType === 'podcasts' ?
 
       <PodcastList
         actions={actions}
         showChannel
+        onSelectPage={this.handleSelectPage}
         ifEmpty=""
         {...this.props}
       /> : '';
@@ -164,13 +171,14 @@ Search.propTypes = {
   location: PropTypes.object.isRequired,
   channels: PropTypes.array.isRequired,
   podcasts: PropTypes.array.isRequired,
+  page: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,
   searchQuery: PropTypes.string.isRequired,
   searchType: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => {
-  const { isLoading } = state.podcasts;
+  const { page, isLoading } = state.podcasts;
   const { query, type } = state.search;
   const { isLoggedIn } = state.auth;
 
@@ -182,6 +190,7 @@ const mapStateToProps = state => {
     searchType: type,
     podcasts,
     channels,
+    page,
     isLoading,
     isLoggedIn,
   };

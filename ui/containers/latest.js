@@ -49,7 +49,8 @@ export class Latest extends React.Component {
           actions={actions}
           ifEmpty={ifEmptyMsg}
           onSelectPage={this.handleSelectPage}
-          showChannel {...this.props}
+          showChannel
+          {...this.props}
         />
         </div>
       </DocumentTitle>

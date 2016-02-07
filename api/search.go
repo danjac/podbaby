@@ -17,7 +17,7 @@ func searchAll(c *echo.Context) error {
 		page       = getPage(c)
 		query      = strings.ToLower(strings.TrimSpace(c.Form("q")))
 		searchType = c.Form("t")
-		result     = models.NewSearchResult()
+		result     = models.NewSearchResult(page)
 		timeout    = time.Minute * 30
 	)
 
