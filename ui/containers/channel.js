@@ -275,6 +275,7 @@ export class Channel extends React.Component {
         {isPodcastsLoading && !query ? <Loading /> :
         <PodcastList
           showChannel={false}
+          searchQuery={query}
           isLoggedIn={isLoggedIn}
           isLoading={isPodcastsLoading}
           onSelectPage={this.handleSelectPage}

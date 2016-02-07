@@ -86,6 +86,7 @@ export class Search extends React.Component {
         <ChannelItem
           key={channel.id}
           channel={channel}
+          searchQuery={searchQuery}
           subscribe={subscribe}
           {...this.props}
         />

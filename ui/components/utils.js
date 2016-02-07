@@ -1,3 +1,4 @@
+import { trim } from 'lodash';
 import moment from 'moment';
 import sanitizeHtml from 'sanitize-html';
 import MobileDetect from 'mobile-detect';
@@ -9,6 +10,21 @@ const sanitizeOptions = {
     span: ['style'],
     img: ['src', 'height', 'width'],
   },
+};
+
+export const highlight = (text, query) => {
+  if (!query || !text) {
+    return text;
+  }
+  const highlightStyle = 'background-color: #fffb24; font-weight: bold; padding: 2';
+  const querytolower = trim(query.toLowerCase());
+  const tokens = text.split(' ').map(token => {
+    if (token.toLowerCase().indexOf(querytolower) !== -1) {
+      return `<span style="${highlightStyle}">${token}</span>`;
+    }
+    return token;
+  });
+  return tokens.join(' ');
 };
 
 export const sanitize = dirty => {

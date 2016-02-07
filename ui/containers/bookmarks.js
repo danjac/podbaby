@@ -87,6 +87,7 @@ export class Bookmarks extends React.Component {
         </form>
         <PodcastList
           actions={actions}
+          searchQuery={query}
           showChannel
           isLoggedIn
           ifEmpty="No bookmarks found"

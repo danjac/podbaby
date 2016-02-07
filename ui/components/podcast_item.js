@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { sanitize, formatPubDate, formatListenDate } from './utils';
+import { sanitize, highlight, formatPubDate, formatListenDate } from './utils';
 
 import {
   ButtonGroup,
@@ -12,7 +12,6 @@ import {
 
 import Icon from './icon';
 import Image from './image';
-
 
 const Buttons = props => {
   const { podcast } = props;
@@ -53,6 +52,7 @@ export default function PodcastItem(props) {
     showExpanded,
     toggleDetail,
     isLoggedIn,
+    searchQuery,
   } = props;
 
   const channelUrl = `/channel/${podcast.channelId}/`;
@@ -125,7 +125,7 @@ export default function PodcastItem(props) {
     <p
       className={showExpanded ? 'lead' : ''}
       style={{ marginTop: 20 }}
-      dangerouslySetInnerHTML={sanitize(podcast.description)}
+      dangerouslySetInnerHTML={sanitize(highlight(podcast.description, searchQuery))}
     /> : ''}
   </Panel>
   );
@@ -137,6 +137,7 @@ PodcastItem.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   showChannel: PropTypes.bool.isRequired,
   showExpanded: PropTypes.bool,
+  searchQuery: PropTypes.string,
   togglePlayer: PropTypes.func.isRequired,
   toggleDetail: PropTypes.func.isRequired,
   toggleBookmark: PropTypes.func.isRequired,

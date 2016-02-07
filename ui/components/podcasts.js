@@ -13,6 +13,7 @@ export class PodcastList extends React.Component {
       dispatch,
       isLoggedIn,
       podcasts,
+      searchQuery,
       isLoading,
       ifEmpty,
       page,
@@ -53,6 +54,7 @@ export class PodcastList extends React.Component {
           return (
             <Podcast
               key={podcast.id}
+              searchQuery={searchQuery}
               isLoggedIn={isLoggedIn}
               podcast={podcast}
               showChannel={showChannel}
@@ -78,6 +80,7 @@ PodcastList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   ifEmpty: PropTypes.any,
   showChannel: PropTypes.bool,
+  searchQuery: PropTypes.string,
 };
 
 export default PodcastList;

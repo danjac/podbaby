@@ -9,10 +9,10 @@ import {
 
 import Image from './image';
 import Icon from './icon';
-import { sanitize } from './utils';
+import { sanitize, highlight } from './utils';
 
 function ChannelItem(props) {
-  const { channel, subscribe, isLoggedIn } = props;
+  const { channel, subscribe, isLoggedIn, searchQuery } = props;
   const url = `/channel/${channel.id}/`;
 
   return (
@@ -56,7 +56,7 @@ function ChannelItem(props) {
     : ''}
     <p
       style={{ marginTop: 20 }}
-      dangerouslySetInnerHTML={sanitize(channel.description)}
+      dangerouslySetInnerHTML={sanitize(highlight(channel.description, searchQuery))}
     />
 </Panel>
   );
@@ -66,6 +66,7 @@ ChannelItem.propTypes = {
   channel: PropTypes.object.isRequired,
   subscribe: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
+  searchQuery: PropTypes.string,
 };
 
 export default ChannelItem;
