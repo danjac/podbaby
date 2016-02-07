@@ -36,6 +36,7 @@ export class Category extends React.Component {
   }
 
   handleSelectPage(page) {
+    window.scrollTo(0, 0);
     this.actions.selectPage(page);
   }
 

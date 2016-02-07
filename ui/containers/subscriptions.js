@@ -34,6 +34,7 @@ export class Subscriptions extends React.Component {
   }
 
   handleSelectPage(page) {
+    window.scrollTo(0, 0);
     this.actions.selectPage(page);
   }
 
