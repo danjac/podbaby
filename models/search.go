@@ -6,8 +6,9 @@ type SearchResult struct {
 	Podcasts *PodcastList `json:"podcasts"`
 }
 
+// NewSearchResult creates a properly initialized search result
 func NewSearchResult(page int) *SearchResult {
-	channels := []Channel{}
+	var channels []Channel
 	podcasts := NewPodcastList(page)
 	return &SearchResult{channels, podcasts}
 }

@@ -8,8 +8,9 @@ type PodcastList struct {
 	Page     *Paginator `json:"page"`
 }
 
+// NewPodcastList creates a new PodcastList instance
 func NewPodcastList(page int) *PodcastList {
-	podcasts := []Podcast{}
+	var podcasts []Podcast
 	return &PodcastList{podcasts, NewPaginator(page, 0)}
 }
 
