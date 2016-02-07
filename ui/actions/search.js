@@ -7,6 +7,10 @@ export function clearSearch() {
   return createAction(Actions.CLEAR_SEARCH);
 }
 
+export function changeSearchType(type) {
+  return createAction(Actions.CHANGE_SEARCH_TYPE, type);
+}
+
 export function search(query, type, page = 1) {
   if (!query) {
     return clearSearch();

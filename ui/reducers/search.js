@@ -7,6 +7,9 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case Actions.CHANGE_SEARCH_TYPE:
+      return Object.assign({}, state, { type: action.payload });
+
     case Actions.CLEAR_SEARCH:
       return initialState;
 

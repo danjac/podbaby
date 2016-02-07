@@ -23,6 +23,7 @@ export class Search extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSelectPage = this.handleSelectPage.bind(this);
+    this.handleChangeSearchType = this.handleChangeSearchType.bind(this);
   }
 
   handleSelectPage(page) {
@@ -30,8 +31,20 @@ export class Search extends React.Component {
     this.actions.search.search(this.props.searchQuery, 'podcasts', page);
   }
 
+  handleChangeSearchType() {
+    this.doSearch();
+  }
+
   handleSearch(event) {
     event.preventDefault();
+    this.doSearch();
+  }
+
+  handleSelect() {
+    this.refs.query.select();
+  }
+
+  doSearch() {
     const value = _.trim(this.refs.query.value);
     const type = this.refs.channels.checked ? 'channels' : 'podcasts';
     const hasChanged = (
@@ -41,13 +54,10 @@ export class Search extends React.Component {
     if (value && hasChanged) {
       this.route.replace(`/search/?q=${value}&t=${type}`);
       this.actions.search.search(value, type);
-    } else if (!value) {
-      this.actions.search.clearSearch();
+    } else {
+      if (!value) this.actions.search.clearSearch();
+      this.actions.search.changeSearchType(type);
     }
-  }
-
-  handleSelect() {
-    this.refs.query.select();
   }
 
   renderSearchResults() {
@@ -131,7 +141,7 @@ export class Search extends React.Component {
                   <label>
                     <input
                       checked={searchType === 'podcasts'}
-                      onChange={this.handleSearch}
+                      onChange={this.handleChangeSearchType}
                       name="type"
                       label="Search podcasts"
                       type="radio"
@@ -144,7 +154,7 @@ export class Search extends React.Component {
                   <label>
                     <input
                       checked={searchType === 'channels'}
-                      onChange={this.handleSearch}
+                      onChange={this.handleChangeSearchType}
                       name="type"
                       type="radio"
                       ref="channels"
