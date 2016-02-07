@@ -70,7 +70,7 @@ func (r *podcastSQLReader) Search(dh DataHandler, result *models.PodcastList, qu
         p.channel_id, p.pub_date, c.title AS name, c.image, p.source
     FROM podcasts p, plainto_tsquery($1) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1))
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1)) DESC, p.pub_date DESC
     OFFSET $2 LIMIT $3`
 
 	return handleError(sqlx.Select(
@@ -90,7 +90,7 @@ func (r *podcastSQLReader) SearchByChannelID(dh DataHandler, podcasts *[]models.
        c.image, p.source
     FROM podcasts p, plainto_tsquery($2) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id AND c.id=$1
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC, p.pub_date DESC LIMIT $3`
 	return handleError(sqlx.Select(dh, podcasts, q, channelID, query, maxSearchRows), q)
 
 }
@@ -104,7 +104,7 @@ func (r *podcastSQLReader) SearchBookmarked(dh DataHandler, podcasts *[]models.P
         AND p.channel_id = c.id 
         AND b.podcast_id = p.id 
         AND b.user_id=$1
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC LIMIT $3`
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($2)) DESC, p.pub_date DESC LIMIT $3`
 	return sqlx.Select(dh, podcasts, q, userID, query, maxSearchRows)
 
 }
