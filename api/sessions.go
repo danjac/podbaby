@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/base64"
+	"fmt"
 	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
 	"github.com/danjac/podbaby/config"
 	"net/http"
@@ -48,6 +49,7 @@ func (s *secureCookieSession) read(c *echo.Context, key string, dst interface{})
 		return false, err
 	}
 	err = s.Decode(key, cookie.Value, dst)
+	fmt.Println("ERROR", err)
 	return err != nil, err
 }
 
