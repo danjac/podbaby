@@ -2,6 +2,7 @@ import { Actions } from '../constants';
 
 const initialState = {
   query: '',
+  type: 'podcasts',
 };
 
 export default function (state = initialState, action) {
@@ -10,7 +11,7 @@ export default function (state = initialState, action) {
       return initialState;
 
     case Actions.SEARCH_REQUEST:
-      return Object.assign({}, state, { query: action.payload });
+      return action.payload;
 
     default:
       return state;

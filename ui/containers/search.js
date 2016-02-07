@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Input, Tabs, Tab } from 'react-bootstrap';
+import { Button, Grid, Row, Col } from 'react-bootstrap';
 import { routeActions } from 'redux-simple-router';
 import DocumentTitle from 'react-document-title';
 
@@ -26,17 +26,22 @@ export class Search extends React.Component {
 
   handleSearch(event) {
     event.preventDefault();
-    const value = _.trim(this.refs.query.getValue());
-    if (value && value !== this.props.searchQuery) {
-      this.route.replace(`/search/?q=${value}`);
-      this.actions.search.search(value);
-    } else {
+    const value = _.trim(this.refs.query.value);
+    const type = this.refs.channels.checked ? 'channels' : 'podcasts';
+    const hasChanged = (
+      value !== this.props.searchQuery ||
+      type !== this.props.searchType
+    );
+    if (value && hasChanged) {
+      this.route.replace(`/search/?q=${value}&t=${type}`);
+      this.actions.search.search(value, type);
+    } else if (!value) {
       this.actions.search.clearSearch();
     }
   }
 
   handleSelect() {
-    this.refs.query.getInputDOMNode().select();
+    this.refs.query.select();
   }
 
   renderSearchResults() {
@@ -80,28 +85,14 @@ export class Search extends React.Component {
         {...this.props}
       /> : '';
 
-    if (podcastItems && channelItems) {
-      const tabStyle = { marginTop: 20 };
-
-      return (
-        <Tabs defaultActiveKey={1}>
-          <Tab eventKey={1} title="Podcasts" style={tabStyle}>
-            {podcastItems}
-          </Tab>
-          <Tab eventKey={2} title="Feeds" style={tabStyle}>
-            {channelItems}
-          </Tab>
-        </Tabs>
-      );
-    } else if (channelItems) {
-      return <div>{channelItems}</div>;
-    } else if (podcastItems) {
-      return podcastItems;
+    if (podcastItems) {
+      return <div>{podcastItems}</div>;
     }
+    return channelItems;
   }
 
   render() {
-    const { searchQuery } = this.props;
+    const { searchQuery, searchType } = this.props;
 
     const help = (
       searchQuery ? '' :
@@ -116,16 +107,48 @@ export class Search extends React.Component {
       <DocumentTitle title={getTitle('Search podcasts and feeds')}>
         <div>
           <form className="form" onSubmit={this.handleSearch}>
-            <Input
-              type="search"
-              ref="query"
-              defaultValue={searchQuery}
-              help={help}
-              onClick={this.handleSelect}
-              placeholder="Find a feed or podcast"
-            />
+            <div className="form-group">
+              <input
+                className="form-control"
+                type="search"
+                ref="query"
+                defaultValue={searchQuery}
+                onClick={this.handleSelect}
+                placeholder="Find a feed or podcast"
+              />
+              {help ? <div className="help-block">{help}</div> : ''}
+            </div>
+            <Grid>
+              <Row>
+                <Col md={6} xs={6}>
+                  <label>
+                    <input
+                      checked={searchType === 'podcasts'}
+                      onChange={this.handleSearch}
+                      name="type"
+                      label="Search podcasts"
+                      type="radio"
+                      ref="podcasts"
+                      value="podcasts"
+                    /> Search podcasts
+                  </label>
+                </Col>
+                <Col md={6} xs={6}>
+                  <label>
+                    <input
+                      checked={searchType === 'channels'}
+                      onChange={this.handleSearch}
+                      name="type"
+                      type="radio"
+                      ref="channels"
+                      value="channels"
+                    /> Search feeds
+                  </label>
+                </Col>
+              </Row>
+            </Grid>
             <Button type="submit" bsStyle="primary" className="form-control">
-              <Icon icon="search" /> Search
+                <Icon icon="search" /> Search
             </Button>
           </form>
           {this.renderSearchResults()}
@@ -143,11 +166,12 @@ Search.propTypes = {
   podcasts: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   searchQuery: PropTypes.string.isRequired,
+  searchType: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => {
   const { isLoading } = state.podcasts;
-  const { query } = state.search;
+  const { query, type } = state.search;
   const { isLoggedIn } = state.auth;
 
   const podcasts = podcastsSelector(state);
@@ -155,6 +179,7 @@ const mapStateToProps = state => {
 
   return {
     searchQuery: query,
+    searchType: type,
     podcasts,
     channels,
     isLoading,

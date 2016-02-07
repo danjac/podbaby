@@ -15,7 +15,7 @@ type PodcastReader interface {
 	SelectByChannel(DataHandler, *models.PodcastList, *models.Channel, int) error
 	SelectBookmarked(DataHandler, *models.PodcastList, int, int) error
 	SelectPlayed(DataHandler, *models.PodcastList, int, int) error
-	Search(DataHandler, *[]models.Podcast, string) error
+	Search(DataHandler, *models.PodcastList, string, int) error
 	SearchBookmarked(DataHandler, *[]models.Podcast, string, int) error
 	SearchByChannelID(DataHandler, *[]models.Podcast, string, int) error
 }
@@ -50,14 +50,37 @@ func (r *podcastSQLReader) GetByID(dh DataHandler, podcast *models.Podcast, id i
 	return handleError(sqlx.Get(dh, podcast, q, id), q)
 }
 
-func (r *podcastSQLReader) Search(dh DataHandler, podcasts *[]models.Podcast, query string) error {
-	q := `
+func (r *podcastSQLReader) Search(dh DataHandler, result *models.PodcastList, query string, page int) error {
+	q := `SELECT COUNT(p.id) FROM podcasts p, plainto_tsquery($1) as q WHERE (p.tsv @@ q)`
+
+	var numRows int
+
+	if err := dh.QueryRowx(q, query).Scan(&numRows); err != nil {
+		return handleError(err, q)
+	}
+
+	result.Page = models.NewPaginator(page, numRows)
+
+	if numRows == 0 {
+		return nil
+	}
+
+	q = `
     SELECT p.id, p.title, p.enclosure_url, p.description,
         p.channel_id, p.pub_date, c.title AS name, c.image, p.source
     FROM podcasts p, plainto_tsquery($1) as q, channels c
     WHERE (p.tsv @@ q) AND p.channel_id = c.id
-    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1)) DESC LIMIT $2`
-	return handleError(sqlx.Select(dh, podcasts, q, query, maxSearchRows), q)
+    ORDER BY ts_rank_cd(p.tsv, plainto_tsquery($1))
+    OFFSET $2 LIMIT $3`
+
+	return handleError(sqlx.Select(
+		dh,
+		&result.Podcasts,
+		q,
+		query,
+		result.Page.Offset,
+		result.Page.PageSize), q)
+
 }
 
 func (r *podcastSQLReader) SearchByChannelID(dh DataHandler, podcasts *[]models.Podcast, query string, channelID int) error {

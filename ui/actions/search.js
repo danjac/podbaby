@@ -7,15 +7,15 @@ export function clearSearch() {
   return createAction(Actions.CLEAR_SEARCH);
 }
 
-export function search(query) {
+export function search(query, type) {
   if (!query) {
     return clearSearch();
   }
 
   return dispatch => {
     dispatch(requestPodcasts());
-    dispatch(createAction(Actions.SEARCH_REQUEST, query));
-    api.search(query)
+    dispatch(createAction(Actions.SEARCH_REQUEST, { query, type }));
+    api.search(query, type)
     .then(result => {
       dispatch(createAction(Actions.SEARCH_SUCCESS, result.data));
     })

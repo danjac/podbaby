@@ -55,7 +55,12 @@ export default function (store) {
   const getCategory = nextState => actions.categories.getCategory(nextState.params.id);
   const getChannel = nextState => actions.channel.getChannel(nextState.params.id);
   const getPodcast = nextState => actions.podcasts.getPodcast(nextState.params.id);
-  const getSearch = nextState => actions.search.search(nextState.location.query.q);
+  const getSearch = nextState => {
+    const query = nextState.location ? nextState.location.query : null;
+    if (query) {
+      actions.search.search(query.q, query.t);
+    }
+  };
 
   const scrollUp = () => window.scrollTo(0, 0);
 

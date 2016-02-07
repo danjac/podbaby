@@ -13,12 +13,19 @@ import (
 func searchAll(c *echo.Context) error {
 
 	var (
-		cache   = getCache(c)
-		query   = strings.ToLower(strings.TrimSpace(c.Form("q")))
-		result  = &models.SearchResult{}
-		key     = fmt.Sprintf("search:all:%v", query)
-		timeout = time.Minute * 30
+		cache      = getCache(c)
+		page       = getPage(c)
+		query      = strings.ToLower(strings.TrimSpace(c.Form("q")))
+		searchType = c.Form("t")
+		result     = models.NewSearchResult()
+		timeout    = time.Minute * 30
 	)
+
+	if searchType != "podcasts" && searchType != "channels" {
+		searchType = "podcasts"
+	}
+
+	key := fmt.Sprintf("search:all:type:%v:page:%v:%v", searchType, page, query)
 
 	if query != "" {
 		if err := cache.Get(key, timeout, result, func() error {
@@ -28,13 +35,15 @@ func searchAll(c *echo.Context) error {
 				conn = s.Conn()
 			)
 
-			if err := s.Channels().Search(conn, &result.Channels, query); err != nil {
-				return err
+			if searchType == "channels" {
+				if err := s.Channels().Search(conn, &result.Channels, query); err != nil {
+					return err
+				}
+			} else {
+				if err := s.Podcasts().Search(conn, result.Podcasts, query, page); err != nil {
+					return err
+				}
 			}
-			if err := s.Podcasts().Search(conn, &result.Podcasts, query); err != nil {
-				return err
-			}
-
 			return nil
 		}); err != nil {
 			return err
