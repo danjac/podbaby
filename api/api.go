@@ -191,15 +191,19 @@ func authenticate(c *echo.Context) (*models.User, error) {
 type defaultAuthenticator struct{}
 
 func (a *defaultAuthenticator) authenticate(c *echo.Context) (*models.User, error) {
+	var (
+		userID int
+		ok     bool
+		err    error
+	)
 
 	// just in case this function has already been called elsewhere
 	if user, ok := getUserOk(c); ok {
 		return user, nil
 	}
 
-	userID, err := getSession(c).readInt(c, userSessionKey)
-	if err != nil || userID == 0 {
-		return nil, nil
+	if userID, ok, err = getSession(c).readInt(c, userSessionKey); !ok {
+		return nil, err
 	}
 
 	s := getStore(c)
