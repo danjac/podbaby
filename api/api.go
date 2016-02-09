@@ -2,15 +2,16 @@ package api
 
 import (
 	"fmt"
-	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/justinas/nosurf"
-	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
-	mw "github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo/middleware"
-	"github.com/danjac/podbaby/api/Godeps/_workspace/src/golang.org/x/net/http2"
 	"html/template"
 	"io"
 	"net/http"
 	"path/filepath"
 	"strconv"
+
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/justinas/nosurf"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
+	mw "github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo/middleware"
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/golang.org/x/net/http2"
 
 	"github.com/danjac/podbaby/cache"
 	"github.com/danjac/podbaby/config"

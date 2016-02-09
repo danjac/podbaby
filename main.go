@@ -6,7 +6,7 @@ import (
 	"github.com/danjac/podbaby/Godeps/_workspace/src/github.com/codegangsta/cli"
 	_ "github.com/danjac/podbaby/Godeps/_workspace/src/github.com/joho/godotenv/autoload"
 	_ "github.com/danjac/podbaby/Godeps/_workspace/src/github.com/lib/pq"
-	"github.com/danjac/podbaby/commands"
+	"github.com/danjac/podbaby/cmd"
 	"github.com/danjac/podbaby/config"
 )
 
@@ -104,14 +104,14 @@ func main() {
 			},
 			Action: func(c *cli.Context) {
 				cfg.MustValidate()
-				commands.Serve(cfg)
+				cmd.Serve(cfg)
 			},
 		},
 		{
 			Name:  "secretkey",
 			Usage: "Creates a secret key",
 			Action: func(c *cli.Context) {
-				commands.SecretKey()
+				cmd.SecretKey()
 			},
 		},
 		{
@@ -126,7 +126,7 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
-				commands.Genenv(envfile)
+				cmd.Genenv(envfile)
 			},
 		},
 		{
@@ -149,7 +149,7 @@ func main() {
 			},
 			Action: func(c *cli.Context) {
 				cfg.MustValidate()
-				commands.Fetch(cfg)
+				cmd.Fetch(cfg)
 			},
 		},
 	}

@@ -2,11 +2,12 @@ package mailer
 
 import (
 	"bytes"
-	"github.com/danjac/podbaby/config"
 	"net/smtp"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/danjac/podbaby/config"
 )
 
 // Mailer handles SMTP calls
