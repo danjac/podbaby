@@ -20,7 +20,7 @@
   "devDependencies": {
     "babel": "^6.3.13",
     "babel-cli": "^6.3.17",
-    "babel-eslint": "^5.0.0-beta6",
+    "babel-eslint": "^6.0.2",
     "babel-loader": "^6.2.0",
     "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",
@@ -29,15 +29,15 @@
     "babel-register": "^6.3.13",
     "chai": "^3.4.1",
     "css-loader": "^0.23.0",
-    "enzyme": "^1.5.0",
+    "enzyme": "^2.2.0",
     "es6-promise": "^3.0.2",
-    "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^3.1.0",
-    "eslint-plugin-react": "^3.15.0",
+    "eslint": "^2.7.0",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-react": "^4.3.0",
     "express": "^4.13.4",
-    "extract-text-webpack-plugin": "^0.9.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
-    "jsdom": "^7.2.1",
+    "jsdom": "^8.3.0",
     "jsdom-global": "^1.5.0",
     "json-loader": "^0.5.4",
     "mocha": "^2.3.4",
@@ -54,12 +54,12 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "axios": "^0.8.1",
+    "axios": "^0.9.1",
     "bootstrap": "^3.3.6",
     "bootswatch": "^3.3.6",
     "classnames": "^2.2.1",
     "font-awesome": "^4.5.0",
-    "history": "^1.13.1",
+    "history": "^2.0.1",
     "lodash": "^4.0.0",
     "md5": "^2.0.0",
     "mobile-detect": "^1.3.1",
@@ -73,9 +73,9 @@
     "redux": "^3.0.5",
     "redux-form": "^4.1.1",
     "redux-simple-router": "^2.0.4",
-    "redux-thunk": "^1.0.2",
+    "redux-thunk": "^2.0.1",
     "reselect": "^2.0.1",
     "sanitize-html": "^1.11.2",
-    "validator": "^4.5.0"
+    "validator": "^5.2.0"
   }
 }
