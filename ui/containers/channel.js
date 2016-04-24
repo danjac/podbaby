@@ -143,7 +143,7 @@ export class Channel extends React.Component {
           </div>
           {channel.description ?
           <p
-            className="lead"
+            className="lead text-center"
             style={{ marginTop: 20 }}
             dangerouslySetInnerHTML={sanitize(channel.description)}
           /> : ''}
