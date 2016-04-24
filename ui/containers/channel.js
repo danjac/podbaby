@@ -10,9 +10,6 @@ import {
   Button,
   Label,
   Input,
-  Grid,
-  Row,
-  Col,
 } from 'react-bootstrap';
 
 
@@ -26,53 +23,9 @@ import PodcastList from '../components/podcasts';
 import Image from '../components/image';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
+import ChannelItem from '../components/channel_item';
 import { sanitize } from '../components/utils';
 import { getTitle } from './utils';
-
-const RelatedChannel = props => {
-  const {
-    channel,
-    handleSubscribe,
-    isLoggedIn } = props;
-
-  return (
-      <div className="thumbnail">
-        <div className="caption text-center">
-          <Link to={`/channel/${channel.id}/`}>
-            <h5>{channel.title}</h5>
-          </Link>
-        </div>
-        <Image
-          src={channel.image}
-          errSrc="/static/podcast.png"
-          imgProps={{
-            alt: channel.title,
-            height: 120,
-            width: 120,
-          }}
-        />
-        {isLoggedIn ?
-          <div className="caption text-center">
-            <Button
-              className="form-control"
-              bsStyle={channel.isSubscribed ? 'default' : 'primary'}
-              title={channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-              onClick={handleSubscribe}
-            >
-            <Icon icon={channel.isSubscribed ? 'unlink' : 'link'} /> {
-            channel.isSubscribed ? 'Unsubscribe' : 'Subscribe'
-            }
-            </Button>
-          </div> : ''}
-     </div>
-  );
-};
-
-RelatedChannel.propTypes = {
-  channel: PropTypes.object.isRequired,
-  handleSubscribe: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired,
-};
 
 export class Channel extends React.Component {
 
@@ -151,22 +104,16 @@ export class Channel extends React.Component {
     const recommendations = relatedChannels.length > 0 ?
     <div className="container">
         <h4 className="text-center">People who subscribed to this feed also subscribed to</h4>
-        <Grid>
-          <Row>
           {this.props.relatedChannels.map(related => {
-            const handleSubscribe = () => this.actions.subscribe.toggleSubscribe(related);
             return (
-            <Col key={related.id} xs={12} md={4}>
-              <RelatedChannel
-                channel={related}
-                handleSubscribe={handleSubscribe}
-                isLoggedIn={isLoggedIn}
-              />
-            </Col>
+        <ChannelItem
+          key={related.id}
+          channel={related}
+          showImage={false}
+        />
+
           );
           })}
-          </Row>
-        </Grid>
     </div> : '';
 
     return (

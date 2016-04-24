@@ -12,7 +12,6 @@ import { podcastsSelector, channelsSelector } from '../selectors';
 import ChannelItem from '../components/channel_item';
 import PodcastList from '../components/podcasts';
 import Icon from '../components/icon';
-import { isMobile } from '../components/utils';
 import { getTitle } from './utils';
 
 export class Search extends React.Component {
@@ -84,14 +83,12 @@ export class Search extends React.Component {
       };
 
 
-      const showImage = !isMobile();
-
       return (
         <ChannelItem
           key={channel.id}
           channel={channel}
           searchQuery={searchQuery}
-          showImage={showImage}
+          showImage={false}
           subscribe={subscribe}
           {...this.props}
         />

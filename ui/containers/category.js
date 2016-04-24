@@ -17,7 +17,6 @@ import { channelsSelector, categorySelector } from '../selectors';
 import Pager from '../components/pager';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
-import { isMobile } from '../components/utils';
 import { getTitle } from './utils';
 
 export class Category extends React.Component {
@@ -95,7 +94,6 @@ export class Category extends React.Component {
     }
 
     const pager = <Pager page={page} onSelectPage={this.handleSelectPage} />;
-    const showImage = !isMobile();
 
     return (
       <DocumentTitle title={getTitle(`Category: ${category.name}`)}>
@@ -118,7 +116,7 @@ export class Category extends React.Component {
           return (
             <ChannelItem
               key={channel.id}
-              showImage={showImage}
+              showImage={false}
               channel={channel}
               isLoggedIn={this.props.isLoggedIn}
               subscribe={toggleSubscribe}

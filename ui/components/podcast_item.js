@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import classnames from 'classnames';
 import { Link } from 'react-router';
 import { sanitize, highlight, formatPubDate, formatListenDate } from './utils';
 
@@ -125,7 +126,7 @@ export default function PodcastItem(props) {
       </Button> : ''}
     {podcast.description && (podcast.isShowDetail || showExpanded) ?
     <p
-      className={showExpanded ? 'lead' : ''}
+      className={classnames({ lead: showExpanded, 'text-center': true })}
       style={{ marginTop: 20 }}
       dangerouslySetInnerHTML={sanitize(highlight(podcast.description, searchQuery))}
     /> : ''}

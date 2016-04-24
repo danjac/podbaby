@@ -58,6 +58,7 @@ function ChannelItem(props) {
     </div>
     : ''}
     <p
+      className="text-center"
       style={{ marginTop: 20 }}
       dangerouslySetInnerHTML={sanitize(highlight(channel.description, searchQuery))}
     />

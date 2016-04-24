@@ -4,7 +4,6 @@ import React, { PropTypes } from 'react';
 import Loading from './loading';
 import Pager from './pager';
 import Podcast from './podcast_item';
-import { isMobile } from './utils';
 
 export class PodcastList extends React.Component {
 
@@ -33,8 +32,6 @@ export class PodcastList extends React.Component {
 
     const pager = <Pager page={page} onSelectPage={onSelectPage} />;
 
-    const showImage = showChannel && !isMobile();
-
     return (
       <div>
         {pager}
@@ -60,7 +57,7 @@ export class PodcastList extends React.Component {
               searchQuery={searchQuery}
               isLoggedIn={isLoggedIn}
               podcast={podcast}
-              showImage={showImage}
+              showImage={false}
               showChannel={showChannel}
               showExpanded={false}
               toggleBookmark={toggleBookmark}
