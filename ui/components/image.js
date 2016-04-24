@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { isMobile } from './utils';
 
 class Image extends React.Component {
   constructor(props) {
@@ -35,9 +34,6 @@ class Image extends React.Component {
   }
 
   render() {
-    if (this.props.hideIfMobile && isMobile()) {
-      return <span />;
-    }
     return (
       <img {...this.props.imgProps}
         src={this.state.src}
@@ -49,7 +45,6 @@ class Image extends React.Component {
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
-  hideIfMobile: PropTypes.bool,
   errSrc: PropTypes.string.isRequired,
   imgProps: PropTypes.object,
 };

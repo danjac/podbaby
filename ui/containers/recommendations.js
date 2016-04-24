@@ -11,6 +11,7 @@ import { channelsSelector } from '../selectors';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
 import Icon from '../components/icon';
+import { isMobile } from '../components/utils';
 import { getTitle } from './utils';
 
 export class Recommendations extends React.Component {
@@ -40,6 +41,8 @@ export class Recommendations extends React.Component {
           Discover other feeds and podcast episodes <Link to="/search/">here</Link>.</span>);
     }
 
+    const showImage = !isMobile();
+
     return (
       <DocumentTitle title={getTitle('Recommendations')}>
       <div>
@@ -56,6 +59,7 @@ export class Recommendations extends React.Component {
         return (
           <ChannelItem
             key={channel.id}
+            showImage={showImage}
             channel={channel}
             isLoggedIn={isLoggedIn}
             subscribe={toggleSubscribe}

@@ -29,6 +29,7 @@ function ChannelItem(props) {
             </Label>
           </h5> : ''}
         </div>
+        {props.showImage ?
         <Link to={url}>
           <Image
             hideIfMobile
@@ -40,7 +41,7 @@ function ChannelItem(props) {
               width: 60,
               alt: channel.title }}
           />
-        </Link>
+        </Link> : ''}
       </div>
     {isLoggedIn ?
     <div style={{ marginTop: 20 }}>
@@ -66,6 +67,7 @@ function ChannelItem(props) {
 
 ChannelItem.propTypes = {
   channel: PropTypes.object.isRequired,
+  showImage: PropTypes.bool.isRequired,
   subscribe: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   searchQuery: PropTypes.string,

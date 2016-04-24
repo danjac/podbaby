@@ -53,6 +53,7 @@ export default function PodcastItem(props) {
     toggleDetail,
     isLoggedIn,
     searchQuery,
+    showImage,
   } = props;
 
   const channelUrl = `/channel/${podcast.channelId}/`;
@@ -81,9 +82,9 @@ export default function PodcastItem(props) {
           <div className="caption text-center">
             <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
           </div>
-            <Link to={channelUrl}>
+          {showImage ?
+             <Link to={channelUrl}>
               <Image
-                hideIfMobile
                 src={image}
                 errSrc="/static/podcast.png"
                 imgProps={{
@@ -92,7 +93,7 @@ export default function PodcastItem(props) {
                   alt: podcast.name,
                 }}
               />
-            </Link>
+            </Link> : ''}
           </div>
       </div>
     );
@@ -136,6 +137,7 @@ export default function PodcastItem(props) {
 PodcastItem.propTypes = {
   podcast: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
+  showImage: PropTypes.bool,
   showChannel: PropTypes.bool.isRequired,
   showExpanded: PropTypes.bool,
   searchQuery: PropTypes.string,

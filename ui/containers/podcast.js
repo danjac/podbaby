@@ -56,6 +56,7 @@ class PodcastDetail extends React.Component {
         podcast={podcast}
         showChannel
         showExpanded
+        showImage
         toggleBookmark={this.handleToggleBookmark}
         toggleDetail={this.handleToggleDetail}
         togglePlayer={this.handleTogglePlayer}

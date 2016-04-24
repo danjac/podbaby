@@ -15,6 +15,7 @@ import Pager from '../components/pager';
 import Icon from '../components/icon';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
+import { isMobile } from '../components/utils';
 import { getTitle } from './utils';
 
 export class Subscriptions extends React.Component {
@@ -56,6 +57,7 @@ export class Subscriptions extends React.Component {
     }
 
     const pager = <Pager page={page} onSelectPage={this.handleSelectPage} />;
+    const showImage = !isMobile();
 
     return (
       <DocumentTitle title={getTitle('My subscriptions')}>
@@ -85,6 +87,7 @@ export class Subscriptions extends React.Component {
             <ChannelItem
               key={channel.id}
               channel={channel}
+              showImage={showImage}
               isLoggedIn
               subscribe={toggleSubscribe}
             />
