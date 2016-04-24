@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import DocumentTitle from 'react-document-title';
 
-import { Input } from 'react-bootstrap';
+import { Input, Button } from 'react-bootstrap';
 
 import * as actions from '../actions';
 import { channelsSelector } from '../selectors';
@@ -24,8 +24,14 @@ export class Subscriptions extends React.Component {
     const { dispatch } = this.props;
     this.actions = bindActionCreators(actions.channels, dispatch);
     this.handleFilterChannels = this.handleFilterChannels.bind(this);
+    this.handleClearFilter = this.handleClearFilter.bind(this);
     this.handleSelectPage = this.handleSelectPage.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+  }
+
+  handleClearFilter() {
+    this.refs.filter.getInputDOMNode().value = '';
+    this.actions.filterChannels('');
   }
 
   handleFilterChannels() {
@@ -43,7 +49,7 @@ export class Subscriptions extends React.Component {
   }
 
   render() {
-    const { page, unfilteredChannels, isLoading } = this.props;
+    const { page, unfilteredChannels, isLoading, filter } = this.props;
 
     if (isLoading) {
       return <Loading />;
@@ -69,6 +75,25 @@ export class Subscriptions extends React.Component {
           onClick={this.handleSelect}
           placeholder="Find a subscription"
         />
+         <Input>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              className="form-control"
+            >
+              <Icon icon="search" /> Search
+            </Button>
+          </Input>
+          {filter ?
+          <Input>
+            <Button
+              onClick={this.handleClearFilter}
+              className="form-control"
+            >
+              <Icon icon="refresh" /> Show all
+            </Button>
+          </Input> : ''}
+
         </form>
         <Input>
           <a
@@ -101,6 +126,7 @@ export class Subscriptions extends React.Component {
 
 Subscriptions.propTypes = {
   channels: PropTypes.array.isRequired,
+  filter: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
   page: PropTypes.object.isRequired,
   isLoading: PropTypes.bool.isRequired,

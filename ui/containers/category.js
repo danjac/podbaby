@@ -7,6 +7,7 @@ import DocumentTitle from 'react-document-title';
 
 import {
   Input,
+  Button,
   ButtonGroup,
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +16,7 @@ import {
 import * as actions from '../actions';
 import { channelsSelector, categorySelector } from '../selectors';
 import Pager from '../components/pager';
+import Icon from '../components/icon';
 import Loading from '../components/loading';
 import ChannelItem from '../components/channel_item';
 import { getTitle } from './utils';
@@ -26,8 +28,14 @@ export class Category extends React.Component {
     const { dispatch } = this.props;
     this.actions = bindActionCreators(actions.channels, dispatch);
     this.handleFilterChannels = this.handleFilterChannels.bind(this);
+    this.handleClearFilter = this.handleClearFilter.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSelectPage = this.handleSelectPage.bind(this);
+  }
+
+  handleClearFilter() {
+    this.refs.filter.getInputDOMNode().value = '';
+    this.actions.filterChannels('');
   }
 
   handleFilterChannels() {
@@ -81,7 +89,13 @@ export class Category extends React.Component {
   }
 
   render() {
-    const { channels, unfilteredChannels, isLoading, category, page } = this.props;
+    const {
+      channels,
+      filter,
+      unfilteredChannels,
+      isLoading,
+      category,
+      page } = this.props;
 
     if (isLoading) {
       return <Loading />;
@@ -106,10 +120,27 @@ export class Category extends React.Component {
             type="search"
             ref="filter"
             onClick={this.handleSelect}
-            onKeyUp={this.handleFilterChannels}
             placeholder="Find a feed in this category"
           />
-        </form>
+          <Input>
+            <Button
+              type="submit"
+              bsStyle="primary"
+              className="form-control"
+            >
+              <Icon icon="search" /> Search
+            </Button>
+          </Input>
+          {filter ?
+          <Input>
+            <Button
+              onClick={this.handleClearFilter}
+              className="form-control"
+            >
+              <Icon icon="refresh" /> Show all
+            </Button>
+          </Input> : ''}
+      </form>
         {pager}
         {channels.map(channel => {
           const toggleSubscribe = () => {
@@ -134,6 +165,7 @@ export class Category extends React.Component {
 
 Category.propTypes = {
   channels: PropTypes.array.isRequired,
+  filter: PropTypes.string.isRequired,
   category: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   page: PropTypes.object.isRequired,
@@ -150,6 +182,7 @@ const mapStateToProps = state => {
   return Object.assign({},
     channelsSelector(state), {
       isLoading: state.channels.isLoading,
+      filter: state.channels.filter,
       category: categorySelector(state),
       isLoggedIn: state.auth.isLoggedIn,
     });
