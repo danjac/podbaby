@@ -100,14 +100,16 @@ export class Category extends React.Component {
       <div>
         {this.renderBreadcrumbs()}
         {this.renderChildren()}
-        <Input
-          className="form-control"
-          type="search"
-          ref="filter"
-          onClick={this.handleSelect}
-          onKeyUp={this.handleFilterChannels}
-          placeholder="Find a feed in this category"
-        />
+        <form onSubmit={this.handleFilterChannels}>
+          <Input
+            className="form-control"
+            type="search"
+            ref="filter"
+            onClick={this.handleSelect}
+            onKeyUp={this.handleFilterChannels}
+            placeholder="Find a feed in this category"
+          />
+        </form>
         {pager}
         {channels.map(channel => {
           const toggleSubscribe = () => {

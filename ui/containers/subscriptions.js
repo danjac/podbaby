@@ -61,14 +61,15 @@ export class Subscriptions extends React.Component {
       <DocumentTitle title={getTitle('My subscriptions')}>
       <div>
         <PageHeader header="My subscriptions" />
+        <form onSubmit={this.handleFilterChannels}>
         <Input
           className="form-control"
           type="search"
           ref="filter"
           onClick={this.handleSelect}
-          onKeyUp={this.handleFilterChannels}
           placeholder="Find a subscription"
         />
+        </form>
         <Input>
           <a
             className="btn btn-default form-control"
