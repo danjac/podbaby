@@ -41,9 +41,10 @@ export const channelsSelector = createSelector(
     const unfilteredChannels = channels.map(channel => {
       return Object.assign({}, channel, { isSubscribed: isSubscribed(channel, subscriptions) });
     });
+    const filterToLower = filter.toLowerCase();
 
     const filteredChannels = unfilteredChannels.filter(channel => {
-      return !filter || channel.title.toLowerCase().indexOf(filter) > -1;
+      return !filter || channel.title.toLowerCase().indexOf(filterToLower) > -1;
     });
 
     const pageSize = 10;
