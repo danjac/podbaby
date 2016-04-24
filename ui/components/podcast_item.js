@@ -83,6 +83,7 @@ export default function PodcastItem(props) {
           </div>
             <Link to={channelUrl}>
               <Image
+                hideIfMobile
                 src={image}
                 errSrc="/static/podcast.png"
                 imgProps={{

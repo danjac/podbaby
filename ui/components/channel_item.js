@@ -30,14 +30,16 @@ function ChannelItem(props) {
           </h5> : ''}
         </div>
         <Link to={url}>
-        <Image className="media-object"
-          src={channel.image}
-          errSrc="/static/podcast.png"
-          imgProps={{
-            height: 60,
-            width: 60,
-            alt: channel.title }}
-        />
+          <Image
+            hideIfMobile
+            className="media-object"
+            src={channel.image}
+            errSrc="/static/podcast.png"
+            imgProps={{
+              height: 60,
+              width: 60,
+              alt: channel.title }}
+          />
         </Link>
       </div>
     {isLoggedIn ?
