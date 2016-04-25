@@ -15,21 +15,23 @@ function ChannelItem(props) {
   const { channel, subscribe, isLoggedIn, searchQuery } = props;
   const url = `/channel/${channel.id}/`;
 
+  const podcastCount = (channel.numPodcasts ?
+    <h5>
+      <Label bsStyle="primary">
+        {channel.numPodcasts} podcast{channel.numPodcasts > 1 ? 's' : ''}
+      </Label>
+    </h5> : '');
+
   return (
     <Panel>
+    {props.showImage ?
     <div className="thumbnail">
         <div className="caption text-center">
           <h4>
             <Link to={url}>{channel.title}</Link>
-              </h4>
-          {channel.numPodcasts ?
-          <h5>
-            <Label bsStyle="primary">
-              {channel.numPodcasts} podcast{channel.numPodcasts > 1 ? 's' : ''}
-            </Label>
-          </h5> : ''}
+          </h4>
+          {podcastCount}
         </div>
-        {props.showImage ?
         <Link to={url}>
           <Image
             hideIfMobile
@@ -41,8 +43,15 @@ function ChannelItem(props) {
               width: 60,
               alt: channel.title }}
           />
-        </Link> : ''}
+        </Link>
+      </div> :
+      <div className="text-center">
+        <h4>
+          <Link to={url}>{channel.title}</Link>
+        </h4>
+        {podcastCount}
       </div>
+      }
     {isLoggedIn ?
     <div style={{ marginTop: 20 }}>
       <Button

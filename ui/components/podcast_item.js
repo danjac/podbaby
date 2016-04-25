@@ -79,11 +79,11 @@ export default function PodcastItem(props) {
           <Link to={podcastUrl}>{podcast.title}</Link>}
         </h4>
         {playedAt}
+        {showImage ?
         <div className="thumbnail">
           <div className="caption text-center">
             <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
           </div>
-          {showImage ?
              <Link to={channelUrl}>
               <Image
                 src={image}
@@ -94,8 +94,10 @@ export default function PodcastItem(props) {
                   alt: podcast.name,
                 }}
               />
-            </Link> : ''}
-          </div>
+            </Link>
+          </div> :
+          <h5><Link to={channelUrl}>{podcast.name}</Link></h5>
+          }
       </div>
     );
   } else {
