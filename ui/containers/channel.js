@@ -140,13 +140,13 @@ export class Channel extends React.Component {
                 </Label>
               </h4>
             </div> : ''}
+            {channel.description ?
+            <p
+              className="lead text-center"
+              style={{ marginTop: 20 }}
+              dangerouslySetInnerHTML={sanitize(channel.description)}
+            /> : ''}
           </div>
-          {channel.description ?
-          <p
-            className="lead text-center"
-            style={{ marginTop: 20 }}
-            dangerouslySetInnerHTML={sanitize(channel.description)}
-          /> : ''}
           <div className="text-center">
             <ButtonGroup>
               {isLoggedIn ?
