@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import _ from 'lodash';
 import { reduxForm } from 'redux-form';
 import validator from 'validator';
 
@@ -12,10 +13,14 @@ import { FormGroup } from '../components/form';
 const validateChangePassword = values => {
   const errors = {};
 
+  if (_.isUndefined(values.newPassword) || _.isUndefined(values.oldPassword)) {
+    return errors;
+  }
+
   if (!values.oldPassword) {
     errors.oldPassword = 'Please provide your old password';
   }
-  if (!validator.isLength(values.newPassword, 6)) {
+  if (validator.newPassword && !validator.isLength(values.newPassword, 6)) {
     errors.newPassword = 'Your new password must be at least 6 characters in length';
   }
   return errors;

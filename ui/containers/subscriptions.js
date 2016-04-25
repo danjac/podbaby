@@ -95,13 +95,6 @@ export class Subscriptions extends React.Component {
           </Input> : ''}
 
         </form>
-        <Input>
-          <a
-            className="btn btn-default form-control"
-            href={`/api/member/subscriptions/podbaby-${moment().format('YYYY-MM-DD')}.opml`}
-            download
-          ><Icon icon="download" /> Download OPML</a>
-        </Input>
         {pager}
         {this.props.channels.map(channel => {
           const toggleSubscribe = () => {
@@ -118,6 +111,13 @@ export class Subscriptions extends React.Component {
           );
         })}
         {pager}
+        <Input>
+          <a
+            className="btn btn-primary form-control"
+            href={`/api/member/subscriptions/podbaby-${moment().format('YYYY-MM-DD')}.opml`}
+            download
+          ><Icon icon="download" /> Download OPML</a>
+        </Input>
       </div>
     </DocumentTitle>
     );
