@@ -109,6 +109,8 @@ export default function PodcastItem(props) {
     );
   }
 
+  const description = sanitize(highlight(podcast.description, searchQuery));
+
   return (
     <Panel>
       {header}
@@ -126,11 +128,11 @@ export default function PodcastItem(props) {
         onClick={toggleDetail}
       ><Icon icon={podcast.isShowDetail ? 'chevron-up' : 'chevron-down'} />
       </Button> : ''}
-    {podcast.description && (podcast.isShowDetail || showExpanded) ?
+    {description.__html && (podcast.isShowDetail || showExpanded) ?
     <p
       className={classnames({ lead: showExpanded, 'text-center': true })}
       style={{ marginTop: 20 }}
-      dangerouslySetInnerHTML={sanitize(highlight(podcast.description, searchQuery))}
+      dangerouslySetInnerHTML={description}
     /> : ''}
   </Panel>
   );
