@@ -3,6 +3,7 @@ import { Actions } from '../constants';
 const initialState = {
   podcast: null,
   isPlaying: false,
+  autoPlay: false,
   currentTime: 0,
 };
 
@@ -24,6 +25,8 @@ export default function (state = initialState, action) {
       return state;
     case Actions.PLAYER_TIME_UPDATE:
       return Object.assign({}, state, { currentTime: action.payload });
+    case Actions.TOGGLE_AUTO_PLAY:
+      return Object.assign({}, state, { autoPlay: !state.autoPlay });
     case Actions.CLOSE_PLAYER:
       return initialState;
     case Actions.RELOAD_PLAYER:

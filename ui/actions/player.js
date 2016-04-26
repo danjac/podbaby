@@ -98,6 +98,10 @@ export function playRandom() {
   };
 }
 
+export function toggleAutoPlay() {
+  return createAction(Actions.TOGGLE_AUTO_PLAY);
+}
+
 export function playLast() {
   return playNextBookmarkedPodcast(-1);
 }

@@ -19,14 +19,28 @@ class Player extends React.Component {
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
     this.handleBookmark = this.handleBookmark.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
+    this.handleEnd = this.handleEnd.bind(this);
     this.handlePlayNext = this.handlePlayNext.bind(this);
     this.handlePlayLast = this.handlePlayLast.bind(this);
     this.handlePlayRandom = this.handlePlayRandom.bind(this);
+    this.handleToggleAutoPlay = this.handleToggleAutoPlay.bind(this);
   }
 
   handleClose(event) {
     event.preventDefault();
     this.props.onClose();
+  }
+
+  handleEnd(event) {
+    event.preventDefault();
+    if (this.props.player.autoPlay) {
+      this.props.onPlayNext();
+    }
+  }
+
+  handleToggleAutoPlay(event) {
+    event.preventDefault();
+    this.props.onToggleAutoPlay();
   }
 
   handleTimeUpdate(event) {
@@ -60,7 +74,7 @@ class Player extends React.Component {
       backgroundColor: '#222',
     };
 
-    const { podcast } = this.props.player;
+    const { podcast, autoPlay } = this.props.player;
 
     const showPlaylistButtons = (
       this.props.isLoggedIn &&
@@ -92,6 +106,12 @@ class Player extends React.Component {
             >
               <Icon icon="random" />
             </Button>
+           <Button
+             title="Auto-play"
+             style={btnStyle}
+             onClick={this.handleToggleAutoPlay}
+           ><Icon icon={ autoPlay ? 'pause' : 'repeat'} />
+          </Button>
            </span>
           : ''}
           <Button
@@ -173,6 +193,7 @@ class Player extends React.Component {
               controls
               autoPlay
               onPlay={this.handlePlay}
+              onEnded={this.handleEnd}
               onTimeUpdate={this.handleTimeUpdate}
               src={podcast.enclosureUrl}
               style={{
@@ -198,6 +219,7 @@ Player.propTypes = {
   onPlayNext: PropTypes.func.isRequired,
   onPlayLast: PropTypes.func.isRequired,
   onPlayRandom: PropTypes.func.isRequired,
+  onToggleAutoPlay: PropTypes.func.isRequired,
   player: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   bookmarks: PropTypes.array,

@@ -66,6 +66,7 @@ export class App extends React.Component {
     this.handlePlayerPlayNext = this.handlePlayerPlayNext.bind(this);
     this.handlePlayerPlayLast = this.handlePlayerPlayLast.bind(this);
     this.handlePlayerPlayRandom = this.handlePlayerPlayRandom.bind(this);
+    this.handlePlayerAutoPlay = this.handlePlayerAutoPlay.bind(this);
   }
 
   handleLogout() {
@@ -100,6 +101,10 @@ export class App extends React.Component {
 
   handlePlayerPlayRandom() {
     this.actions.player.playRandom();
+  }
+
+  handlePlayerAutoPlay() {
+    this.actions.player.toggleAutoPlay();
   }
 
   handlePlayerPlayNext() {
@@ -154,6 +159,7 @@ export class App extends React.Component {
           onPlayNext={this.handlePlayerPlayNext}
           onPlayLast={this.handlePlayerPlayLast}
           onPlayRandom={this.handlePlayerPlayRandom}
+          onToggleAutoPlay={this.handlePlayerAutoPlay}
           onToggleBookmark={this.handleTogglePlayerBookmark}
           onTimeUpdate={this.handleUpdatePlayerTime}
           onClose={this.handleClosePlayer}
