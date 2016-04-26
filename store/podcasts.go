@@ -220,7 +220,7 @@ func (r *podcastSQLReader) SelectSubscribed(dh DataHandler, result *models.Podca
 
 func (r *podcastSQLReader) SelectBookmarked(dh DataHandler, result *models.PodcastList, userID, page int) error {
 
-	q := `SELECT COUNT(id) FROM bookmarks WHERE user_id=$1`
+	q := `SELECT COUNT(*) FROM (SELECT DISTINCT podcast_id FROM bookmarks WHERE user_id=$1) AS bk_count`
 
 	var numRows int
 
@@ -241,8 +241,8 @@ func (r *podcastSQLReader) SelectBookmarked(dh DataHandler, result *models.Podca
     JOIN channels c ON c.id = p.channel_id
     JOIN bookmarks b ON b.podcast_id = p.id
     WHERE b.user_id=$1
-    GROUP BY p.id, p.title, c.title, c.image, b.id
-    ORDER BY b.id DESC
+    GROUP BY p.id, p.title, c.title, c.image
+    ORDER BY p.id DESC
     OFFSET $2 LIMIT $3`
 
 	return handleError(sqlx.Select(
