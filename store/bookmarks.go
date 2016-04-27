@@ -36,7 +36,7 @@ func newBookmarkStore() BookmarkStore {
 type bookmarkSQLReader struct{}
 
 func (r *bookmarkSQLReader) SelectByUserID(dh DataHandler, result *[]int, userID int) error {
-	q := "SELECT DISTINCT podcast_id FROM bookmarks WHERE user_id=$1 ORDER BY podcast_id DESC"
+	q := "SELECT podcast_id FROM bookmarks WHERE user_id=$1 ORDER BY id DESC"
 	return handleError(sqlx.Select(dh, result, q, userID), q)
 }
 
