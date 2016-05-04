@@ -2,15 +2,16 @@ package api
 
 import (
 	"fmt"
-	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
-	"github.com/danjac/podbaby/models"
-	"github.com/danjac/podbaby/store"
-	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/DATA-DOG/go-sqlmock"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/danjac/podbaby/api/Godeps/_workspace/src/github.com/labstack/echo"
+	"github.com/danjac/podbaby/models"
+	"github.com/danjac/podbaby/store"
+	"github.com/danjac/podbaby/store/Godeps/_workspace/src/github.com/DATA-DOG/go-sqlmock"
 )
 
 func TestGetBookmarksIfOk(t *testing.T) {
@@ -37,7 +38,7 @@ func TestGetBookmarksIfOk(t *testing.T) {
 	}
 
 	rows := sqlmock.NewRows([]string{""}).AddRow(1)
-	mock.ExpectQuery(`^SELECT COUNT\(id\) FROM bookmarks*`).WillReturnRows(rows)
+	mock.ExpectQuery(`^SELECT COUNT\(\*\) FROM \(SELECT DISTINCT podcast_id FROM bookmarks*`).WillReturnRows(rows)
 
 	rows = sqlmock.NewRows([]string{
 		"id", "title", "enclosure_url", "description",
