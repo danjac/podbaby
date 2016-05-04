@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const PageHeader = ({ header }) => {
   return (
-    <div className="page-header">
+    <div className="page-header text-center">
       <h3>{header}</h3>
     </div>
   );
