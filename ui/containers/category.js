@@ -38,7 +38,8 @@ export class Category extends React.Component {
     this.actions.filterChannels('');
   }
 
-  handleFilterChannels() {
+  handleFilterChannels(event) {
+    event.preventDefault();
     const value = _.trim(this.refs.filter.getValue());
     this.actions.filterChannels(value);
   }
