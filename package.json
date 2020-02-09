@@ -51,7 +51,7 @@
     "uglifyjs": "^2.4.10",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.9",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
     "axios": "^0.9.1",
