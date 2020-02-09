@@ -1,3 +1,6 @@
+**Note: this project is no longer maintained, and relies on old versions of Go and React that may be buggy and insecure. Use at your own risk!**
+
+
 Podbaby is a web application for listing to and organizing your podcasts.
 
 Development setup
